@@ -311,8 +311,8 @@ export function Navbar() {
     <>
       <LoadingBar color="#0066CC" progress={progress} onLoaderFinished={() => setProgress(0)} />
       <header className="sticky top-0 border-b bg-white z-[1000] shadow-md backdrop-blur-sm transition-all duration-300">
-        <nav className="container mx-auto px-4 py-4 overflow-x-auto scrollbar-hide bg-white">
-          <div className="flex items-center justify-between min-w-max">
+        <nav className="container mx-auto px-4 py-4 overflow-x-hidden scrollbar-hide bg-white">
+          <div className="flex items-center justify-between">
 
             {/* Logo */}
             <Link href="/" onClick={() => handleNavigation("/")} className="text-2xl font-bold flex items-center space-x-1">
@@ -437,7 +437,7 @@ export function Navbar() {
                       </Link>
                     </div>
                   </SheetHeader>
-                  <div className="flex-1 overflow-auto">
+                  <div className="flex-1 overflow-x-hidden">
                     <div className="divide-y">
                       {menuItems.map((item) => (
                         <div key={item.title} className="py-4 px-6">
@@ -477,7 +477,7 @@ export function Navbar() {
                                 animate={{ opacity: 1, height: 'auto' }}
                                 exit={{ opacity: 0, height: 0 }}
                                 transition={{ duration: 0.2 }}
-                                className="mt-2 ml-4 space-y-4 overflow-hidden"
+                                className="mt-2 ml-4 space-y-4 overflow-x-hidden"
                               >
                                 {item.sections.map((section) => (
                                   <div key={section.title}>
