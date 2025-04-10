@@ -8,8 +8,8 @@ import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/components/ui/
 import { ChevronDown, ChevronRight, Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import LoadingBar from "react-top-loading-bar"
-// Import the trackEvent function at the top of the file
 import { trackEvent } from "@/lib/analytics"
+import { motion, AnimatePresence } from 'framer-motion'
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
@@ -278,7 +278,6 @@ export function Navbar() {
     },
   ]
 
-  // Close dropdown when clicking outside
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -296,7 +295,6 @@ export function Navbar() {
     return () => document.removeEventListener("click", handleClickOutside)
   }, [])
 
-  // Update the handleNavigation function to track page navigation
   const handleNavigation = (href: string, itemName?: string) => {
     setProgress(30)
 
@@ -312,11 +310,13 @@ export function Navbar() {
   return (
     <>
       <LoadingBar color="#0066CC" progress={progress} onLoaderFinished={() => setProgress(0)} />
-      <header className="sticky top-0 border-b bg-white z-[1000] shadow-md">
+      <header className="sticky top-0 border-b bg-white z-[1000] shadow-md backdrop-blur-sm transition-all duration-300">
         <nav className="container mx-auto px-4 py-4 overflow-x-auto scrollbar-hide bg-white">
           <div className="flex items-center justify-between min-w-max">
+
             {/* Logo */}
-            <Link href="/" onClick={() => handleNavigation("/")} className="text-2xl font-bold flex items-center">
+            <Link href="/" onClick={() => handleNavigation("/")} className="text-2xl font-bold flex items-center space-x-1">
+              <img className="w-12 transition-transform hover:scale-105" src="/logo.png" alt="Logo" />
               <span className="text-[#051C2C]">Creative</span>
               <span className="text-blue-600">Surf</span>
             </Link>
@@ -328,8 +328,8 @@ export function Navbar() {
                   <div key={item.title} className="desktop-menu relative">
                     <button
                       className={cn(
-                        "flex items-center space-x-1 px-4 py-2 whitespace-nowrap text-lg font-semibold",
-                        activeDesktopMenu === item.title ? "text-blue-600" : "",
+                        "flex items-center space-x-1 px-4 py-2 whitespace-nowrap text-lg font-semibold hover:text-blue-600 transition-colors",
+                        activeDesktopMenu === item.title && "text-blue-600"
                       )}
                       onClick={(e) => {
                         e.stopPropagation()
@@ -340,52 +340,60 @@ export function Navbar() {
                       <ChevronDown
                         className={cn(
                           "h-4 w-4 transition-transform duration-200",
-                          activeDesktopMenu === item.title ? "rotate-180" : "",
+                          activeDesktopMenu === item.title && "rotate-180"
                         )}
                       />
                     </button>
 
                     {/* Desktop Megamenu */}
-                    {activeDesktopMenu === item.title && (
-                      <div className="fixed left-0 right-0 mt-2 bg-white border-b shadow-lg py-6 z-[1000]">
-                        <div className="container mx-auto px-4">
-                          <div className="grid grid-cols-4 gap-4">
-                            {item.sections.map((section) => (
-                              <div key={section.title}>
-                                <h3 className="font-medium mb-2">
-                                  <Link
-                                    href={section.href}
-                                    onClick={() => {
-                                      handleNavigation(section.href, section.title)
-                                      setActiveDesktopMenu(null)
-                                    }}
-                                    className="hover:text-blue-600"
-                                  >
-                                    {section.title}
-                                  </Link>
-                                </h3>
-                                <ul className="space-y-1">
-                                  {section.items.map((subItem) => (
-                                    <li key={subItem.name}>
-                                      <Link
-                                        href={subItem.href}
-                                        onClick={() => {
-                                          handleNavigation(subItem.href, subItem.name)
-                                          setActiveDesktopMenu(null)
-                                        }}
-                                        className="text-sm text-gray-600 hover:text-blue-600"
-                                      >
-                                        {subItem.name}
-                                      </Link>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            ))}
+                    <AnimatePresence>
+                      {activeDesktopMenu === item.title && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ duration: 0.2 }}
+                          className="fixed left-0 right-0 mt-2 bg-white border-b shadow-lg py-6 z-[1000]"
+                        >
+                          <div className="container mx-auto px-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                              {item.sections.map((section) => (
+                                <div key={section.title}>
+                                  <h3 className="font-medium mb-2">
+                                    <Link
+                                      href={section.href}
+                                      onClick={() => {
+                                        handleNavigation(section.href, section.title)
+                                        setActiveDesktopMenu(null)
+                                      }}
+                                      className="hover:text-blue-600 transition-colors"
+                                    >
+                                      {section.title}
+                                    </Link>
+                                  </h3>
+                                  <ul className="space-y-1">
+                                    {section.items.map((subItem) => (
+                                      <li key={subItem.name}>
+                                        <Link
+                                          href={subItem.href}
+                                          onClick={() => {
+                                            handleNavigation(subItem.href, subItem.name)
+                                            setActiveDesktopMenu(null)
+                                          }}
+                                          className="text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                                        >
+                                          {subItem.name}
+                                        </Link>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    )}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 ))}
               </div>
@@ -394,7 +402,7 @@ export function Navbar() {
             {/* Desktop CTA */}
             <Button
               asChild
-              className="hidden lg:flex bg-blue-600 hover:bg-blue-800 px-4 py-1 text-base lg:text-lg whitespace-nowrap mr-2"
+              className="hidden lg:flex bg-blue-600 hover:bg-blue-700 px-5 py-2 text-base lg:text-lg whitespace-nowrap transition-all duration-200 shadow-md hover:shadow-lg rounded-xl"
             >
               <Link href="/proposal" onClick={() => handleNavigation("/proposal")}>
                 Get a Proposal
@@ -408,8 +416,12 @@ export function Navbar() {
                   {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-full sm:max-w-md p-0" onClick={(e) => e.stopPropagation()}>
-                <div className="flex flex-col h-full mobile-menu-content">
+              <SheetContent
+                side="right"
+                className="top-0 right-0 max-w-full p-0 z-[1100] bg-white shadow-lg transition-all duration-300"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex flex-col w-full h-full mobile-menu-content">
                   <SheetHeader className="p-4 border-b">
                     <div className="flex items-center justify-between">
                       <Link
@@ -437,8 +449,8 @@ export function Navbar() {
                                 setMobileMenuOpen(false)
                               }}
                               className={cn(
-                                "text-lg font-semibold",
-                                activeItem === item.title ? "text-blue-600" : "text-gray-900",
+                                "text-lg font-semibold hover:text-blue-600 transition-colors",
+                                activeItem === item.title ? "text-blue-600" : "text-gray-900"
                               )}
                             >
                               {item.title}
@@ -453,54 +465,62 @@ export function Navbar() {
                               <ChevronRight
                                 className={cn(
                                   "h-5 w-5 transition-transform duration-200",
-                                  activeItem === item.title ? "rotate-90" : "",
+                                  activeItem === item.title && "rotate-90"
                                 )}
                               />
                             </button>
                           </div>
-                          {activeItem === item.title && (
-                            <div className="mt-2 ml-4 space-y-4">
-                              {item.sections.map((section) => (
-                                <div key={section.title}>
-                                  <h4 className="font-semibold text-base text-gray-900 mb-1">
-                                    <Link
-                                      href={section.href}
-                                      onClick={() => {
-                                        handleNavigation(section.href, section.title)
-                                        setMobileMenuOpen(false)
-                                      }}
-                                      className="hover:text-blue-600"
-                                    >
-                                      {section.title}
-                                    </Link>
-                                  </h4>
-                                  <ul className="space-y-1">
-                                    {section.items.map((subItem) => (
-                                      <li key={subItem.name}>
-                                        <Link
-                                          href={subItem.href}
-                                          onClick={() => {
-                                            handleNavigation(subItem.href, subItem.name)
-                                            setMobileMenuOpen(false)
-                                          }}
-                                          className="block text-sm text-gray-600 hover:text-blue-600"
-                                        >
-                                          {subItem.name}
-                                        </Link>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              ))}
-                            </div>
-                          )}
+                          <AnimatePresence>
+                            {activeItem === item.title && (
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="mt-2 ml-4 space-y-4 overflow-hidden"
+                              >
+                                {item.sections.map((section) => (
+                                  <div key={section.title}>
+                                    <h4 className="font-semibold text-base text-gray-900 mb-1">
+                                      <Link
+                                        href={section.href}
+                                        onClick={() => {
+                                          handleNavigation(section.href, section.title)
+                                          setMobileMenuOpen(false)
+                                        }}
+                                        className="hover:text-blue-600"
+                                      >
+                                        {section.title}
+                                      </Link>
+                                    </h4>
+                                    <ul className="space-y-1">
+                                      {section.items.map((subItem) => (
+                                        <li key={subItem.name}>
+                                          <Link
+                                            href={subItem.href}
+                                            onClick={() => {
+                                              handleNavigation(subItem.href, subItem.name)
+                                              setMobileMenuOpen(false)
+                                            }}
+                                            className="block text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                                          >
+                                            {subItem.name}
+                                          </Link>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                ))}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                         </div>
                       ))}
                     </div>
                   </div>
 
                   <div className="p-4 border-t">
-                    <Button asChild className="w-full bg-blue-600 hover:bg-blue-800">
+                    <Button asChild className="w-full bg-blue-600 hover:bg-blue-800 transition-all duration-200">
                       <Link
                         href="/proposal"
                         onClick={() => {

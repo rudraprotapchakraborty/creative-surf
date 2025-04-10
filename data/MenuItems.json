@@ -1,0 +1,493 @@
+{
+    "menuItems": [
+      {
+        "title": "Digital Marketing",
+        "href": "/digital-marketing",
+        "sections": [
+          {
+            "title": "Digital Intelligence",
+            "href": "/digital-marketing/digital-intelligence",
+            "items": [
+              {
+                "name": "Web Channel Call Tracking",
+                "href": "/digital-marketing/digital-intelligence/web-channel-call-tracking"
+              },
+              {
+                "name": "SEO Reporting & Forecasting",
+                "href": "/digital-marketing/digital-intelligence/seo-reporting"
+              },
+              {
+                "name": "Channel Attribution & Forecasting",
+                "href": "/digital-marketing/digital-intelligence/channel-attribution"
+              },
+              {
+                "name": "Digital Marketing Competitor Analysis",
+                "href": "/digital-marketing/digital-intelligence/competitor-analysis"
+              },
+              {
+                "name": "Private Equity Due Diligence",
+                "href": "/digital-marketing/digital-intelligence/private-equity"
+              },
+              {
+                "name": "Revenue Operations",
+                "href": "/digital-marketing/digital-intelligence/revenue-operations"
+              }
+            ]
+          },
+          {
+            "title": "Conversion",
+            "href": "/digital-marketing/conversion",
+            "items": [
+              {
+                "name": "Conversion Rate Optimization",
+                "href": "/digital-marketing/conversion/cro"
+              },
+              {
+                "name": "User Experience Testing",
+                "href": "/digital-marketing/conversion/ux-testing"
+              },
+              {
+                "name": "Landing Pages & Funnels",
+                "href": "/digital-marketing/conversion/landing-pages"
+              },
+              {
+                "name": "Online Review Acceleration",
+                "href": "/digital-marketing/conversion/online-reviews"
+              },
+              {
+                "name": "Channel Partner Sales Pipeline Management",
+                "href": "/digital-marketing/conversion/channel-partner"
+              },
+              {
+                "name": "Website Personalization",
+                "href": "/digital-marketing/conversion/website-personalization"
+              }
+            ]
+          },
+          {
+            "title": "Marketing Automation",
+            "href": "/digital-marketing/marketing-automation",
+            "items": [
+              {
+                "name": "Account-Based Marketing Services",
+                "href": "/digital-marketing/marketing-automation/abm"
+              },
+              {
+                "name": "Lead Nurture Email Marketing",
+                "href": "/digital-marketing/marketing-automation/lead-nurture"
+              },
+              {
+                "name": "Email Marketing Management",
+                "href": "/digital-marketing/marketing-automation/email-marketing"
+              },
+              {
+                "name": "Salesforce Marketing Automation",
+                "href": "/digital-marketing/marketing-automation/salesforce"
+              }
+            ]
+          },
+          {
+            "title": "Commerce Platforms",
+            "href": "/digital-marketing/commerce-platforms",
+            "items": [
+              {
+                "name": "SEO for Amazon",
+                "href": "/digital-marketing/commerce-platforms/amazon-seo"
+              },
+              {
+                "name": "Advertising Management for Amazon",
+                "href": "/digital-marketing/commerce-platforms/amazon-advertising"
+              },
+              {
+                "name": "Shopify Optimization Services",
+                "href": "/digital-marketing/commerce-platforms/shopify"
+              },
+              {
+                "name": "Facebook Marketplace for Business",
+                "href": "/digital-marketing/commerce-platforms/facebook-marketplace"
+              },
+              {
+                "name": "Influencer Marketing Services",
+                "href": "/digital-marketing/commerce-platforms/influencer-marketing"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "SEO & Lead Generation",
+        "href": "/seo-lead-generation",
+        "sections": [
+          {
+            "title": "Organic Search",
+            "href": "/seo-lead-generation/organic-search",
+            "items": [
+              {
+                "name": "SEO Services",
+                "href": "/seo-lead-generation/organic-search/seo-services"
+              },
+              {
+                "name": "Enterprise SEO Services",
+                "href": "/seo-lead-generation/organic-search/enterprise-seo"
+              },
+              {
+                "name": "Digital Marketing Services",
+                "href": "/seo-lead-generation/organic-search/digital-marketing"
+              },
+              {
+                "name": "Local SEO Services",
+                "href": "/seo-lead-generation/organic-search/local-seo"
+              },
+              {
+                "name": "Google Local Services Ads Management",
+                "href": "/seo-lead-generation/organic-search/google-local-services"
+              },
+              {
+                "name": "SEO Audits",
+                "href": "/seo-lead-generation/organic-search/seo-audits"
+              },
+              {
+                "name": "Generative Engine & Chat Optimization",
+                "href": "/seo-lead-generation/organic-search/generative-engine-optimization"
+              }
+            ]
+          },
+          {
+            "title": "Digital Advertising",
+            "href": "/seo-lead-generation/digital-advertising",
+            "items": [
+              {
+                "name": "PPC Management Services",
+                "href": "/seo-lead-generation/digital-advertising/ppc-management"
+              },
+              {
+                "name": "Enterprise PPC Management Services",
+                "href": "/seo-lead-generation/digital-advertising/enterprise-ppc"
+              },
+              {
+                "name": "Social Media Advertising",
+                "href": "/seo-lead-generation/digital-advertising/social-media-advertising"
+              },
+              {
+                "name": "Enterprise Social Media Advertising",
+                "href": "/seo-lead-generation/digital-advertising/enterprise-social-media"
+              },
+              {
+                "name": "Programmatic Advertising Services",
+                "href": "/seo-lead-generation/digital-advertising/programmatic-advertising"
+              },
+              {
+                "name": "Addressable Geofencing Services",
+                "href": "/seo-lead-generation/digital-advertising/geofencing"
+              }
+            ]
+          },
+          {
+            "title": "Ecommerce",
+            "href": "/seo-lead-generation/ecommerce",
+            "items": [
+              {
+                "name": "Ecommerce SEO Services",
+                "href": "/seo-lead-generation/ecommerce/ecommerce-seo"
+              },
+              {
+                "name": "Ecommerce PPC Services",
+                "href": "/seo-lead-generation/ecommerce/ecommerce-ppc"
+              },
+              {
+                "name": "Ecommerce Social Media Advertising",
+                "href": "/seo-lead-generation/ecommerce/ecommerce-social-media"
+              },
+              {
+                "name": "B2B Ecommerce Enablement",
+                "href": "/seo-lead-generation/ecommerce/b2b-ecommerce"
+              },
+              {
+                "name": "Shopping Feed Automation",
+                "href": "/seo-lead-generation/ecommerce/shopping-feed"
+              },
+              {
+                "name": "Ecommerce Digital Marketing Services",
+                "href": "/seo-lead-generation/ecommerce/ecommerce-digital-marketing"
+              }
+            ]
+          },
+          {
+            "title": "Learn",
+            "href": "/seo-lead-generation/learn",
+            "items": [
+              {
+                "name": "Our SEO Results",
+                "href": "/seo-lead-generation/learn/seo-results"
+              },
+              {
+                "name": "Our SEO Case Studies",
+                "href": "/seo-lead-generation/learn/seo-case-studies"
+              },
+              {
+                "name": "What Is an SEO Company?",
+                "href": "/seo-lead-generation/learn/what-is-an-seo-company"
+              },
+              {
+                "name": "Who Are the Best SEO Companies?",
+                "href": "/seo-lead-generation/learn/best-seo-companies"
+              },
+              {
+                "name": "SEO Guide for Marketing Managers",
+                "href": "/seo-lead-generation/learn/seo-guide"
+              },
+              {
+                "name": "What Is Digital Marketing?",
+                "href": "/seo-lead-generation/learn/what-is-digital-marketing"
+              },
+              {
+                "name": "Best Digital Marketing Tools",
+                "href": "/seo-lead-generation/learn/digital-marketing-tools"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "UX & Interactive",
+        "href": "/ux-interactive",
+        "sections": [
+          {
+            "title": "Design",
+            "href": "/ux-interactive/design",
+            "items": [
+              {
+                "name": "Website Design",
+                "href": "/ux-interactive/design/website-design"
+              },
+              {
+                "name": "Website Redesign",
+                "href": "/ux-interactive/design/website-redesign"
+              },
+              {
+                "name": "Rapid Web Design",
+                "href": "/ux-interactive/design/rapid-web-design"
+              },
+              {
+                "name": "Social Media Design",
+                "href": "/ux-interactive/design/social-media-design"
+              },
+              {
+                "name": "Ecommerce Website Design",
+                "href": "/ux-interactive/design/ecommerce-design"
+              },
+              {
+                "name": "Email Marketing Testing & Design",
+                "href": "/ux-interactive/design/email-design"
+              }
+            ]
+          },
+          {
+            "title": "Content Marketing",
+            "href": "/ux-interactive/content-marketing",
+            "items": [
+              {
+                "name": "SEO Copywriting",
+                "href": "/ux-interactive/content-marketing/seo-copywriting"
+              },
+              {
+                "name": "Content Marketing Services",
+                "href": "/ux-interactive/content-marketing/content-services"
+              },
+              {
+                "name": "Social Media Management",
+                "href": "/ux-interactive/content-marketing/social-media-management"
+              },
+              {
+                "name": "Infographics & Motion Graphics",
+                "href": "/ux-interactive/content-marketing/infographics"
+              },
+              {
+                "name": "Web Video Production Services",
+                "href": "/ux-interactive/content-marketing/video-production"
+              },
+              {
+                "name": "YouTube Advertising",
+                "href": "/ux-interactive/content-marketing/youtube-advertising"
+              }
+            ]
+          },
+          {
+            "title": "Development",
+            "href": "/ux-interactive/development",
+            "items": [
+              {
+                "name": "Digital Experience Development",
+                "href": "/ux-interactive/development/digital-experience"
+              },
+              {
+                "name": "Shopify Ecommerce Development",
+                "href": "/ux-interactive/development/shopify"
+              },
+              {
+                "name": "Web Infrastructure & Maintenance",
+                "href": "/ux-interactive/development/web-infrastructure"
+              },
+              {
+                "name": "Content Management Systems",
+                "href": "/ux-interactive/development/cms"
+              },
+              {
+                "name": "AI & GPT Integration",
+                "href": "/ux-interactive/development/ai-integration"
+              }
+            ]
+          },
+          {
+            "title": "Challenges We Solve",
+            "href": "/ux-interactive/challenges",
+            "items": [
+              {
+                "name": "My Website Doesn't Drive Leads",
+                "href": "/ux-interactive/challenges/website-leads"
+              },
+              {
+                "name": "My Website Traffic Is Going Down",
+                "href": "/ux-interactive/challenges/traffic-decline"
+              },
+              {
+                "name": "My Website Doesn't Convert",
+                "href": "/ux-interactive/challenges/conversion-issues"
+              },
+              {
+                "name": "My Website Isn't Driving ROI",
+                "href": "/ux-interactive/challenges/roi-problems"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Who We Are",
+        "href": "/about",
+        "sections": [
+          {
+            "title": "Who We Are",
+            "href": "/about",
+            "items": [
+              {
+                "name": "Our Approach",
+                "href": "/about/approach"
+              },
+              {
+                "name": "About Us",
+                "href": "/about"
+              },
+              {
+                "name": "Career",
+                "href": "/about/careers"
+              },
+              {
+                "name": "Contact Info",
+                "href": "/contact"
+              },
+              {
+                "name": "Reviews",
+                "href": "/about/reviews"
+              },
+              {
+                "name": "Awards",
+                "href": "/about/awards"
+              }
+            ]
+          },
+          {
+            "title": "Community Impact",
+            "href": "/about/community-impact",
+            "items": [
+              {
+                "name": "Company Values",
+                "href": "/about/values"
+              },
+              {
+                "name": "Community Impact",
+                "href": "/about/community-impact"
+              },
+              {
+                "name": "FXBuilds",
+                "href": "/about/fx-builds"
+              },
+              {
+                "name": "Equality at WebFX",
+                "href": "/about/equality"
+              },
+              {
+                "name": "STEMFX Program",
+                "href": "/about/stem-program"
+              },
+              {
+                "name": "CreativeSurf History",
+                "href": "/about/history"
+              }
+            ]
+          },
+          {
+            "title": "Pricing Guides",
+            "href": "/about/pricing",
+            "items": [
+              {
+                "name": "How Much Should a Website Cost?",
+                "href": "/about/pricing/website-cost"
+              },
+              {
+                "name": "How Much Does PPC Cost?",
+                "href": "/about/pricing/ppc-cost"
+              },
+              {
+                "name": "Email Marketing Pricing",
+                "href": "/about/pricing/email-marketing"
+              },
+              {
+                "name": "Social Media Pricing",
+                "href": "/about/pricing/social-media"
+              },
+              {
+                "name": "How Much Does SEO Cost?",
+                "href": "/about/pricing/seo-cost"
+              },
+              {
+                "name": "Local SEO Pricing",
+                "href": "/about/pricing/local-seo"
+              }
+            ]
+          },
+          {
+            "title": "Content Library",
+            "href": "/blog",
+            "items": [
+              {
+                "name": "Our Blog",
+                "href": "/blog"
+              },
+              {
+                "name": "SEO Checker Report",
+                "href": "/tools/seo-checker"
+              },
+              {
+                "name": "Free Keyword Suggestion Tool",
+                "href": "/tools/keyword-suggestion"
+              },
+              {
+                "name": "Fix Your Funnel",
+                "href": "/tools/fix-funnel"
+              },
+              {
+                "name": "FAQFox",
+                "href": "/tools/faq-fox"
+              },
+              {
+                "name": "View All Tools",
+                "href": "/tools"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  

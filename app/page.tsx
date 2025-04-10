@@ -33,6 +33,7 @@ import { motion } from "framer-motion"
 import { useMobile } from "@/hooks/use-mobile"
 import { useRouter } from "next/navigation"
 import { useState, useRef, useEffect } from "react"
+import TrustedByCompanies from "./components/TrustedByCompanies"
 
 const services = [
   {
@@ -405,6 +406,8 @@ export default function Page() {
           </div>
         </div>
       </section>
+
+      <TrustedByCompanies></TrustedByCompanies>
 
       {/* Services We Provide */}
       <section className="py-16 bg-gray-100">

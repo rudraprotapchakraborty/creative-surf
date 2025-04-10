@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { generateMetadata } from "@/lib/metadata"
 import Client from "./client"
+import './globals.css'
 
 export const metadata: Metadata = generateMetadata({
   title: "Creative Surf",
@@ -17,7 +18,3 @@ export default function RootLayout({
 }) {
   return <Client>{children}</Client>
 }
-
-
-
-import './globals.css'

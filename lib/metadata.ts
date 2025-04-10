@@ -5,9 +5,16 @@ type MetadataProps = {
   description?: string
   image?: string
   path?: string
+  icons?: Metadata["icons"] // ✅ Added icons support
 }
 
-export function generateMetadata({ title, description, image, path }: MetadataProps): Metadata {
+export function generateMetadata({
+  title,
+  description,
+  image,
+  path,
+  icons,
+}: MetadataProps): Metadata {
   const siteName = "Creative Surf"
   const defaultTitle = "Creative Surf | Digital Marketing Agency"
   const defaultDescription =
@@ -46,4 +53,3 @@ export function generateMetadata({ title, description, image, path }: MetadataPr
     },
   }
 }
-
