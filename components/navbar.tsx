@@ -310,15 +310,15 @@ export function Navbar() {
   return (
     <>
       <LoadingBar color="#0066CC" progress={progress} onLoaderFinished={() => setProgress(0)} />
-      <header className="sticky top-0 border-b bg-white z-[1000] shadow-md backdrop-blur-sm transition-all duration-300">
-        <nav className="container mx-auto px-4 py-4 overflow-x-hidden scrollbar-hide bg-white">
+      <header className="fixed top-6 left-1/2 transform -translate-x-1/2 z-[1000] w-[95%] md:w-[90%] lg:w-[85%] xl:w-[80%]">
+        <nav className="rounded-full text-white bg-white/5 backdrop-blur-md shadow-xl transition-all duration-300 px-4 py-3">
           <div className="flex items-center justify-between">
 
             {/* Logo */}
             <Link href="/" onClick={() => handleNavigation("/")} className="text-2xl font-bold flex items-center space-x-1">
               <img className="w-12 transition-transform hover:scale-105" src="/logo.png" alt="Logo" />
-              <span className="text-[#051C2C]">Creative</span>
-              <span className="text-blue-600">Surf</span>
+              {/* <span className="text-[#051C2C]">Creative</span>
+              <span className="text-blue-600">Surf</span> */}
             </Link>
 
             {/* Desktop Navigation */}
@@ -402,7 +402,7 @@ export function Navbar() {
             {/* Desktop CTA */}
             <Button
               asChild
-              className="hidden lg:flex bg-blue-600 hover:bg-blue-700 px-5 py-2 text-base lg:text-lg whitespace-nowrap transition-all duration-200 shadow-md hover:shadow-lg rounded-xl"
+              className="rounded-full hidden lg:flex bg-cyan-600 hover:bg-cyan-700 px-5 py-2 text-base lg:text-lg whitespace-nowrap transition-all duration-200 shadow-md hover:shadow-lg"
             >
               <Link href="/proposal" onClick={() => handleNavigation("/proposal")}>
                 Get a Proposal

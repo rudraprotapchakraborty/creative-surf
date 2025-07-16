@@ -34,13 +34,13 @@ const blogPosts = [
 
 const BlogSection = () => {
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-gradient-to-b from-gray-900 via-gray-800 to-black">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-bold mb-12 text-center">Read from our blog</h2>
+        <h2 className="text-4xl font-bold mb-12 text-center text-white">Read from our blog</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {blogPosts.map((post, index) => (
-            <Card key={index} className="border-0 shadow-lg">
-              <CardContent className="p-6">
+            <Card key={index} className="border-0 shadow-lg bg-gradient-to-b from-gray-900 via-gray-800 to-black">
+              <CardContent className="p-6 ">
                 <Image
                   src={post.image || "/placeholder.svg"}
                   alt={post.title}
@@ -48,9 +48,9 @@ const BlogSection = () => {
                   height={200}
                   className="w-full h-48 object-cover mb-4 rounded-md"
                 />
-                <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
-                <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                <Link href={post.link} className="text-blue-600 hover:underline">
+                <h3 className="text-xl font-semibold mb-2 text-white">{post.title}</h3>
+                <p className="text-white/80 mb-4">{post.excerpt}</p>
+                <Link href={post.link} className="text-cyan-600 hover:underline">
                   Read more
                 </Link>
               </CardContent>
@@ -58,7 +58,7 @@ const BlogSection = () => {
           ))}
         </div>
         <div className="text-center">
-          <Button asChild className="bg-blue-600 hover:bg-blue-700">
+          <Button asChild className="bg-cyan-600 hover:bg-cyan-700 rounded-full">
             <Link href="/blog">
               Read more articles
               <ArrowRight className="ml-2 h-4 w-4" />

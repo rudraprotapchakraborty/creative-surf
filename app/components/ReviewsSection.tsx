@@ -57,13 +57,13 @@ const ReviewsSection = () => {
   };
 
   return (
-    <section className="py-24 bg-gradient-to-b from-white to-gray-50">
+    <section className="py-24 bg-gradient-to-b from-gray-900 via-gray-800 to-black">
       <div className="container mx-auto px-4 pt-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Why People <span className="text-blue-600">Love Us</span>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+            Why People <span className="text-cyan-600">Love Us</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-white/80 max-w-3xl mx-auto">
             Hear what our clients have to say about their experience working with Creative Surf and the results we've
             delivered for their businesses.
           </p>
@@ -100,9 +100,9 @@ const ReviewsSection = () => {
               {reviews.map((review, index) => (
                 <div key={index} className="w-full flex-shrink-0">
                   <div className="mx-auto max-w-4xl">
-                    <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 pt-14 mt-8 relative">
+                    <div className="bg-gradient-to-b from-gray-900 via-gray-800 to-black rounded-2xl shadow-xl p-8 md:p-12 pt-14 mt-8 relative">
                       {/* Quote Icon */}
-                      <div className="absolute -top-8 left-6 bg-blue-600 text-white p-4 rounded-full shadow-lg">
+                      <div className="absolute -top-8 left-6 bg-cyan-600 text-white p-4 rounded-full shadow-lg">
                         <Quote className="h-6 w-6" />
                       </div>
 
@@ -119,12 +119,12 @@ const ReviewsSection = () => {
 
                       {/* Review Content */}
                       <div className="min-h-[150px]">
-                        <p className="text-xl text-gray-700 italic mb-8 leading-relaxed">"{review.text}"</p>
+                        <p className="text-xl text-white/80 italic mb-8 leading-relaxed">"{review.text}"</p>
                       </div>
 
                       {/* Reviewer Info */}
                       <div className="flex items-center">
-                        <div className="relative w-16 h-16 rounded-full overflow-hidden mr-4 border-2 border-blue-600">
+                        <div className="relative w-16 h-16 rounded-full overflow-hidden mr-4 border-2 border-cyan-600">
                           <Image
                             src={review.avatar || "/placeholder.svg"}
                             alt={review.name}
@@ -134,13 +134,13 @@ const ReviewsSection = () => {
                         </div>
                         <div>
                           <h4 className="text-lg font-bold text-gray-900">{review.name}</h4>
-                          <div className="text-blue-600">{review.position}</div>
-                          <div className="text-gray-500 text-sm">{review.company}</div>
+                          <div className="text-cyan-600">{review.position}</div>
+                          <div className="text-white/80 text-sm">{review.company}</div>
                         </div>
                       </div>
 
                       {/* Review Metadata */}
-                      <div className="mt-6 pt-6 border-t border-gray-200 flex justify-between items-center text-sm text-gray-500">
+                      <div className="mt-6 pt-6 border-t border-gray-200 flex justify-between items-center text-sm text-white/80">
                         <div>Verified Client</div>
                         <div>{review.date}</div>
                       </div>
@@ -159,7 +159,7 @@ const ReviewsSection = () => {
                 onClick={() => setCurrentReviewIndex(index)}
                 className={cn(
                   "w-3 h-3 rounded-full transition-all duration-300",
-                  currentReviewIndex === index ? "bg-blue-600 w-8" : "bg-gray-300 hover:bg-gray-400"
+                  currentReviewIndex === index ? "bg-cyan-600 w-8" : "bg-gray-300 hover:bg-gray-400"
                 )}
                 aria-label={`Go to review ${index + 1}`}
               />
@@ -170,26 +170,26 @@ const ReviewsSection = () => {
         {/* Review Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 max-w-4xl mx-auto">
           <div className="text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">500+</div>
-            <div className="text-gray-600">Happy Clients</div>
+            <div className="text-3xl font-bold text-cyan-600 mb-2">500+</div>
+            <div className="text-white/80">Happy Clients</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">4.9/5</div>
-            <div className="text-gray-600">Average Rating</div>
+            <div className="text-3xl font-bold text-cyan-600 mb-2">4.9/5</div>
+            <div className="text-white/80">Average Rating</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">97%</div>
-            <div className="text-gray-600">Repeat Clients</div>
+            <div className="text-3xl font-bold text-cyan-600 mb-2">97%</div>
+            <div className="text-white/80">Repeat Clients</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">48hrs</div>
-            <div className="text-gray-600">Response Time</div>
+            <div className="text-3xl font-bold text-cyan-600 mb-2">48hrs</div>
+            <div className="text-white/80">Response Time</div>
           </div>
         </div>
 
         {/* CTA */}
         <div className="text-center mt-16">
-          <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-6">
+          <Button asChild size="lg" className="bg-cyan-600 hover:bg-cyan-700 text-lg px-8 py-6 rounded-full">
             <Link href="/proposal">Join Our Happy Clients</Link>
           </Button>
         </div>

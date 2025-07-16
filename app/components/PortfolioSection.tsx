@@ -55,7 +55,7 @@ const PortfolioSection = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-20 bg-gradient-to-b from-gray-900 via-gray-800 to-black">
       <div className="container mx-auto px-4">
         <MotionWrapper
           initial={{ opacity: 0, y: 30 }}
@@ -63,10 +63,10 @@ const PortfolioSection = () => {
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-center">
-            Our <span className="text-blue-600">Works</span>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-center text-white">
+            Our <span className="text-cyan-400">Works</span>
           </h2>
-          <p className="text-xl text-gray-600 text-center mb-12">
+          <p className="text-xl text-white/80 text-center mb-12">
             Explore our portfolio of successful projects and creative solutions
           </p>
         </MotionWrapper>
@@ -118,7 +118,7 @@ const PortfolioSection = () => {
                           {work.tags.map((tag, tagIndex) => (
                             <span
                               key={tagIndex}
-                              className="bg-blue-600/80 backdrop-blur-sm px-3 py-1 rounded-full text-sm"
+                              className="bg-cyan-600/80 backdrop-blur-sm px-3 py-1 rounded-full text-sm"
                             >
                               {tag}
                             </span>
@@ -127,7 +127,7 @@ const PortfolioSection = () => {
                         <Button
                           asChild
                           variant="outline"
-                          className="border-white bg-white text-black hover:bg-white hover:text-blue-600 transition-colors duration-300"
+                          className="border-white rounded-full bg-white text-black hover:bg-white hover:text-cyan-600 transition-colors duration-300"
                         >
                           <Link href={work.link} className="flex items-center gap-2">
                             View Project <ExternalLink className="h-4 w-4" />
@@ -149,7 +149,7 @@ const PortfolioSection = () => {
                 onClick={() => setCurrentWorkIndex(index)}
                 className={cn(
                   "w-3 h-3 rounded-full transition-all duration-300",
-                  currentWorkIndex === index ? "bg-blue-600 w-8" : "bg-gray-300 hover:bg-gray-400"
+                  currentWorkIndex === index ? "bg-cyan-600 w-8" : "bg-gray-300 hover:bg-gray-400"
                 )}
                 aria-label={`Go to slide ${index + 1}`}
               />
@@ -160,20 +160,20 @@ const PortfolioSection = () => {
         {/* Project Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 max-w-4xl mx-auto">
           <div className="text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">150+</div>
-            <div className="text-gray-600">Projects Completed</div>
+            <div className="text-3xl font-bold text-cyan-600 mb-2">150+</div>
+            <div className="text-white/80">Projects Completed</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">98%</div>
-            <div className="text-gray-600">Client Satisfaction</div>
+            <div className="text-3xl font-bold text-cyan-600 mb-2">98%</div>
+            <div className="text-white/80">Client Satisfaction</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">12</div>
-            <div className="text-gray-600">Industry Awards</div>
+            <div className="text-3xl font-bold text-cyan-600 mb-2">12</div>
+            <div className="text-white/80">Industry Awards</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">24/7</div>
-            <div className="text-gray-600">Support Available</div>
+            <div className="text-3xl font-bold text-cyan-600 mb-2">24/7</div>
+            <div className="text-white/80">Support Available</div>
           </div>
         </div>
       </div>

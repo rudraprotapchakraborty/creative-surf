@@ -10,114 +10,85 @@ import { toast, Toaster } from "react-hot-toast"
 import { subscribeToNewsletter } from "@/app/actions"
 
 export function Footer() {
-  const [website, setWebsite] = useState("")
+  const [email, setEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
   return (
-    <footer className="bg-[#051C2C] text-white overflow-x-hidden">
+    <footer className="bg-[#051C2C] text-white overflow-x-hidden select-none">
       {/* Stats Section */}
-      <div className="container mx-auto px-4 py-12 border-b border-gray-800">
-        <div className="flex flex-col lg:flex-row gap-8 items-center">
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 lg:gap-12 flex-grow w-full">
-            <div className="space-y-1 text-center lg:text-left">
-              <div className="text-2xl lg:text-3xl font-bold">24M+</div>
-              <div className="text-xs lg:text-sm uppercase tracking-wider">
-                LEADS DRIVEN
-                <br />
-                FOR CLIENTS
+      <div className="container mx-auto px-6 py-14 border-b border-gray-800">
+        <div className="flex flex-col lg:flex-row gap-12 items-center justify-between">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-10 w-full max-w-5xl">
+            {[
+              { value: "24M+", label: "LEADS DRIVEN FOR CLIENTS" },
+              { value: "$10M+", label: "REVENUE DRIVEN FOR CLIENTS" },
+              { value: "1M+", label: "HOURS OF EXPERTISE" },
+              { value: "100+", label: "EXPERTS ON STAFF" },
+            ].map(({ value, label }, idx) => (
+              <div
+                key={idx}
+                className="flex flex-col items-center lg:items-start text-center lg:text-left animate-fade-in"
+                style={{ animationDelay: `${idx * 150}ms` }}
+              >
+                <div className="text-3xl font-extrabold tracking-tight">{value}</div>
+                <div className="mt-1 text-xs uppercase tracking-wide text-gray-400 leading-snug">
+                  {label.split(" ").map((word, i) => (
+                    <span key={i}>
+                      {word}
+                      {i !== label.split(" ").length - 1 ? " " : ""}
+                      <br />
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-            <div className="space-y-1 text-center lg:text-left">
-              <div className="text-2xl lg:text-3xl font-bold">$10M+</div>
-              <div className="text-xs lg:text-sm uppercase tracking-wider">
-                REVENUE DRIVEN
-                <br />
-                FOR CLIENTS
-              </div>
-            </div>
-            <div className="space-y-1 text-center lg:text-left">
-              <div className="text-2xl lg:text-3xl font-bold">1M+</div>
-              <div className="text-xs lg:text-sm uppercase tracking-wider">
-                HOURS OF
-                <br />
-                EXPERTISE
-              </div>
-            </div>
-            <div className="space-y-1 text-center lg:text-left">
-              <div className="text-2xl lg:text-3xl font-bold">100+</div>
-              <div className="text-xs lg:text-sm uppercase tracking-wider">
-                EXPERTS
-                <br />
-                ON STAFF
-              </div>
-            </div>
+            ))}
           </div>
-          <div className="w-full lg:w-auto bg-blue-600 rounded-xl p-4 sm:p-6">
+
+          <div className="w-full lg:w-[380px] bg-cyan-700 bg-opacity-90 rounded-2xl p-6 shadow-lg backdrop-blur-sm transition hover:bg-cyan-600 duration-300">
             <Toaster position="bottom-center" />
-            <h3 className="text-xl font-bold mb-4">Discover how we can help your business grow</h3>
+            <h3 className="text-xl font-semibold mb-5 tracking-wide">Discover how we can help your business grow</h3>
             <form
               onSubmit={async (e) => {
                 e.preventDefault()
-                const formData = new FormData(e.currentTarget)
-                const email = formData.get("email") as string
-
-                if (!email) {
+                if (!email.trim()) {
                   toast.error("Please enter your email")
                   return
                 }
 
                 setIsLoading(true)
                 try {
-                  await subscribeToNewsletter(email)
+                  await subscribeToNewsletter(email.trim())
                   toast.success("Thanks for subscribing!")
-                  setWebsite("")
-
-                  // Redirect to proposal page with email prefilled
-                  window.location.href = `/proposal?email=${encodeURIComponent(email)}`
+                  setEmail("")
+                  window.location.href = `/proposal?email=${encodeURIComponent(email.trim())}`
                 } catch (error) {
                   toast.error(error instanceof Error ? error.message : "Something went wrong")
                   setIsLoading(false)
                 }
               }}
-              className="flex flex-col sm:flex-row gap-2 w-full"
+              className="flex flex-col sm:flex-row gap-3"
             >
               <Input
-                type="text"
+                type="email"
                 name="email"
-                value={website}
-                onChange={(e) => setWebsite(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="bg-white text-black flex-grow"
+                className="bg-white text-gray-900 rounded-lg shadow-sm placeholder-gray-400 focus:ring-2 focus:ring-cyan-400 flex-grow transition"
                 disabled={isLoading}
+                required
+                aria-label="Email"
               />
-              <Button type="submit" className="whitespace-nowrap bg-blue-700 hover:bg-blue-800" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="whitespace-nowrap bg-cyan-900 hover:bg-cyan-800 focus:ring-4 focus:ring-cyan-400 rounded-lg transition flex items-center justify-center"
+                disabled={isLoading}
+                aria-live="polite"
+              >
                 {isLoading ? (
-                  <span className="flex items-center">
-                    <svg
-                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Processing...
-                  </span>
-                ) : (
-                  "Send Me a Proposal!"
-                )}
+                  <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-5 w-5 mr-2"></div>
+                ) : null}
+                {isLoading ? "Processing..." : "Send Me a Proposal!"}
               </Button>
             </form>
           </div>
@@ -125,17 +96,24 @@ export function Footer() {
       </div>
 
       {/* Main Footer Content */}
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      <div className="container mx-auto px-6 py-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
           {/* Logo and Contact Section */}
-          <div className="lg:col-span-1">
-            <Image src="/placeholder.svg" alt="WebFX Logo" width={150} height={50} className="mb-6" />
-            <div className="space-y-2">
-              <h3 className="font-semibold">Ready to speak with a marketing expert?</h3>
-              <p>Give us a ring</p>
+          <div className="space-y-6">
+            <Image
+              src="/logo.png"
+              alt="logo"
+              width={150}
+              height={50}
+              className="opacity-90 hover:opacity-100 transition"
+              priority
+            />
+            <div>
+              <h3 className="font-semibold text-lg mb-1">Ready to speak with a marketing expert?</h3>
+              <p className="text-gray-300 mb-2">Give us a ring</p>
               <Link
                 href="tel:888-256-9448"
-                className="inline-block text-2xl font-bold text-blue-400 hover:text-blue-300"
+                className="text-cyan-400 font-bold text-2xl hover:text-cyan-300 transition"
               >
                 888-256-9448
               </Link>
@@ -143,93 +121,88 @@ export function Footer() {
           </div>
 
           {/* Services Column */}
-          <div>
-            <h3 className="text-lg font-bold mb-4">SERVICES</h3>
-            <ul className="space-y-3">
-              {services.map((service, index) => {
-                // Generate route based on service name
-                const route = `/services/${service.toLowerCase().replace(/\s+/g, "-")}`
-
-                return (
-                  <li key={index}>
-                    <Link href={route} className="text-gray-300 hover:text-white">
-                      {service}
-                    </Link>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
+          <FooterColumn title="SERVICES" items={services.map((s) => ({ title: s, link: `/services/${s.toLowerCase().replace(/\s+/g, "-")}` }))} />
 
           {/* Knowledge Base Column */}
-          <div>
-            <h3 className="text-lg font-bold mb-4">KNOWLEDGEBASE</h3>
-            <ul className="space-y-3">
-              {knowledgebase.map((item, index) => (
-                <li key={index}>
-                  <Link href={item.link} className="text-gray-300 hover:text-white">
-                    {item.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <FooterColumn title="KNOWLEDGEBASE" items={knowledgebase} />
 
           {/* Explore Column */}
-          <div>
-            <h3 className="text-lg font-bold mb-4">EXPLORE</h3>
-            <ul className="space-y-3">
-              {explore.map((item, index) => (
-                <li key={index}>
-                  <Link href={item.link} className="text-gray-300 hover:text-white">
-                    {item.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <FooterColumn title="EXPLORE" items={explore} />
         </div>
       </div>
 
       {/* Bottom Footer */}
       <div className="border-t border-gray-800">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left flex-wrap">
-            <div>
-              <p className="text-sm">PROUDLY BROUGHT TO YOU BY CREATIVE SURF</p>
-            </div>
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              <div className="text-sm">
-                <span className="text-gray-400">© Creative Surf 2019-{new Date().getFullYear()}</span>
-                <Link href="/sitemap" className="ml-4 text-gray-300 hover:text-white">
-                  Sitemap
-                </Link>
-                <Link href="/privacy-terms" className="ml-4 text-gray-300 hover:text-white">
-                  Privacy & Terms of Use
-                </Link>
-              </div>
-              <div className="flex gap-4 justify-center md:justify-start mt-4 sm:mt-0">
-                <Link href="#" className="text-gray-400 hover:text-white">
-                  <Facebook size={20} />
-                </Link>
-                <Link href="#" className="text-gray-400 hover:text-white">
-                  <Twitter size={20} />
-                </Link>
-                <Link href="#" className="text-gray-400 hover:text-white">
-                  <Linkedin size={20} />
-                </Link>
-                <Link href="#" className="text-gray-400 hover:text-white">
-                  <Youtube size={20} />
-                </Link>
-                <Link href="#" className="text-gray-400 hover:text-white">
-                  <Instagram size={20} />
-                </Link>
-              </div>
-            </div>
+        <div className="container mx-auto px-6 py-8 max-w-7xl flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
+          <p className="text-gray-400 text-sm select-text">PROUDLY BROUGHT TO YOU BY CREATIVE SURF</p>
+
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-5 text-gray-400 text-sm select-text">
+            <span>© Creative Surf 2019-{new Date().getFullYear()}</span>
+            <Link href="/sitemap" className="hover:text-white transition">Sitemap</Link>
+            <Link href="/privacy-terms" className="hover:text-white transition">Privacy & Terms of Use</Link>
+          </div>
+
+          <div className="flex gap-6 justify-center md:justify-start mt-3 md:mt-0 text-gray-400">
+            {[Facebook, Twitter, Linkedin, Youtube, Instagram].map((Icon, i) => (
+              <Link href="#" key={i} className="hover:text-white transition">
+                <Icon size={22} />
+              </Link>
+            ))}
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        .loader {
+          border-top-color: #1e40af; /* cyan-900 */
+          animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.6s ease forwards;
+        }
+      `}</style>
     </footer>
+  )
+}
+
+function FooterColumn({
+  title,
+  items,
+}: {
+  title: string
+  items: { title: string; link: string }[]
+}) {
+  return (
+    <div>
+      <h3 className="text-lg font-semibold mb-6 tracking-wide">{title}</h3>
+      <ul className="space-y-4">
+        {items.map(({ title, link }, i) => (
+          <li key={i}>
+            <Link
+              href={link}
+              className="text-gray-300 hover:text-white transition duration-200 ease-in-out"
+            >
+              {title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
 
@@ -262,4 +235,3 @@ const explore = [
   { title: "Return on Ad Spend", link: "#" },
   { title: "Contact Us", link: "/contact" },
 ]
-

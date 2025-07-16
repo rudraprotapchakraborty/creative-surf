@@ -17,7 +17,7 @@ const teamMembers = [
   },
   {
     image: "/placeholder.svg",
-    bgColor: "bg-[#DBEAFE]", // Blue pastel
+    bgColor: "bg-[#DBEAFE]", // cyan pastel
   },
   {
     image: "/placeholder.svg",
@@ -40,7 +40,7 @@ const TeamSection = () => {
   };
 
   return (
-    <section className="bg-[#F8FAFC] py-20">
+    <section className="bg-gradient-to-b from-gray-900 via-gray-800 to-black py-20">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center">
           {/* Team Images */}
@@ -60,12 +60,12 @@ const TeamSection = () => {
           </div>
 
           {/* Heading */}
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-[#1E293B]">Meet Creative Surf</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">Meet Creative Surf</h2>
 
           {/* Subheading */}
-          <p className="text-xl md:text-2xl text-[#1E293B] mb-12">
+          <p className="text-xl md:text-2xl text-white/80 mb-12">
             Your world-class, tech-enabled marketing agency with over{" "}
-            <span className="text-blue-600 border-b-4 border-blue-600">3 million</span> hours of combined expertise.
+            <span className="text-cyan-600 border-b-4 border-cyan-600">3 million</span> hours of combined expertise.
           </p>
 
           {/* Form */}
@@ -78,13 +78,13 @@ const TeamSection = () => {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="flex-grow text-base sm:text-lg h-12"
+              className="flex-grow text-base sm:text-lg h-12 rounded-full"
               required
             />
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-blue-600 hover:bg-blue-700 text-base sm:text-lg h-12 px-4 sm:px-8"
+              className="bg-cyan-600 hover:bg-cyan-700 text-base sm:text-lg h-12 px-4 sm:px-8 rounded-full"
             >
               {isSubmitting ? (
                 <span className="flex items-center">

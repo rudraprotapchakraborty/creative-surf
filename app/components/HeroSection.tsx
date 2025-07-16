@@ -7,67 +7,90 @@ import { motion } from "framer-motion";
 
 export default function HeroSection() {
   return (
-    <section className="relative bg-gradient-to-r from-white to-blue-100 text-gray-800 py-12 md:py-20 overflow-hidden min-h-[400px]">
-      <div className="absolute inset-0 z-0 bg-dot-pattern opacity-30 animate-pulse"></div>
+    <section className="relative bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white py-24 overflow-hidden min-h-[520px]">
+      {/* Animated subtle starry background */}
+      <motion.div
+        className="absolute inset-0 -z-10 bg-gradient-radial from-indigo-700 via-transparent to-transparent opacity-40"
+        animate={{ opacity: [0.3, 0.5, 0.3] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute inset-0 -z-20 bg-gradient-radial from-blue-800 via-transparent to-transparent opacity-30"
+        animate={{ opacity: [0.25, 0.45, 0.25] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+      />
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+      <div className="container mx-auto px-6 relative z-10 max-w-7xl">
+        <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-16">
           {/* Text Section */}
           <motion.div
-            className="max-w-2xl"
-            initial={{ opacity: 0, y: 40 }}
+            className="max-w-3xl"
+            initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            transition={{ duration: 1, ease: "easeOut" }}
           >
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight tracking-tight">
-              <span className="block bg-gradient-to-r from-blue-600 via-fuchsia-500 to-cyan-500 text-transparent bg-clip-text">
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight ">
+              <span className="block bg-gradient-to-r from-cyan-400 via-purple-700 to-purple-800 bg-clip-text text-transparent">
                 Unlock Revenue Growth By
               </span>
               <TypeAnimation
                 sequence={[
                   "Digital Marketing",
-                  2000,
+                  2500,
                   "SEO & Lead Generation",
-                  2000,
+                  2500,
                   "UX & Interactive",
-                  2000,
+                  2500,
                 ]}
                 wrapper="span"
-                speed={50}
+                speed={45}
                 repeat={Infinity}
-                className="block text-blue-400 bg-gradient-to-r from-blue-600 via-fuchsia-500 to-cyan-500 text-transparent bg-clip-text mt-2"
+                className="block mt-3 bg-gradient-to-r from-cyan-400 via-purple-700 to-purple-800 bg-clip-text text-transparent font-semibold drop-shadow-md"
               />
             </h1>
 
-            <div className="mt-8 flex flex-col sm:flex-row gap-4">
-              <Button className="bg-blue-600 hover:bg-blue-700 transition-all duration-300 ease-in-out shadow-lg">
+            <div className="mt-12 flex flex-col sm:flex-row gap-6">
+              <Button
+                className="rounded-full bg-gradient-to-r from-cyan-600 via-purple-600 to-pink-600 shadow-lg shadow-cyan-700/60 hover:shadow-cyan-900/80 transition-transform transform hover:-translate-y-1 active:translate-y-0 active:scale-95"
+              >
                 Get Started
               </Button>
               <Button
                 variant="outline"
-                className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 ease-in-out shadow-md"
+                className="rounded-full border-2 bg-gray-900 border-cyan-500 text-cyan-400 hover:bg-cyan-500 hover:text-white shadow-md shadow-cyan-700/40 transition-transform transform hover:-translate-y-1 active:translate-y-0 active:scale-95"
               >
-                Get a proposal
+                Get a Proposal
               </Button>
             </div>
           </motion.div>
 
           {/* Image Section */}
           <motion.div
-            className="w-full md:w-1/2 flex justify-center items-center"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: "easeOut" }}
+            className="w-full md:w-1/2 flex justify-center relative"
+            initial={{ opacity: 0, scale: 0.9, rotate: -3 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            whileHover={{ scale: 1.05, rotate: 3, transition: { duration: 0.4 } }}
           >
-            <div className="relative w-full h-[200px] md:h-[260px] lg:h-[320px]">
+            <div className="relative w-full max-w-lg h-[320px] md:h-[360px] lg:h-[400px] drop-shadow-[0_20px_30px_rgba(99,102,241,0.7)] rounded-3xl overflow-hidden">
               <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/20943545-CE8NfTg9GBeEIOnIVPadYdmnUJn7Pm.png"
                 alt="Digital Marketing Illustration"
                 fill
-                className="object-contain drop-shadow-xl"
+                className="object-contain"
                 priority
               />
             </div>
+
+            {/* Neon glow behind image */}
+            <div
+              className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-72 h-40 rounded-xl filter blur-3xl opacity-50"
+              style={{
+                background:
+                  "radial-gradient(circle at center, rgba(129, 140, 248, 0.6), transparent 70%)",
+                zIndex: -1,
+              }}
+            />
           </motion.div>
         </div>
       </div>
