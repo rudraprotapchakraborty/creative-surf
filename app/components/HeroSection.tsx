@@ -1,99 +1,146 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { TypeAnimation } from "react-type-animation";
-import Image from "next/image";
-import { motion } from "framer-motion";
 
 export default function HeroSection() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+  // Scroll-based transforms
+  const bgOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.3]);
+  const textY = useTransform(scrollYProgress, [0, 0.3], [0, -120]);
+  const textOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+
   return (
-    <section className="relative bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white py-24 overflow-hidden min-h-[520px]">
-      {/* Animated subtle starry background */}
+    <section
+      ref={ref}
+      className="relative flex items-center justify-center text-center text-white min-h-screen overflow-hidden bg-black"
+    >
+      {/* Aurora Gradient Mist */}
       <motion.div
-        className="absolute inset-0 -z-10 bg-gradient-radial from-indigo-700 via-transparent to-transparent opacity-40"
-        animate={{ opacity: [0.3, 0.5, 0.3] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute inset-0 -z-40"
+        animate={{
+          background: [
+            "radial-gradient(circle at 25% 20%, rgba(0,255,255,0.25), transparent 70%), radial-gradient(circle at 75% 80%, rgba(0,255,255,0.15), transparent 70%)",
+            "radial-gradient(circle at 30% 30%, rgba(0,200,255,0.25), transparent 70%), radial-gradient(circle at 70% 70%, rgba(0,180,255,0.15), transparent 70%)",
+          ],
+        }}
+        transition={{ duration: 15, repeat: Infinity, repeatType: "reverse" }}
+        style={{ opacity: bgOpacity }}
+      />
+
+      {/* Star Particles Layer */}
+      <motion.div
+        className="absolute inset-0 -z-30"
+        animate={{ backgroundPosition: ["0px 0px", "300px 300px"] }}
+        transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+        style={{
+          backgroundImage:
+            "radial-gradient(white 1px, transparent 1px), radial-gradient(white 1px, transparent 1px)",
+          backgroundSize: "140px 140px, 220px 220px",
+          backgroundPosition: "0px 0px, 70px 70px",
+          opacity: 0.35,
+        }}
+      />
+
+      {/* Rotating Rings */}
+      <motion.div
+        className="absolute -z-20 w-[1400px] h-[1400px] rounded-full border border-cyan-400/30"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 160, repeat: Infinity, ease: "linear" }}
       />
       <motion.div
-        className="absolute inset-0 -z-20 bg-gradient-radial from-blue-800 via-transparent to-transparent opacity-30"
-        animate={{ opacity: [0.25, 0.45, 0.25] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+        className="absolute -z-20 w-[1000px] h-[1000px] rounded-full border border-cyan-300/20"
+        animate={{ rotate: -360 }}
+        transition={{ duration: 200, repeat: Infinity, ease: "linear" }}
       />
 
-      <div className="container mx-auto px-6 relative z-10 max-w-7xl">
-        <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-16">
-          {/* Text Section */}
-          <motion.div
-            className="max-w-3xl"
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-          >
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight ">
-              <span className="block bg-gradient-to-r from-cyan-400 via-purple-700 to-purple-800 bg-clip-text text-transparent">
-                Unlock Revenue Growth By
-              </span>
-              <TypeAnimation
-                sequence={[
-                  "Digital Marketing",
-                  2500,
-                  "SEO & Lead Generation",
-                  2500,
-                  "UX & Interactive",
-                  2500,
-                ]}
-                wrapper="span"
-                speed={45}
-                repeat={Infinity}
-                className="block mt-3 bg-gradient-to-r from-cyan-400 via-purple-700 to-purple-800 bg-clip-text text-transparent font-semibold drop-shadow-md"
-              />
-            </h1>
+      {/* Main Content */}
+      <motion.div
+        className="relative z-10 max-w-5xl px-6"
+        style={{ y: textY, opacity: textOpacity }}
+      >
+        <motion.h1
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="text-5xl sm:text-6xl lg:text-8xl font-extrabold leading-tight tracking-tight mb-6"
+        >
+          <span className="block bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 bg-clip-text text-transparent drop-shadow-[0_0_25px_rgba(0,255,255,0.6)]">
+            Powering the Future with
+          </span>
+          <TypeAnimation
+            sequence={[
+              "Next-Level Innovation",
+              2000,
+              "Intelligent Automation",
+              2000,
+              "Immersive Design",
+              2000,
+            ]}
+            wrapper="span"
+            speed={45}
+            repeat={Infinity}
+            className="block mt-4 bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 bg-clip-text text-transparent font-semibold drop-shadow-[0_0_20px_rgba(0,255,255,0.6)]"
+          />
+        </motion.h1>
 
-            <div className="mt-12 flex flex-col sm:flex-row gap-6">
-              <Button
-                className="rounded-full bg-gradient-to-r from-cyan-600 via-purple-600 to-pink-600 shadow-lg shadow-cyan-700/60 hover:shadow-cyan-900/80 transition-transform transform hover:-translate-y-1 active:translate-y-0 active:scale-95"
-              >
-                Get Started
-              </Button>
-              <Button
-                variant="outline"
-                className="rounded-full border-2 bg-gray-900 border-cyan-500 text-cyan-400 hover:bg-cyan-500 hover:text-white shadow-md shadow-cyan-700/40 transition-transform transform hover:-translate-y-1 active:translate-y-0 active:scale-95"
-              >
-                Get a Proposal
-              </Button>
-            </div>
-          </motion.div>
+        <motion.p
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 1 }}
+          className="mt-4 text-lg text-gray-300 max-w-2xl mx-auto"
+        >
+          Experience a new era of technology with adaptive strategies,
+          human-centered design, and AI-powered creativity.
+        </motion.p>
 
-          {/* Image Section */}
-          <motion.div
-            className="w-full md:w-1/2 flex justify-center relative"
-            initial={{ opacity: 0, scale: 0.9, rotate: -3 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-            whileHover={{ scale: 1.05, rotate: 3, transition: { duration: 0.4 } }}
-          >
-            <div className="relative w-full max-w-lg h-[320px] md:h-[360px] lg:h-[400px] drop-shadow-[0_20px_30px_rgba(99,102,241,0.7)] rounded-3xl overflow-hidden">
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/20943545-CE8NfTg9GBeEIOnIVPadYdmnUJn7Pm.png"
-                alt="Digital Marketing Illustration"
-                fill
-                className="object-contain"
-                priority
-              />
-            </div>
-
-            {/* Neon glow behind image */}
-            <div
-              className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-72 h-40 rounded-xl filter blur-3xl opacity-50"
-              style={{
-                background:
-                  "radial-gradient(circle at center, rgba(129, 140, 248, 0.6), transparent 70%)",
-                zIndex: -1,
-              }}
+        {/* Futuristic Buttons */}
+        <motion.div
+          className="mt-10 flex flex-col sm:flex-row gap-4 justify-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 1 }}
+        >
+          <Button className="relative rounded-full backdrop-blur-md bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 px-8 py-3 text-lg font-semibold shadow-[0_0_35px_rgba(0,255,255,0.7)] hover:shadow-[0_0_55px_rgba(0,255,255,0.9)] transition-all duration-300 hover:-translate-y-1 active:scale-95 overflow-hidden">
+            <span className="relative z-10">Get Started</span>
+            <motion.span
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+              animate={{ x: ["-100%", "100%"] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             />
-          </motion.div>
+          </Button>
+
+          <Button
+            variant="outline"
+            className="rounded-full bg-transparent border-2 border-cyan-400/70 text-cyan-300 px-8 py-3 text-lg font-semibold hover:bg-cyan-400 hover:text-white shadow-[0_0_25px_rgba(0,255,255,0.6)] transition-all duration-300 hover:-translate-y-1 active:scale-95"
+          >
+            Explore More
+          </Button>
+        </motion.div>
+      </motion.div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center"
+        animate={{ y: [0, 12, 0] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <span className="text-gray-400 text-sm mb-3">Scroll to Discover</span>
+        <div className="w-6 h-10 border-2 border-cyan-400 rounded-full flex justify-center shadow-[0_0_10px_rgba(0,255,255,0.6)]">
+          <motion.div
+            className="w-2 h-2 bg-cyan-400 rounded-full mt-2 shadow-[0_0_6px_rgba(0,255,255,0.6)]"
+            animate={{ y: [0, 18, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          />
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

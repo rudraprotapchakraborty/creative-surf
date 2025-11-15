@@ -11,7 +11,7 @@ export const routeMap = {
   contact: "/contact",
   blog: "/blog",
   caseStudies: "/case-studies",
-  proposal: "/proposal",
+  proposal: "/contact",
   privacyTerms: "/privacy-terms",
 
   // Digital Marketing section
@@ -34,9 +34,11 @@ export const routeMap = {
       enterpriseSeo: "/seo-lead-generation/organic-search/enterprise-seo",
       digitalMarketing: "/seo-lead-generation/organic-search/digital-marketing",
       localSeo: "/seo-lead-generation/organic-search/local-seo",
-      googleLocalServices: "/seo-lead-generation/organic-search/google-local-services",
+      googleLocalServices:
+        "/seo-lead-generation/organic-search/google-local-services",
       seoAudits: "/seo-lead-generation/organic-search/seo-audits",
-      generativeEngineOptimization: "/seo-lead-generation/organic-search/generative-engine-optimization",
+      generativeEngineOptimization:
+        "/seo-lead-generation/organic-search/generative-engine-optimization",
     },
 
     // Digital Advertising
@@ -44,9 +46,12 @@ export const routeMap = {
       index: "/seo-lead-generation/digital-advertising",
       ppcManagement: "/seo-lead-generation/digital-advertising/ppc-management",
       enterprisePpc: "/seo-lead-generation/digital-advertising/enterprise-ppc",
-      socialMediaAdvertising: "/seo-lead-generation/digital-advertising/social-media-advertising",
-      enterpriseSocialMedia: "/seo-lead-generation/digital-advertising/enterprise-social-media",
-      programmaticAdvertising: "/seo-lead-generation/digital-advertising/programmatic-advertising",
+      socialMediaAdvertising:
+        "/seo-lead-generation/digital-advertising/social-media-advertising",
+      enterpriseSocialMedia:
+        "/seo-lead-generation/digital-advertising/enterprise-social-media",
+      programmaticAdvertising:
+        "/seo-lead-generation/digital-advertising/programmatic-advertising",
       geofencing: "/seo-lead-generation/digital-advertising/geofencing",
     },
 
@@ -55,10 +60,12 @@ export const routeMap = {
       index: "/seo-lead-generation/ecommerce",
       ecommerceSeo: "/seo-lead-generation/ecommerce/ecommerce-seo",
       ecommercePpc: "/seo-lead-generation/ecommerce/ecommerce-ppc",
-      ecommerceSocialMedia: "/seo-lead-generation/ecommerce/ecommerce-social-media",
+      ecommerceSocialMedia:
+        "/seo-lead-generation/ecommerce/ecommerce-social-media",
       b2bEcommerce: "/seo-lead-generation/ecommerce/b2b-ecommerce",
       shoppingFeed: "/seo-lead-generation/ecommerce/shopping-feed",
-      ecommerceDigitalMarketing: "/seo-lead-generation/ecommerce/ecommerce-digital-marketing",
+      ecommerceDigitalMarketing:
+        "/seo-lead-generation/ecommerce/ecommerce-digital-marketing",
     },
 
     // Learn
@@ -69,8 +76,10 @@ export const routeMap = {
       whatIsAnSeoCompany: "/seo-lead-generation/learn/what-is-an-seo-company",
       bestSeoCompanies: "/seo-lead-generation/learn/best-seo-companies",
       seoGuide: "/seo-lead-generation/learn/seo-guide",
-      whatIsDigitalMarketing: "/seo-lead-generation/learn/what-is-digital-marketing",
-      digitalMarketingTools: "/seo-lead-generation/learn/digital-marketing-tools",
+      whatIsDigitalMarketing:
+        "/seo-lead-generation/learn/what-is-digital-marketing",
+      digitalMarketingTools:
+        "/seo-lead-generation/learn/digital-marketing-tools",
     },
   },
 
@@ -92,7 +101,7 @@ export const routeMap = {
     values: "/about/values",
     awards: "/about/awards",
   },
-}
+};
 
 /**
  * Usage:
@@ -103,4 +112,3 @@ export const routeMap = {
  * <Link href={routeMap.contact}>Contact Us</Link>
  * <Link href={routeMap.seoLeadGeneration.organicSearch.seoServices}>SEO Services</Link>
  */
-

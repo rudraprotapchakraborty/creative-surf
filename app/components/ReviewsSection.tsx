@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, ExternalLink, Star, Quote } from "lucide-react";
-import Link from "next/link";
+"use client";
+
+import { useState, useRef } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import Image from "next/image";
-import { cn } from "@/lib/utils"; // Utility to conditionally apply classes
+import { cn } from "@/lib/utils";
 
 const reviews = [
   {
@@ -12,7 +12,7 @@ const reviews = [
     position: "Marketing Director",
     company: "TechVision Inc.",
     avatar: "/placeholder.svg?height=100&width=100",
-    text: "Working with Creative Surf transformed our digital presence completely. Their strategic approach to our marketing challenges delivered measurable results within just three months. Our conversion rates increased by 45% and our social media engagement doubled.",
+    text: "Working with Creative Surf transformed our digital presence completely. Our conversion rates increased by 45%.",
     rating: 5,
     date: "March 15, 2025",
   },
@@ -21,7 +21,7 @@ const reviews = [
     position: "CEO",
     company: "Innovate Solutions",
     avatar: "/placeholder.svg?height=100&width=100",
-    text: "As a startup founder, I needed an agency that could handle all aspects of our marketing while I focused on product development. Creative Surf exceeded my expectations in every way. They developed our brand identity, built our website, and executed a launch campaign that got us featured in major industry publications. Their work directly contributed to our successful Series A funding.",
+    text: "They developed our brand identity, built our website, and executed a launch campaign that got us featured in major publications.",
     rating: 5,
     date: "February 3, 2025",
   },
@@ -30,172 +30,138 @@ const reviews = [
     position: "E-commerce Manager",
     company: "StyleHouse Boutique",
     avatar: "/placeholder.svg?height=100&width=100",
-    text: "Our online sales have increased by 78% since we started working with Creative Surf. Their understanding of e-commerce trends and consumer behavior is exceptional. The product photography and social media campaigns they created for our seasonal collection launch were stunning and highly effective. They're always one step ahead with innovative ideas.",
+    text: "Our online sales have increased by 78% since working with them. Their seasonal launch campaign was stunning.",
     rating: 5,
     date: "January 22, 2025",
   },
-  {
-    name: "David Wilson",
-    position: "Operations Director",
-    company: "Global Logistics Partners",
-    avatar: "/placeholder.svg?height=100&width=100",
-    text: "In a B2B industry like ours, finding an agency that understands the nuances of our market was challenging until we found Creative Surf. They revamped our lead generation strategy and created content that actually resonates with our target clients. Their data-driven approach and regular reporting make it easy to see the ROI on our marketing spend.",
-    rating: 4,
-    date: "December 10, 2024",
-  },
 ];
 
-const ReviewsSection = () => {
-  const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
+export default function ReviewsSection() {
+  const [index, setIndex] = useState(0);
+  const containerRef = useRef(null);
 
-  const prevReview = () => {
-    setCurrentReviewIndex((prev) => (prev === 0 ? reviews.length - 1 : prev - 1));
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const rotateX = useSpring(useTransform(mouseY, [0, 1], [15, -15]), { stiffness: 150, damping: 20 });
+  const rotateY = useSpring(useTransform(mouseX, [0, 1], [-15, 15]), { stiffness: 150, damping: 20 });
+
+  const handleMouseMove = (e) => {
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    mouseX.set(x);
+    mouseY.set(y);
   };
 
-  const nextReview = () => {
-    setCurrentReviewIndex((prev) => (prev === reviews.length - 1 ? 0 : prev + 1));
-  };
+  const prev = () => setIndex((i) => (i === 0 ? reviews.length - 1 : i - 1));
+  const next = () => setIndex((i) => (i === reviews.length - 1 ? 0 : i + 1));
 
   return (
-    <section className="py-24 bg-gradient-to-b from-gray-900 via-gray-800 to-black">
-      <div className="container mx-auto px-4 pt-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-            Why People <span className="text-cyan-600">Love Us</span>
-          </h2>
-          <p className="text-xl text-white/80 max-w-3xl mx-auto">
-            Hear what our clients have to say about their experience working with Creative Surf and the results we've
-            delivered for their businesses.
-          </p>
-        </div>
+    <section
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black text-white"
+    >
+      {/* Background gradient orbs */}
+      <motion.div
+        className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full bg-cyan-500/30 blur-3xl"
+        animate={{ x: [0, 50, -50, 0], y: [0, -50, 50, 0] }}
+        transition={{ duration: 15, repeat: Infinity }}
+      />
+      <motion.div
+        className="absolute top-1/3 right-[-200px] w-[600px] h-[600px] rounded-full bg-blue-500/30 blur-3xl"
+        animate={{ x: [0, -40, 40, 0], y: [0, 60, -60, 0] }}
+        transition={{ duration: 18, repeat: Infinity }}
+      />
 
-        <div className="max-w-5xl mx-auto relative">
-          {/* Review Navigation */}
-          <div className="absolute top-1/2 left-0 md:-left-12 lg:-left-16 z-10 transform -translate-y-1/2">
-            <button
-              onClick={prevReview}
-              className="bg-white hover:bg-gray-100 text-gray-800 p-2 md:p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110"
-              aria-label="Previous review"
-            >
-              <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
-            </button>
-          </div>
+      {/* Content wrapper */}
+      <div className="relative w-full max-w-6xl px-6 flex flex-col items-center">
+        <motion.h2
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-5xl md:text-7xl font-extrabold text-center bg-gradient-to-r from-cyan-400 via-blue-500 to-blue-700 bg-clip-text text-transparent drop-shadow-lg mb-16"
+        >
+          What Our Clients Say
+        </motion.h2>
 
-          <div className="absolute top-1/2 right-0 md:-right-12 lg:-right-16 z-10 transform -translate-y-1/2">
-            <button
-              onClick={nextReview}
-              className="bg-white hover:bg-gray-100 text-gray-800 p-2 md:p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110"
-              aria-label="Next review"
-            >
-              <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
-            </button>
-          </div>
-
-          {/* Reviews Carousel */}
-          <div className="overflow-hidden">
-            <div
-              className="flex transition-transform duration-700 ease-in-out"
-              style={{ transform: `translateX(-${currentReviewIndex * 100}%)` }}
-            >
-              {reviews.map((review, index) => (
-                <div key={index} className="w-full flex-shrink-0">
-                  <div className="mx-auto max-w-4xl">
-                    <div className="bg-gradient-to-b from-gray-900 via-gray-800 to-black rounded-2xl shadow-xl p-8 md:p-12 pt-14 mt-8 relative">
-                      {/* Quote Icon */}
-                      <div className="absolute -top-8 left-6 bg-cyan-600 text-white p-4 rounded-full shadow-lg">
-                        <Quote className="h-6 w-6" />
-                      </div>
-
-                      {/* Star Rating */}
-                      <div className="flex mb-6">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-6 w-6 ${i < review.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
-                          />
-                        ))}
-                        <span className="ml-2 text-gray-600 font-medium">{review.rating}.0</span>
-                      </div>
-
-                      {/* Review Content */}
-                      <div className="min-h-[150px]">
-                        <p className="text-xl text-white/80 italic mb-8 leading-relaxed">"{review.text}"</p>
-                      </div>
-
-                      {/* Reviewer Info */}
-                      <div className="flex items-center">
-                        <div className="relative w-16 h-16 rounded-full overflow-hidden mr-4 border-2 border-cyan-600">
-                          <Image
-                            src={review.avatar || "/placeholder.svg"}
-                            alt={review.name}
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-bold text-gray-900">{review.name}</h4>
-                          <div className="text-cyan-600">{review.position}</div>
-                          <div className="text-white/80 text-sm">{review.company}</div>
-                        </div>
-                      </div>
-
-                      {/* Review Metadata */}
-                      <div className="mt-6 pt-6 border-t border-gray-200 flex justify-between items-center text-sm text-white/80">
-                        <div>Verified Client</div>
-                        <div>{review.date}</div>
-                      </div>
+        <div className="relative w-full overflow-hidden">
+          <motion.div
+            className="flex transition-transform duration-700 ease-out"
+            style={{ transform: `translateX(-${index * 100}%)` }}
+          >
+            {reviews.map((review, i) => (
+              <motion.div
+                key={i}
+                style={{ rotateX, rotateY }}
+                className="w-full flex-shrink-0 px-4"
+              >
+                <motion.div
+                  className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-10 shadow-2xl flex flex-col items-center text-center hover:shadow-cyan-500/30 transition-all duration-500"
+                  whileHover={{ scale: 1.03 }}
+                >
+                  <div className="flex mb-4">
+                    {[...Array(5)].map((_, s) => (
+                      <Star
+                        key={s}
+                        className={cn(
+                          "h-6 w-6",
+                          s < review.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-500"
+                        )}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-xl text-gray-200 italic mb-8 max-w-3xl">“{review.text}”</p>
+                  <div className="flex items-center gap-4">
+                    <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-cyan-400">
+                      <Image src={review.avatar} alt={review.name} fill className="object-cover" />
+                    </div>
+                    <div className="text-left">
+                      <h4 className="text-lg font-bold">{review.name}</h4>
+                      <div className="text-cyan-400">{review.position}</div>
+                      <div className="text-gray-400 text-sm">{review.company}</div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Review Indicators */}
-          <div className="flex justify-center mt-8 gap-2">
-            {reviews.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentReviewIndex(index)}
-                className={cn(
-                  "w-3 h-3 rounded-full transition-all duration-300",
-                  currentReviewIndex === index ? "bg-cyan-600 w-8" : "bg-gray-300 hover:bg-gray-400"
-                )}
-                aria-label={`Go to review ${index + 1}`}
-              />
+                  <div className="mt-6 text-sm text-gray-400">{review.date}</div>
+                </motion.div>
+              </motion.div>
             ))}
+          </motion.div>
+
+          {/* Navigation */}
+          <div className="absolute inset-y-0 left-0 flex items-center">
+            <button
+              onClick={prev}
+              className="p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition"
+            >
+              <ChevronLeft className="h-6 w-6 text-cyan-400" />
+            </button>
+          </div>
+          <div className="absolute inset-y-0 right-0 flex items-center">
+            <button
+              onClick={next}
+              className="p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition"
+            >
+              <ChevronRight className="h-6 w-6 text-cyan-400" />
+            </button>
           </div>
         </div>
 
-        {/* Review Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 max-w-4xl mx-auto">
-          <div className="text-center">
-            <div className="text-3xl font-bold text-cyan-600 mb-2">500+</div>
-            <div className="text-white/80">Happy Clients</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-cyan-600 mb-2">4.9/5</div>
-            <div className="text-white/80">Average Rating</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-cyan-600 mb-2">97%</div>
-            <div className="text-white/80">Repeat Clients</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-cyan-600 mb-2">48hrs</div>
-            <div className="text-white/80">Response Time</div>
-          </div>
-        </div>
-
-        {/* CTA */}
-        <div className="text-center mt-16">
-          <Button asChild size="lg" className="bg-cyan-600 hover:bg-cyan-700 text-lg px-8 py-6 rounded-full">
-            <Link href="/proposal">Join Our Happy Clients</Link>
-          </Button>
+        {/* Dots */}
+        <div className="flex gap-3 mt-8">
+          {reviews.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              className={cn(
+                "h-3 w-3 rounded-full transition-all",
+                i === index ? "bg-cyan-400 w-6" : "bg-gray-500 hover:bg-gray-400"
+              )}
+            />
+          ))}
         </div>
       </div>
     </section>
   );
-};
-
-export default ReviewsSection;
+}

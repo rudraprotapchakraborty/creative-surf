@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useRef, useState, useEffect } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import {
   PenTool,
   FileText,
@@ -17,138 +17,172 @@ const services = [
   {
     title: "Graphics Design",
     description:
-      "Professional design services for print and digital media including logos, branding materials, and marketing collateral",
+      "High-impact visuals for brands, blending art direction with precision graphics.",
     icon: PenTool,
-    gradient: "from-pink-500 to-rose-600",
+    color: "from-cyan-400 to-blue-500",
   },
   {
     title: "Content Marketing",
-    description:
-      "Strategic content creation and distribution to attract and engage your target audience",
+    description: "Strategic storytelling to connect deeply with your audience.",
     icon: FileText,
-    gradient: "from-orange-400 to-amber-600",
+    color: "from-fuchsia-400 to-pink-500",
   },
   {
     title: "Video Editing",
-    description:
-      "Professional video production and post-production services for marketing and promotional content",
+    description: "Cinematic edits with seamless motion and narrative clarity.",
     icon: Video,
-    gradient: "from-yellow-400 to-amber-600",
+    color: "from-yellow-300 to-amber-500",
   },
   {
     title: "Website Development",
-    description:
-      "Custom website design and development using the latest technologies and best practices",
+    description: "Immersive, high-performance web experiences.",
     icon: Globe,
-    gradient: "from-pink-400 to-purple-600",
+    color: "from-violet-400 to-purple-600",
   },
   {
     title: "OVC/TVC",
-    description:
-      "Online and television commercial production to showcase your brand across multiple channels",
+    description: "Premium commercials for maximum brand impact.",
     icon: Tv,
-    gradient: "from-purple-500 to-indigo-700",
+    color: "from-purple-400 to-indigo-600",
   },
   {
-    title: "SEO and Social Media Marketing",
-    description:
-      "Improve visibility in search engines and build engagement across social platforms",
+    title: "SEO & Social Media",
+    description: "Boost your visibility with precision SEO and campaigns.",
     icon: Search,
-    gradient: "from-blue-500 to-cyan-600",
+    color: "from-green-400 to-emerald-500",
   },
   {
     title: "Media Buying",
-    description:
-      "Strategic ad placement and campaign management to maximize your marketing ROI",
+    description: "Optimized ad spend to maximize ROI.",
     icon: Target,
-    gradient: "from-green-400 to-emerald-600",
+    color: "from-orange-400 to-red-500",
   },
   {
     title: "Digital Branding",
-    description:
-      "Comprehensive brand strategy and identity development for the digital landscape",
+    description: "Crafting cohesive digital identities for lasting impressions.",
     icon: Users,
-    gradient: "from-teal-400 to-emerald-600",
+    color: "from-teal-400 to-cyan-500",
   },
 ];
 
 const cardVariants = {
-  offscreen: { y: 60, opacity: 0, scale: 0.8 },
+  offscreen: { y: 80, opacity: 0, scale: 0.9, filter: "blur(10px)" },
   onscreen: {
     y: 0,
     opacity: 1,
     scale: 1,
-    transition: {
-      type: "spring",
-      bounce: 0.35,
-      duration: 0.8,
-    },
+    filter: "blur(0px)",
+    transition: { type: "spring", bounce: 0.4, duration: 1 },
   },
 };
 
-const ServicesSection: React.FC = () => {
+export default function ServicesSection() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+
+  const titleScale = useTransform(scrollYProgress, [0, 0.3], [0.8, 1.15]);
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
+
+  // --- FIX: Only generate particles on client ---
+  const [particles, setParticles] = useState([]);
+
+  useEffect(() => {
+    const generated = Array.from({ length: 30 }, () => ({
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 100}%`,
+      dy: (Math.random() - 0.5) * 40,
+      dx: (Math.random() - 0.5) * 40,
+      duration: 4 + Math.random() * 4,
+      size: Math.random() > 0.5 ? "w-1 h-1" : "w-2 h-2",
+      color: Math.random() > 0.5 ? "bg-white/30" : "bg-cyan-400/30 blur-sm",
+    }));
+
+    setParticles(generated);
+  }, []); // runs only on client
+
   return (
-    <section className="py-24 bg-gradient-to-b from-gray-900 via-gray-800 to-black">
-      <div className="container mx-auto px-6 text-center max-w-7xl">
+    <section
+      ref={ref}
+      className="relative py-28 bg-black text-white overflow-hidden"
+    >
+      {/* Aurora Background */}
+      <motion.div
+        className="absolute inset-0 -z-20"
+        animate={{
+          background: [
+            "radial-gradient(ellipse at 20% 40%, rgba(56,189,248,0.15) 0%, transparent 70%), radial-gradient(ellipse at 80% 60%, rgba(0,255,255,0.15) 0%, transparent 70%)",
+            "radial-gradient(ellipse at 30% 50%, rgba(0,255,255,0.15) 0%, transparent 70%), radial-gradient(ellipse at 70% 50%, rgba(56,189,248,0.15) 0%, transparent 70%)",
+          ],
+        }}
+        transition={{ duration: 8, repeat: Infinity, repeatType: "reverse" }}
+      />
+
+      {/* Particles */}
+      {particles.map((p, i) => (
+        <motion.div
+          key={i}
+          className={`absolute rounded-full ${p.size} ${p.color}`}
+          style={{ top: p.top, left: p.left }}
+          animate={{ x: [0, p.dx], y: [0, p.dy], opacity: [0.2, 1, 0.2] }}
+          transition={{
+            duration: p.duration,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+
+      <div className="container mx-auto px-6 max-w-7xl relative z-10">
         <motion.h2
-          className="text-5xl text-cyan-400 font-extrabold mb-20 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-transparent bg-clip-text tracking-tight drop-shadow-lg"
-          initial={{ opacity: 0, y: -40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
+          style={{ scale: titleScale, opacity: titleOpacity }}
+          className="text-6xl sm:text-7xl font-extrabold mb-24 tracking-tight bg-gradient-to-r from-cyan-400 via-cyan-500 to-blue-500 bg-clip-text text-transparent text-center"
         >
-          Services We <span className="text-white">Provide</span>
+          Our Expertise
         </motion.h2>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-12">
-          {services.map(({ title, description, icon: Icon, gradient }, i) => (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+          {services.map(({ title, description, icon: Icon, color }) => (
             <motion.div
               key={title}
-              className="relative rounded-3xl bg-gradient-to-br shadow-2xl shadow-cyan-700/30 p-8 cursor-pointer select-none"
+              className="relative group p-8 rounded-3xl backdrop-blur-xl border border-white/10 bg-white/5 shadow-xl cursor-pointer overflow-hidden"
+              variants={cardVariants}
               initial="offscreen"
               whileInView="onscreen"
-              viewport={{ once: true, amount: 0.5 }}
-              variants={cardVariants}
-              whileHover={{ scale: 1.05, rotate: 1 }}
-              whileTap={{ scale: 0.95, rotate: -1 }}
-              style={{
-                backgroundImage: `linear-gradient(135deg, var(--tw-gradient-stops))`,
-                "--tw-gradient-from": `var(--tw-color-${gradient.split(" ")[0]})`,
-                "--tw-gradient-to": `var(--tw-color-${gradient.split(" ")[2]})`,
-              } as React.CSSProperties}
+              viewport={{ once: true, amount: 0.4 }}
+              whileHover={{ rotateX: 8, rotateY: -8, scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
             >
-              {/* Neon glowing blur behind icon */}
-              <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full filter blur-3xl opacity-40"
-                style={{
-                  background:
-                    `radial-gradient(circle at center, rgba(255,255,255,0.6), transparent 60%)`,
-                }}
+              <motion.div
+                className={`absolute inset-0 bg-gradient-to-br ${color} opacity-0 group-hover:opacity-20 transition-all duration-500`}
               />
 
-              <div className="relative flex flex-col items-center gap-6 text-white">
-                <div
-                  className={`p-5 rounded-full bg-gradient-to-br ${gradient} shadow-lg shadow-${gradient
-                    .split(" ")[1]
-                    .replace(/-/, "")}/70 transition-transform duration-300 group-hover:scale-125`}
-                >
-                  <Icon className="h-14 w-14 drop-shadow-xl" />
-                </div>
-                <h3 className="text-3xl font-extrabold tracking-wide drop-shadow-md">
-                  {title}
-                </h3>
-                <p className="text-white/80 max-w-xs leading-relaxed tracking-wide drop-shadow-sm">
-                  {description}
-                </p>
-              </div>
+              <motion.div
+                className={`p-5 mb-6 rounded-full bg-gradient-to-br ${color} shadow-xl`}
+                whileHover={{ scale: 1.15, rotate: 5 }}
+              >
+                <Icon className="h-14 w-14 text-white drop-shadow-lg" />
+              </motion.div>
 
-              {/* Fancy 3D border */}
-              <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-white/30 transition-all duration-500 pointer-events-none" />
+              <h3 className="text-2xl font-bold mb-4">{title}</h3>
+              <p className="text-white/70 leading-relaxed">{description}</p>
+
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                animate={{ backgroundPosition: ["0 0", "0 100%"] }}
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(transparent, rgba(255,255,255,0.03) 1px, transparent 2px)",
+                  backgroundSize: "100% 4px",
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
             </motion.div>
           ))}
         </div>
       </div>
     </section>
   );
-};
-
-export default ServicesSection;
+}

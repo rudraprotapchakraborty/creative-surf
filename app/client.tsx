@@ -6,6 +6,7 @@ import type { Metadata } from "next"
 import { Poppins } from "next/font/google"
 import { Suspense } from "react"
 import GoogleAnalytics from "@/components/google-analytics"
+import ChatBubble from "./components/ChatBubble"
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -28,15 +29,25 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${poppins.variable} font-sans`}>
-      <body className="overflow-x-hidden">
+      <body>
         <Suspense fallback={null}>
           <GoogleAnalytics />
         </Suspense>
+
+        {/* NAV */}
         <Navbar />
+
+        {/* PAGE CONTENT */}
         <LoadingBarProvider>
           <main className="min-h-screen">{children}</main>
         </LoadingBarProvider>
+
+        {/* FOOTER */}
         <Footer />
+
+        {/* CHAT BUBBLE - MUST BE OUTSIDE MAIN CONTENT */}
+        <ChatBubble />   {/* <-- FIXED! */}
+
       </body>
     </html>
   )

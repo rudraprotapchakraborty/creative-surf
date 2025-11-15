@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,8 +11,6 @@ const pricingPlans = {
       title: "Basic",
       price: 390,
       description: "Perfect for small businesses",
-      gradient: "from-cyan-500 to-cyan-500",
-      border: "border-gray-200",
       features: [
         "Business Development",
         "Campaign Marketing",
@@ -28,8 +26,6 @@ const pricingPlans = {
       price: 490,
       description: "Best for growing companies",
       highlight: "POPULAR",
-      gradient: "from-cyan-600 to-purple-600",
-      border: "border-cyan-600 border-2",
       features: [
         "Business Development",
         "Campaign Marketing",
@@ -46,8 +42,6 @@ const pricingPlans = {
       title: "Premium",
       price: 650,
       description: "For enterprise businesses",
-      gradient: "from-purple-600 to-pink-600",
-      border: "border-gray-200",
       features: [
         "Business Development",
         "Campaign Marketing",
@@ -63,164 +57,158 @@ const pricingPlans = {
       ],
     },
   ],
-  yearly: [
-    {
-      ...this?.monthly?.[0],
-      price: 390 * 12 * 0.8, // 20% off
-    },
-    {
-      ...this?.monthly?.[1],
-      price: 490 * 12 * 0.8,
-    },
-    {
-      ...this?.monthly?.[2],
-      price: 650 * 12 * 0.8,
-    },
-  ],
+  yearly: [],
 };
 
-const PricingSection = () => {
-  const [isMobile, setIsMobile] = useState(false);
+pricingPlans.yearly = pricingPlans.monthly.map((p) => ({
+  ...p,
+  price: p.price * 6 * 0.8,
+}));
+
+export default function PricingSection() {
   const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
 
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  const MotionWrapper = ({ children, ...props }) => {
-    if (isMobile) return <div {...props}>{children}</div>;
-    return <motion.div {...props}>{children}</motion.div>;
-  };
-
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-900 via-gray-800 to-black">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <MotionWrapper
-          className="text-4xl md:text-5xl font-bold mb-4 text-center text-white"
-          initial={!isMobile ? { opacity: 0, y: -20 } : undefined}
-          whileInView={!isMobile ? { opacity: 1, y: 0 } : undefined}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-        >
-          Our <span className="text-cyan-400">Pricing</span> Plans
-        </MotionWrapper>
-        <MotionWrapper
-          className="text-xl text-white/80 text-center mb-8"
-          initial={!isMobile ? { opacity: 0, y: 20 } : undefined}
-          whileInView={!isMobile ? { opacity: 1, y: 0 } : undefined}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
-          Choose the perfect plan for your business needs
-        </MotionWrapper>
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
+      {/* Neon grid */}
+      <motion.div
+        className="absolute inset-0 opacity-20"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)
+          `,
+          backgroundSize: "60px 60px",
+          transform: "perspective(800px) rotateX(60deg)",
+        }}
+        animate={{ backgroundPosition: ["0px 0px", "60px 60px"] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+      />
 
-        {/* Billing Toggle */}
-        <div className="flex justify-center mb-12">
-          <div className="flex bg-gradient-to-b from-gray-900 via-gray-800 to-black rounded-full p-1">
-            <button
-              onClick={() => setBilling("monthly")}
-              className={`px-4 py-2 rounded-full font-medium transition ${
-                billing === "monthly"
-                  ? "bg-cyan-600 text-white"
-                  : "text-white"
-              }`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setBilling("yearly")}
-              className={`px-4 py-2 rounded-full font-medium transition ${
-                billing === "yearly"
-                  ? "bg-cyan-600 text-white"
-                  : "text-white"
-              }`}
-            >
-              Yearly <span className="text-xs">(20% OFF)</span>
-            </button>
+      {/* Floating orbs */}
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-40 h-40 rounded-full bg-cyan-500/20 blur-3xl"
+          style={{
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+          }}
+          animate={{
+            y: [0, 60, 0],
+            x: [0, 40, 0],
+            opacity: [0.2, 0.6, 0.2],
+          }}
+          transition={{
+            duration: 10 + Math.random() * 5,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+
+      {/* Particle trails */}
+      {[...Array(15)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-12 rounded-full bg-gradient-to-b from-cyan-400 to-transparent opacity-60"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+          }}
+          animate={{
+            y: ["-20vh", "120vh"],
+            opacity: [0, 1, 0],
+          }}
+          transition={{
+            duration: 3 + Math.random() * 2,
+            delay: Math.random() * 3,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+
+      {/* Content */}
+      <div className="container relative z-10 px-6 max-w-7xl text-center">
+        {/* Heading */}
+        <motion.h1
+          className="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-[0_0_15px_rgba(0,255,255,0.4)]"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          Ultimate Pricing Plans
+        </motion.h1>
+        <p className="text-gray-300 mt-4 text-lg">
+          Choose your perfect package — crafted for modern businesses
+        </p>
+
+        {/* Toggle */}
+        <div className="mt-8 flex justify-center">
+          <div className="relative flex items-center bg-white/10 rounded-full p-1 backdrop-blur-lg border border-white/20">
+            {["monthly", "yearly"].map((mode) => (
+              <button
+                key={mode}
+                onClick={() => setBilling(mode as "monthly" | "yearly")}
+                className={`px-6 py-2 rounded-full font-medium transition-all ${
+                  billing === mode
+                    ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg"
+                    : "text-gray-300"
+                }`}
+              >
+                {mode === "monthly" ? "Monthly" : "Half-Yearly (20% OFF)"}
+              </button>
+            ))}
           </div>
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto ">
-          {pricingPlans["monthly"].map((plan, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mt-16">
+          {pricingPlans[billing].map((plan) => (
             <motion.div
               key={plan.title}
-              initial={!isMobile ? { opacity: 0, y: 40 } : undefined}
-              whileInView={!isMobile ? { opacity: 1, y: 0 } : undefined}
-              transition={{ duration: 0.5, delay: 0.2 * index }}
-              viewport={{ once: true }}
-              className="relative group"
+              className="relative group p-8 rounded-3xl backdrop-blur-xl border border-white/20 bg-white/5 shadow-[0_0_30px_rgba(0,255,255,0.1)] transition-all flex flex-col justify-between"
+              whileHover={{ scale: 1.05, rotateY: 5 }}
+              style={{ transformStyle: "preserve-3d" }}
             >
-              {/* Hover Gradient Background */}
-              <div
-                className={`absolute inset-0 bg-gradient-to-r ${plan.gradient} rounded-2xl blur opacity-0 group-hover:opacity-50 transition duration-500`}
-              ></div>
-
-              {/* Card */}
-              <div
-                className={`relative bg-gradient-to-b from-gray-900 via-gray-800 to-black ${plan.border} rounded-2xl shadow-xl p-8 transition-transform duration-500 hover:-translate-y-1 flex flex-col h-full`}
-              >
-                {/* Highlight Badge */}
-                {plan.highlight && (
-                  <div className="absolute top-0 right-0 bg-cyan-600 text-white px-4 py-1 rounded-bl-lg rounded-tr-lg text-sm font-semibold z-10">
-                    {plan.highlight}
-                  </div>
-                )}
-
-                {/* Header */}
-                <div className="text-center mb-8">
-                  <h3
-                    className={`inline-block bg-gradient-to-r ${plan.gradient} text-white rounded-full px-6 py-2 text-xl font-semibold mb-4`}
-                  >
-                    {plan.title}
-                  </h3>
-                  <div className="text-4xl font-bold mb-2 text-white/80">
-                    ${billing === "monthly" ? plan.price : Math.floor(plan.price * 12 * 0.8)}
-                    <span className="text-lg text-white/80">/mo</span>
-                  </div>
-                  <p className="text-white/80">{plan.description}</p>
+              {/* Glow */}
+              <motion.div
+                className="absolute inset-0 rounded-3xl bg-gradient-to-r from-cyan-500 to-blue-500 opacity-0 group-hover:opacity-20 blur-2xl"
+                transition={{ duration: 0.4 }}
+              />
+              {plan.highlight && (
+                <div className="absolute top-4 right-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-3 py-1 text-xs rounded-full shadow-md">
+                  {plan.highlight}
                 </div>
+              )}
 
-                {/* Features */}
-                <div className="flex-grow">
-                  <ul className="space-y-4 mb-8">
-                    {plan.features.map((feature) => (
-                      <li
-                        key={feature}
-                        className="flex items-center text-white/80"
-                      >
-                        <motion.div
-                          whileHover={{ scale: 1.2 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <CheckCircle2 className="h-5 w-5 text-green-500 mr-3" />
-                        </motion.div>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
+              <div>
+                <h3 className="text-2xl font-bold text-white">{plan.title}</h3>
+                <div className="mt-4 text-5xl font-extrabold text-white">
+                  ${Math.floor(plan.price)}
+                  <span className="text-lg text-gray-400">
+                    /{billing === "monthly" ? "mo" : "half-yr"}
+                  </span>
                 </div>
-
-                {/* Button */}
-                <Button
-                  aria-label={`Select ${plan.title} plan`}
-                  className={`w-full bg-gradient-to-r ${plan.gradient} hover:brightness-110`}
-                >
-                  Get Started
-                </Button>
+                <p className="text-gray-300 mt-2">{plan.description}</p>
+                <ul className="mt-6 space-y-3 text-left">
+                  {plan.features.map((f) => (
+                    <li key={f} className="flex items-center gap-3 text-gray-200">
+                      <CheckCircle2 className="text-cyan-400" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
               </div>
+
+              <Button className="mt-8 w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:brightness-125 text-white font-semibold py-3 rounded-full shadow-lg transition-all">
+                Get Started
+              </Button>
             </motion.div>
           ))}
         </div>
       </div>
     </section>
   );
-};
-
-export default PricingSection;
+}

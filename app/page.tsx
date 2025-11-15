@@ -13,17 +13,18 @@ import BlogSection from "./components/BlogSection"
 
 export default function Page() {
   return (
-    <div className="flex flex-col min-h-screen overflow-x-hidden">
-      <HeroSection></HeroSection>
-      <TrustedByCompanies></TrustedByCompanies>
-      <ServicesSection></ServicesSection>
-      <ImpactSection></ImpactSection>
-      <PricingSection></PricingSection>      
-      <PortfolioSection></PortfolioSection>
-      <ReviewsSection></ReviewsSection>
-      <TeamSection></TeamSection>      
-      <BlogSection></BlogSection>
-    </div>
+    <>
+      <div className="flex flex-col min-h-screen">
+        <HeroSection />
+        <TrustedByCompanies />
+        <ServicesSection />
+        <ImpactSection />
+        <PricingSection />
+        <PortfolioSection />
+        <ReviewsSection />
+        <TeamSection />
+        <BlogSection />
+      </div>
+    </>
   )
 }
-
