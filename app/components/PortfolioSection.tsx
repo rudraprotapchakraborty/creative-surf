@@ -6,36 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRef } from "react";
 
-const ourWorks = [
-  {
-    title: "Global E-commerce Redesign",
-    description: "Complete overhaul resulting in 43% conversion increase.",
-    image: "/placeholder.svg?height=800&width=1200",
-    tags: ["E-commerce", "UX Design"],
-    link: "/case-studies/ecommerce-redesign",
-  },
-  {
-    title: "Luxury Brand Campaign",
-    description: "Integrated social campaign increasing engagement by 78%.",
-    image: "/placeholder.svg?height=800&width=1200",
-    tags: ["Social Media", "Strategy"],
-    link: "/case-studies/luxury-social-campaign",
-  },
-  {
-    title: "SaaS Marketing Website",
-    description: "Conversion-focused site doubling qualified leads.",
-    image: "/placeholder.svg?height=800&width=1200",
-    tags: ["Web Dev", "Lead Gen"],
-    link: "/case-studies/saas-marketing-website",
-  },
-  {
-    title: "Fintech App Launch",
-    description: "Strategy achieving 100k+ downloads in one month.",
-    image: "/placeholder.svg?height=800&width=1200",
-    tags: ["App Marketing", "Ads"],
-    link: "/case-studies/fintech-app-launch",
-  },
-];
+import { caseStudies as ourWorks } from "../case-studies/caseStudiesData";
 
 const WorkCard = ({ work, idx }: { work: any, idx: number }) => {
   const ref = useRef(null);
@@ -152,8 +123,8 @@ export default function PortfolioSection() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-             <Link href="/case-studies" className="inline-flex items-center gap-3 px-8 py-4 rounded-sm font-semibold bg-flow-text text-white hover:bg-flow-text/90 transition-colors shadow-sm">
-               View All Projects <ArrowUpRight className="w-5 h-5" />
+             <Link href="/case-studies" className="inline-flex items-center gap-2 px-6 py-3 rounded-sm bg-flow-card border border-flow-border shadow-sm text-flow-text hover:bg-flow-border transition-colors font-semibold">
+               View All Projects <ArrowUpRight className="w-4 h-4 ml-2" />
              </Link>
           </motion.div>
         </div>

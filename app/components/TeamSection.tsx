@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 const teamMembers = [
@@ -70,13 +71,17 @@ export default function TeamSection() {
               whileHover={{ y: -5 }}
               className="group flex flex-col items-center text-center"
             >
-              <div className="relative w-32 h-32 md:w-36 md:h-36 mb-6 rounded-full overflow-hidden border border-flow-border group-hover:border-flow-text/30 transition-colors duration-500">
-                <Image
-                  src={member.image}
-                  alt={member.name}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                />
+              <div className="relative flex items-center justify-center w-32 h-32 md:w-36 md:h-36 mb-6 rounded-full overflow-hidden border border-flow-border group-hover:border-flow-text/30 transition-colors duration-500 bg-flow-border/10">
+                {member.image.includes("placeholder") ? (
+                  <User size={60} className="text-flow-text/40 transition-transform duration-700 group-hover:scale-110" strokeWidth={1} />
+                ) : (
+                  <Image
+                    src={member.image}
+                    alt={member.name}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                )}
               </div>
               <h3 className="text-xl font-heading font-extrabold text-flow-text mb-1 tracking-tight">{member.name}</h3>
               <p className="text-sm text-flow-text/60 font-normal">{member.role}</p>

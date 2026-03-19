@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Star } from "lucide-react";
+import { Star, User } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -52,8 +52,12 @@ const ReviewCard = ({ review }: { review: typeof reviews[0] }) => (
     </div>
     
     <div className="flex items-center gap-4">
-      <div className="relative w-14 h-14 rounded-full overflow-hidden border border-flow-border">
-        <Image src={review.avatar} alt={review.name} fill className="object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+      <div className="relative flex items-center justify-center w-14 h-14 rounded-full overflow-hidden border border-flow-border bg-flow-border/10">
+        {review.avatar.includes("placeholder") ? (
+          <User size={24} className="text-flow-text/40 transition-transform duration-500 hover:scale-110" strokeWidth={1.5} />
+        ) : (
+          <Image src={review.avatar} alt={review.name} fill className="object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+        )}
       </div>
       <div className="text-left">
         <h4 className="font-heading font-extrabold text-flow-text tracking-tight">{review.name}</h4>

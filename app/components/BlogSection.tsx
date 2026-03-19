@@ -4,41 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-
-const blogPosts = [
-  {
-    title: "10 SEO Strategies for 2025",
-    excerpt: "Next-gen SEO hacks that will dominate the algorithm battlefield.",
-    image: "/placeholder.svg?height=400&width=600",
-    link: "/blog/seo-strategies-2025",
-    category: "SEO",
-    date: "Oct 12, 2024"
-  },
-  {
-    title: "The Power of Content Marketing",
-    excerpt: "Harness the narrative. Build empires with words & visuals.",
-    image: "/placeholder.svg?height=400&width=600",
-    link: "/blog/power-of-content-marketing",
-    category: "Marketing",
-    date: "Oct 05, 2024"
-  },
-  {
-    title: "Social Media Trends to Watch",
-    excerpt: "Social’s new frontier — immersive, AI-driven, and unfiltered.",
-    image: "/placeholder.svg?height=400&width=600",
-    link: "/blog/social-media-trends",
-    category: "Social",
-    date: "Sep 28, 2024"
-  },
-  {
-    title: "Maximizing ROI with PPC Campaigns",
-    excerpt: "AI bidding, intent mapping, and creative rotations to rule PPC.",
-    image: "/placeholder.svg?height=400&width=600",
-    link: "/blog/maximizing-ppc-roi",
-    category: "Advertising",
-    date: "Sep 21, 2024"
-  },
-];
+import { blogPosts } from "../blog/blogData";
 
 export default function BlogSection() {
   return (

@@ -1,176 +1,85 @@
-"use client"
-import Link from "next/link"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { ArrowRight } from "lucide-react"
-import { motion } from "framer-motion"
+"use client";
 
-// Fake posts (replace with API later)
-const blogPosts = [
-  {
-    slug: "10-seo-strategies-for-2025",
-    title: "10 SEO Strategies for 2025",
-    excerpt:
-      "Stay ahead of the curve with these cutting-edge SEO techniques for the coming year.",
-    date: "2025-01-15",
-    image: "/placeholder.svg?height=200&width=400",
-    category: "SEO",
-  },
-  {
-    slug: "power-of-content-marketing",
-    title: "The Power of Content Marketing",
-    excerpt:
-      "Discover how content marketing can transform your business and boost your online presence.",
-    date: "2025-02-01",
-    image: "/placeholder.svg?height=200&width=400",
-    category: "Content Marketing",
-  },
-  {
-    slug: "social-media-trends-to-watch",
-    title: "Social Media Trends to Watch",
-    excerpt:
-      "Learn about the latest social media trends that are shaping digital marketing strategies.",
-    date: "2025-02-15",
-    image: "/placeholder.svg?height=200&width=400",
-    category: "Social Media",
-  },
-  {
-    slug: "maximizing-roi-with-ppc-campaigns",
-    title: "Maximizing ROI with PPC Campaigns",
-    excerpt:
-      "Explore effective strategies to improve your pay-per-click campaigns and increase ROI.",
-    date: "2025-03-01",
-    image: "/placeholder.svg?height=200&width=400",
-    category: "PPC",
-  },
-]
+import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
+import { blogPosts } from "./blogData";
 
 export default function BlogContent() {
   return (
-    <div className="bg-gray-950 min-h-screen text-white">
+    <div className="bg-flow-bg min-h-screen text-flow-text">
       {/* Hero Section */}
-      <section className="relative h-[50vh] flex items-center justify-center overflow-hidden">
-        {/* Gradient background */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.2 }}
-          className="absolute inset-0 bg-gradient-to-b from-blue-900 via-indigo-900 to-gray-950"
-        />
-
-        {/* Floating glowing particles */}
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(30)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 bg-white rounded-full"
-              initial={{ opacity: 0, y: 0 }}
-              animate={{
-                opacity: [0, 1, 0],
-                y: [-20, -200],
-                x: [0, (Math.random() - 0.5) * 300],
-              }}
-              transition={{
-                duration: 5 + Math.random() * 4,
-                repeat: Infinity,
-                delay: Math.random() * 4,
-              }}
-              style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-              }}
-            />
-          ))}
+      <section className="relative pt-32 pb-20 overflow-hidden border-b border-flow-border">
+        {/* Sharp Vector Waves */}
+        <div className="absolute top-0 left-0 w-[100vw] h-[100vw] md:w-[60vw] md:h-[60vw] max-w-[1000px] max-h-[1000px] pointer-events-none z-0 overflow-hidden transform opacity-20 -scale-y-100">
+          <motion.svg 
+            viewBox="0 0 500 500" 
+            preserveAspectRatio="xMidYMax slice"
+            className="absolute bottom-0 left-0 w-full h-full object-cover origin-bottom-left"
+          >
+            <path d="M 500,500 L 0,500 C 100,400 150,300 300,350 C 400,380 450,200 500,100 Z" className="fill-flow-blob3 transition-colors" />
+            <path d="M 500,500 L 50,500 C 150,450 250,350 350,400 C 420,430 480,250 500,150 Z" className="fill-flow-blob1 transition-colors" />
+          </motion.svg>
         </div>
 
-        <div className="relative z-10 text-center px-6">
+        <div className="container mx-auto px-6 max-w-7xl relative z-10 text-center">
           <motion.h1
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            className="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"
+            className="text-[3rem] md:text-[5rem] font-heading font-extrabold tracking-tight mb-6 leading-tight"
           >
-            Our Blog
+            Insights & <br className="hidden md:block"/>
+            <span className="text-flow-green">Perspectives</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="text-lg md:text-xl mt-4 text-gray-200 max-w-2xl mx-auto"
+            className="text-flow-text/70 text-lg md:text-xl max-w-2xl mx-auto"
           >
-            Stay updated with the latest trends and insights in digital marketing, SEO, and more.
+            Expert advice, industry trends, and strategic plays to keep you ahead of the digital curve.
           </motion.p>
         </div>
       </section>
 
-      {/* Blog Posts */}
-      <section className="container mx-auto px-4 py-16">
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          variants={{
-            hidden: {},
-            show: {
-              transition: {
-                staggerChildren: 0.15,
-              },
-            },
-          }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
-        >
-          {blogPosts.map((post) => (
+      {/* Blog Posts Grid */}
+      <section className="container mx-auto px-6 max-w-7xl py-20">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+          {blogPosts.map((post, index) => (
             <motion.div
               key={post.slug}
-              variants={{
-                hidden: { opacity: 0, y: 50 },
-                show: { opacity: 1, y: 0 },
-              }}
-              transition={{ duration: 0.8 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1, duration: 0.5 }}
+              className="group flex flex-col"
             >
-              <Card className="overflow-hidden group relative bg-white/5 border border-white/10 backdrop-blur-lg hover:shadow-xl transition-all duration-300">
-                {/* Blog image */}
-                <div className="overflow-hidden">
-                  <Image
-                    src={post.image}
-                    alt={post.title}
-                    width={400}
-                    height={200}
-                    className="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-500"
-                  />
+              <Link href={post.link} className="block w-full aspect-[4/3] rounded-sm overflow-hidden mb-6 relative border border-flow-border bg-flow-bg">
+                <Image 
+                  src={post.image} 
+                  alt={post.title} 
+                  fill 
+                  className="object-cover transition-transform duration-700 group-hover:scale-105" 
+                />
+                <div className="absolute top-4 left-4 bg-flow-card shadow-sm border border-flow-border px-3 py-1 rounded-sm text-xs font-bold uppercase tracking-wider text-flow-text">
+                  {post.category}
                 </div>
-
-                <CardContent className="p-6">
-                  <div className="text-sm text-cyan-400 font-semibold mb-2">
-                    {post.category}
-                  </div>
-                  <h2 className="text-xl font-bold mb-2 line-clamp-2">
-                    {post.title}
-                  </h2>
-                  <p className="text-gray-300 mb-4 line-clamp-3">
-                    {post.excerpt}
-                  </p>
-                  <div className="text-sm text-gray-400">{post.date}</div>
-                </CardContent>
-
-                <CardFooter className="p-6 border-t border-white/10">
-                  <motion.div whileHover={{ scale: 1.05 }}>
-                    <Button asChild variant="ghost" className="w-full text-cyan-400 hover:text-white hover:bg-cyan-500/20">
-                      <Link
-                        href={`/blog/${post.slug}`}
-                        className="flex items-center justify-center"
-                      >
-                        Read More <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </motion.div>
-                </CardFooter>
-              </Card>
+              </Link>
+              
+              <div className="flex flex-col flex-1">
+                <p className="text-sm text-flow-green mb-2 font-bold uppercase tracking-wider">{post.date}</p>
+                <h3 className="text-2xl font-heading font-extrabold text-flow-text mb-2 line-clamp-2 leading-tight group-hover:text-flow-green transition-colors tracking-tight">
+                  <Link href={post.link}>{post.title}</Link>
+                </h3>
+                <p className="text-flow-text/70 text-base font-normal line-clamp-3 mb-4 flex-1">
+                  {post.excerpt}
+                </p>
+              </div>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </section>
     </div>
-  )
+  );
 }
