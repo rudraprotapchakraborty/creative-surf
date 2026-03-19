@@ -93,7 +93,7 @@ export default function ReviewsSection() {
           <span className="px-5 py-2 rounded-[2rem] bg-flow-card border border-flow-border shadow-sm text-sm font-semibold text-flow-green mb-8">
             Client Testimonials
           </span>
-          <h2 className="text-[3.5rem] sm:text-[4.5rem] md:text-7xl lg:text-[6.5rem] font-heading font-extrabold tracking-[-0.04em] mb-6 leading-[1.05]">
+          <h2 className="text-[2.75rem] sm:text-[3.5rem] md:text-6xl lg:text-[6.5rem] font-heading font-extrabold tracking-[-0.04em] mb-6 leading-[1.05]">
             Don't just take <br className="hidden md:block"/>our word for it.
           </h2>
         </motion.div>

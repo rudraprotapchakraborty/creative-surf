@@ -79,7 +79,7 @@ export default function PricingSection() {
            viewport={{ once: true }}
            className="text-left mb-16 flex flex-col items-start"
         >
-          <h2 className="text-[3.5rem] sm:text-[4.5rem] md:text-7xl lg:text-[6.5rem] font-heading font-extrabold tracking-[-0.04em] mb-4 leading-[1.05]">
+          <h2 className="text-[2.75rem] sm:text-[3.5rem] md:text-6xl lg:text-[6.5rem] font-heading font-extrabold tracking-[-0.04em] mb-4 leading-[1.05]">
             Clear, Transparent <br className="hidden md:block"/> Pricing.
           </h2>
           <p className="text-flow-text/70 text-lg font-normal max-w-2xl">
@@ -129,7 +129,7 @@ export default function PricingSection() {
               </div>
 
               <div className="mb-8 flex items-baseline">
-                <span className="text-6xl md:text-7xl font-heading font-extrabold tracking-[-0.04em] text-flow-text">${plan.price}</span>
+                <span className="text-[3.5rem] md:text-7xl font-heading font-extrabold tracking-[-0.04em] text-flow-text">${plan.price}</span>
                 <span className="text-flow-text/50 ml-2 font-normal">
                   /{billing === "monthly" ? "mo" : "half-yr"}
                 </span>

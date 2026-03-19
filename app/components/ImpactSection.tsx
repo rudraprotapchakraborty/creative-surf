@@ -56,7 +56,7 @@ const ImpactSection: React.FC = () => {
                 key={i}
                 className="p-6 md:p-8 rounded-sm bg-flow-bg border border-flow-border hover:shadow-sm transition-shadow flex flex-col justify-center items-center text-center aspect-square"
               >
-                <div className="text-5xl md:text-6xl lg:text-7xl font-heading font-extrabold tracking-[-0.04em] mb-3 text-flow-green">
+                <div className="text-[2.5rem] md:text-6xl lg:text-7xl font-heading font-extrabold tracking-[-0.04em] mb-3 text-flow-green">
                   {stat.prefix || ""}
                   <CountUp end={stat.value} duration={2.5} enableScrollSpy scrollSpyOnce />
                   {stat.suffix || ""}
@@ -75,7 +75,7 @@ const ImpactSection: React.FC = () => {
              viewport={{ once: true }}
              transition={{ duration: 0.6 }}
            >
-             <h2 className="text-[3.5rem] sm:text-[4.5rem] md:text-7xl lg:text-[6.5rem] font-heading font-extrabold tracking-[-0.04em] mb-8 leading-[1.05]">
+             <h2 className="text-[2.75rem] sm:text-[3.5rem] md:text-6xl lg:text-[6.5rem] font-heading font-extrabold tracking-[-0.04em] mb-8 leading-[1.05]">
                Data that drives 
                <br className="hidden md:block"/>
                <span className="text-flow-green inline-block relative mt-2">

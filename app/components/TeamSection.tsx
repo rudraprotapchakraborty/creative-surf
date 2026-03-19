@@ -50,7 +50,7 @@ export default function TeamSection() {
            viewport={{ once: true }}
            className="text-left mb-20 flex flex-col items-start"
         >
-          <h2 className="text-[3.5rem] sm:text-[4.5rem] md:text-7xl lg:text-[6.5rem] font-heading font-extrabold tracking-[-0.04em] mb-4 leading-[1.05]">
+          <h2 className="text-[2.75rem] sm:text-[3.5rem] md:text-6xl lg:text-[6.5rem] font-heading font-extrabold tracking-[-0.04em] mb-4 leading-[1.05]">
             Meet Our<br className="hidden md:block"/>Visionaries
           </h2>
           <p className="text-flow-text/70 max-w-2xl font-normal text-lg">
