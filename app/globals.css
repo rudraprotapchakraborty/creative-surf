@@ -59,9 +59,22 @@ body {
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Flow Theme Light Variables */
+    --flow-bg: 250 250 250; /* #FAFAFA */
+    --flow-text: 5 26 46; /* #051A2E */
+    --flow-green: 0 102 162; /* #0066A2 */
+    --flow-buttonHover: 0 77 122; /* #004D7A */
+    
+    --flow-card: #FFFFFF;
+    --flow-border: #F3F4F6;
+    
+    --flow-blob-1: #7DD3FC;
+    --flow-blob-2: #BAE6FD;
+    --flow-blob-3: #E0F2FE;
   }
   .dark {
-    --background: 0 0% 3.9%;
+    --background: 0 0% 0%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
@@ -93,6 +106,19 @@ body {
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Flow Theme Dark Variables */
+    --flow-bg: 0 0 0;
+    --flow-text: 255 255 255;
+    --flow-green: 0 102 162;
+    --flow-buttonHover: 0 77 122;
+    
+    --flow-card: rgba(255, 255, 255, 0.02);
+    --flow-border: rgba(255, 255, 255, 0.08);
+    
+    --flow-blob-1: rgba(125, 211, 252, 0.4);
+    --flow-blob-2: rgba(186, 230, 253, 0.5);
+    --flow-blob-3: rgba(224, 242, 254, 0.4);
   }
 }
 

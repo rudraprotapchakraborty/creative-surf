@@ -41,6 +41,17 @@ module.exports = {
           600: "#0066CC",
           700: "#0052A3",
         },
+        flow: {
+          bg: "rgb(var(--flow-bg) / <alpha-value>)",
+          text: "rgb(var(--flow-text) / <alpha-value>)",
+          green: "rgb(var(--flow-green) / <alpha-value>)",
+          buttonHover: "rgb(var(--flow-buttonHover) / <alpha-value>)",
+          card: "var(--flow-card)",
+          border: "var(--flow-border)",
+          blob1: "var(--flow-blob-1)",
+          blob2: "var(--flow-blob-2)",
+          blob3: "var(--flow-blob-3)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -48,7 +59,8 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-poppins)"],
+        sans: ["var(--font-body)"],
+        heading: ["var(--font-heading)"],
       },
       keyframes: {
         "rotate-slow": {

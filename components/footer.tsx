@@ -3,13 +3,15 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Facebook, Linkedin, Instagram, ArrowUpRight, Mail, Phone } from "lucide-react";
+import MouseParticles from "./MouseParticles";
 
 export function Footer() {
   return (
-    <footer id="contact" className="relative w-full bg-[#06080F] text-white pt-32 pb-12 overflow-hidden border-t border-white/[0.05]">
+    <footer id="contact" className="relative w-full bg-flow-card text-flow-text pt-32 pb-12 overflow-hidden border-t border-flow-border">
+      <MouseParticles />
       
       {/* Soft Background Accent */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-[#7DD3FC]/20 blur-[120px] rounded-full pointer-events-none translate-x-1/4 translate-y-1/4" />
 
       <div className="container mx-auto px-6 max-w-7xl relative z-10">
         
@@ -22,16 +24,16 @@ export function Footer() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="text-5xl md:text-7xl font-medium tracking-tight mb-6"
+              className="text-4xl md:text-6xl lg:text-7xl font-heading font-extrabold tracking-[-0.04em] mb-6 leading-[1.05]"
             >
-              Let's Build Something <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Unreal.</span>
+              Let's Build Something <span className="text-flow-green">Unreal.</span>
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.1 }}
-              className="text-gray-400 text-lg font-light mb-10 max-w-md"
+              className="text-flow-text/70 text-lg font-normal mb-10 max-w-md"
             >
               Combining creativity, strategy, and technology to shape the future of your brand.
             </motion.p>
@@ -44,7 +46,7 @@ export function Footer() {
             >
               <Link
                 href="mailto:contact@creativesurf.agency"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-lg font-medium text-black bg-white hover:bg-gray-200 transition-colors"
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-sm text-lg font-semibold text-white bg-flow-green hover:bg-flow-buttonHover transition-colors shadow-sm"
               >
                 Start a Project <ArrowUpRight className="w-5 h-5" />
               </Link>
@@ -58,14 +60,14 @@ export function Footer() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="flex flex-col gap-4 text-gray-300 font-light"
+              className="flex flex-col gap-4 text-flow-text/80 font-semibold"
             >
-              <a href="mailto:contact@creativesurf.agency" className="flex items-center gap-3 hover:text-cyan-400 transition-colors">
-                <Mail className="w-5 h-5 text-gray-500" />
+              <a href="mailto:contact@creativesurf.agency" className="flex items-center gap-3 hover:text-flow-green transition-colors">
+                <Mail className="w-5 h-5 text-flow-green" />
                 contact@creativesurf.agency
               </a>
-              <a href="https://wa.me/8801988467099" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:text-cyan-400 transition-colors">
-                <Phone className="w-5 h-5 text-gray-500" />
+              <a href="https://wa.me/8801988467099" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:text-flow-green transition-colors">
+                <Phone className="w-5 h-5 text-flow-green" />
                 +880 1988-467099
               </a>
             </motion.div>
@@ -78,14 +80,14 @@ export function Footer() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="mt-8 grid grid-cols-3 gap-4 w-full"
             >
-              <a href="https://www.linkedin.com/company/creative-surf-agency/" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.05] hover:border-cyan-500/30 transition-all group">
-                <Linkedin size={24} strokeWidth={1.5} className="text-gray-400 group-hover:text-cyan-400 transition-colors" />
+              <a href="https://www.linkedin.com/company/creative-surf-agency/" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center p-4 rounded-sm bg-flow-bg border border-flow-border hover:bg-flow-card hover:border-flow-text/20 hover:shadow-sm transition-all group">
+                <Linkedin size={24} strokeWidth={2} className="text-flow-text/60 group-hover:text-flow-green transition-colors" />
               </a>
-              <a href="https://www.instagram.com/creative.surf.agency/" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.05] hover:border-cyan-500/30 transition-all group">
-                <Instagram size={24} strokeWidth={1.5} className="text-gray-400 group-hover:text-cyan-400 transition-colors" />
+              <a href="https://www.instagram.com/creative.surf.agency/" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center p-4 rounded-sm bg-flow-bg border border-flow-border hover:bg-flow-card hover:border-flow-text/20 hover:shadow-sm transition-all group">
+                <Instagram size={24} strokeWidth={2} className="text-flow-text/60 group-hover:text-flow-green transition-colors" />
               </a>
-              <a href="https://www.facebook.com/creative.surf.agency/" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.05] hover:border-cyan-500/30 transition-all group">
-                <Facebook size={24} strokeWidth={1.5} className="text-gray-400 group-hover:text-cyan-400 transition-colors" />
+              <a href="https://www.facebook.com/creative.surf.agency/" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center p-4 rounded-sm bg-flow-bg border border-flow-border hover:bg-flow-card hover:border-flow-text/20 hover:shadow-sm transition-all group">
+                <Facebook size={24} strokeWidth={2} className="text-flow-text/60 group-hover:text-flow-green transition-colors" />
               </a>
             </motion.div>
           </div>
@@ -98,9 +100,9 @@ export function Footer() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.6 }}
-          className="pt-8 border-t border-white/[0.05] flex justify-center items-center"
+          className="pt-8 border-t border-flow-border flex justify-center items-center"
         >
-          <p className="text-sm text-gray-500 font-light text-center">
+          <p className="text-sm text-flow-text/50 font-medium text-center">
             © {new Date().getFullYear()} Creative Surf. All Rights Reserved.
           </p>
         </motion.div>

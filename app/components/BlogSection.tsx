@@ -42,7 +42,18 @@ const blogPosts = [
 
 export default function BlogSection() {
   return (
-    <section className="relative py-32 bg-[#06080F] text-white overflow-hidden border-t border-white/[0.05]">
+    <section className="relative py-32 bg-flow-bg text-flow-text overflow-hidden border-t border-flow-border">
+      {/* Sharp Vector Waves */}
+      <div className="absolute bottom-0 right-0 w-[100vw] h-[100vw] md:w-[60vw] md:h-[60vw] max-w-[1000px] max-h-[1000px] pointer-events-none z-0 overflow-hidden transform opacity-40">
+        <motion.svg 
+          viewBox="0 0 500 500" 
+          preserveAspectRatio="xMidYMax slice"
+          className="absolute bottom-0 right-0 w-full h-full object-cover origin-bottom-right"
+        >
+          <path d="M 500,500 L 0,500 C 100,400 150,300 300,350 C 400,380 450,200 500,100 Z" className="fill-flow-blob3 transition-colors" />
+          <path d="M 500,500 L 50,500 C 150,450 250,350 350,400 C 420,430 480,250 500,150 Z" className="fill-flow-blob1 transition-colors" />
+        </motion.svg>
+      </div>
       <div className="container mx-auto px-6 max-w-7xl relative z-10">
         
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
@@ -52,10 +63,11 @@ export default function BlogSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-4">
-              Insights & <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Perspectives</span>
+            <h2 className="text-[3.5rem] sm:text-[4.5rem] md:text-7xl lg:text-[6.5rem] font-heading font-extrabold tracking-[-0.04em] mb-4 leading-[1.05]">
+              Insights & <br className="hidden md:block"/>
+              <span className="text-flow-green">Perspectives</span>
             </h2>
-            <p className="text-gray-400 font-light text-lg max-w-lg">
+            <p className="text-flow-text/70 font-normal text-lg max-w-lg">
               Expert advice, industry trends, and strategic plays to keep you ahead of the digital curve.
             </p>
           </motion.div>
@@ -68,7 +80,7 @@ export default function BlogSection() {
           >
             <Link 
               href="/blog" 
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black hover:bg-gray-200 transition-colors font-medium"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-sm bg-flow-card border border-flow-border shadow-sm text-flow-text hover:bg-flow-border transition-colors font-semibold"
             >
               View All Articles <ArrowRight className="h-4 w-4" />
             </Link>
@@ -85,24 +97,24 @@ export default function BlogSection() {
               transition={{ delay: index * 0.1, duration: 0.5 }}
               className="group flex flex-col"
             >
-              <Link href={post.link} className="block w-full aspect-[4/3] rounded-3xl overflow-hidden mb-6 relative border border-white/5 bg-white/5">
+              <Link href={post.link} className="block w-full aspect-[4/3] rounded-sm overflow-hidden mb-6 relative border border-flow-border bg-flow-bg">
                 <Image 
                   src={post.image} 
                   alt={post.title} 
                   fill 
                   className="object-cover transition-transform duration-700 group-hover:scale-105" 
                 />
-                <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-xs font-medium text-white">
+                <div className="absolute top-4 left-4 bg-flow-card shadow-sm border border-flow-border px-3 py-1 rounded-sm text-xs font-bold uppercase tracking-wider text-flow-text">
                   {post.category}
                 </div>
               </Link>
               
               <div className="flex flex-col flex-1">
-                <p className="text-sm text-cyan-400 mb-2 font-medium">{post.date}</p>
-                <h3 className="text-xl font-medium text-white mb-2 line-clamp-2 leading-tight group-hover:text-cyan-300 transition-colors">
+                <p className="text-sm text-flow-green mb-2 font-bold uppercase tracking-wider">{post.date}</p>
+                <h3 className="text-2xl font-heading font-extrabold text-flow-text mb-2 line-clamp-2 leading-tight group-hover:text-flow-green transition-colors tracking-tight">
                   <Link href={post.link}>{post.title}</Link>
                 </h3>
-                <p className="text-gray-400 text-sm font-light line-clamp-3 mb-4 flex-1">
+                <p className="text-flow-text/70 text-base font-normal line-clamp-3 mb-4 flex-1">
                   {post.excerpt}
                 </p>
               </div>

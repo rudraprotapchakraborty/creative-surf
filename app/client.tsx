@@ -3,14 +3,21 @@ import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { LoadingBarProvider } from "@/components/LoadingBarContext"
 import type { Metadata } from "next"
-import { Poppins } from "next/font/google"
+import { Syne, Outfit } from "next/font/google"
 import { Suspense } from "react"
+import { ThemeProvider } from "@/components/theme-provider"
 import GoogleAnalytics from "@/components/google-analytics"
 
-const poppins = Poppins({
+const syne = Syne({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-poppins",
+  variable: "--font-heading",
+  display: "swap",
+})
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
 })
 
 export const metadata: Metadata = {
@@ -27,25 +34,26 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${poppins.variable} font-sans`}>
+    <html lang="en" className={`${syne.variable} ${outfit.variable} font-sans`}>
       <body>
-        <Suspense fallback={null}>
-          <GoogleAnalytics />
-        </Suspense>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          <Suspense fallback={null}>
+            <GoogleAnalytics />
+          </Suspense>
 
-        {/* NAV */}
-        <Navbar />
+          {/* NAV */}
+          <Navbar />
 
-        {/* PAGE CONTENT */}
-        <LoadingBarProvider>
-          <main className="min-h-screen">{children}</main>
-        </LoadingBarProvider>
+          {/* PAGE CONTENT */}
+          <LoadingBarProvider>
+            <main className="min-h-screen">{children}</main>
+          </LoadingBarProvider>
 
-        {/* FOOTER */}
-        <Footer />
+          {/* FOOTER */}
+          <Footer />
 
-        {/* CHAT BUBBLE - MUST BE OUTSIDE MAIN CONTENT */}
-
+          {/* CHAT BUBBLE - MUST BE OUTSIDE MAIN CONTENT */}
+        </ThemeProvider>
       </body>
     </html>
   )

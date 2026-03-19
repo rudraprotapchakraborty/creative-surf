@@ -17,7 +17,7 @@ const MovingLogos = () => {
             key={index}
             className="w-28 h-28 mx-6 inline-flex items-center justify-center flex-shrink-0"
           >
-            <div className="w-24 h-24 rounded-full overflow-hidden border border-white/[0.05] shadow-xl transform hover:scale-110 transition-all duration-300">
+            <div className="w-24 h-24 rounded-full overflow-hidden border border-flow-border bg-flow-card shadow-xl transform hover:scale-110 transition-all duration-300">
               <img
                 src={logo}
                 alt={`Company logo ${index + 1}`}

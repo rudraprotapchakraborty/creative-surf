@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { motion } from "framer-motion";
+import { Star } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -14,150 +13,109 @@ const reviews = [
     avatar: "/placeholder.svg?height=100&width=100",
     text: "Working with Creative Surf transformed our digital presence completely. Our conversion rates increased by 45%.",
     rating: 5,
-    date: "March 15, 2025",
   },
   {
     name: "Michael Chen",
     position: "CEO",
     company: "Innovate Solutions",
     avatar: "/placeholder.svg?height=100&width=100",
-    text: "They developed our brand identity, built our website, and executed a launch campaign that got us featured in major publications.",
+    text: "They developed our brand identity, built our website, and executed a campaign that got us featured in major publications.",
     rating: 5,
-    date: "February 3, 2025",
   },
   {
     name: "Emily Rodriguez",
     position: "E-commerce Manager",
     company: "StyleHouse Boutique",
     avatar: "/placeholder.svg?height=100&width=100",
-    text: "Our online sales have increased by 78% since working with them. Their seasonal launch campaign was stunning.",
+    text: "Our online sales have increased by 78% since working with them. Their seasonal launch campaign was absolutely stunning.",
     rating: 5,
-    date: "January 22, 2025",
   },
 ];
 
+const ReviewCard = ({ review }: { review: typeof reviews[0] }) => (
+  <div className="w-[350px] md:w-[450px] shrink-0 p-8 md:p-10 rounded-sm bg-flow-card border border-flow-border shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow duration-500">
+    <div>
+      <div className="flex gap-1 mb-8">
+        {[...Array(5)].map((_, s) => (
+          <Star
+            key={s}
+            className={cn(
+              "h-5 w-5",
+              s < review.rating ? "text-[#F5B041] fill-[#F5B041]" : "text-gray-200"
+            )}
+          />
+        ))}
+      </div>
+      <p className="text-xl md:text-2xl font-normal text-flow-text/90 leading-relaxed mb-10">
+        "{review.text}"
+      </p>
+    </div>
+    
+    <div className="flex items-center gap-4">
+      <div className="relative w-14 h-14 rounded-full overflow-hidden border border-flow-border">
+        <Image src={review.avatar} alt={review.name} fill className="object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+      </div>
+      <div className="text-left">
+        <h4 className="font-heading font-extrabold text-flow-text tracking-tight">{review.name}</h4>
+        <p className="text-sm text-flow-text/60 font-normal truncate max-w-[200px]">{review.position}, {review.company}</p>
+      </div>
+    </div>
+  </div>
+);
+
 export default function ReviewsSection() {
-  const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState(0);
-
-  const paginate = (newDirection: number) => {
-    setDirection(newDirection);
-    setIndex((prev) => {
-      let nextIndex = prev + newDirection;
-      if (nextIndex < 0) nextIndex = reviews.length - 1;
-      if (nextIndex >= reviews.length) nextIndex = 0;
-      return nextIndex;
-    });
-  };
-
-  const variants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 100 : -100,
-      opacity: 0,
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1,
-    },
-    exit: (direction: number) => ({
-      zIndex: 0,
-      x: direction < 0 ? 100 : -100,
-      opacity: 0,
-    }),
-  };
+  // We duplicate the array multiple times to ensure enough long content for a seamless infinite scroll even on ultra-wide monitors.
+  const marqueeItems = [...reviews, ...reviews, ...reviews, ...reviews];
 
   return (
-    <section className="relative py-32 bg-[#06080F] text-white overflow-hidden">
-      <div className="container mx-auto px-6 max-w-5xl">
-        <motion.div
-           initial={{ opacity: 0, y: 20 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           viewport={{ once: true }}
-           className="text-center mb-20 flex flex-col items-center"
+    <section className="relative py-32 bg-flow-bg text-flow-text overflow-hidden border-t border-flow-border">
+      
+      {/* Sharp Vector Waves */}
+      <div className="absolute top-0 right-0 w-[100vw] h-[100vw] md:w-[60vw] md:h-[60vw] max-w-[1000px] max-h-[1000px] pointer-events-none z-0 overflow-hidden transform opacity-40">
+        <motion.svg 
+          viewBox="0 0 500 500" 
+          preserveAspectRatio="xMidYMax slice"
+          className="absolute top-0 right-0 w-full h-full object-cover origin-top-right"
         >
-          <span className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-cyan-400 mb-6">
+          <path d="M 500,500 L 0,500 C 100,400 150,300 300,350 C 400,380 450,200 500,100 Z" className="fill-flow-blob3 transition-colors" />
+          <path d="M 500,500 L 50,500 C 150,450 250,350 350,400 C 420,430 480,250 500,150 Z" className="fill-flow-blob2 transition-colors" />
+        </motion.svg>
+      </div>
+
+      <div className="container mx-auto px-6 max-w-7xl pt-10">
+        <motion.div
+           initial={{ opacity: 0, y: 30 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           viewport={{ once: true, margin: "-100px" }}
+           transition={{ duration: 0.8, ease: "easeOut" }}
+           className="text-left mb-24 flex flex-col items-start relative z-10"
+        >
+          <span className="px-5 py-2 rounded-[2rem] bg-flow-card border border-flow-border shadow-sm text-sm font-semibold text-flow-green mb-8">
             Client Testimonials
           </span>
-          <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-4">
-            Don't just take our word for it.
+          <h2 className="text-[3.5rem] sm:text-[4.5rem] md:text-7xl lg:text-[6.5rem] font-heading font-extrabold tracking-[-0.04em] mb-6 leading-[1.05]">
+            Don't just take <br className="hidden md:block"/>our word for it.
           </h2>
         </motion.div>
-
-        <div className="relative h-[400px] sm:h-[300px] flex items-center justify-center">
-          <AnimatePresence initial={false} custom={direction} mode="wait">
-            <motion.div
-              key={index}
-              custom={direction}
-              variants={variants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{
-                x: { type: "spring", stiffness: 300, damping: 30 },
-                opacity: { duration: 0.2 },
-              }}
-              className="absolute w-full max-w-3xl mx-auto"
-            >
-              <div className="bg-white/[0.02] border border-white/[0.05] rounded-[2rem] p-8 md:p-12 text-center flex flex-col items-center">
-                <div className="flex gap-1 mb-8">
-                  {[...Array(5)].map((_, s) => (
-                    <Star
-                      key={s}
-                      className={cn(
-                        "h-5 w-5",
-                        s < reviews[index].rating ? "text-cyan-400 fill-cyan-400" : "text-gray-600"
-                      )}
-                    />
-                  ))}
-                </div>
-                <p className="text-xl md:text-2xl font-light text-gray-200 leading-relaxed mb-10 max-w-2xl">
-                  "{reviews[index].text}"
-                </p>
-                <div className="flex items-center gap-4">
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/10">
-                    <Image src={reviews[index].avatar} alt={reviews[index].name} fill className="object-cover" />
-                  </div>
-                  <div className="text-left">
-                    <h4 className="font-medium text-white">{reviews[index].name}</h4>
-                    <p className="text-sm text-gray-400 truncate max-w-[200px]">{reviews[index].position}, {reviews[index].company}</p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        <div className="flex items-center justify-center gap-6 mt-12 z-10 relative">
-           <button
-             onClick={() => paginate(-1)}
-             className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white/5 transition-colors"
-           >
-             <ChevronLeft className="w-5 h-5" />
-           </button>
-           <div className="flex gap-2">
-             {reviews.map((_, i) => (
-               <button
-                 key={i}
-                 onClick={() => {
-                   setDirection(i > index ? 1 : -1);
-                   setIndex(i);
-                 }}
-                 className={cn(
-                   "w-2.5 h-2.5 rounded-full transition-all duration-300",
-                   i === index ? "bg-cyan-400 w-8" : "bg-white/20 hover:bg-white/40"
-                 )}
-               />
-             ))}
-           </div>
-           <button
-             onClick={() => paginate(1)}
-             className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white/5 transition-colors"
-           >
-             <ChevronRight className="w-5 h-5" />
-           </button>
-        </div>
       </div>
+
+      {/* Infinite Marquee */}
+      <div className="relative w-full flex overflow-hidden group pb-10">
+         {/* Gradient Masks for fading edges */}
+         <div className="absolute top-0 left-0 w-[15vw] h-full bg-gradient-to-r from-flow-bg to-transparent z-10 pointer-events-none" />
+         <div className="absolute top-0 right-0 w-[15vw] h-full bg-gradient-to-l from-flow-bg to-transparent z-10 pointer-events-none" />
+         
+         <motion.div
+           animate={{ x: ["0%", "-50%"] }}
+           transition={{ duration: 40, ease: "linear", repeat: Infinity }}
+           className="flex gap-6 md:gap-8 px-4"
+         >
+           {marqueeItems.map((review, idx) => (
+             <ReviewCard key={idx} review={review} />
+           ))}
+         </motion.div>
+      </div>
+
     </section>
   );
 }
