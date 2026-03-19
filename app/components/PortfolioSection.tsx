@@ -1,182 +1,117 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 
 const ourWorks = [
   {
     title: "Global E-commerce Redesign",
-    description:
-      "Complete overhaul of an international e-commerce platform resulting in 43% increase in conversions",
-    image: "/placeholder.svg?height=1200&width=2000",
-    tags: ["E-commerce", "UX Design", "Frontend Development"],
+    description: "Complete overhaul resulting in 43% conversion increase.",
+    image: "/placeholder.svg?height=800&width=1200",
+    tags: ["E-commerce", "UX Design"],
     link: "/case-studies/ecommerce-redesign",
-    gradient: "from-cyan-500 via-blue-800 to-purple-700",
   },
   {
-    title: "Luxury Brand Social Campaign",
-    description:
-      "Integrated social media campaign for a luxury fashion brand that increased engagement by 78%",
-    image: "/placeholder.svg?height=1200&width=2000",
-    tags: ["Social Media", "Content Creation", "Brand Strategy"],
+    title: "Luxury Brand Campaign",
+    description: "Integrated social campaign increasing engagement by 78%.",
+    image: "/placeholder.svg?height=800&width=1200",
+    tags: ["Social Media", "Strategy"],
     link: "/case-studies/luxury-social-campaign",
-    gradient: "from-pink-500 via-purple-700 to-indigo-800",
   },
   {
     title: "SaaS Marketing Website",
-    description:
-      "Modern, conversion-focused website for a B2B SaaS company that doubled qualified lead generation",
-    image: "/placeholder.svg?height=1200&width=2000",
-    tags: ["Web Development", "SEO", "Lead Generation"],
+    description: "Conversion-focused site doubling qualified leads.",
+    image: "/placeholder.svg?height=800&width=1200",
+    tags: ["Web Dev", "Lead Gen"],
     link: "/case-studies/saas-marketing-website",
-    gradient: "from-indigo-500 via-blue-700 to-cyan-600",
   },
   {
-    title: "Mobile App Launch Campaign",
-    description:
-      "Comprehensive marketing strategy for a fintech app launch that achieved 100,000+ downloads in first month",
-    image: "/placeholder.svg?height=1200&width=2000",
-    tags: ["App Marketing", "Digital Advertising", "Content Strategy"],
+    title: "Fintech App Launch",
+    description: "Strategy achieving 100k+ downloads in one month.",
+    image: "/placeholder.svg?height=800&width=1200",
+    tags: ["App Marketing", "Ads"],
     link: "/case-studies/fintech-app-launch",
-    gradient: "from-fuchsia-500 via-red-700 to-orange-600",
   },
 ];
 
 export default function PortfolioSection() {
-  const [index, setIndex] = useState(0);
-  const timeoutRef = useRef(null);
-  const [particles, setParticles] = useState([]);
-
-  useEffect(() => {
-    // Set up auto-slide
-    timeoutRef.current = setInterval(() => {
-      setIndex((prev) => (prev === ourWorks.length - 1 ? 0 : prev + 1));
-    }, 6000);
-    return () => clearInterval(timeoutRef.current);
-  }, []);
-
-  useEffect(() => {
-    // Generate particle positions only in client
-    const particleData = [...Array(15)].map(() => ({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      delay: Math.random() * 3,
-    }));
-    setParticles(particleData);
-  }, []);
-
   return (
-    <section className="relative h-screen w-full overflow-hidden mt-14">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={index}
-          className={cn(
-            "absolute inset-0 transition-all duration-700",
-            `bg-gradient-to-br ${ourWorks[index].gradient}`
-          )}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        />
-      </AnimatePresence>
-
-      {/* Floating particles */}
-      {particles.map((p, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1.5 h-1.5 rounded-full bg-white/30 backdrop-blur-sm"
-          initial={{ x: p.x, y: p.y }}
-          animate={{
-            y: [p.y, p.y - 50],
-            opacity: [1, 0],
-          }}
-          transition={{
-            duration: 4 + Math.random() * 3,
-            repeat: Infinity,
-            delay: p.delay,
-          }}
-        />
-      ))}
-
-      {/* Slide content */}
-      <div className="relative h-full w-full flex flex-col items-center justify-center px-8 text-center text-white">
-        <motion.div
-          key={ourWorks[index].title}
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -50 }}
-          transition={{ duration: 1 }}
-          className="max-w-4xl"
-        >
-          <motion.h2
-            className="text-5xl md:text-7xl font-extrabold mb-6 drop-shadow-[0_0_25px_rgba(255,255,255,0.5)]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
+    <section id="projects" className="relative py-32 bg-[#06080F] text-white overflow-hidden">
+      <div className="container mx-auto px-6 max-w-7xl relative z-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            {ourWorks[index].title}
-          </motion.h2>
-          <motion.p
-            className="text-lg md:text-2xl text-gray-200 mb-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
+            <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-4">
+              Selected 
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500"> Works.</span>
+            </h2>
+            <p className="text-gray-400 max-w-md font-light text-lg">
+              A glimpse into our recent collaborations and digital transformations.
+            </p>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            {ourWorks[index].description}
-          </motion.p>
+             <Link href="/case-studies" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+               View All Projects <ArrowUpRight className="w-4 h-4" />
+             </Link>
+          </motion.div>
+        </div>
 
-          <div className="flex flex-wrap justify-center gap-3 mb-8">
-            {ourWorks[index].tags.map((tag, i) => (
-              <motion.span
-                key={i}
-                className="px-4 py-1 rounded-full border border-white/30 bg-white/10 text-sm backdrop-blur-sm hover:bg-white/20 transition"
-                whileHover={{ scale: 1.1 }}
-              >
-                {tag}
-              </motion.span>
-            ))}
-          </div>
-
-          <Button
-            asChild
-            variant="outline"
-            className="border-white text-black hover:bg-white hover:text-black rounded-full px-6 py-2"
-          >
-            <Link
-              href={ourWorks[index].link}
-              className="flex items-center gap-2"
+        <div className="grid md:grid-cols-2 gap-8">
+          {ourWorks.map((work, idx) => (
+            <motion.div
+              key={work.title}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, delay: idx * 0.1, ease: "easeOut" }}
+              className="group relative flex flex-col gap-6"
             >
-              View Project <ExternalLink className="w-4 h-4" />
-            </Link>
-          </Button>
-        </motion.div>
-
-        {/* Navigation */}
-        <div className="absolute inset-x-0 bottom-10 flex items-center justify-between px-6 md:px-20">
-          <motion.button
-            onClick={() =>
-              setIndex(index === 0 ? ourWorks.length - 1 : index - 1)
-            }
-            className="p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm"
-            whileHover={{ scale: 1.1 }}
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </motion.button>
-
-          <motion.button
-            onClick={() =>
-              setIndex(index === ourWorks.length - 1 ? 0 : index + 1)
-            }
-            className="p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm"
-            whileHover={{ scale: 1.1 }}
-          >
-            <ChevronRight className="w-6 h-6" />
-          </motion.button>
+              <Link href={work.link} className="block overflow-hidden rounded-[2rem] bg-white/5 aspect-video relative border border-white/5">
+                <Image 
+                  src={work.image} 
+                  alt={work.title}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+                
+                {/* Overlay Badge */}
+                <div className="absolute top-6 right-6 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+                   <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 text-white shadow-xl">
+                      <ArrowUpRight className="w-5 h-5" />
+                   </div>
+                </div>
+              </Link>
+              
+              <div className="px-2">
+                <div className="flex gap-2 mb-3">
+                  {work.tags.map(tag => (
+                    <span key={tag} className="px-3 py-1 text-xs font-medium rounded-full bg-white/[0.03] border border-white/10 text-gray-300">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <h3 className="text-2xl font-medium mb-2 group-hover:text-cyan-300 transition-colors duration-300">
+                  <Link href={work.link}>{work.title}</Link>
+                </h3>
+                <p className="text-gray-400 font-light">
+                  {work.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

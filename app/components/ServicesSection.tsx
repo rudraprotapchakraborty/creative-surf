@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
   PenTool,
@@ -16,63 +16,60 @@ import {
 const services = [
   {
     title: "Graphics Design",
-    description:
-      "High-impact visuals for brands, blending art direction with precision graphics.",
+    description: "High-impact visuals blending art direction with precision.",
     icon: PenTool,
-    color: "from-cyan-400 to-blue-500",
   },
   {
     title: "Content Marketing",
     description: "Strategic storytelling to connect deeply with your audience.",
     icon: FileText,
-    color: "from-fuchsia-400 to-pink-500",
   },
   {
     title: "Video Editing",
     description: "Cinematic edits with seamless motion and narrative clarity.",
     icon: Video,
-    color: "from-yellow-300 to-amber-500",
   },
   {
     title: "Website Development",
     description: "Immersive, high-performance web experiences.",
     icon: Globe,
-    color: "from-violet-400 to-purple-600",
   },
   {
     title: "OVC/TVC",
     description: "Premium commercials for maximum brand impact.",
     icon: Tv,
-    color: "from-purple-400 to-indigo-600",
   },
   {
     title: "SEO & Social Media",
     description: "Boost your visibility with precision SEO and campaigns.",
     icon: Search,
-    color: "from-green-400 to-emerald-500",
   },
   {
     title: "Media Buying",
     description: "Optimized ad spend to maximize ROI.",
     icon: Target,
-    color: "from-orange-400 to-red-500",
   },
   {
     title: "Digital Branding",
     description: "Crafting cohesive digital identities for lasting impressions.",
     icon: Users,
-    color: "from-teal-400 to-cyan-500",
   },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 },
+  },
+};
+
 const cardVariants = {
-  offscreen: { y: 80, opacity: 0, scale: 0.9, filter: "blur(10px)" },
-  onscreen: {
+  hidden: { y: 40, opacity: 0 },
+  visible: {
     y: 0,
     opacity: 1,
-    scale: 1,
-    filter: "blur(0px)",
-    transition: { type: "spring", bounce: 0.4, duration: 1 },
+    transition: { type: "spring", stiffness: 300, damping: 24 },
   },
 };
 
@@ -83,105 +80,62 @@ export default function ServicesSection() {
     offset: ["start end", "end start"],
   });
 
-  const titleScale = useTransform(scrollYProgress, [0, 0.3], [0.8, 1.15]);
-  const titleOpacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
-
-  // --- FIX: Only generate particles on client ---
-  const [particles, setParticles] = useState([]);
-
-  useEffect(() => {
-    const generated = Array.from({ length: 30 }, () => ({
-      top: `${Math.random() * 100}%`,
-      left: `${Math.random() * 100}%`,
-      dy: (Math.random() - 0.5) * 40,
-      dx: (Math.random() - 0.5) * 40,
-      duration: 4 + Math.random() * 4,
-      size: Math.random() > 0.5 ? "w-1 h-1" : "w-2 h-2",
-      color: Math.random() > 0.5 ? "bg-white/30" : "bg-cyan-400/30 blur-sm",
-    }));
-
-    setParticles(generated);
-  }, []); // runs only on client
+  const titleScale = useTransform(scrollYProgress, [0, 0.2], [0.9, 1]);
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
 
   return (
     <section
+      id="services"
       ref={ref}
-      className="relative py-28 bg-black text-white overflow-hidden"
+      className="relative py-32 bg-[#06080F] text-white overflow-hidden"
     >
-      {/* Aurora Background */}
-      <motion.div
-        className="absolute inset-0 -z-20"
-        animate={{
-          background: [
-            "radial-gradient(ellipse at 20% 40%, rgba(56,189,248,0.15) 0%, transparent 70%), radial-gradient(ellipse at 80% 60%, rgba(0,255,255,0.15) 0%, transparent 70%)",
-            "radial-gradient(ellipse at 30% 50%, rgba(0,255,255,0.15) 0%, transparent 70%), radial-gradient(ellipse at 70% 50%, rgba(56,189,248,0.15) 0%, transparent 70%)",
-          ],
-        }}
-        transition={{ duration: 8, repeat: Infinity, repeatType: "reverse" }}
-      />
+      {/* Subtle Background Elements */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none" />
 
-      {/* Particles */}
-      {particles.map((p, i) => (
+      <div className="container mx-auto px-6 max-w-7xl relative z-10 font-sans">
         <motion.div
-          key={i}
-          className={`absolute rounded-full ${p.size} ${p.color}`}
-          style={{ top: p.top, left: p.left }}
-          animate={{ x: [0, p.dx], y: [0, p.dy], opacity: [0.2, 1, 0.2] }}
-          transition={{
-            duration: p.duration,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-
-      <div className="container mx-auto px-6 max-w-7xl relative z-10">
-        <motion.h2
-          style={{ scale: titleScale, opacity: titleOpacity }}
-          className="text-6xl sm:text-7xl font-extrabold mb-24 tracking-tight bg-gradient-to-r from-cyan-400 via-cyan-500 to-blue-500 bg-clip-text text-transparent text-center"
+           style={{ scale: titleScale, opacity: titleOpacity }}
+           className="text-center mb-20"
         >
-          Our Expertise
-        </motion.h2>
+          <h2 className="text-4xl md:text-6xl font-medium tracking-tight bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">
+            Our Expertise
+          </h2>
+          <p className="mt-4 text-gray-400 max-w-2xl mx-auto font-light text-lg">
+            Comprehensive digital solutions engineered for growth and aesthetic supremacy.
+          </p>
+        </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
-          {services.map(({ title, description, icon: Icon, color }) => (
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
+          {services.map(({ title, description, icon: Icon }) => (
             <motion.div
               key={title}
-              className="relative group p-8 rounded-3xl backdrop-blur-xl border border-white/10 bg-white/5 shadow-xl cursor-pointer overflow-hidden"
               variants={cardVariants}
-              initial="offscreen"
-              whileInView="onscreen"
-              viewport={{ once: true, amount: 0.4 }}
-              whileHover={{ rotateX: 8, rotateY: -8, scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              whileHover={{ y: -5, scale: 1.02 }}
+              className="group relative p-8 rounded-[2rem] bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.04] hover:border-white/[0.1] transition-all duration-300 overflow-hidden flex flex-col"
             >
-              <motion.div
-                className={`absolute inset-0 bg-gradient-to-br ${color} opacity-0 group-hover:opacity-20 transition-all duration-500`}
-              />
+              <div className="mb-6 inline-flex p-3 rounded-2xl bg-white/[0.05] text-cyan-400 group-hover:scale-110 group-hover:text-cyan-300 transition-transform duration-300 ease-out">
+                <Icon className="h-6 w-6" strokeWidth={1.5} />
+              </div>
 
-              <motion.div
-                className={`p-5 mb-6 rounded-full bg-gradient-to-br ${color} shadow-xl`}
-                whileHover={{ scale: 1.15, rotate: 5 }}
-              >
-                <Icon className="h-14 w-14 text-white drop-shadow-lg" />
-              </motion.div>
+              <h3 className="text-xl font-medium mb-3 text-white/90 group-hover:text-white transition-colors">
+                {title}
+              </h3>
+              <p className="text-sm text-gray-400 leading-relaxed font-light">
+                {description}
+              </p>
 
-              <h3 className="text-2xl font-bold mb-4">{title}</h3>
-              <p className="text-white/70 leading-relaxed">{description}</p>
-
-              <motion.div
-                className="absolute inset-0 pointer-events-none"
-                animate={{ backgroundPosition: ["0 0", "0 100%"] }}
-                style={{
-                  backgroundImage:
-                    "repeating-linear-gradient(transparent, rgba(255,255,255,0.03) 1px, transparent 2px)",
-                  backgroundSize: "100% 4px",
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
+              {/* Hover Glow */}
+              <div className="absolute -bottom-2 -right-2 w-24 h-24 bg-cyan-500/10 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

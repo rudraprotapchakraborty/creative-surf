@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -38,128 +38,124 @@ const reviews = [
 
 export default function ReviewsSection() {
   const [index, setIndex] = useState(0);
-  const containerRef = useRef(null);
+  const [direction, setDirection] = useState(0);
 
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const rotateX = useSpring(useTransform(mouseY, [0, 1], [15, -15]), { stiffness: 150, damping: 20 });
-  const rotateY = useSpring(useTransform(mouseX, [0, 1], [-15, 15]), { stiffness: 150, damping: 20 });
-
-  const handleMouseMove = (e) => {
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
-    mouseX.set(x);
-    mouseY.set(y);
+  const paginate = (newDirection: number) => {
+    setDirection(newDirection);
+    setIndex((prev) => {
+      let nextIndex = prev + newDirection;
+      if (nextIndex < 0) nextIndex = reviews.length - 1;
+      if (nextIndex >= reviews.length) nextIndex = 0;
+      return nextIndex;
+    });
   };
 
-  const prev = () => setIndex((i) => (i === 0 ? reviews.length - 1 : i - 1));
-  const next = () => setIndex((i) => (i === reviews.length - 1 ? 0 : i + 1));
+  const variants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 100 : -100,
+      opacity: 0,
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1,
+    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      x: direction < 0 ? 100 : -100,
+      opacity: 0,
+    }),
+  };
 
   return (
-    <section
-      ref={containerRef}
-      onMouseMove={handleMouseMove}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black text-white"
-    >
-      {/* Background gradient orbs */}
-      <motion.div
-        className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full bg-cyan-500/30 blur-3xl"
-        animate={{ x: [0, 50, -50, 0], y: [0, -50, 50, 0] }}
-        transition={{ duration: 15, repeat: Infinity }}
-      />
-      <motion.div
-        className="absolute top-1/3 right-[-200px] w-[600px] h-[600px] rounded-full bg-blue-500/30 blur-3xl"
-        animate={{ x: [0, -40, 40, 0], y: [0, 60, -60, 0] }}
-        transition={{ duration: 18, repeat: Infinity }}
-      />
-
-      {/* Content wrapper */}
-      <div className="relative w-full max-w-6xl px-6 flex flex-col items-center">
-        <motion.h2
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-5xl md:text-7xl font-extrabold text-center bg-gradient-to-r from-cyan-400 via-blue-500 to-blue-700 bg-clip-text text-transparent drop-shadow-lg mb-16"
+    <section className="relative py-32 bg-[#06080F] text-white overflow-hidden">
+      <div className="container mx-auto px-6 max-w-5xl">
+        <motion.div
+           initial={{ opacity: 0, y: 20 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           viewport={{ once: true }}
+           className="text-center mb-20 flex flex-col items-center"
         >
-          What Our Clients Say
-        </motion.h2>
+          <span className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-cyan-400 mb-6">
+            Client Testimonials
+          </span>
+          <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-4">
+            Don't just take our word for it.
+          </h2>
+        </motion.div>
 
-        <div className="relative w-full overflow-hidden">
-          <motion.div
-            className="flex transition-transform duration-700 ease-out"
-            style={{ transform: `translateX(-${index * 100}%)` }}
-          >
-            {reviews.map((review, i) => (
-              <motion.div
-                key={i}
-                style={{ rotateX, rotateY }}
-                className="w-full flex-shrink-0 px-4"
-              >
-                <motion.div
-                  className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-10 shadow-2xl flex flex-col items-center text-center hover:shadow-cyan-500/30 transition-all duration-500"
-                  whileHover={{ scale: 1.03 }}
-                >
-                  <div className="flex mb-4">
-                    {[...Array(5)].map((_, s) => (
-                      <Star
-                        key={s}
-                        className={cn(
-                          "h-6 w-6",
-                          s < review.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-500"
-                        )}
-                      />
-                    ))}
-                  </div>
-                  <p className="text-xl text-gray-200 italic mb-8 max-w-3xl">“{review.text}”</p>
-                  <div className="flex items-center gap-4">
-                    <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-cyan-400">
-                      <Image src={review.avatar} alt={review.name} fill className="object-cover" />
-                    </div>
-                    <div className="text-left">
-                      <h4 className="text-lg font-bold">{review.name}</h4>
-                      <div className="text-cyan-400">{review.position}</div>
-                      <div className="text-gray-400 text-sm">{review.company}</div>
-                    </div>
-                  </div>
-                  <div className="mt-6 text-sm text-gray-400">{review.date}</div>
-                </motion.div>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Navigation */}
-          <div className="absolute inset-y-0 left-0 flex items-center">
-            <button
-              onClick={prev}
-              className="p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition"
+        <div className="relative h-[400px] sm:h-[300px] flex items-center justify-center">
+          <AnimatePresence initial={false} custom={direction} mode="wait">
+            <motion.div
+              key={index}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                x: { type: "spring", stiffness: 300, damping: 30 },
+                opacity: { duration: 0.2 },
+              }}
+              className="absolute w-full max-w-3xl mx-auto"
             >
-              <ChevronLeft className="h-6 w-6 text-cyan-400" />
-            </button>
-          </div>
-          <div className="absolute inset-y-0 right-0 flex items-center">
-            <button
-              onClick={next}
-              className="p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition"
-            >
-              <ChevronRight className="h-6 w-6 text-cyan-400" />
-            </button>
-          </div>
+              <div className="bg-white/[0.02] border border-white/[0.05] rounded-[2rem] p-8 md:p-12 text-center flex flex-col items-center">
+                <div className="flex gap-1 mb-8">
+                  {[...Array(5)].map((_, s) => (
+                    <Star
+                      key={s}
+                      className={cn(
+                        "h-5 w-5",
+                        s < reviews[index].rating ? "text-cyan-400 fill-cyan-400" : "text-gray-600"
+                      )}
+                    />
+                  ))}
+                </div>
+                <p className="text-xl md:text-2xl font-light text-gray-200 leading-relaxed mb-10 max-w-2xl">
+                  "{reviews[index].text}"
+                </p>
+                <div className="flex items-center gap-4">
+                  <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/10">
+                    <Image src={reviews[index].avatar} alt={reviews[index].name} fill className="object-cover" />
+                  </div>
+                  <div className="text-left">
+                    <h4 className="font-medium text-white">{reviews[index].name}</h4>
+                    <p className="text-sm text-gray-400 truncate max-w-[200px]">{reviews[index].position}, {reviews[index].company}</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        {/* Dots */}
-        <div className="flex gap-3 mt-8">
-          {reviews.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setIndex(i)}
-              className={cn(
-                "h-3 w-3 rounded-full transition-all",
-                i === index ? "bg-cyan-400 w-6" : "bg-gray-500 hover:bg-gray-400"
-              )}
-            />
-          ))}
+        <div className="flex items-center justify-center gap-6 mt-12 z-10 relative">
+           <button
+             onClick={() => paginate(-1)}
+             className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white/5 transition-colors"
+           >
+             <ChevronLeft className="w-5 h-5" />
+           </button>
+           <div className="flex gap-2">
+             {reviews.map((_, i) => (
+               <button
+                 key={i}
+                 onClick={() => {
+                   setDirection(i > index ? 1 : -1);
+                   setIndex(i);
+                 }}
+                 className={cn(
+                   "w-2.5 h-2.5 rounded-full transition-all duration-300",
+                   i === index ? "bg-cyan-400 w-8" : "bg-white/20 hover:bg-white/40"
+                 )}
+               />
+             ))}
+           </div>
+           <button
+             onClick={() => paginate(1)}
+             className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white/5 transition-colors"
+           >
+             <ChevronRight className="w-5 h-5" />
+           </button>
         </div>
       </div>
     </section>

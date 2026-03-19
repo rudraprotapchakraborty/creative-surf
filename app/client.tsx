@@ -6,7 +6,6 @@ import type { Metadata } from "next"
 import { Poppins } from "next/font/google"
 import { Suspense } from "react"
 import GoogleAnalytics from "@/components/google-analytics"
-import ChatBubble from "./components/ChatBubble"
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -46,7 +45,6 @@ export default function RootLayout({
         <Footer />
 
         {/* CHAT BUBBLE - MUST BE OUTSIDE MAIN CONTENT */}
-        <ChatBubble />   {/* <-- FIXED! */}
 
       </body>
     </html>

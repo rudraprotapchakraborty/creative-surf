@@ -114,12 +114,3 @@ body {
   background-size: 20px 20px;
 }
 
-#chat-portal {
-  position: fixed;
-  z-index: 999999999999 !important;
-  inset: 0; /* covers whole viewport */
-  pointer-events: none; /* allows clicks through */
-
-  /* This ENSURES transforms above cannot clip it */
-  isolation: isolate;
-}

@@ -1,189 +1,145 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import {
-  motion,
-  AnimatePresence,
-  useMotionValue,
-  useTransform,
-} from "framer-motion";
 import { Menu, X } from "lucide-react";
-import LoadingBar from "react-top-loading-bar";
-import { Button } from "@/components/ui/button";
-import { trackEvent } from "@/lib/analytics";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function Navbar() {
-  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
-  const [progress, setProgress] = React.useState(0);
-  const [stars, setStars] = React.useState<{ left: number; top: number }[]>([]);
-  const [mounted, setMounted] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  const router = useRouter();
-  const scrollY = useMotionValue(0);
-  const navHeight = useTransform(scrollY, [0, 150], ["80px", "64px"]);
-
-  React.useEffect(() => {
-    setMounted(true);
-
-    const s = Array.from({ length: 12 }).map(() => ({
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-    }));
-    setStars(s);
-
-    const onScroll = () => scrollY.set(window.scrollY);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  if (!mounted) return null;
-
-  const menuItems = [
-    { title: "Services", href: "/services" },
-    { title: "About", href: "/about" },
-    { title: "Blog", href: "/blog" },
+  const navLinks = [
+    { label: "Home", href: "#home" },
+    { label: "Services", href: "#services" },
+    { label: "Projects", href: "#projects" },
+    { label: "Pricing", href: "#pricing" },
   ];
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "auto";
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <>
-      <LoadingBar
-        color="#00e6ff"
-        progress={progress}
-        onLoaderFinished={() => setProgress(0)}
-      />
-
-      {/* FIX 1 — ADD pointer-events-none AND isolate */}
-      <motion.header
-        style={{ height: navHeight }}
-        className="
-          fixed top-4 left-1/2 -translate-x-1/2 
-          z-[1000] w-[92%] 
-          pointer-events-none 
-          isolate
-        "
-      >
-        {/* FIX 2 — pointer-events-auto on real nav */}
+      <header className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-[5000]">
         <motion.nav
-          className="
-            relative px-8 py-3 flex justify-between items-center 
-            rounded-full border border-cyan-400/20 
-            bg-gradient-to-r from-cyan-900/20 via-blue-900/10 to-purple-900/20 
-            backdrop-blur-2xl shadow-[0_0_40px_rgba(0,200,255,0.25)]
-            pointer-events-auto
-            overflow-visible
-          "
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className={`
+            w-full px-6 py-4 flex items-center justify-between
+            rounded-full border transition-all duration-500
+            ${scrolled 
+              ? "bg-[#06080F]/80 border-white/10 backdrop-blur-xl shadow-2xl" 
+              : "bg-transparent border-transparent"}
+          `}
         >
-          {/* FIX 3 — ALL background layers MUST BE pointer-events-none */}
-          <motion.div
-            className="
-              absolute inset-0 pointer-events-none 
-              bg-[radial-gradient(circle_at_top_left,rgba(0,255,255,0.15),transparent_60%),radial-gradient(circle_at_bottom_right,rgba(100,0,255,0.15),transparent_60%)]
-            "
-            animate={{ opacity: [0.4, 0.8, 0.4] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          />
-
-          <motion.div className="absolute inset-0 pointer-events-none">
-            {stars.map((s, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-[2px] h-[2px] bg-cyan-300 rounded-full shadow-[0_0_6px_#00f6ff]"
-                style={{ left: `${s.left}%`, top: `${s.top}%` }}
-                animate={{ opacity: [0, 1, 0] }}
-                transition={{
-                  duration: 3,
-                  delay: i * 0.3,
-                  repeat: Infinity,
-                  repeatType: "reverse",
-                }}
-              />
-            ))}
-          </motion.div>
-
-          {/* Logo */}
-          <Link href="/" className="pointer-events-auto">
-            <motion.img
-              src="/logo.png"
-              alt="Logo"
-              className="w-12 h-12 drop-shadow-[0_0_12px_#00eaff]"
-              whileHover={{ scale: 1.15, rotate: 8 }}
-            />
+          {/* LOGO */}
+          <Link href="/" className="flex items-center gap-3 group">
+            <img src="/logo.png" alt="logo" className="w-8 h-8 md:w-10 md:h-10 transition-transform duration-500 group-hover:scale-110" />
+            <span className="text-white font-medium text-lg md:text-xl tracking-tight">
+              Creative Surf
+            </span>
           </Link>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-10 relative z-10 pointer-events-auto">
-            {menuItems.map((item) => (
-              <motion.button
-                key={item.title}
-                onClick={() => router.push(item.href)}
-                className="relative text-white font-medium tracking-wide text-lg group"
-                whileHover={{ scale: 1.15, y: -2 }}
-                transition={{ type: "spring", stiffness: 300 }}
+          {/* DESKTOP NAV */}
+          <div className="hidden md:flex items-center gap-8 bg-white/[0.03] px-8 py-2.5 rounded-full border border-white/[0.05]">
+            {navLinks.map((link) => (
+              <Link 
+                key={link.href} 
+                href={link.href} 
+                className="text-gray-300 text-sm font-medium hover:text-white transition-colors"
               >
-                {item.title}
-                <motion.span
-                  className="absolute left-0 bottom-[-6px] h-[2px] bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full"
-                  initial={{ width: 0 }}
-                  whileHover={{ width: "100%" }}
-                  transition={{ duration: 0.4 }}
-                />
-              </motion.button>
+                {link.label}
+              </Link>
             ))}
           </div>
 
-          {/* CTA Button */}
-          <Button
-            asChild
-            className="hidden md:block rounded-full px-6 py-2 text-lg font-semibold bg-gradient-to-r 
-                from-sky-400 via-cyan-500 to-blue-600 text-white shadow-[0_0_25px_rgba(0,255,255,0.5)]
-                pointer-events-auto"
-          >
-            <Link href="/contact">Get Started</Link>
-          </Button>
+          {/* DESKTOP CTA */}
+          <div className="hidden md:flex items-center">
+            <Link
+              href="#contact"
+              className="
+                px-6 py-2.5 rounded-full text-sm font-medium text-black
+                bg-white hover:bg-gray-200 transition-colors
+              "
+            >
+              Get Started
+            </Link>
+          </div>
 
-          {/* Mobile Menu Button */}
+          {/* MOBILE MENU BUTTON */}
           <button
-            onClick={() => setMobileMenuOpen(true)}
-            className="md:hidden text-white z-10 pointer-events-auto"
+            onClick={() => setMobileOpen(true)}
+            aria-label="Open menu"
+            className="md:hidden text-white p-2 rounded-full hover:bg-white/10 transition-colors"
           >
-            <Menu size={30} />
+            <Menu size={24} />
           </button>
         </motion.nav>
+      </header>
 
-        {/* Mobile Menu — unchanged */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
+      {/* MOBILE OVERLAY */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-[#06080F]/90 backdrop-blur-xl z-[9999]"
+          >
             <motion.div
-              className="fixed inset-0 bg-black/80 backdrop-blur-3xl flex flex-col items-center justify-center space-y-8 z-[2000] pointer-events-auto"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="absolute top-0 right-0 h-full w-[85%] max-w-[360px] bg-[#06080F] border-l border-white/10 p-8 flex flex-col"
             >
-              <button
-                className="absolute top-6 right-6 text-white"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <X size={36} />
-              </button>
-
-              {menuItems.map((item, i) => (
-                <motion.button
-                  key={item.title}
-                  onClick={() => router.push(item.href)}
-                  className="text-white text-3xl font-bold hover:text-cyan-400"
+              <div className="flex justify-between items-center mb-12">
+                <span className="text-white font-medium text-xl">Menu</span>
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="text-white p-2 rounded-full hover:bg-white/10 transition-colors"
                 >
-                  {item.title}
-                </motion.button>
-              ))}
+                  <X size={24} />
+                </button>
+              </div>
+
+              <div className="flex flex-col gap-6 w-full">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="text-gray-300 text-2xl font-medium hover:text-white transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+
+              <div className="mt-auto pt-8 border-t border-white/10">
+                <Link
+                  href="#contact"
+                  onClick={() => setMobileOpen(false)}
+                  className="w-full flex justify-center py-4 rounded-full text-lg font-medium bg-white text-black hover:bg-gray-200 transition-colors"
+                >
+                  Get Started
+                </Link>
+              </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.header>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

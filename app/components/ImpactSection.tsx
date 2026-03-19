@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState } from "react";
 import { BarChart2, LineChart, PenTool, DollarSign } from "lucide-react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import CountUp from "react-countup";
 import {
   Accordion,
@@ -12,12 +12,6 @@ import {
 } from "@/components/ui/accordion";
 
 const ImpactSection: React.FC = () => {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-
   const [activeItem, setActiveItem] = useState("actionable-analytics");
 
   const countValues = {
@@ -27,176 +21,112 @@ const ImpactSection: React.FC = () => {
     years: 10,
   };
 
-  // Scroll transforms
-  const titleScale = useTransform(scrollYProgress, [0, 0.25], [0.7, 1.2]);
-  const titleOpacity = useTransform(scrollYProgress, [0, 0.25], [0, 1]);
-  const statsOpacity = useTransform(scrollYProgress, [0, 0.35], [0, 1]);
-  const statsScale = useTransform(scrollYProgress, [0, 0.35], [0.8, 1]);
-  const accordionY = useTransform(scrollYProgress, [0, 0.45], [80, 0]);
-
-  // --- FIX: CLIENT-ONLY PARTICLES ---
-  const [particles, setParticles] = useState<
-    { left: string; top: string; duration: number; delay: number }[]
-  >([]);
-
-  useEffect(() => {
-    const generated = Array.from({ length: 25 }, () => ({
-      left: `${Math.random() * 100}%`,
-      top: `${Math.random() * 100}%`,
-      duration: 6 + Math.random() * 4,
-      delay: Math.random() * 3,
-    }));
-
-    setParticles(generated);
-  }, []);
-
   return (
-    <section
-      ref={ref}
-      className="relative bg-black text-white py-28 overflow-hidden"
-    >
-      {/* Blue Aurora Background */}
-      <motion.div
-        className="absolute inset-0 -z-20"
-        animate={{
-          background: [
-            "radial-gradient(ellipse at 20% 40%, rgba(0,255,255,0.15) 0%, transparent 70%), radial-gradient(ellipse at 80% 60%, rgba(56,189,248,0.15) 0%, transparent 70%)",
-            "radial-gradient(ellipse at 30% 50%, rgba(56,189,248,0.15) 0%, transparent 70%), radial-gradient(ellipse at 70% 50%, rgba(0,255,255,0.15) 0%, transparent 70%)",
-          ],
-        }}
-        transition={{ duration: 8, repeat: Infinity, repeatType: "reverse" }}
-      />
-
-      {/* Floating upward cyan particles (client-side only) */}
-      <div className="absolute inset-0 -z-10">
-        {particles.map((p, i) => (
+    <section className="relative bg-[#06080F] text-white py-32 overflow-hidden border-t border-white/[0.05]">
+      
+      <div className="container mx-auto px-6 max-w-7xl relative z-10 flex flex-col lg:flex-row gap-20 items-center">
+        
+        {/* Left Side: Stats Grid */}
+        <div className="w-full lg:w-1/2">
           <motion.div
-            key={i}
-            className="absolute w-1.5 h-1.5 bg-cyan-400/50 rounded-full"
-            style={{ left: p.left, top: p.top }}
-            animate={{
-              y: [0, -60],
-              opacity: [0.2, 1, 0],
-            }}
-            transition={{
-              duration: p.duration,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: p.delay,
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="container mx-auto px-6 max-w-7xl relative z-10">
-        {/* Section Title */}
-        <motion.h2
-          style={{ scale: titleScale, opacity: titleOpacity }}
-          className="text-5xl md:text-7xl font-extrabold text-center mb-20 bg-gradient-to-r from-cyan-400 via-cyan-500 to-blue-600 bg-clip-text text-transparent tracking-tight"
-        >
-          Marketing Impact.
-          <span className="block text-3xl md:text-4xl font-light text-white/60">
-            Data That Drives Results
-          </span>
-        </motion.h2>
-
-        {/* Stats Grid */}
-        <motion.div
-          className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-20"
-          style={{ opacity: statsOpacity, scale: statsScale }}
-        >
-          {[
-            {
-              value: countValues.clientSatisfaction,
-              suffix: "%",
-              label: "Client Satisfaction",
-            },
-            {
-              value: countValues.revenue,
-              prefix: "$",
-              suffix: "M+",
-              label: "Revenue Generated",
-            },
-            { value: countValues.growth, suffix: "%", label: "Average Growth" },
-            { value: countValues.years, label: "Years Experience" },
-          ].map((stat, i) => (
-            <motion.div
-              key={i}
-              className="p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg text-center hover:shadow-cyan-500/40 transition-all duration-300"
-              whileHover={{ scale: 1.08, rotateX: 6, rotateY: -6 }}
-            >
-              <div className="text-5xl font-bold text-cyan-400 mb-3">
-                {stat.prefix || ""}
-                <CountUp end={stat.value} duration={2.5} />
-                {stat.suffix || ""}
-              </div>
-              <div className="text-white/80">{stat.label}</div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Accordion */}
-        <motion.div className="max-w-3xl mx-auto space-y-5" style={{ y: accordionY }}>
-          <Accordion
-            type="single"
-            collapsible
-            defaultValue="actionable-analytics"
-            className="space-y-4"
+             initial={{ opacity: 0, scale: 0.95 }}
+             whileInView={{ opacity: 1, scale: 1 }}
+             viewport={{ once: true }}
+             transition={{ duration: 0.6 }}
+             className="grid grid-cols-2 gap-4"
           >
             {[
-              {
-                value: "actionable-analytics",
-                icon: <BarChart2 className="h-6 w-6 text-cyan-400" />,
-                title: "Actionable Analytics",
-                content:
-                  "Gain deep, actionable insights to refine campaigns and boost ROI with precision.",
-              },
-              {
-                value: "data-empowerment",
-                icon: <LineChart className="h-6 w-6 text-cyan-400" />,
-                title: "Data Empowerment",
-                content:
-                  "Empower teams with accessible, meaningful data to make confident, informed decisions.",
-              },
-              {
-                value: "content-marketing",
-                icon: <PenTool className="h-6 w-6 text-cyan-400" />,
-                title: "Content Marketing",
-                content:
-                  "Engaging, targeted content strategies that convert and build brand loyalty.",
-              },
-              {
-                value: "sales-enablement",
-                icon: <DollarSign className="h-6 w-6 text-cyan-400" />,
-                title: "Sales Enablement",
-                content:
-                  "Align sales & marketing with tools to accelerate deal closures and revenue growth.",
-              },
-            ].map((item) => (
-              <AccordionItem
-                key={item.value}
-                value={item.value}
-                className="border border-white/10 bg-white/5 backdrop-blur-lg rounded-xl p-4 hover:border-cyan-400/40 transition-all duration-300"
+              { value: countValues.clientSatisfaction, suffix: "%", label: "Client Satisfaction", color: "text-cyan-400" },
+              { value: countValues.revenue, prefix: "$", suffix: "M+", label: "Revenue Generated", color: "text-blue-400" },
+              { value: countValues.growth, suffix: "%", label: "Average Growth", color: "text-purple-400" },
+              { value: countValues.years, label: "Years Experience", color: "text-white" },
+            ].map((stat, i) => (
+              <div
+                key={i}
+                className="p-6 md:p-8 rounded-[2rem] bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.04] transition-colors flex flex-col justify-center items-center text-center aspect-square"
               >
-                <AccordionTrigger
-                  onClick={() => setActiveItem(item.value)}
-                  className="flex items-center gap-4 text-lg font-semibold"
-                >
-                  <motion.div
-                    className="bg-cyan-500/20 p-2 rounded-full border border-cyan-400/30"
-                    whileHover={{ scale: 1.2, rotate: 8 }}
-                  >
-                    {item.icon}
-                  </motion.div>
-                  {item.title}
-                </AccordionTrigger>
-                <AccordionContent>
-                  <p className="text-white/70 mt-2 leading-relaxed">{item.content}</p>
-                </AccordionContent>
-              </AccordionItem>
+                <div className={`text-5xl md:text-6xl font-medium tracking-tight mb-3 ${stat.color}`}>
+                  {stat.prefix || ""}
+                  <CountUp end={stat.value} duration={2.5} enableScrollSpy scrollSpyOnce />
+                  {stat.suffix || ""}
+                </div>
+                <div className="text-gray-400 font-light text-sm md:text-base max-w-[120px] leading-tight">{stat.label}</div>
+              </div>
             ))}
-          </Accordion>
-        </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Right Side: Accordion */}
+        <div className="w-full lg:w-1/2">
+           <motion.div
+             initial={{ opacity: 0, x: 30 }}
+             whileInView={{ opacity: 1, x: 0 }}
+             viewport={{ once: true }}
+             transition={{ duration: 0.6 }}
+           >
+             <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-8">
+               Data that drives <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">results.</span>
+             </h2>
+             <p className="text-gray-400 font-light text-lg mb-10 leading-relaxed max-w-lg">
+               We believe in engineering success through observable metrics. Our strategies align with your business objectives to deliver undeniable impact.
+             </p>
+
+             <Accordion
+               type="single"
+               collapsible
+               defaultValue="actionable-analytics"
+               className="w-full"
+             >
+               {[
+                 {
+                   value: "actionable-analytics",
+                   icon: <BarChart2 className="w-5 h-5" />,
+                   title: "Actionable Analytics",
+                   content: "Gain deep insights to refine campaigns and boost ROI with precision.",
+                 },
+                 {
+                   value: "data-empowerment",
+                   icon: <LineChart className="w-5 h-5" />,
+                   title: "Data Empowerment",
+                   content: "Empower teams with accessible data to make confident decisions.",
+                 },
+                 {
+                   value: "content-marketing",
+                   icon: <PenTool className="w-5 h-5" />,
+                   title: "Content Marketing",
+                   content: "Targeted content strategies that convert and build loyalty.",
+                 },
+                 {
+                   value: "sales-enablement",
+                   icon: <DollarSign className="w-5 h-5" />,
+                   title: "Sales Enablement",
+                   content: "Align sales & marketing to accelerate deal closures.",
+                 },
+               ].map((item) => (
+                 <AccordionItem
+                   key={item.value}
+                   value={item.value}
+                   className="border-b border-white/[0.05] py-2"
+                 >
+                   <AccordionTrigger
+                     onClick={() => setActiveItem(item.value)}
+                     className="hover:no-underline text-lg font-medium text-white/90 hover:text-white transition-colors"
+                   >
+                     <div className="flex items-center gap-4">
+                       <div className={`p-2 rounded-lg transition-colors duration-300 ${activeItem === item.value ? 'bg-cyan-500/10 text-cyan-400' : 'bg-white/[0.05] text-gray-400'}`}>
+                         {item.icon}
+                       </div>
+                       {item.title}
+                     </div>
+                   </AccordionTrigger>
+                   <AccordionContent className="text-gray-400 font-light leading-relaxed pl-14 pb-4">
+                     {item.content}
+                   </AccordionContent>
+                 </AccordionItem>
+               ))}
+             </Accordion>
+           </motion.div>
+        </div>
       </div>
     </section>
   );
