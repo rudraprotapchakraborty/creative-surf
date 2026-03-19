@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
-import { X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, Send, Sparkles } from "lucide-react";
 
 interface ChatWindowProps {
   onClose: () => void;
@@ -19,7 +19,6 @@ const SUGGESTED_PROMPTS = [
   "Can you design a website?",
   "Do you manage social media?",
   "How much do your services cost?",
-  "Can I see your portfolio?",
 ];
 
 export default function ChatWindow({ onClose, onNewMessage }: ChatWindowProps) {
@@ -28,7 +27,7 @@ export default function ChatWindow({ onClose, onNewMessage }: ChatWindowProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       sender: "bot",
-      text: "Hi — I'm Creative Surf’s virtual assistant. How can I help you today?",
+      text: "Hi! I'm the Creative Surf assistant. How can I help you today?",
     },
   ]);
 
@@ -38,7 +37,12 @@ export default function ChatWindow({ onClose, onNewMessage }: ChatWindowProps) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior: "smooth"
+      });
+    }
   }, [messages, typing]);
 
   const pushBot = (text: string) => {
@@ -76,106 +80,134 @@ export default function ChatWindow({ onClose, onNewMessage }: ChatWindowProps) {
   };
 
   return (
-    <>
-      <motion.div
-        initial={!isMobile ? { opacity: 0, y: 20 } : {}}
-        animate={!isMobile ? { opacity: 1, y: 0 } : {}}
-        exit={{ opacity: 0 }}
-        className="
-          fixed bottom-24 right-6 z-[9999]
-          w-80 h-96 lg:w-96 lg:h-[520px]
-          rounded-2xl backdrop-blur-xl
-          bg-[#0d0f16]/80 border border-white/10 shadow-2xl
-          flex flex-col
-        "
-      >
-        {/* HEADER */}
-        <div className="px-4 py-3 rounded-t-2xl text-white bg-gradient-to-r from-cyan-500 to-purple-600 flex justify-between items-center">
+    <motion.div
+      initial={!isMobile ? { opacity: 0, y: 30, scale: 0.95 } : { y: "100%" }}
+      animate={!isMobile ? { opacity: 1, y: 0, scale: 1 } : { y: 0 }}
+      exit={!isMobile ? { opacity: 0, y: 20, scale: 0.95 } : { y: "100%" }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      className="
+        fixed bottom-24 right-6 z-[9999]
+        w-[85vw] max-w-[380px] h-[550px] max-h-[75vh]
+        rounded-3xl backdrop-blur-2xl
+        bg-[#06080F]/90 border border-white/[0.08] shadow-[0_0_40px_rgba(0,0,0,0.5)]
+        flex flex-col overflow-hidden
+      "
+    >
+      {/* HEADER */}
+      <div className="px-6 py-5 border-b border-white/[0.05] bg-white/[0.02] flex justify-between items-center relative overflow-hidden">
+        {/* Subtle glow in header */}
+        <div className="absolute top-0 left-1/4 w-1/2 h-full bg-cyan-500/10 blur-[20px] rounded-full pointer-events-none" />
+        
+        <div className="flex items-center gap-3 relative z-10">
+          <div className="w-8 h-8 rounded-full bg-white/[0.05] border border-white/[0.05] flex items-center justify-center">
+            <Sparkles className="w-4 h-4 text-cyan-400" />
+          </div>
           <div>
-            <div className="font-semibold">Creative Surf AI</div>
-            <div className="text-xs opacity-80">Virtual Support</div>
-          </div>
-
-          <button onClick={onClose} className="p-1 hover:bg-white/20 rounded">
-            <X size={18} />
-          </button>
-        </div>
-
-        {/* SUGGESTED PROMPTS */}
-        <div className="px-3 py-2 border-b border-white/10 bg-[#11131a]/60">
-          <div className="flex gap-2 overflow-x-auto">
-            {SUGGESTED_PROMPTS.map((p, i) => (
-              <button
-                key={i}
-                onClick={() => sendMessage(p)}
-                className="
-                  px-3 py-1.5 rounded-xl text-sm whitespace-nowrap
-                  bg-[#1a1d27] text-gray-200 border border-white/10
-                "
-              >
-                {p}
-              </button>
-            ))}
+            <div className="text-white font-medium text-sm">CreativeAI</div>
+            <div className="text-xs text-gray-400 font-light flex items-center gap-1.5 mt-0.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Online
+            </div>
           </div>
         </div>
 
-        {/* MESSAGES */}
-        <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4">
-          {messages.map((m, i) => (
-            <div
+        <button 
+          onClick={onClose} 
+          className="relative z-10 p-2 text-gray-400 hover:text-white hover:bg-white/[0.05] rounded-full transition-colors"
+        >
+          <X size={18} />
+        </button>
+      </div>
+
+      {/* SUGGESTED PROMPTS */}
+      <div className="px-4 py-3 border-b border-white/[0.02] bg-[#06080F]">
+        <div className="flex flex-wrap gap-2 pb-1">
+          {SUGGESTED_PROMPTS.map((p, i) => (
+            <button
               key={i}
-              className={`max-w-[80%] ${m.sender === "user" ? "ml-auto" : "mr-auto"}`}
+              onClick={() => sendMessage(p)}
+              className="
+                px-3 py-1.5 rounded-full text-[13px] font-medium transition-colors
+                bg-white/[0.03] text-gray-300 border border-white/[0.05] hover:bg-white/[0.08] hover:text-white
+              "
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* MESSAGES */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-5 space-y-5 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+        <AnimatePresence initial={false}>
+          {messages.map((m, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              className={`max-w-[85%] flex flex-col ${m.sender === "user" ? "ml-auto items-end" : "mr-auto items-start"}`}
             >
               <div
-                className="px-4 py-2 rounded-xl text-sm"
-                style={{
-                  background:
-                    m.sender === "user"
-                      ? "linear-gradient(90deg,#00e5ff,#8b5cf6)"
-                      : "rgba(255,255,255,0.05)",
-                  color: "white",
-                }}
+                className={`
+                  px-5 py-3 rounded-2xl text-[14px] leading-relaxed shadow-sm
+                  ${m.sender === "user" 
+                    ? "bg-white text-black rounded-br-sm font-medium" 
+                    : "bg-white/[0.04] border border-white/[0.05] text-gray-200 rounded-bl-sm font-light"
+                  }
+                `}
               >
                 {m.text}
               </div>
-            </div>
+            </motion.div>
           ))}
 
           {typing && (
-            <div className="mr-auto max-w-[80%]">
-              <div className="px-4 py-2 rounded-xl bg-white/10 text-gray-200">
-                <div className="flex gap-1">
-                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
-                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-150"></span>
-                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-300"></span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* INPUT AREA */}
-        <div className="px-3 py-3 border-t border-white/10 bg-[#11131a]/60">
-          <div className="flex gap-2">
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-              className="
-                flex-1 px-4 py-2 rounded-xl bg-[#1a1d27] text-white border border-white/10
-                outline-none
-              "
-              placeholder="Type your message..."
-            />
-            <button
-              onClick={() => sendMessage()}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 text-white"
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="mr-auto max-w-[80%]"
             >
-              Send
-            </button>
-          </div>
+              <div className="px-5 py-4 rounded-2xl rounded-bl-sm bg-white/[0.04] border border-white/[0.05] flex items-center gap-1.5">
+                <motion.span animate={{ y: [0, -4, 0] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0 }} className="w-1.5 h-1.5 bg-gray-400 rounded-full" />
+                <motion.span animate={{ y: [0, -4, 0] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }} className="w-1.5 h-1.5 bg-gray-400 rounded-full" />
+                <motion.span animate={{ y: [0, -4, 0] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }} className="w-1.5 h-1.5 bg-gray-400 rounded-full" />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* INPUT AREA */}
+      <div className="p-4 bg-white/[0.02] border-t border-white/[0.05]">
+        <div className="relative flex items-center">
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+            className="
+              w-full pl-5 pr-14 py-3.5 rounded-full 
+              bg-white/[0.05] text-white placeholder-gray-500 text-sm font-light
+              border border-white/[0.1] focus:border-cyan-500/50 focus:bg-white/[0.08]
+              outline-none transition-all shadow-inner
+            "
+            placeholder="Ask me anything..."
+          />
+          <button
+            onClick={() => sendMessage()}
+            disabled={!input.trim()}
+            className="
+              absolute right-2 top-1/2 -translate-y-1/2
+              w-9 h-9 rounded-full bg-white text-black flex items-center justify-center
+              hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors
+            "
+          >
+            <Send size={16} className={input.trim() ? "translate-x-0.5" : ""} />
+          </button>
         </div>
-      </motion.div>
-    </>
+      </div>
+      
+    </motion.div>
   );
 }

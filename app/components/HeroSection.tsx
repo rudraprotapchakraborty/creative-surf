@@ -72,24 +72,26 @@ export default function HeroSection() {
 
           {/* CTA Buttons */}
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-            <motion.button 
+            <motion.a 
+              href="#contact"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-black rounded-full font-medium text-lg overflow-hidden transition-transform"
+              className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-black rounded-full font-medium text-lg overflow-hidden transition-transform cursor-pointer"
             >
               <span className="relative z-10 flex items-center gap-2">
                 Start a Project
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-200 to-blue-200 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </motion.button>
-            <motion.button 
+            </motion.a>
+            <motion.a 
+              href="#projects"
               whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.1)" }}
               whileTap={{ scale: 0.95 }}
-              className="w-full sm:w-auto px-8 py-4 rounded-full font-medium text-lg text-white border border-white/20 hover:border-white/40 backdrop-blur-sm transition-colors"
+              className="w-full sm:w-auto px-8 py-4 rounded-full font-medium text-lg text-white border border-white/20 hover:border-white/40 backdrop-blur-sm transition-colors text-center cursor-pointer"
             >
               View Our Work
-            </motion.button>
+            </motion.a>
           </motion.div>
         </motion.div>
 
