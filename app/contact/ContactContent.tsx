@@ -1,183 +1,146 @@
-"use client"
-import { motion, useScroll, useTransform } from "framer-motion"
-import { useRef } from "react"
+"use client";
+import { motion } from "framer-motion";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { MapPin, Mail, Phone, Clock } from "lucide-react";
 
 export default function ContactContent() {
-  const ref = useRef(null)
-  const { scrollY } = useScroll({ container: ref })
-
-  const yBackground = useTransform(scrollY, [0, 500], [0, 200])
-  const yParticles = useTransform(scrollY, [0, 500], [0, -150])
-  const yText = useTransform(scrollY, [0, 300], [0, -80])
-
   return (
-    <main
-      ref={ref}
-      className="flex flex-col min-h-screen bg-gray-950 text-white overflow-hidden"
-    >
-      {/* Hero Section */}
-      <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
-        {/* Gradient background */}
+    <main className="min-h-screen bg-flow-bg text-flow-text pt-32 pb-24 px-6 overflow-hidden">
+      
+      {/* Background blobs for aesthetic */}
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-flow-green/5 blur-[120px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/4" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-flow-text/5 blur-[100px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/4" />
+      
+      <div className="container mx-auto max-w-7xl relative z-10">
+        
         <motion.div
-          style={{ y: yBackground }}
-          className="absolute inset-0 bg-gradient-to-b from-blue-900 via-indigo-900 to-gray-950"
-        />
-
-        {/* Animated particles */}
-        <motion.div
-          style={{ y: yParticles }}
-          className="absolute inset-0 overflow-hidden"
+           initial={{ opacity: 0, y: 30 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ duration: 0.8, ease: "easeOut" }}
+           className="text-left mb-20 max-w-3xl"
         >
-          {[...Array(40)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 bg-white rounded-full"
-              initial={{ opacity: 0, y: 0 }}
-              animate={{
-                opacity: [0, 1, 0],
-                y: [-20, -200],
-                x: [0, (Math.random() - 0.5) * 300],
-              }}
-              transition={{
-                duration: 6 + Math.random() * 4,
-                repeat: Infinity,
-                delay: Math.random() * 5,
-              }}
-              style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-              }}
-            />
-          ))}
+          <h1 className="text-[3rem] sm:text-[4.5rem] md:text-6xl lg:text-[6.5rem] font-heading font-extrabold tracking-[-0.04em] mb-6 leading-[1.05]">
+            Let's build <br className="hidden md:block"/>something great.
+          </h1>
+          <p className="text-xl text-flow-text/70 font-normal">
+            Have a bold idea? We're ready to bring it to life with creativity, technology, and sheer innovation.
+          </p>
         </motion.div>
 
-        {/* Hero text */}
-        <motion.div
-          style={{ y: yText }}
-          className="relative z-10 text-center px-6"
-        >
-          <motion.h1
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            className="text-5xl md:text-6xl lg:text-7xl font-extrabold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent drop-shadow-lg"
-          >
-            Let’s Connect
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="text-lg md:text-xl mt-6 text-gray-200 max-w-2xl mx-auto"
-          >
-            Have a bold idea? We're ready to bring it to life with creativity,
-            technology, and innovation.
-          </motion.p>
-        </motion.div>
-      </section>
-
-      {/* Contact Section */}
-      <section className="relative py-20 px-6">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, x: -60 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1 }}
-            className="backdrop-blur-lg bg-white/5 rounded-2xl p-8 shadow-lg border border-white/10"
-          >
-            <h2 className="text-3xl font-bold mb-8">Contact Information</h2>
-            <div className="space-y-6 text-gray-300">
-              <div>
-                <h3 className="text-lg font-semibold text-cyan-400">Address</h3>
-                <p>
-                  Dhaka
-                  <br />
-                  Bangladesh
-                </p>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-cyan-400">Email</h3>
-                <p>contact@creativesurfagency.com</p>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-cyan-400">Phone</h3>
-                <p>+880 1988-467099</p>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-cyan-400">Hours</h3>
-                <p>
-                  Mon–Fri: 9am – 6pm
-                  <br />
-                  Sat–Sun: Closed
-                </p>
-              </div>
-            </div>
-          </motion.div>
-
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          
           {/* Contact Form */}
           <motion.div
-            initial={{ opacity: 0, x: 60 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1 }}
-            className="lg:col-span-2 backdrop-blur-lg bg-white/5 rounded-2xl p-8 shadow-lg border border-white/10"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="lg:col-span-2 bg-flow-card border border-flow-border rounded-sm p-8 md:p-12 shadow-sm"
           >
-            <h2 className="text-3xl font-bold mb-8">Send Us a Message</h2>
+            <h2 className="text-3xl font-heading font-extrabold mb-8 tracking-tight">Send a Message</h2>
             <form className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="flex flex-col">
-                  <label htmlFor="name" className="text-sm mb-2">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    className="px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="name" className="text-sm font-semibold text-flow-text/80">Name</label>
+                  <Input 
+                    id="name" 
+                    placeholder="Jane Doe" 
+                    className="h-12 bg-flow-bg border-flow-border text-flow-text focus-visible:ring-flow-green/20"
                   />
                 </div>
-                <div className="flex flex-col">
-                  <label htmlFor="email" className="text-sm mb-2">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="email" className="text-sm font-semibold text-flow-text/80">Email</label>
+                  <Input 
+                    id="email" 
+                    type="email" 
+                    placeholder="jane@example.com" 
+                    className="h-12 bg-flow-bg border-flow-border text-flow-text focus-visible:ring-flow-green/20"
                   />
                 </div>
               </div>
-              <div className="flex flex-col">
-                <label htmlFor="subject" className="text-sm mb-2">
-                  Subject
-                </label>
-                <input
-                  type="text"
-                  id="subject"
-                  className="px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              <div className="flex flex-col gap-2">
+                <label htmlFor="subject" className="text-sm font-semibold text-flow-text/80">Subject</label>
+                <Input 
+                  id="subject" 
+                  placeholder="How can we help you?" 
+                  className="h-12 bg-flow-bg border-flow-border text-flow-text focus-visible:ring-flow-green/20"
                 />
               </div>
-              <div className="flex flex-col">
-                <label htmlFor="message" className="text-sm mb-2">
-                  Message
-                </label>
-                <textarea
-                  id="message"
+              <div className="flex flex-col gap-2">
+                <label htmlFor="message" className="text-sm font-semibold text-flow-text/80">Message</label>
+                <textarea 
+                  id="message" 
                   rows={6}
-                  className="px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                ></textarea>
+                  placeholder="Tell us about your project..."
+                  className="w-full rounded-sm px-4 py-3 bg-flow-bg border border-flow-border text-flow-text placeholder:text-flow-text/50 focus:outline-none focus:ring-2 focus:ring-flow-green/20 resize-none transition-all shadow-sm"
+                />
               </div>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                type="submit"
-                className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 py-3 rounded-lg font-bold text-lg shadow-lg hover:shadow-cyan-500/50 transition"
+              <Button 
+                type="submit" 
+                className="w-full md:w-auto px-10 h-12 rounded-sm bg-flow-green text-white hover:bg-flow-buttonHover font-semibold transition-colors shadow-sm text-base mt-4"
               >
                 Send Message
-              </motion.button>
+              </Button>
             </form>
           </motion.div>
+
+          {/* Contact Details */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex flex-col gap-8"
+          >
+            <div className="bg-flow-card border border-flow-border rounded-sm p-8 shadow-sm">
+              <h3 className="text-xl font-heading font-extrabold mb-6 tracking-tight">Contact Info</h3>
+              <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-full bg-flow-bg border border-flow-border flex-shrink-0">
+                    <MapPin className="w-5 h-5 text-flow-green" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-flow-text mb-1">Address</h4>
+                    <p className="text-flow-text/70 text-sm leading-relaxed">Dhaka<br/>Bangladesh</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-full bg-flow-bg border border-flow-border flex-shrink-0">
+                    <Mail className="w-5 h-5 text-flow-green" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-flow-text mb-1">Email</h4>
+                    <p className="text-flow-text/70 text-sm leading-relaxed">contact@creativesurf.agency</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-full bg-flow-bg border border-flow-border flex-shrink-0">
+                    <Phone className="w-5 h-5 text-flow-green" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-flow-text mb-1">Phone</h4>
+                    <p className="text-flow-text/70 text-sm leading-relaxed">+880 1988-467099</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-full bg-flow-bg border border-flow-border flex-shrink-0">
+                    <Clock className="w-5 h-5 text-flow-green" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-flow-text mb-1">Hours</h4>
+                    <p className="text-flow-text/70 text-sm leading-relaxed">Mon–Fri: 9am – 6pm<br/>Sat–Sun: Closed</p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            
+          </motion.div>
+
         </div>
-      </section>
+      </div>
     </main>
-  )
+  );
 }

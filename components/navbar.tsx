@@ -11,10 +11,10 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   const navLinks = [
-    { label: "Home", href: "#home" },
-    { label: "Services", href: "#services" },
-    { label: "Projects", href: "#projects" },
-    { label: "Pricing", href: "#pricing" },
+    { label: "Home", href: "/#home" },
+    { label: "Services", href: "/#services" },
+    { label: "Projects", href: "/#projects" },
+    { label: "Pricing", href: "/#pricing" },
   ];
 
   useEffect(() => {
@@ -69,7 +69,7 @@ export function Navbar() {
           <div className="hidden md:flex items-center gap-4">
             <ThemeToggle />
             <Link
-              href="#contact"
+              href="/contact"
               className="
                 px-6 py-2.5 rounded-sm text-sm font-semibold text-white
                 bg-flow-green hover:bg-flow-buttonHover transition-colors shadow-sm
@@ -134,7 +134,7 @@ export function Navbar() {
 
               <div className="mt-auto pt-8 border-t border-flow-border">
                 <Link
-                  href="#contact"
+                  href="/contact"
                   onClick={() => setMobileOpen(false)}
                   className="w-full flex justify-center py-4 rounded-sm text-lg font-semibold bg-flow-green text-white hover:bg-flow-buttonHover transition-colors shadow-sm"
                 >

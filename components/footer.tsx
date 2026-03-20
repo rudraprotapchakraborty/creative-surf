@@ -45,7 +45,7 @@ export function Footer() {
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               <Link
-                href="mailto:contact@creativesurf.agency"
+                href="/contact"
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-sm text-lg font-semibold text-white bg-flow-green hover:bg-flow-buttonHover transition-colors shadow-sm"
               >
                 Start a Project <ArrowUpRight className="w-5 h-5" />
