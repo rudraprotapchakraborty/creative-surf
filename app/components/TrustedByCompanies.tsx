@@ -6,28 +6,31 @@ import { motion } from "framer-motion";
 
 const TrustedByCompanies: React.FC = () => {
   return (
-    <section className="w-full py-24 bg-flow-card overflow-hidden border-t border-flow-border">
-      <div className="container mx-auto px-6 flex flex-col items-center justify-center text-center">
-        
+    <section className="relative w-full py-20 bg-flow-bg overflow-hidden border-t border-flow-border">
+      <div className="absolute inset-0 bg-grid-fine mask-radial pointer-events-none opacity-25" />
+
+      <div className="container mx-auto px-6 flex flex-col items-center justify-center text-center relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-12"
+          className="mb-12 flex flex-col items-center gap-4"
         >
-          <p className="text-flow-text/60 font-medium text-sm tracking-widest uppercase mb-2">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border border-flow-border text-xs font-bold uppercase tracking-[0.2em] text-aurora-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-aurora-1" />
+            Our Clients
+          </span>
+          <p className="text-flow-textSoft font-medium text-sm md:text-base">
             Trusted by forward-thinking teams worldwide
           </p>
         </motion.div>
-
       </div>
 
-      {/* Edge-to-Edge Logos container */}
-      <div className="w-full relative mt-8">
-        <div className="absolute left-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-r from-flow-card to-transparent pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-l from-flow-card to-transparent pointer-events-none" />
-        
+      {/* Edge-to-Edge Logos */}
+      <div className="w-full relative mt-4">
+        <div className="absolute left-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-r from-flow-bg to-transparent pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-l from-flow-bg to-transparent pointer-events-none" />
         <MovingLogos />
       </div>
     </section>

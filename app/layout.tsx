@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { generateMetadata } from "@/lib/metadata";
 import Client from "./client";
 import "./globals.css";
-import ChatButton from "@/components/ChatButton";
 
 export const metadata: Metadata = generateMetadata({
   title: "Creative Surf",
@@ -17,8 +16,5 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <Client>
-    <ChatButton />
-    {children}
-    </Client>;
+  return <Client>{children}</Client>;
 }

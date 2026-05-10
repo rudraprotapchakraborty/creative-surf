@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(rm -v components/ChatButton.tsx components/ChatWindow.tsx)",
+      "Bash(rm -rv app/api/chat)",
+      "Bash(rm public/chatgpt.png)",
+      "Bash(rm -rf .next)",
+      "Bash(npm install *)"
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -37,57 +37,62 @@ export function Navbar() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className={`
-            w-full px-6 py-4 flex items-center justify-between
-            rounded-full border transition-all duration-500
-            ${scrolled 
-              ? "bg-flow-card/90 border-flow-border backdrop-blur-xl shadow-sm" 
-              : "bg-transparent border-transparent"}
+            w-full px-5 md:px-6 py-3 md:py-4 flex items-center justify-between
+            rounded-full transition-all duration-500
+            ${scrolled
+              ? "glass-strong border border-flow-border shadow-soft"
+              : "bg-transparent border border-transparent"}
           `}
         >
           {/* LOGO */}
           <Link href="/" className="flex items-center gap-3 group">
-            <img src="/logo.png" alt="logo" className="w-8 h-8 md:w-10 md:h-10 transition-transform duration-500 group-hover:scale-110" />
-            <span className={`font-heading font-extrabold text-lg md:text-xl tracking-tight transition-colors ${scrolled ? 'text-flow-text' : 'text-flow-text'}`}>
-              Creative Surf
+            <div className="relative">
+              <div className="absolute inset-0 bg-aurora-grad rounded-full blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-500" />
+              <img
+                src="/logo.png"
+                alt="logo"
+                className="relative w-8 h-8 md:w-10 md:h-10 transition-transform duration-500 group-hover:scale-110"
+              />
+            </div>
+            <span className="font-heading font-extrabold text-lg md:text-xl tracking-tight text-flow-text">
+              Creative <span className="text-aurora">Surf</span>
             </span>
           </Link>
 
           {/* DESKTOP NAV */}
-          <div className="hidden md:flex items-center gap-8 bg-flow-card/50 px-8 py-2.5 rounded-sm border border-flow-border shadow-sm">
+          <div className="hidden md:flex items-center gap-1 glass border border-flow-border px-2 py-1.5 rounded-full">
             {navLinks.map((link) => (
-              <Link 
-                key={link.href} 
-                href={link.href} 
-                className="text-flow-text/70 text-sm font-semibold hover:text-flow-green transition-colors"
+              <Link
+                key={link.href}
+                href={link.href}
+                className="px-4 py-2 rounded-full text-flow-textSoft text-sm font-semibold hover:text-flow-text hover:bg-flow-card transition-all"
               >
                 {link.label}
               </Link>
             ))}
           </div>
 
-          {/* DESKTOP CTA & TOGGLE */}
-          <div className="hidden md:flex items-center gap-4">
+          {/* DESKTOP CTA */}
+          <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
             <Link
               href="/contact"
-              className="
-                px-6 py-2.5 rounded-sm text-sm font-semibold text-white
-                bg-flow-green hover:bg-flow-buttonHover transition-colors shadow-sm
-              "
+              className="shine relative group inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-aurora-grad shadow-aurora overflow-hidden"
             >
-              Get Started
+              <span className="relative">Get Started</span>
+              <ArrowRight className="relative w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </div>
 
-          {/* MOBILE MENU BUTTON & TOGGLE */}
+          {/* MOBILE MENU BUTTON */}
           <div className="md:hidden flex items-center gap-2">
             <ThemeToggle />
             <button
               onClick={() => setMobileOpen(true)}
               aria-label="Open menu"
-              className={`p-2 rounded-sm transition-colors ${scrolled ? 'text-flow-text hover:bg-flow-border' : 'text-flow-text hover:bg-flow-card/50'}`}
+              className="p-2 rounded-full text-flow-text hover:bg-flow-card transition-colors"
             >
-              <Menu size={24} />
+              <Menu size={22} />
             </button>
           </div>
         </motion.nav>
@@ -100,35 +105,47 @@ export function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-flow-bg/95 backdrop-blur-xl z-[9999]"
+            className="fixed inset-0 bg-flow-bg/90 backdrop-blur-2xl z-[9999]"
           >
+            {/* Aurora accent in overlay */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-50">
+              <div className="aurora-blob aurora-1 w-[60vw] h-[60vw] -top-[20vw] -right-[20vw]" />
+              <div className="aurora-blob aurora-2 w-[50vw] h-[50vw] bottom-[-10vw] -left-[10vw]" />
+            </div>
+
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="absolute top-0 right-0 h-full w-[85%] max-w-[360px] bg-flow-card border-l border-flow-border shadow-xl p-8 flex flex-col"
+              className="absolute top-0 right-0 h-full w-[88%] max-w-[380px] glass-strong border-l border-flow-border p-8 flex flex-col"
             >
               <div className="flex justify-between items-center mb-12">
                 <span className="text-flow-text font-heading font-extrabold text-xl">Menu</span>
                 <button
                   onClick={() => setMobileOpen(false)}
-                  className="text-flow-text p-2 rounded-sm hover:bg-flow-border transition-colors"
+                  className="text-flow-text p-2 rounded-full hover:bg-flow-card transition-colors"
                 >
-                  <X size={24} />
+                  <X size={22} />
                 </button>
               </div>
 
-              <div className="flex flex-col gap-6 w-full">
-                {navLinks.map((link) => (
-                  <Link
+              <div className="flex flex-col gap-1 w-full">
+                {navLinks.map((link, idx) => (
+                  <motion.div
                     key={link.href}
-                    href={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="text-flow-text/70 text-2xl font-semibold hover:text-flow-green transition-colors"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 + idx * 0.05 }}
                   >
-                    {link.label}
-                  </Link>
+                    <Link
+                      href={link.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="block text-flow-text text-2xl md:text-3xl font-heading font-extrabold py-3 hover:text-aurora-1 transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
                 ))}
               </div>
 
@@ -136,9 +153,10 @@ export function Navbar() {
                 <Link
                   href="/contact"
                   onClick={() => setMobileOpen(false)}
-                  className="w-full flex justify-center py-4 rounded-sm text-lg font-semibold bg-flow-green text-white hover:bg-flow-buttonHover transition-colors shadow-sm"
+                  className="shine relative group w-full flex items-center justify-center gap-2 py-4 rounded-full text-lg font-semibold bg-aurora-grad text-white shadow-aurora overflow-hidden"
                 >
-                  Get Started
+                  <span className="relative">Get Started</span>
+                  <ArrowRight className="relative w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
               </div>
             </motion.div>

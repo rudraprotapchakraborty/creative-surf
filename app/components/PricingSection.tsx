@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
+import WaveBackdrop from "./WaveBackdrop";
 
 export default function PricingSection() {
   const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
@@ -11,7 +12,7 @@ export default function PricingSection() {
     monthly: [
       {
         title: "Basic",
-        price: 390,
+        price: 1000,
         description: "Perfect for small businesses",
         features: [
           "Business Development",
@@ -25,27 +26,27 @@ export default function PricingSection() {
       },
       {
         title: "Standard",
-        price: 490,
+        price: 1500,
         description: "Best for growing companies",
-        highlight: "Popular",
+        highlight: "Most Popular",
         features: [
           "Product Photography",
           "Creative Visual Content (Up to 10)",
           "Copyright Content with SEO",
           "Media Buying on Demand ($50 free)",
-          "Everything in Basic"
+          "Everything in Basic",
         ],
       },
       {
         title: "Premium",
-        price: 650,
+        price: 1800,
         description: "For enterprise businesses",
         features: [
           "Website Development",
           "Creative Visual Content (Up to 15)",
           "Media Buying on Demand ($100 free)",
           "Content Writing (Up to 5)",
-          "Everything in Standard"
+          "Everything in Standard",
         ],
       },
     ],
@@ -54,56 +55,62 @@ export default function PricingSection() {
 
   pricingPlans.yearly = pricingPlans.monthly.map((p) => ({
     ...p,
-    price: Math.floor(p.price * 6 * 0.8), // Assuming half-yearly pricing originally implies this calculation
+    price: Math.floor(p.price * 6 * 0.8),
   }));
 
   const activePlans = pricingPlans[billing];
 
   return (
-    <section id="pricing" className="relative py-32 bg-flow-card text-flow-text overflow-hidden border-t border-flow-border">
-      {/* Sharp Vector Waves */}
-      <div className="absolute top-0 left-0 w-[100vw] h-[100vw] md:w-[60vw] md:h-[60vw] max-w-[1000px] max-h-[1000px] pointer-events-none z-0 overflow-hidden transform -scale-x-100 opacity-40">
-        <motion.svg 
-          viewBox="0 0 500 500" 
-          preserveAspectRatio="xMidYMax slice"
-          className="absolute top-0 left-0 w-full h-full object-cover origin-top-left"
-        >
-          <path d="M 500,500 L 0,500 C 100,400 150,300 300,350 C 400,380 450,200 500,100 Z" className="fill-flow-blob3 transition-colors" />
-          <path d="M 500,500 L 50,500 C 150,450 250,350 350,400 C 420,430 480,250 500,150 Z" className="fill-flow-blob2 transition-colors" />
-        </motion.svg>
-      </div>
+    <section
+      id="pricing"
+      className="relative py-20 sm:py-24 md:py-28 lg:py-32 bg-flow-bg text-flow-text overflow-hidden border-t border-flow-border"
+    >
+      <WaveBackdrop id="price-wave" corner="tl" size="sm" opacity={0.45} />
+
+      <div className="absolute inset-0 bg-grid-fine mask-radial pointer-events-none opacity-40" />
+
       <div className="container px-6 max-w-7xl mx-auto relative z-10">
         <motion.div
-           initial={{ opacity: 0, y: 20 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           viewport={{ once: true }}
-           className="text-left mb-16 flex flex-col items-start"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-left mb-12 md:mb-16 flex flex-col items-start"
         >
-          <h2 className="text-[2.75rem] sm:text-[3.5rem] md:text-6xl lg:text-[6.5rem] font-heading font-extrabold tracking-[-0.04em] mb-4 leading-[1.05]">
-            Clear, Transparent <br className="hidden md:block"/> Pricing.
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border border-flow-border text-xs font-bold uppercase tracking-[0.2em] text-aurora-1 mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-aurora-1" />
+            Pricing
+          </span>
+          <h2 className="text-[2.25rem] sm:text-[3rem] md:text-5xl lg:text-[5.5rem] font-heading font-extrabold tracking-[-0.05em] mb-4 leading-[1.0]">
+            Clear, transparent <br className="hidden md:block" />
+            <span className="text-aurora italic">pricing.</span>
           </h2>
-          <p className="text-flow-text/70 text-lg font-normal max-w-2xl">
+          <p className="text-flow-textSoft text-lg font-normal max-w-2xl">
             Choose your perfect package — crafted for modern businesses aiming for growth.
           </p>
 
-          <div className="mt-10 inline-flex items-center bg-flow-bg rounded-sm p-1 border border-flow-border">
+          <div className="mt-10 inline-flex items-center glass border border-flow-border rounded-full p-1">
             {["monthly", "yearly"].map((mode) => (
               <button
                 key={mode}
                 onClick={() => setBilling(mode as "monthly" | "yearly")}
-                className={`px-8 py-2.5 rounded-sm text-sm font-semibold transition-all duration-300 ${
-                  billing === mode
-                    ? "bg-flow-card text-flow-text shadow-sm border border-flow-border"
-                    : "text-flow-text/60 hover:text-flow-text"
+                className={`relative px-6 md:px-8 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
+                  billing === mode ? "text-white" : "text-flow-textSoft hover:text-flow-text"
                 }`}
               >
-                {mode === "monthly" ? "Monthly" : "Half-Yearly (20% OFF)"}
+                {billing === mode && (
+                  <motion.span
+                    layoutId="pricing-toggle"
+                    className="absolute inset-0 bg-aurora-grad rounded-full shadow-aurora"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <span className="relative">{mode === "monthly" ? "Monthly" : "Half-Yearly · 20% off"}</span>
               </button>
             ))}
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {activePlans.map((plan, idx) => (
             <motion.div
               key={plan.title}
@@ -111,45 +118,64 @@ export default function PricingSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1, duration: 0.5 }}
-              className={`relative flex flex-col p-8 rounded-sm bg-flow-card border transition-colors duration-300 hover:shadow-sm ${
-                plan.highlight 
-                  ? "border-flow-green shadow-sm" 
-                  : "border-flow-border hover:border-flow-text/20"
+              whileHover={{ y: -6 }}
+              className={`relative flex flex-col p-8 lg:p-10 rounded-3xl overflow-hidden ${
+                plan.highlight
+                  ? "bg-flow-cardSolid border border-transparent shadow-aurora gradient-border"
+                  : "glass border border-flow-border conic-ring"
               }`}
             >
               {plan.highlight && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-flow-green text-white px-4 py-1 text-xs font-bold rounded-sm tracking-wide shadow-sm">
-                  {plan.highlight}
+                <span className="absolute inset-0 bg-aurora-soft opacity-80 pointer-events-none" />
+              )}
+
+              {plan.highlight && (
+                <div className="absolute -top-3 right-6 z-10">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold tracking-[0.15em] uppercase rounded-full bg-aurora-grad text-white shadow-aurora">
+                    <Sparkles className="w-3 h-3" />
+                    {plan.highlight}
+                  </span>
                 </div>
               )}
-              
-              <div className="mb-8">
-                <h3 className="text-3xl font-heading font-extrabold text-flow-text mb-2 tracking-tight">{plan.title}</h3>
-                <p className="text-sm text-flow-text/60 font-normal h-10">{plan.description}</p>
+
+              <div className="relative mb-8">
+                <h3 className="text-2xl md:text-3xl font-heading font-extrabold text-flow-text mb-2 tracking-tight">
+                  {plan.title}
+                </h3>
+                <p className="text-sm text-flow-textSoft font-normal h-10">{plan.description}</p>
               </div>
 
-              <div className="mb-8 flex items-baseline">
-                <span className="text-[3.5rem] md:text-7xl font-heading font-extrabold tracking-[-0.04em] text-flow-text">${plan.price}</span>
-                <span className="text-flow-text/50 ml-2 font-normal">
+              <div className="relative mb-8 flex items-baseline">
+                <span className="text-[3.5rem] md:text-7xl font-heading font-extrabold tracking-[-0.05em] text-flow-text">
+                  ${plan.price}
+                </span>
+                <span className="text-flow-textSoft ml-2 font-normal">
                   /{billing === "monthly" ? "mo" : "half-yr"}
                 </span>
               </div>
 
-              <ul className="flex-1 space-y-4 mb-8">
+              <ul className="relative flex-1 space-y-3.5 mb-8">
                 {plan.features.map((feature: string) => (
-                  <li key={feature} className="flex items-start gap-3 text-sm text-flow-text/80 font-normal leading-relaxed">
-                    <Check className="w-5 h-5 text-flow-green shrink-0 mt-0.5" />
+                  <li
+                    key={feature}
+                    className="flex items-start gap-3 text-sm text-flow-text/85 font-normal leading-relaxed"
+                  >
+                    <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-aurora-grad flex items-center justify-center">
+                      <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                    </span>
                     <span>{feature}</span>
                   </li>
                 ))}
               </ul>
 
-              <button className={`w-full py-4 rounded-sm font-semibold transition-colors ${
-                plan.highlight
-                  ? "bg-flow-green text-white hover:bg-flow-buttonHover"
-                  : "bg-flow-bg text-flow-text border border-flow-border hover:bg-flow-border"
-              }`}>
-                Get Started
+              <button
+                className={`shine relative w-full py-4 rounded-full font-semibold transition-all overflow-hidden ${
+                  plan.highlight
+                    ? "bg-aurora-grad text-white shadow-aurora hover:shadow-lg"
+                    : "glass border border-flow-borderStrong text-flow-text hover:border-aurora-1/50"
+                }`}
+              >
+                <span className="relative">Get Started</span>
               </button>
             </motion.div>
           ))}

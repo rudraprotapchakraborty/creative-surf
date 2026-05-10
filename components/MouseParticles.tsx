@@ -3,12 +3,12 @@
 import { useEffect, useRef } from 'react';
 
 const colors = [
-  "#0066A2", 
-  "#7DD3FC", 
-  "#F5B041", 
-  "#E74C3C", 
-  "#8E44AD",
-  "#16A085"
+  "#0066A2", // signature ocean blue
+  "#0EA5E9", // sky 500
+  "#38BDF8", // sky 400
+  "#7DD3FC", // sky 300
+  "#BAE6FD", // sky 200
+  "#003D5B", // abyss navy
 ];
 
 export default function MouseParticles() {

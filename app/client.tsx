@@ -34,8 +34,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${syne.variable} ${outfit.variable} font-sans`}>
-      <body>
+    <html lang="en" className={`${syne.variable} ${outfit.variable} font-sans`} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <Suspense fallback={null}>
             <GoogleAnalytics />
