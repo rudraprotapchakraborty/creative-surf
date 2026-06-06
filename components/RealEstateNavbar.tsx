@@ -4,43 +4,26 @@ import Link from "next/link";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
 
-export function Navbar() {
-  const pathname = usePathname();
+const navLinks = [
+  { label: "Home",     href: "/" },
+  { label: "Projects", href: "/real-estate/projects" },
+];
+
+export function RealEstateNavbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
-  const isRE = pathname.startsWith("/real-estate");
-
-  const navLinks = isRE
-    ? [
-        { label: "Home",     href: "/real-estate" },
-        { label: "Projects", href: "/real-estate/projects" },
-      ]
-    : [
-        { label: "Home",     href: "/#home" },
-        { label: "Services", href: "/#services" },
-        { label: "Projects", href: "/#projects" },
-        { label: "Pricing",  href: "/#pricing" },
-      ];
-
-  const specialBtn = isRE
-    ? { label: "Marketing", href: "/" }
-    : { label: "Real Estate", href: "/real-estate" };
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "auto";
   }, [mobileOpen]);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const scrolledClass = "glass-strong border border-flow-border shadow-soft";
 
   return (
     <>
@@ -49,14 +32,14 @@ export function Navbar() {
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className={`
-            w-full px-4 md:px-5 py-2 md:py-2.5 flex items-center justify-between
-            rounded-full transition-all duration-500
-            ${scrolledClass}
-          `}
+          className={`w-full px-4 md:px-5 py-2 md:py-2.5 flex items-center justify-between rounded-full transition-all duration-500 border ${
+            scrolled
+              ? "bg-white/70 border-black/8 backdrop-blur-md shadow-sm"
+              : "bg-transparent border-transparent"
+          }`}
         >
           {/* LOGO */}
-          <Link href={isRE ? "/real-estate" : "/"} className="flex items-center gap-3 group">
+          <Link href="/" className="flex items-center gap-3 group">
             <div className="relative">
               <div className="absolute inset-0 bg-aurora-grad rounded-full blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-500" />
               <img
@@ -70,7 +53,7 @@ export function Navbar() {
             </span>
           </Link>
 
-          {/* DESKTOP — nav pill */}
+          {/* DESKTOP NAV */}
           <div className="hidden md:flex items-center gap-0.5 glass border border-flow-border px-1.5 py-1 rounded-full">
             {navLinks.map((link) => (
               <Link
@@ -83,35 +66,19 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* DESKTOP — special button (Real Estate / Marketing) */}
-          <div className="hidden md:flex">
-            <Link
-              href={specialBtn.href}
-              className="px-3 py-1.5 rounded-full text-xs font-semibold border transition-all hover:opacity-80"
-              style={{
-                color: isRE ? "#0066A2" : "#B8892A",
-                borderColor: isRE ? "#0066A230" : "#B8892A40",
-                backgroundColor: isRE ? "#0066A210" : "#B8892A10",
-              }}
-            >
-              {specialBtn.label}
-            </Link>
-          </div>
-
-          {/* DESKTOP — theme + CTA */}
+          {/* DESKTOP CTA */}
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
             <Link
               href="/contact"
-              className={`shine relative group inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold text-white overflow-hidden ${isRE ? "" : "bg-aurora-grad shadow-aurora"}`}
-              style={isRE ? { background: "linear-gradient(135deg,#B8892A,#D4A843)" } : undefined}
+              className="shine relative group inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold text-white bg-aurora-grad shadow-aurora overflow-hidden"
             >
               <span className="relative">Get Started</span>
               <ArrowRight className="relative w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </div>
 
-          {/* MOBILE — toggle */}
+          {/* MOBILE MENU BUTTON */}
           <div className="md:hidden flex items-center gap-2">
             <ThemeToggle />
             <button
@@ -173,22 +140,6 @@ export function Navbar() {
                     </Link>
                   </motion.div>
                 ))}
-
-                {/* special button in mobile */}
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 + navLinks.length * 0.05 }}
-                >
-                  <Link
-                    href={specialBtn.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="block text-2xl font-heading font-extrabold py-3 transition-colors"
-                    style={{ color: isRE ? "#0066A2" : "#B8892A" }}
-                  >
-                    {specialBtn.label}
-                  </Link>
-                </motion.div>
               </div>
 
               <div className="mt-auto pt-8 border-t border-flow-border">

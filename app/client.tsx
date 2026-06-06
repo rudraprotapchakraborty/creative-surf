@@ -1,6 +1,7 @@
 import "./globals.css"
 import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
+import { RouteTheme } from "@/components/RouteTheme"
+import { ConditionalFooter } from "@/components/ConditionalFooter"
 import { LoadingBarProvider } from "@/components/LoadingBarContext"
 import type { Metadata } from "next"
 import { Syne, Outfit } from "next/font/google"
@@ -41,6 +42,8 @@ export default function RootLayout({
             <GoogleAnalytics />
           </Suspense>
 
+          <RouteTheme />
+
           {/* NAV */}
           <Navbar />
 
@@ -50,7 +53,7 @@ export default function RootLayout({
           </LoadingBarProvider>
 
           {/* FOOTER */}
-          <Footer />
+          <ConditionalFooter />
 
           {/* CHAT BUBBLE - MUST BE OUTSIDE MAIN CONTENT */}
         </ThemeProvider>
