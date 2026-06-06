@@ -20,10 +20,8 @@ export function Navbar() {
         { label: "Projects", href: "/real-estate/projects" },
       ]
     : [
-        { label: "Home",     href: "/#home" },
-        { label: "Services", href: "/#services" },
-        { label: "Projects", href: "/#projects" },
-        { label: "Pricing",  href: "/#pricing" },
+        { label: "Home",  href: "/" },
+        { label: "Blogs", href: "/blogs" },
       ];
 
   const specialBtn = isRE
@@ -129,79 +127,47 @@ export function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-flow-bg/90 backdrop-blur-2xl z-[9999]"
+            initial={{ opacity: 0, y: -8, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.97 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            className="fixed top-[4.5rem] left-1/2 -translate-x-1/2 w-[92%] max-w-sm z-[9999] glass-strong border border-flow-border rounded-2xl shadow-soft overflow-hidden"
+            style={{ fontFamily: "var(--font-jakarta)" }}
           >
-            <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-50">
-              <div className="aurora-blob aurora-1 w-[60vw] h-[60vw] -top-[20vw] -right-[20vw]" />
-              <div className="aurora-blob aurora-2 w-[50vw] h-[50vw] bottom-[-10vw] -left-[10vw]" />
+            {/* Nav links */}
+            <div className="flex flex-col p-2">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="px-4 py-3 rounded-xl text-sm font-semibold text-flow-textSoft hover:text-flow-text hover:bg-flow-card transition-all"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <Link
+                href={specialBtn.href}
+                onClick={() => setMobileOpen(false)}
+                className="px-4 py-3 rounded-xl text-sm font-semibold transition-all hover:bg-flow-card"
+                style={{ color: isRE ? "#0066A2" : "#B8892A" }}
+              >
+                {specialBtn.label}
+              </Link>
             </div>
 
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="absolute top-0 right-0 h-full w-[88%] max-w-[380px] glass-strong border-l border-flow-border p-8 flex flex-col"
-            >
-              <div className="flex justify-between items-center mb-12">
-                <span className="text-flow-text font-heading font-extrabold text-xl">Menu</span>
-                <button
-                  onClick={() => setMobileOpen(false)}
-                  className="text-flow-text p-2 rounded-full hover:bg-flow-card transition-colors"
-                >
-                  <X size={22} />
-                </button>
-              </div>
-
-              <div className="flex flex-col gap-1 w-full">
-                {navLinks.map((link, idx) => (
-                  <motion.div
-                    key={link.href}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 + idx * 0.05 }}
-                  >
-                    <Link
-                      href={link.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="block text-flow-text text-2xl md:text-3xl font-heading font-extrabold py-3 hover:text-aurora-1 transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  </motion.div>
-                ))}
-
-                {/* special button in mobile */}
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 + navLinks.length * 0.05 }}
-                >
-                  <Link
-                    href={specialBtn.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="block text-2xl font-heading font-extrabold py-3 transition-colors"
-                    style={{ color: isRE ? "#0066A2" : "#B8892A" }}
-                  >
-                    {specialBtn.label}
-                  </Link>
-                </motion.div>
-              </div>
-
-              <div className="mt-auto pt-8 border-t border-flow-border">
-                <Link
-                  href="/contact"
-                  onClick={() => setMobileOpen(false)}
-                  className="shine relative group w-full flex items-center justify-center gap-2 py-4 rounded-full text-lg font-semibold bg-aurora-grad text-white shadow-aurora overflow-hidden"
-                >
-                  <span className="relative">Get Started</span>
-                  <ArrowRight className="relative w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                </Link>
-              </div>
-            </motion.div>
+            {/* Divider + CTA */}
+            <div className="border-t border-flow-border p-2">
+              <Link
+                href="/contact"
+                onClick={() => setMobileOpen(false)}
+                className="group flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-semibold text-white"
+                style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
+              >
+                Get Started
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

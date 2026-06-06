@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
+import Image from "next/image";
 
 /**
  * Continuous, parallax ocean scene with an interactive surfer.
@@ -47,80 +48,67 @@ function buildWavePath(baseline: number, amplitude: number, period: number): str
   return segments.join(" ");
 }
 
-const PATH_BACK  = buildWavePath(70, 36, 600);   // slow distant swells
-const PATH_MID   = buildWavePath(115, 50, 400);  // mid-depth waves
-const PATH_FRONT = buildWavePath(150, 58, 300);  // foreground — surfer rides
+const PATH_BACK  = buildWavePath(70, 18, 600);   // slow distant swells
+const PATH_MID   = buildWavePath(115, 28, 400);  // mid-depth waves
+const PATH_FRONT = buildWavePath(150, 32, 300);  // foreground — surfer rides
 
 const FRONT_PERIOD = 300;
-const FRONT_AMPLITUDE = 58;
+const FRONT_AMPLITUDE = 32;
 const FRONT_BASELINE = 150;
 const FRONT_DURATION = 6; // seconds per tile — matches SMIL `dur` for front wave
 const SURFER_X_PCT = 0.72;
 
 export default function OceanScene() {
-  const [tricks, setTricks] = useState(0);
-  const [splashes, setSplashes] = useState<{ id: number; x: number }[]>([]);
-  const splashId = useRef(0);
-  const isJumping = useRef(false);
+  const [boosts, setBoosts] = useState(0);
+  const isBoosting = useRef(false);
+  const surferScale = useMotionValue(1);
 
-  // Shared phase 0..1 driving the front wave + surfer.
+  // Wave x-offset motion values (SVG viewBox units, 0 → -TILE loops)
+  const backX  = useMotionValue(0);
+  const midX   = useMotionValue(0);
+  const frontX = useMotionValue(0);
+  const foamX  = useMotionValue(0);
+
+  // Keep animation controls so we can set .speed on them
+  const waveCtrl = useRef<ReturnType<typeof animate>[]>([]);
+
   const phase = useMotionValue(0);
-  useEffect(() => {
-    const controls = animate(phase, 1, {
-      duration: FRONT_DURATION,
-      ease: "linear",
-      repeat: Infinity,
-    });
-    return () => controls.stop();
-  }, [phase]);
 
-  const jumpY = useMotionValue(0);
-  const jumpRot = useMotionValue(0);
+  useEffect(() => {
+    waveCtrl.current = [
+      animate(backX,  [0, -TILE], { duration: 14,            ease: "linear", repeat: Infinity }),
+      animate(midX,   [0, -TILE], { duration: 9,             ease: "linear", repeat: Infinity }),
+      animate(frontX, [0, -TILE], { duration: FRONT_DURATION, ease: "linear", repeat: Infinity }),
+      animate(foamX,  [0, -TILE], { duration: FRONT_DURATION, ease: "linear", repeat: Infinity }),
+    ];
+    const phaseCtrl = animate(phase, 1, { duration: FRONT_DURATION, ease: "linear", repeat: Infinity });
+    return () => {
+      waveCtrl.current.forEach((c) => c.stop());
+      phaseCtrl.stop();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Surfer Y in viewBox units — sine of (surferX + scrollOffset).
   const surferYVB = useTransform(phase, (p) => {
     const x = SURFER_X_PCT * VB_W + p * TILE;
     return FRONT_BASELINE - FRONT_AMPLITUDE * Math.sin((x * 2 * Math.PI) / FRONT_PERIOD);
   });
-  // Tilt follows the wave slope — derivative of sin is cos.
-  const surferTilt = useTransform(phase, (p) => {
-    const x = SURFER_X_PCT * VB_W + p * TILE;
-    return -Math.cos((x * 2 * Math.PI) / FRONT_PERIOD) * 14;
-  });
+  const surferTop = useTransform(surferYVB, (y) => `${(y / VB_H) * 100}%`);
 
-  // Convert viewBox Y → CSS top % of container (which has same aspect ratio mapping).
-  const surferTop = useTransform([surferYVB, jumpY] as any, ([y, j]: any) => {
-    return `${((y + j) / VB_H) * 100}%`;
-  });
-  const surferRotate = useTransform(
-    [surferTilt, jumpRot] as any,
-    ([t, r]: any) => `${t + r}deg`
-  );
+  const triggerBoost = () => {
+    if (isBoosting.current) return;
+    isBoosting.current = true;
+    setBoosts((n) => n + 1);
 
-  const triggerJump = () => {
-    if (isJumping.current) return;
-    isJumping.current = true;
-    setTricks((t) => t + 1);
+    waveCtrl.current.forEach((c) => { c.speed = 4; });
+    animate(surferScale, 0.75, { duration: 0.2, ease: "easeOut" });
 
-    const xPct = SURFER_X_PCT * 100;
-    const id = ++splashId.current;
-    setSplashes((s) => [...s, { id, x: xPct }]);
-    setTimeout(() => setSplashes((s) => s.filter((sp) => sp.id !== id)), 900);
-
-    animate(jumpY, [-95, 0], {
-      duration: 1.0,
-      ease: [0.32, 0.72, 0.35, 1],
-      onComplete: () => {
-        isJumping.current = false;
-        const lid = ++splashId.current;
-        setSplashes((s) => [...s, { id: lid, x: xPct }]);
-        setTimeout(() => setSplashes((s) => s.filter((sp) => sp.id !== lid)), 700);
-      },
-    });
-    animate(jumpRot, [0, -360, 0], {
-      duration: 1.0,
-      ease: "easeInOut",
-    });
+    setTimeout(() => {
+      isBoosting.current = false;
+      waveCtrl.current.forEach((c) => { c.speed = 1; });
+      animate(surferScale, 1, { duration: 0.4, ease: "easeOut" });
+    }, 1500);
   };
 
   useEffect(() => {
@@ -131,7 +119,7 @@ export default function OceanScene() {
           if (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable) return;
         }
         e.preventDefault();
-        triggerJump();
+        triggerBoost();
       }
     };
     window.addEventListener("keydown", onKey);
@@ -175,88 +163,52 @@ export default function OceanScene() {
         </defs>
 
         {/* Back wave — slowest */}
-        <path d={PATH_BACK} fill="url(#ocean-back)">
-          <animateTransform
-            attributeName="transform"
-            type="translate"
-            from="0 0"
-            to={`-${TILE} 0`}
-            dur="14s"
-            repeatCount="indefinite"
-          />
-        </path>
+        <motion.g style={{ x: backX }}>
+          <path d={PATH_BACK} fill="url(#ocean-back)" />
+        </motion.g>
 
         {/* Mid wave */}
-        <path d={PATH_MID} fill="url(#ocean-mid)">
-          <animateTransform
-            attributeName="transform"
-            type="translate"
-            from="0 0"
-            to={`-${TILE} 0`}
-            dur="9s"
-            repeatCount="indefinite"
-          />
-        </path>
+        <motion.g style={{ x: midX }}>
+          <path d={PATH_MID} fill="url(#ocean-mid)" />
+        </motion.g>
 
         {/* Front wave — fastest, surfer rides this */}
-        <path d={PATH_FRONT} fill="url(#ocean-front)">
-          <animateTransform
-            attributeName="transform"
-            type="translate"
-            from="0 0"
-            to={`-${TILE} 0`}
-            dur={`${FRONT_DURATION}s`}
-            repeatCount="indefinite"
-          />
-        </path>
+        <motion.g style={{ x: frontX }}>
+          <path d={PATH_FRONT} fill="url(#ocean-front)" />
+        </motion.g>
 
         {/* Foam highlight on the front wave crests */}
-        <path
-          d={PATH_FRONT}
-          fill="none"
-          stroke="rgb(var(--accent-3))"
-          strokeOpacity="0.65"
-          strokeWidth="1.5"
-        >
-          <animateTransform
-            attributeName="transform"
-            type="translate"
-            from="0 0"
-            to={`-${TILE} 0`}
-            dur={`${FRONT_DURATION}s`}
-            repeatCount="indefinite"
+        <motion.g style={{ x: foamX }}>
+          <path
+            d={PATH_FRONT}
+            fill="none"
+            stroke="rgb(var(--accent-3))"
+            strokeOpacity="0.65"
+            strokeWidth="1.5"
           />
-        </path>
+        </motion.g>
       </svg>
-
-      {/* Splash particles */}
-      {splashes.map((sp) => (
-        <Splash key={sp.id} xPct={sp.x} />
-      ))}
 
       {/* Surfer (clickable) */}
       <motion.button
         type="button"
-        onClick={triggerJump}
-        aria-label="Make the surfer do a trick"
+        onClick={triggerBoost}
+        aria-label="Boost the surfer"
         className="pointer-events-auto absolute z-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-2 focus-visible:ring-offset-2 focus-visible:ring-offset-flow-bg rounded-full"
         style={{
           left: `${SURFER_X_PCT * 100}%`,
           top: surferTop,
-          rotate: surferRotate,
           translateX: "-50%",
           translateY: "-100%",
-          transformOrigin: "50% 95%",
+          scale: surferScale,
         }}
-        whileHover={{ scale: 1.06 }}
-        whileTap={{ scale: 0.94 }}
       >
         <SurferSvg />
       </motion.button>
 
-      {/* Trick counter / hint */}
+      {/* Boost indicator */}
       <div className="pointer-events-none absolute bottom-4 right-4 md:bottom-6 md:right-6 z-30 flex items-center gap-3">
-        {/* Hint pill — solid white card so it pops over the waves */}
+        {/* Hint pill */}
         <div className="hidden md:flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-flow-cardSolid border-2 border-flow-borderStrong text-xs font-bold uppercase tracking-[0.18em] text-flow-text shadow-aurora">
           <kbd className="px-2.5 py-1 rounded-md bg-aurora-grad text-white text-[10px] font-extrabold tracking-wider shadow-aurora ring-1 ring-white/40">
             SPACE
@@ -264,31 +216,29 @@ export default function OceanScene() {
           <span className="text-flow-text/75">or tap surfer</span>
         </div>
 
-        {/* Trick counter — solid gradient with strong glow */}
+        {/* Boost counter */}
         <motion.div
           animate={{ y: [0, -3, 0] }}
           transition={{ duration: 2.4, ease: "easeInOut", repeat: Infinity }}
           className="relative px-5 py-3 rounded-full bg-aurora-grad text-white text-sm font-bold tracking-wide flex items-center gap-2.5 ring-2 ring-white/50 shadow-[0_8px_24px_-4px_rgba(0,102,162,0.55),0_2px_6px_rgba(5,26,46,0.18)]"
         >
-          {/* outer glow halo */}
           <span
             aria-hidden
             className="absolute -inset-1 rounded-full opacity-60 blur-lg -z-10"
             style={{
-              background:
-                "linear-gradient(110deg, rgb(var(--accent-1)), rgb(var(--accent-2)))",
+              background: "linear-gradient(110deg, rgb(var(--accent-1)), rgb(var(--accent-2)))",
             }}
           />
           <span className="text-base">🏄</span>
-          <span className="uppercase tracking-[0.14em] text-xs opacity-90">Tricks</span>
+          <span className="uppercase tracking-[0.14em] text-xs opacity-90">Boost</span>
           <motion.span
-            key={tricks}
+            key={boosts}
             initial={{ scale: 1.6, y: -3 }}
             animate={{ scale: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 380, damping: 16 }}
             className="font-extrabold tabular-nums text-base min-w-[1.5ch] text-center"
           >
-            {tricks}
+            {boosts}
           </motion.span>
         </motion.div>
       </div>
@@ -301,134 +251,15 @@ export default function OceanScene() {
 /* -------------------------------------------------------------------------- */
 
 function SurferSvg() {
-  // Logo-matching CARVING pose with full detail:
-  // back arm raised high & back, front arm extended forward, knees bent into
-  // an athletic stance — but rendered with skin head, wetsuit, sunglasses,
-  // hair, gradient board, and articulated limbs.
   return (
-    <svg
-      width="118"
-      height="152"
-      viewBox="0 0 140 180"
-      fill="none"
-      className="drop-shadow-[0_12px_20px_rgba(0,102,162,0.45)]"
-    >
-      <defs>
-        <linearGradient id="board-grad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="rgb(var(--accent-3))" />
-          <stop offset="60%" stopColor="rgb(var(--accent-2))" />
-          <stop offset="100%" stopColor="rgb(var(--accent-1))" />
-        </linearGradient>
-        <linearGradient id="wetsuit" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="rgb(var(--accent-1))" />
-          <stop offset="100%" stopColor="rgb(var(--flow-text))" />
-        </linearGradient>
-      </defs>
-
-      {/* Board fin */}
-      <path
-        d="M 78,170 L 86,180 L 92,170 Z"
-        fill="rgb(var(--accent-1))"
-        opacity="0.85"
-      />
-
-      {/* Surfboard with gradient + highlight stripe */}
-      <ellipse
-        cx="70"
-        cy="166"
-        rx="60"
-        ry="7"
-        fill="url(#board-grad)"
-        stroke="rgb(var(--accent-1))"
-        strokeWidth="2"
-      />
-      <ellipse cx="70" cy="162" rx="52" ry="2.5" fill="white" opacity="0.55" />
-      <ellipse cx="14" cy="166" rx="6" ry="3" fill="rgb(var(--accent-1))" opacity="0.5" />
-
-      {/* === BACK LEG (drawn first, partially behind front leg) === */}
-      <g
-        stroke="url(#wetsuit)"
-        strokeWidth="15"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      >
-        <polyline points="76,92 90,128 100,158" />
-      </g>
-
-      {/* === FRONT LEG (knee forward, weight bearing) === */}
-      <g
-        stroke="url(#wetsuit)"
-        strokeWidth="15"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      >
-        <polyline points="62,90 48,124 38,158" />
-      </g>
-
-      {/* === TORSO (wetsuit, leaning forward into the carve) === */}
-      <path
-        d="M 48,46
-           C 42,58 42,76 50,90
-           L 76,92
-           C 84,82 82,62 75,46
-           L 68,42
-           Z"
-        fill="url(#wetsuit)"
-      />
-
-      {/* Wetsuit chest stripe */}
-      <path
-        d="M 45,66 C 53,64 70,64 78,66 L 78,71 C 70,69 53,69 45,71 Z"
-        fill="rgb(var(--accent-3))"
-        opacity="0.9"
-      />
-
-      {/* === BACK ARM (raised HIGH up and back — logo's signature) === */}
-      <g
-        stroke="rgb(var(--flow-text))"
-        strokeWidth="11"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      >
-        <polyline points="70,48 92,28 110,10" />
-      </g>
-      {/* back-arm hand */}
-      <circle cx="112" cy="9" r="5" fill="rgb(var(--flow-text))" />
-
-      {/* === FRONT ARM (extended forward for direction) === */}
-      <g
-        stroke="rgb(var(--flow-text))"
-        strokeWidth="10"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      >
-        <polyline points="50,54 32,62 14,68" />
-      </g>
-      {/* front-arm hand */}
-      <circle cx="12" cy="68" r="4.5" fill="rgb(var(--flow-text))" />
-
-      {/* === HEAD (skin tone) === */}
-      <circle cx="58" cy="30" r="13" fill="#F4C8A0" />
-
-      {/* Hair — back-flowing tuft */}
-      <path
-        d="M 68,22 C 78,18 86,20 92,26 L 88,32 C 80,26 72,28 67,32 Z"
-        fill="rgb(var(--flow-text))"
-      />
-      {/* Hair top crown */}
-      <path
-        d="M 50,24 C 53,18 62,16 68,20 L 68,28 C 60,23 53,25 50,30 Z"
-        fill="rgb(var(--flow-text))"
-      />
-
-      {/* Sunglasses */}
-      <rect x="53" y="28" width="13" height="3.5" rx="1.6" fill="rgb(var(--flow-text))" />
-      <rect x="50" y="29" width="3" height="2.5" rx="1" fill="rgb(var(--flow-text))" />
-    </svg>
+    <Image
+      src="/surfer.png"
+      alt="surfer"
+      width={130}
+      height={110}
+      className="drop-shadow-[0_8px_18px_rgba(0,102,162,0.45)] -rotate-[15deg]"
+      priority
+    />
   );
 }
 

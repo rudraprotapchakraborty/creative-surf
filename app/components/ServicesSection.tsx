@@ -1,124 +1,171 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import {
-  PenTool,
-  FileText,
-  Video,
-  Globe,
-  Tv,
-  Search,
-  Target,
-  Users,
-  ArrowUpRight,
+  PenTool, FileText, Video, Globe, Tv,
+  Search, Target, Users, ChevronRight,
 } from "lucide-react";
-import WaveBackdrop from "./WaveBackdrop";
+
+const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 const services = [
-  { title: "Graphics Design", description: "High-impact visuals blending art direction with precision.", icon: PenTool },
-  { title: "Content Marketing", description: "Strategic storytelling to connect deeply with your audience.", icon: FileText },
-  { title: "Video Editing", description: "Cinematic edits with seamless motion and narrative clarity.", icon: Video },
-  { title: "Website Development", description: "Immersive, high-performance web experiences.", icon: Globe },
-  { title: "OVC/TVC", description: "Premium commercials for maximum brand impact.", icon: Tv },
-  { title: "SEO & Social Media", description: "Boost your visibility with precision SEO and campaigns.", icon: Search },
-  { title: "Media Buying", description: "Optimized ad spend to maximize ROI.", icon: Target },
-  { title: "Digital Branding", description: "Crafting cohesive digital identities for lasting impressions.", icon: Users },
+  {
+    title: "Graphics Design",
+    description: "High-impact visuals blending art direction with precision — brand identity, campaign assets, and everything in between.",
+    icon: PenTool,
+    tags: ["Brand Identity", "Print", "Digital"],
+  },
+  {
+    title: "Content Marketing",
+    description: "Strategic storytelling that builds authority, drives organic traffic, and converts browsers into loyal buyers.",
+    icon: FileText,
+    tags: ["Strategy", "Copywriting", "Distribution"],
+  },
+  {
+    title: "Video Editing",
+    description: "Cinematic edits with seamless motion and narrative clarity — from short-form reels to full brand films.",
+    icon: Video,
+    tags: ["Reels", "Ad Films", "Brand Videos"],
+  },
+  {
+    title: "Website Development",
+    description: "High-performance web experiences engineered for conversion and built to scale as your business grows.",
+    icon: Globe,
+    tags: ["Next.js", "React", "E-commerce"],
+  },
+  {
+    title: "OVC / TVC",
+    description: "Premium television and online video commercials that communicate your brand's value with maximum impact.",
+    icon: Tv,
+    tags: ["Commercials", "Broadcast", "Online"],
+  },
+  {
+    title: "SEO & Social Media",
+    description: "Precision SEO and social campaigns that compound your visibility and bring high-intent audiences directly to you.",
+    icon: Search,
+    tags: ["SEO", "Paid Social", "Analytics"],
+  },
+  {
+    title: "Media Buying",
+    description: "Optimised ad spend across every channel — making every dollar work harder so your ROI compounds over time.",
+    icon: Target,
+    tags: ["Google Ads", "Meta", "Programmatic"],
+  },
+  {
+    title: "Digital Branding",
+    description: "Cohesive digital identities for lasting impressions — visual systems, brand voice, and positioning that stick.",
+    icon: Users,
+    tags: ["Strategy", "Visual Identity", "Voice"],
+  },
 ];
 
 export default function ServicesSection() {
-  const containerRef = useRef(null);
-
   return (
     <section
       id="services"
-      ref={containerRef}
-      className="relative py-20 sm:py-24 md:py-28 lg:py-32 bg-flow-bg text-flow-text overflow-hidden border-t border-flow-border"
+      className="relative bg-flow-bg text-flow-text overflow-hidden border-t border-flow-border"
     >
-      <WaveBackdrop id="svc-wave" corner="tl" size="sm" opacity={0.65} />
-
-      {/* Glow */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="aurora-blob aurora-3 w-[30vw] h-[30vw] bottom-[10vh] right-[5vw] opacity-30 animate-aurora-alt" />
+      {/* Section header */}
+      <div className="px-6 sm:px-10 lg:px-20 xl:px-28 pt-20 sm:pt-24 md:pt-28 lg:pt-32 pb-14">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col md:flex-row md:items-end justify-between gap-6"
+        >
+          <div>
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border border-flow-border text-xs font-bold uppercase tracking-[0.2em] text-aurora-1 mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-aurora-1" />
+              Our Expertise
+            </span>
+            <h2
+              className="font-bold text-flow-text leading-tight"
+              style={{ fontSize: "clamp(2rem,3.5vw,3.25rem)" }}
+            >
+              What we do<br />
+              <span className="text-aurora">exceptionally well.</span>
+            </h2>
+          </div>
+          <p className="text-flow-textSoft text-base max-w-xs leading-relaxed md:text-right">
+            Eight disciplines. One integrated team. Every service built to compound your growth.
+          </p>
+        </motion.div>
       </div>
 
-      {/* Grid */}
-      <div className="absolute inset-0 bg-grid-fine mask-radial-tl pointer-events-none opacity-50" />
+      {/* Editorial numbered rows */}
+      <div>
+        {services.map(({ title, description, icon: Icon, tags }, i) => (
+          <motion.div
+            key={title}
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.6, ease: EASE, delay: i * 0.04 }}
+            className="group relative flex items-start gap-3 sm:gap-8 lg:gap-14 px-4 sm:px-10 lg:px-20 xl:px-28 py-6 sm:py-9 border-t border-flow-border cursor-default transition-colors duration-300 hover:bg-flow-surface"
+          >
+            {/* Hover left accent bar */}
+            <div
+              className="absolute left-0 top-0 bottom-0 w-[3px] scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-top rounded-r-full"
+              style={{ background: "linear-gradient(180deg, rgb(var(--accent-1)), transparent)" }}
+            />
 
-      <div className="container mx-auto px-6 max-w-7xl relative z-10">
-        <div className="flex flex-col lg:flex-row gap-10 md:gap-14 lg:gap-24 relative">
-          {/* Sticky title */}
-          <div className="lg:w-1/3">
-            <div className="sticky top-32">
-              <motion.span
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border border-flow-border text-xs font-bold uppercase tracking-[0.2em] text-aurora-1 mb-6"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-aurora-1" />
-                Our Expertise
-              </motion.span>
-              <motion.h2
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                className="text-[2.25rem] sm:text-[3rem] md:text-5xl lg:text-[5.5rem] font-heading font-extrabold tracking-[-0.05em] text-flow-text leading-[1.0]"
-              >
-                Built<br />
-                <span className="text-aurora italic">to scale.</span>
-              </motion.h2>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-                className="mt-6 text-flow-textSoft font-normal text-lg md:text-xl leading-relaxed max-w-sm"
-              >
-                Comprehensive digital solutions engineered for growth and aesthetic supremacy.
-              </motion.p>
+            {/* Watermark number — hidden on mobile */}
+            <span
+              className="hidden sm:block flex-shrink-0 font-black leading-none select-none"
+              style={{
+                fontSize: "clamp(2.5rem, 5vw, 5rem)",
+                color: "rgb(var(--accent-1) / 0.10)",
+              }}
+            >
+              {String(i + 1).padStart(2, "0")}
+            </span>
+
+            {/* Icon chip */}
+            <div
+              className="flex-shrink-0 w-9 h-9 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center mt-0.5 transition-all duration-300 group-hover:scale-110"
+              style={{
+                background: "rgb(var(--accent-1) / 0.10)",
+                border: "1px solid rgb(var(--accent-1) / 0.20)",
+              }}
+            >
+              <Icon className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: "rgb(var(--accent-1))" }} />
             </div>
-          </div>
 
-          {/* Cards */}
-          <div className="lg:w-2/3 flex flex-col gap-5">
-            {services.map(({ title, description, icon: Icon }, index) => (
-              <motion.div
-                key={title}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.7, delay: index * 0.05, ease: "easeOut" }}
-                whileHover={{ y: -4 }}
-                className="conic-ring group p-7 md:p-9 rounded-2xl glass border border-flow-border flex flex-col sm:flex-row gap-6 sm:items-center relative overflow-hidden cursor-pointer"
-              >
-                <span className="absolute inset-0 bg-aurora-soft opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            {/* Text */}
+            <div className="flex-1 min-w-0 pt-0.5 lg:flex lg:items-start lg:gap-10">
+              <div className="lg:w-56 flex-shrink-0 mb-2 lg:mb-0">
+                <h3 className="font-bold text-flow-text text-base sm:text-lg mb-2 group-hover:text-aurora-1 transition-colors duration-300">
+                  {title}
+                </h3>
+                <div className="flex flex-wrap gap-1.5">
+                  {tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                      style={{
+                        background: "rgb(var(--accent-1) / 0.08)",
+                        color: "rgb(var(--accent-2) / 0.9)",
+                      }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <p className="text-flow-textSoft text-sm sm:text-[0.95rem] leading-relaxed flex-1 mt-2 lg:mt-0">
+                {description}
+              </p>
+            </div>
 
-                <div className="relative shrink-0">
-                  <div className="absolute inset-0 bg-aurora-grad rounded-xl blur-lg opacity-30 group-hover:opacity-60 transition-opacity" />
-                  <div className="relative p-5 rounded-xl bg-aurora-grad text-white">
-                    <Icon className="h-7 w-7" strokeWidth={2} />
-                  </div>
-                </div>
-                <div className="flex-1 relative">
-                  <h3 className="text-2xl md:text-3xl font-heading font-bold mb-2 text-flow-text tracking-tight transition-colors">
-                    {title}
-                  </h3>
-                  <p className="text-base md:text-lg text-flow-textSoft leading-relaxed font-normal">
-                    {description}
-                  </p>
-                </div>
-                <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-500">
-                  <div className="p-2 rounded-full bg-flow-cardSolid border border-flow-borderStrong">
-                    <ArrowUpRight className="h-4 w-4 text-aurora-1" />
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+            <ChevronRight
+              className="hidden sm:block flex-shrink-0 mt-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 text-aurora-1"
+              size={20}
+            />
+          </motion.div>
+        ))}
+        <div className="border-t border-flow-border mx-6 sm:mx-10 lg:mx-20 xl:mx-28" />
       </div>
     </section>
   );

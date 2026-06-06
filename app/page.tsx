@@ -6,26 +6,22 @@ import HeroSection from "./components/HeroSection";
 import ServicesSection from "./components/ServicesSection";
 import ImpactSection from "./components/ImpactSection";
 import PricingSection from "./components/PricingSection";
-import PortfolioSection from "./components/PortfolioSection";
 import ReviewsSection from "./components/ReviewsSection";
 import TeamSection from "./components/TeamSection";
-import BlogSection from "./components/BlogSection";
 import { NoSSR } from "./NoSSR";
 
 export default function Page() {
   return (
     <>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-screen" style={{ fontFamily: "var(--font-jakarta)" }}>
         <NoSSR>
           <HeroSection />
           <TrustedByCompanies />
           <ServicesSection />
           <ImpactSection />
           <PricingSection />
-          <PortfolioSection />
           <ReviewsSection />
           <TeamSection />
-          <BlogSection />
         </NoSSR>
       </div>
     </>

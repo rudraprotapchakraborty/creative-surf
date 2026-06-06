@@ -4,7 +4,7 @@ import { RouteTheme } from "@/components/RouteTheme"
 import { ConditionalFooter } from "@/components/ConditionalFooter"
 import { LoadingBarProvider } from "@/components/LoadingBarContext"
 import type { Metadata } from "next"
-import { Syne, Outfit } from "next/font/google"
+import { Syne, Outfit, Plus_Jakarta_Sans } from "next/font/google"
 import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import GoogleAnalytics from "@/components/google-analytics"
@@ -18,6 +18,13 @@ const syne = Syne({
 const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-body",
+  display: "swap",
+})
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-jakarta",
+  weight: ["300", "400", "500", "600", "700", "800"],
   display: "swap",
 })
 
@@ -35,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${syne.variable} ${outfit.variable} font-sans`} suppressHydrationWarning>
+    <html lang="en" className={`${syne.variable} ${outfit.variable} ${jakarta.variable} font-sans`} suppressHydrationWarning>
       <body suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <Suspense fallback={null}>

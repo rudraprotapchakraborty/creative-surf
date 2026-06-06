@@ -10,6 +10,7 @@ export function Footer() {
     <footer
       id="contact"
       className="relative w-full bg-flow-bg text-flow-text pt-20 sm:pt-24 md:pt-28 lg:pt-32 pb-10 md:pb-12 overflow-hidden border-t border-flow-border"
+      style={{ fontFamily: "var(--font-jakarta)" }}
     >
       <MouseParticles />
 
@@ -40,18 +41,19 @@ export function Footer() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="text-4xl md:text-6xl lg:text-7xl font-heading font-extrabold tracking-[-0.05em] mb-6 leading-[1.0]"
+              className="font-bold mb-6 leading-tight text-flow-text"
+              style={{ fontSize: "clamp(2rem,3.5vw,3.25rem)" }}
             >
               Let's build something
               <br />
-              <span className="text-aurora-shimmer italic">unreal.</span>
+              <span className="text-aurora-shimmer">unreal.</span>
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.1 }}
-              className="text-flow-textSoft text-lg font-normal mb-10 max-w-md"
+              className="text-flow-textSoft text-base mb-10 max-w-md"
             >
               Combining creativity, strategy, and technology to shape the future of your brand.
             </motion.p>
@@ -64,7 +66,7 @@ export function Footer() {
             >
               <Link
                 href="/contact"
-                className="shine group relative inline-flex items-center gap-2 px-8 py-4 rounded-full text-lg font-semibold text-white bg-aurora-grad shadow-aurora overflow-hidden"
+                className="shine group relative inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold text-white bg-aurora-grad shadow-aurora overflow-hidden"
               >
                 <span className="relative">Start a Project</span>
                 <ArrowUpRight className="relative w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -83,12 +85,12 @@ export function Footer() {
             >
               <a
                 href="mailto:contact@creativesurf.agency"
-                className="group flex items-center gap-3 hover:text-aurora-1 transition-colors"
+                className="group flex items-center gap-3 hover:text-aurora-1 transition-colors min-w-0"
               >
-                <span className="p-2 rounded-full glass border border-flow-border group-hover:border-aurora-1/40 transition-colors">
+                <span className="flex-shrink-0 p-2 rounded-full glass border border-flow-border group-hover:border-aurora-1/40 transition-colors">
                   <Mail className="w-4 h-4 text-aurora-1" />
                 </span>
-                contact@creativesurf.agency
+                <span className="break-all text-sm sm:text-base">contact@creativesurf.agency</span>
               </a>
               <a
                 href="https://wa.me/8801988467099"
