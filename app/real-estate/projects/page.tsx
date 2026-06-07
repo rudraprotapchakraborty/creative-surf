@@ -1,131 +1,312 @@
 "use client"
 
+import { useState, useEffect, useCallback } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
-import Image from "next/image"
-import { motion } from "framer-motion"
-import { ArrowLeft, Building2, Clock } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { Plus, Pencil, Trash2, LogOut, MapPin, Building2, Home } from "lucide-react"
 
-const G = "#B8892A"
-const N = "#080F1A"
+interface Project {
+  _id: string
+  name: string
+  slug: string
+  subtitle: string
+  status: string
+  plotNo: string
+  roadNo: string
+  sector: string
+  plotSize: string
+  numberOfUnits: string
+  buildingDetails: string
+  flatSize: string
+  description: string
+  coverImage: string
+  createdAt: string
+}
 
-const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
+const STATUS_COLOR: Record<string, string> = {
+  Ongoing:   "#0066A2",
+  Completed: "#16a34a",
+  Upcoming:  "#B8892A",
+}
+
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08 } },
+}
+const fadeUp = {
+  hidden: { opacity: 0, y: 22 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } },
+}
 
 export default function ProjectsPage() {
+  const [projects, setProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [adminUsername, setAdminUsername] = useState("")
+  const [activeStatus, setActiveStatus] = useState("All")
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const router = useRouter()
+
+  const fetchProjects = useCallback(async () => {
+    try {
+      const res = await fetch("/api/real-estate-projects")
+      if (res.ok) setProjects(await res.json())
+    } catch {}
+    setLoading(false)
+  }, [])
+
+  useEffect(() => {
+    fetchProjects()
+    fetch("/api/auth/me").then(r => r.json()).then(d => {
+      if (d.authenticated) { setIsAdmin(true); setAdminUsername(d.username) }
+    }).catch(() => {})
+  }, [fetchProjects])
+
+  async function handleLogout() {
+    await fetch("/api/auth/logout", { method: "POST" })
+    setIsAdmin(false)
+    setAdminUsername("")
+    router.refresh()
+  }
+
+  async function handleDelete(id: string, name: string) {
+    if (!confirm(`Delete "${name}"? This cannot be undone.`)) return
+    setDeletingId(id)
+    try {
+      const res = await fetch(`/api/real-estate-projects/${id}`, { method: "DELETE" })
+      if (res.ok) setProjects(prev => prev.filter(p => p._id !== id))
+    } catch {}
+    setDeletingId(null)
+  }
+
+  const statuses = ["All", ...Array.from(new Set(projects.map(p => p.status)))]
+  const filtered = activeStatus === "All" ? projects : projects.filter(p => p.status === activeStatus)
+
   return (
-    <div
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-6"
-      style={{ fontFamily: "var(--font-re)", backgroundColor: N }}
-    >
-      {/* background image with overlay */}
-      <div className="absolute inset-0">
-        <Image
-          src="/real-estate-reimagined.png"
-          alt=""
-          fill
-          className="object-cover opacity-20"
-          priority
-        />
-        <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at center, ${N}80 0%, ${N} 70%)` }} />
+    <main className="min-h-screen bg-flow-bg relative">
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="aurora-blob animate-aurora" style={{ width: 700, height: 700, top: "-10%", left: "-5%", background: "radial-gradient(circle, rgba(0,102,162,0.1), transparent 65%)" }} />
+        <div className="aurora-blob animate-aurora-alt" style={{ width: 600, height: 600, bottom: "5%", right: "-8%", background: "radial-gradient(circle, rgba(184,137,42,0.08), transparent 65%)" }} />
       </div>
 
-      {/* floating ring decorations */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
-        style={{ border: `1px solid ${G}12` }} />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full pointer-events-none"
-        style={{ border: `1px solid ${G}18` }} />
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 md:pt-32 pb-20">
 
-      {/* content */}
-      <div className="relative z-10 flex flex-col items-center text-center max-w-2xl">
-
-        {/* icon */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.6 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: EASE }}
-          className="w-20 h-20 rounded-2xl flex items-center justify-center mb-8"
-          style={{ background: `${G}15`, border: `1px solid ${G}40` }}
-        >
-          <Building2 className="w-9 h-9" style={{ color: G }} />
-        </motion.div>
-
-        {/* label */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}
-          className="flex items-center gap-2 mb-6"
-        >
-          <Clock className="w-3.5 h-3.5" style={{ color: G }} />
-          <span className="text-xs font-bold uppercase tracking-[0.3em]" style={{ color: G }}>Coming Soon</span>
-        </motion.div>
-
-        {/* heading */}
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: EASE, delay: 0.2 }}
-          className="font-bold text-white leading-tight mb-6"
-          style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)" }}
-        >
-          Projects Showcase<br />
-          <span style={{ color: G }}>Launching Soon</span>
-        </motion.h1>
-
-        {/* description */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: EASE, delay: 0.35 }}
-          className="text-white/50 text-base leading-relaxed mb-10 max-w-md"
-        >
-          We're curating a premium portfolio of Dhaka's finest real estate developments.
-          Check back soon to explore verified listings from our developer partners.
-        </motion.p>
-
-        {/* divider */}
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 0.8, ease: EASE, delay: 0.5 }}
-          className="h-px w-16 mb-10 origin-center"
-          style={{ background: G }}
-        />
-
-        {/* mock project cards — blurred placeholders */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: EASE, delay: 0.55 }}
-          className="grid grid-cols-3 gap-3 mb-10 w-full max-w-sm"
-        >
-          {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="aspect-square rounded-xl blur-[2px] opacity-30"
-              style={{
-                background: `linear-gradient(135deg, ${G}30, ${G}10)`,
-                border: `1px solid ${G}25`,
-              }}
-            />
-          ))}
-        </motion.div>
-
-        {/* back link */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-        >
-          <Link
-            href="/real-estate"
-            className="group inline-flex items-center gap-2 text-sm font-semibold transition-colors"
-            style={{ color: `${G}90` }}
+        {/* ─── Header ─── */}
+        <div className="flex flex-col gap-4 mb-10 sm:mb-14">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-5"
           >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            Back to Real Estate
-          </Link>
-        </motion.div>
+            <div>
+              <span className="inline-flex items-center gap-2 mb-4">
+                <span className="w-5 h-[2px]" style={{ background: "#B8892A" }} />
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em]" style={{ color: "#B8892A" }}>
+                  Creative Surf · Real Estate
+                </span>
+              </span>
+              <h1 className="font-bold text-flow-text leading-tight mb-3" style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}>
+                Our Projects
+              </h1>
+              <p className="max-w-lg text-sm sm:text-base leading-relaxed" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                Premium residential developments in Dhaka — built with quality, designed for life.
+              </p>
+            </div>
+
+            {isAdmin && (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+                className="flex items-center gap-2 sm:gap-3 shrink-0 flex-wrap"
+              >
+                <span className="text-xs font-medium px-3 py-1.5 rounded-full" style={{ background: "rgba(184,137,42,0.1)", color: "#B8892A" }}>
+                  @{adminUsername}
+                </span>
+                <Link
+                  href="/real-estate/projects/new"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white shine relative overflow-hidden transition-all"
+                  style={{ background: "#B8892A", boxShadow: "0 4px 18px rgba(184,137,42,0.35)" }}
+                >
+                  <Plus size={15} />
+                  New Project
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="p-2 rounded-xl transition-colors hover:opacity-70"
+                  style={{ background: "rgb(var(--flow-border))", color: "rgb(var(--flow-text))" }}
+                  title="Logout"
+                >
+                  <LogOut size={15} />
+                </button>
+              </motion.div>
+            )}
+          </motion.div>
+        </div>
+
+        {/* ─── Status filter ─── */}
+        {statuses.length > 1 && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="flex flex-wrap gap-2 mb-8 sm:mb-12"
+          >
+            {statuses.map(s => (
+              <button
+                key={s}
+                onClick={() => setActiveStatus(s)}
+                className="px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200"
+                style={
+                  activeStatus === s
+                    ? { background: "#0066A2", color: "#fff", boxShadow: "0 2px 12px rgba(0,102,162,0.3)" }
+                    : { background: "var(--flow-card)", color: "rgb(var(--flow-text))", border: "1px solid var(--flow-border-strong)" }
+                }
+              >
+                {s}
+              </button>
+            ))}
+          </motion.div>
+        )}
+
+        {/* ─── Loading ─── */}
+        {loading && (
+          <div className="flex justify-center py-24">
+            <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: "rgba(0,102,162,0.2)", borderTopColor: "#0066A2" }} />
+          </div>
+        )}
+
+        {/* ─── Empty ─── */}
+        {!loading && filtered.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col items-center justify-center py-24 text-center"
+          >
+            <div className="w-16 h-16 rounded-2xl mb-6 flex items-center justify-center" style={{ background: "rgba(184,137,42,0.1)" }}>
+              <Building2 size={28} style={{ color: "#B8892A" }} />
+            </div>
+            <h3 className="font-bold text-xl mb-2 text-flow-text">No projects yet</h3>
+            <p className="text-sm mb-6" style={{ color: "rgb(var(--flow-text-soft))" }}>
+              {isAdmin ? "Add your first real estate project to get started." : "Projects will appear here soon."}
+            </p>
+            {isAdmin && (
+              <Link href="/real-estate/projects/new" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: "#B8892A", boxShadow: "0 4px 18px rgba(184,137,42,0.35)" }}>
+                <Plus size={15} /> Add First Project
+              </Link>
+            )}
+          </motion.div>
+        )}
+
+        {/* ─── Projects grid ─── */}
+        {!loading && filtered.length > 0 && (
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6"
+          >
+            <AnimatePresence>
+              {filtered.map(project => (
+                <motion.article
+                  key={project._id}
+                  variants={fadeUp}
+                  layout
+                  className="glass rounded-2xl overflow-hidden flex flex-col"
+                  style={{ border: "1px solid var(--flow-border-strong)" }}
+                >
+                  {/* Cover image */}
+                  {project.coverImage && (
+                    <div className="relative w-full overflow-hidden" style={{ height: 200 }}>
+                      <img src={project.coverImage} alt={project.name} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%)" }} />
+                    </div>
+                  )}
+
+                  <div className="p-4 sm:p-5 flex flex-col flex-1">
+                    {/* Status + admin controls */}
+                    <div className="flex items-center justify-between mb-3">
+                      <span
+                        className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white"
+                        style={{ background: STATUS_COLOR[project.status] ?? "#0066A2" }}
+                      >
+                        {project.status}
+                      </span>
+                      {isAdmin && (
+                        <div className="flex gap-1.5">
+                          <Link
+                            href={`/real-estate/projects/edit/${project._id}`}
+                            className="p-1.5 rounded-lg transition-all"
+                            style={{ background: "rgba(184,137,42,0.1)", color: "#B8892A" }}
+                            title="Edit"
+                          >
+                            <Pencil size={12} />
+                          </Link>
+                          <button
+                            onClick={() => handleDelete(project._id, project.name)}
+                            disabled={deletingId === project._id}
+                            className="p-1.5 rounded-lg transition-all"
+                            style={{ background: "rgb(239 68 68 / 0.1)", color: "rgb(239 68 68)" }}
+                            title="Delete"
+                          >
+                            <Trash2 size={12} />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    <h3 className="font-bold text-flow-text mb-1 leading-snug text-base sm:text-[1.05rem]">
+                      {project.name}
+                    </h3>
+                    {project.subtitle && (
+                      <p className="text-[11px] font-semibold uppercase tracking-wider mb-3 opacity-60">{project.subtitle}</p>
+                    )}
+
+                    {/* Specs */}
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 mb-4 text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                      {project.plotSize && <span className="flex items-center gap-1.5"><Home size={10} /> {project.plotSize}</span>}
+                      {project.flatSize && <span className="flex items-center gap-1.5"><Building2 size={10} /> {project.flatSize}</span>}
+                      {project.numberOfUnits && <span className="flex items-center gap-1.5 col-span-2">Units: {project.numberOfUnits}</span>}
+                      {(project.sector || project.roadNo) && (
+                        <span className="flex items-center gap-1.5 col-span-2">
+                          <MapPin size={10} />
+                          {[project.sector && `Sec-${project.sector}`, project.roadNo && `Rd-${project.roadNo}`].filter(Boolean).join(", ")}
+                        </span>
+                      )}
+                    </div>
+
+                    {project.description && (
+                      <p className="text-xs leading-relaxed mb-4 line-clamp-2 flex-1" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                        {project.description}
+                      </p>
+                    )}
+
+                    <div className="pt-3 flex justify-end" style={{ borderTop: "1px solid var(--flow-border)" }}>
+                      <Link
+                        href={`/real-estate/projects/${project._id}`}
+                        className="text-[11px] font-semibold"
+                        style={{ color: "#0066A2" }}
+                      >
+                        View Details →
+                      </Link>
+                    </div>
+                  </div>
+                </motion.article>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        )}
+
+        {!isAdmin && !loading && (
+          <div className="mt-16 text-center">
+            <Link href="/login" className="text-xs opacity-30 hover:opacity-60 transition-opacity" style={{ color: "rgb(var(--flow-text))" }}>
+              Admin
+            </Link>
+          </div>
+        )}
       </div>
-    </div>
+    </main>
   )
 }
