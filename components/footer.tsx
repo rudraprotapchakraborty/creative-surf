@@ -92,16 +92,24 @@ export function Footer() {
                 </span>
                 <span className="break-all text-sm sm:text-base">contact@creativesurf.agency</span>
               </a>
-              <a
-                href="https://wa.me/8801988467099"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shine group inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white overflow-hidden transition-all self-start"
-                style={{ background: "#25D366", boxShadow: "0 4px 16px #25D36640" }}
-              >
-                <Phone className="w-4 h-4" />
-                Chat on WhatsApp
-              </a>
+              <div className="flex items-center gap-3">
+                <span className="flex-shrink-0 p-2 rounded-full glass border border-flow-border">
+                  <Phone className="w-4 h-4 text-aurora-1" />
+                </span>
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-sm sm:text-base">+880 1988-467099</span>
+                  <a
+                    href="https://wa.me/8801988467099"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shine inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-white overflow-hidden self-start"
+                    style={{ background: "#25D366", boxShadow: "0 2px 10px #25D36640" }}
+                  >
+                    <Phone className="w-3 h-3" />
+                    Chat on WhatsApp
+                  </a>
+                </div>
+              </div>
             </motion.div>
 
             <motion.div

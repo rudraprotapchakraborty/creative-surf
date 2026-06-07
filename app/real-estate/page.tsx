@@ -756,30 +756,85 @@ export default function RealEstatePage() {
       {/* ════════════════════════════════════════
           FOOTER
       ════════════════════════════════════════ */}
-      <footer className="relative min-h-[70vh] flex flex-col overflow-hidden">
+      <footer className="relative min-h-[90vh] flex flex-col overflow-hidden">
         <div className="absolute inset-0">
           <Image src="/real-estate-reimagined.png" alt="Dhaka skyline" fill className="object-cover" priority />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
         </div>
 
-        <div className="relative z-10 flex flex-col justify-between min-h-[70vh] px-6 sm:px-10 lg:px-20 xl:px-28 pt-16 sm:pt-28 pb-10">
-          <div>
-            <motion.p
-              initial={{ opacity: 0, x: -60 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, ease: EASE }}
-              className="font-black leading-[1.0] uppercase"
-              style={{ fontFamily: "var(--font-re)", fontSize: "clamp(2rem,7vw,8rem)", color: B }}
-            >Real Estate.</motion.p>
-            <motion.p
-              initial={{ opacity: 0, x: -60 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, ease: EASE, delay: 0.1 }}
-              className="font-black leading-[1.0] uppercase"
-              style={{ fontFamily: "var(--font-re)", fontSize: "clamp(2rem,7vw,8rem)", color: G }}
-            >Reimagined.</motion.p>
+        <div className="relative z-10 flex flex-col justify-between min-h-[90vh] px-6 sm:px-10 lg:px-20 xl:px-28 pt-16 sm:pt-28 pb-10">
+
+          {/* Top row: heading left, contact info right */}
+          <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-10">
+            <div>
+              <motion.p
+                initial={{ opacity: 0, x: -60 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9, ease: EASE }}
+                className="font-black leading-[1.0] uppercase"
+                style={{ fontFamily: "var(--font-re)", fontSize: "clamp(2rem,7vw,8rem)", color: B }}
+              >Real Estate.</motion.p>
+              <motion.p
+                initial={{ opacity: 0, x: -60 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9, ease: EASE, delay: 0.1 }}
+                className="font-black leading-[1.0] uppercase"
+                style={{ fontFamily: "var(--font-re)", fontSize: "clamp(2rem,7vw,8rem)", color: G }}
+              >Reimagined.</motion.p>
+            </div>
+
+            <div className="flex flex-col gap-6 lg:items-end w-full lg:w-auto mt-4 lg:mt-0">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.3, ease: EASE }}
+                className="flex flex-col gap-4 text-white font-semibold"
+              >
+                <a href="mailto:contact@creativesurf.agency" className="group flex items-center gap-3 hover:text-white/70 transition-colors min-w-0">
+                  <span className="flex-shrink-0 p-2 rounded-full glass border border-flow-border group-hover:border-white/40 transition-colors">
+                    <Mail className="w-4 h-4 text-aurora-1" />
+                  </span>
+                  <span className="break-all text-sm sm:text-base">contact@creativesurf.agency</span>
+                </a>
+                <div className="flex items-center gap-3">
+                  <span className="flex-shrink-0 p-2 rounded-full glass border border-flow-border">
+                    <Phone className="w-4 h-4 text-aurora-1" />
+                  </span>
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-sm sm:text-base">+880 1988-467099</span>
+                    <a href="https://wa.me/8801988467099" target="_blank" rel="noopener noreferrer"
+                      className="shine inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-white overflow-hidden self-start"
+                      style={{ background: "#25D366", boxShadow: "0 2px 10px #25D36640" }}
+                    >
+                      <Phone className="w-3 h-3" />
+                      Chat on WhatsApp
+                    </a>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.4, ease: EASE }}
+                className="mt-8 grid grid-cols-3 gap-3 w-full"
+              >
+                {[
+                  { Icon: Linkedin,  href: "https://www.linkedin.com/company/creative-surf-agency/",  label: "LinkedIn" },
+                  { Icon: Instagram, href: "https://www.instagram.com/creative.surf.agency/",         label: "Instagram" },
+                  { Icon: Facebook,  href: "https://www.facebook.com/creative.surf.agency/",          label: "Facebook" },
+                ].map(({ Icon, href, label }) => (
+                  <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
+                    className="group conic-ring relative flex flex-col items-center justify-center p-4 rounded-2xl glass border border-flow-border hover:border-white/40 transition-all">
+                    <Icon size={22} strokeWidth={2} className="text-white/70 group-hover:text-white transition-colors" />
+                  </a>
+                ))}
+              </motion.div>
+            </div>
           </div>
 
           <div className="flex flex-col gap-6">
@@ -792,44 +847,12 @@ export default function RealEstatePage() {
               >
                 <Link
                   href="/contact"
-                  className="group inline-flex items-center gap-2 px-8 py-4 rounded-full text-base font-semibold text-white"
-                  style={{ background: "var(--flow-card)", border: `1px solid ${G}50` }}
+                  className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold text-white"
+                  style={{ background: G, boxShadow: `0 4px 20px ${G}50` }}
                 >
                   Start a Project
                   <ArrowUpRight className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </Link>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7, ease: EASE, delay: 0.15 }}
-                className="flex flex-col gap-4 lg:items-end"
-              >
-                <a href="mailto:contact@creativesurf.agency" className="group flex items-center gap-3 text-flow-text/80 font-medium hover:text-white transition-colors text-sm">
-                  <span className="p-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm"><Mail className="w-4 h-4" /></span>
-                  contact@creativesurf.agency
-                </a>
-                <a href="https://wa.me/8801988467099" target="_blank" rel="noopener noreferrer"
-                  className="shine inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white overflow-hidden transition-all self-start"
-                  style={{ background: "#25D366", boxShadow: "0 4px 16px #25D36640" }}
-                >
-                  <Phone className="w-4 h-4" />
-                  Chat on WhatsApp
-                </a>
-                <div className="flex gap-3">
-                  {[
-                    { Icon: Linkedin,  href: "https://www.linkedin.com/company/creative-surf-agency/",  label: "LinkedIn" },
-                    { Icon: Instagram, href: "https://www.instagram.com/creative.surf.agency/",         label: "Instagram" },
-                    { Icon: Facebook,  href: "https://www.facebook.com/creative.surf.agency/",          label: "Facebook" },
-                  ].map(({ Icon, href, label }) => (
-                    <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-                      className="flex items-center justify-center w-11 h-11 rounded-xl bg-white/10 border border-white/20 backdrop-blur-sm hover:bg-white/20 transition-all">
-                      <Icon size={18} strokeWidth={2} className="text-white" />
-                    </a>
-                  ))}
-                </div>
               </motion.div>
             </div>
 
