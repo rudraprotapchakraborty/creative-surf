@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { motion } from "framer-motion"
 import { Eye, EyeOff, Lock, User, Waves } from "lucide-react"
 
@@ -12,6 +12,8 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get("from") || "/blogs"
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -26,7 +28,7 @@ export default function LoginPage() {
       })
 
       if (res.ok) {
-        router.push("/blogs")
+        router.push(redirect)
         router.refresh()
       } else {
         const data = await res.json()
@@ -83,9 +85,6 @@ export default function LoginPage() {
             >
               Admin Access
             </h1>
-            <p className="text-sm" style={{ color: "rgb(var(--flow-text-soft))" }}>
-              Sign in to manage your blog content
-            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">

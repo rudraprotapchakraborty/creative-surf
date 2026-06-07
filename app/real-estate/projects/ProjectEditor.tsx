@@ -159,8 +159,8 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
   useEffect(() => {
     fetch("/api/auth/me")
       .then(r => r.json())
-      .then(d => { if (!d.authenticated) router.push("/login") })
-      .catch(() => router.push("/login"))
+      .then(d => { if (!d.authenticated) router.push("/login?from=/real-estate/projects") })
+      .catch(() => router.push("/login?from=/real-estate/projects"))
   }, [router])
 
   useEffect(() => {

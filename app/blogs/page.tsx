@@ -282,7 +282,7 @@ export default function BlogsPage() {
 
         {!isAdmin && !loading && (
           <div className="mt-16 text-center">
-            <Link href="/login" className="text-xs opacity-30 hover:opacity-60 transition-opacity" style={{ color: "rgb(var(--flow-text))" }}>
+            <Link href="/login?from=/blogs" className="text-xs opacity-30 hover:opacity-60 transition-opacity" style={{ color: "rgb(var(--flow-text))" }}>
               Admin
             </Link>
           </div>
