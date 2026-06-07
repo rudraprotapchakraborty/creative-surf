@@ -72,8 +72,8 @@ module.exports = {
         "3xl": "1.75rem",
       },
       fontFamily: {
-        sans: ["var(--font-body)"],
-        heading: ["var(--font-heading)"],
+        sans: ["var(--font-jakarta)"],
+        heading: ["var(--font-jakarta)"],
       },
       backgroundImage: {
         "aurora-grad": "linear-gradient(110deg, rgb(var(--accent-1)) 0%, rgb(var(--accent-2)) 100%)",

@@ -4,22 +4,10 @@ import { RouteTheme } from "@/components/RouteTheme"
 import { ConditionalFooter } from "@/components/ConditionalFooter"
 import { LoadingBarProvider } from "@/components/LoadingBarContext"
 import type { Metadata } from "next"
-import { Syne, Outfit, Plus_Jakarta_Sans } from "next/font/google"
+import { Plus_Jakarta_Sans } from "next/font/google"
 import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import GoogleAnalytics from "@/components/google-analytics"
-
-const syne = Syne({
-  subsets: ["latin"],
-  variable: "--font-heading",
-  display: "swap",
-})
-
-const outfit = Outfit({
-  subsets: ["latin"],
-  variable: "--font-body",
-  display: "swap",
-})
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -42,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${syne.variable} ${outfit.variable} ${jakarta.variable} font-sans`} suppressHydrationWarning>
+    <html lang="en" className={`${jakarta.variable} font-sans`} suppressHydrationWarning>
       <body suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <Suspense fallback={null}>
@@ -61,8 +49,6 @@ export default function RootLayout({
 
           {/* FOOTER */}
           <ConditionalFooter />
-
-          {/* CHAT BUBBLE - MUST BE OUTSIDE MAIN CONTENT */}
         </ThemeProvider>
       </body>
     </html>

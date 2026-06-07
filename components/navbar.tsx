@@ -113,11 +113,11 @@ export function Navbar() {
           <div className="md:hidden flex items-center gap-2">
             <ThemeToggle />
             <button
-              onClick={() => setMobileOpen(true)}
-              aria-label="Open menu"
+              onClick={() => setMobileOpen(v => !v)}
+              aria-label="Toggle menu"
               className="p-2 rounded-full text-flow-text hover:bg-flow-card transition-colors"
             >
-              <Menu size={22} />
+              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </motion.nav>
@@ -126,12 +126,18 @@ export function Navbar() {
       {/* MOBILE OVERLAY */}
       <AnimatePresence>
         {mobileOpen && (
+          <>
+            {/* Backdrop */}
+            <div
+              className="fixed inset-0 z-[9998]"
+              onClick={() => setMobileOpen(false)}
+            />
           <motion.div
             initial={{ opacity: 0, y: -8, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.97 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
-            className="fixed top-[4.5rem] left-1/2 -translate-x-1/2 w-[92%] max-w-sm z-[9999] glass-strong border border-flow-border rounded-2xl shadow-soft overflow-hidden"
+            className="fixed top-[4.5rem] left-4 right-4 max-w-sm mx-auto z-[9999] glass-strong border border-flow-border rounded-2xl shadow-soft overflow-hidden"
             style={{ fontFamily: "var(--font-jakarta)" }}
           >
             {/* Nav links */}
@@ -169,6 +175,7 @@ export function Navbar() {
               </Link>
             </div>
           </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>
