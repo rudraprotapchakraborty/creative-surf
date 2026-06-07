@@ -1,146 +1,280 @@
-"use client";
-import { motion } from "framer-motion";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { MapPin, Mail, Phone, Clock } from "lucide-react";
+"use client"
+
+import { useState } from "react"
+import { motion } from "framer-motion"
+import { MapPin, Mail, Phone, Clock, Send, CheckCircle, ArrowUpRight } from "lucide-react"
+
+const ACCENT = "rgb(var(--accent-1))"
+const ACCENT_SOFT = "rgb(var(--accent-1) / 0.1)"
+
+const contactItems = [
+  {
+    icon: MapPin,
+    label: "Address",
+    value: "Dhaka, Bangladesh",
+    href: null,
+  },
+  {
+    icon: Mail,
+    label: "Email",
+    value: "contact@creativesurf.agency",
+    href: "mailto:contact@creativesurf.agency",
+  },
+  {
+    icon: Phone,
+    label: "Phone / WhatsApp",
+    value: "+880 1988-467099",
+    href: "https://wa.me/8801988467099",
+  },
+  {
+    icon: Clock,
+    label: "Hours",
+    value: "Mon–Fri: 9am – 6pm",
+    href: null,
+  },
+]
 
 export default function ContactContent() {
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" })
+  const [sending, setSending] = useState(false)
+  const [sent, setSent] = useState(false)
+  const [error, setError] = useState("")
+
+  function set(key: string, value: string) {
+    setForm(prev => ({ ...prev, [key]: value }))
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setError("")
+    setSending(true)
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      })
+      if (res.ok) {
+        setSent(true)
+        setForm({ name: "", email: "", subject: "", message: "" })
+      } else {
+        setError("Something went wrong. Please try again.")
+      }
+    } catch {
+      setError("Network error. Please try again.")
+    } finally {
+      setSending(false)
+    }
+  }
+
+  const inputClass = "w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
+  const inputStyle = {
+    background: "var(--flow-bg)",
+    border: "1px solid var(--flow-border-strong)",
+    color: "rgb(var(--flow-text))",
+  }
+
   return (
-    <main className="min-h-screen bg-flow-bg text-flow-text pt-32 pb-24 px-6 overflow-hidden">
-      
-      {/* Background blobs for aesthetic */}
-      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-flow-green/5 blur-[120px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/4" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-flow-text/5 blur-[100px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/4" />
-      
-      <div className="container mx-auto max-w-7xl relative z-10">
-        
+    <main className="min-h-screen bg-flow-bg text-flow-text relative overflow-hidden">
+      {/* Aurora blobs */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="aurora-blob animate-aurora" style={{ width: 700, height: 700, top: "-15%", left: "-10%", background: "radial-gradient(circle, rgb(var(--accent-1) / 0.1), transparent 65%)" }} />
+        <div className="aurora-blob animate-aurora-alt" style={{ width: 600, height: 600, bottom: "-10%", right: "-5%", background: "radial-gradient(circle, rgb(var(--accent-2) / 0.08), transparent 65%)" }} />
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 md:pt-32 pb-20">
+
+        {/* ─── Header ─── */}
         <motion.div
-           initial={{ opacity: 0, y: 30 }}
-           animate={{ opacity: 1, y: 0 }}
-           transition={{ duration: 0.8, ease: "easeOut" }}
-           className="text-left mb-20 max-w-3xl"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-12 sm:mb-16"
         >
-          <h1 className="text-[3rem] sm:text-[4.5rem] md:text-6xl lg:text-[6.5rem] font-heading font-extrabold tracking-[-0.04em] mb-6 leading-[1.05]">
-            Let's build <br className="hidden md:block"/>something great.
+          <span className="inline-flex items-center gap-2 mb-4">
+            <span className="w-5 h-[2px]" style={{ background: ACCENT }} />
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em]" style={{ color: ACCENT }}>
+              Creative Surf · Contact
+            </span>
+          </span>
+          <h1 className="font-bold text-flow-text leading-tight mb-4" style={{ fontSize: "clamp(2.2rem, 6vw, 5rem)", fontFamily: "var(--font-heading)" }}>
+            Let's build<br className="hidden sm:block" /> something great.
           </h1>
-          <p className="text-xl text-flow-text/70 font-normal">
+          <p className="text-base sm:text-lg max-w-xl leading-relaxed" style={{ color: "rgb(var(--flow-text-soft))" }}>
             Have a bold idea? We're ready to bring it to life with creativity, technology, and sheer innovation.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          
-          {/* Contact Form */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+
+          {/* ─── Form ─── */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="lg:col-span-2 bg-flow-card border border-flow-border rounded-sm p-8 md:p-12 shadow-sm"
+            transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-2"
           >
-            <h2 className="text-3xl font-heading font-extrabold mb-8 tracking-tight">Send a Message</h2>
-            <form className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="name" className="text-sm font-semibold text-flow-text/80">Name</label>
-                  <Input 
-                    id="name" 
-                    placeholder="Jane Doe" 
-                    className="h-12 bg-flow-bg border-flow-border text-flow-text focus-visible:ring-flow-green/20"
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="email" className="text-sm font-semibold text-flow-text/80">Email</label>
-                  <Input 
-                    id="email" 
-                    type="email" 
-                    placeholder="jane@example.com" 
-                    className="h-12 bg-flow-bg border-flow-border text-flow-text focus-visible:ring-flow-green/20"
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <label htmlFor="subject" className="text-sm font-semibold text-flow-text/80">Subject</label>
-                <Input 
-                  id="subject" 
-                  placeholder="How can we help you?" 
-                  className="h-12 bg-flow-bg border-flow-border text-flow-text focus-visible:ring-flow-green/20"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label htmlFor="message" className="text-sm font-semibold text-flow-text/80">Message</label>
-                <textarea 
-                  id="message" 
-                  rows={6}
-                  placeholder="Tell us about your project..."
-                  className="w-full rounded-sm px-4 py-3 bg-flow-bg border border-flow-border text-flow-text placeholder:text-flow-text/50 focus:outline-none focus:ring-2 focus:ring-flow-green/20 resize-none transition-all shadow-sm"
-                />
-              </div>
-              <Button 
-                type="submit" 
-                className="w-full md:w-auto px-10 h-12 rounded-sm bg-flow-green text-white hover:bg-flow-buttonHover font-semibold transition-colors shadow-sm text-base mt-4"
-              >
-                Send Message
-              </Button>
-            </form>
+            <div className="glass rounded-2xl p-6 sm:p-8 md:p-10 h-full" style={{ border: "1px solid var(--flow-border-strong)" }}>
+              <h2 className="font-bold text-flow-text mb-7 text-xl sm:text-2xl" style={{ fontFamily: "var(--font-heading)" }}>
+                Send a Message
+              </h2>
+
+              {sent ? (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex flex-col items-center justify-center py-16 text-center gap-4"
+                >
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mb-2" style={{ background: ACCENT_SOFT }}>
+                    <CheckCircle size={30} style={{ color: ACCENT }} />
+                  </div>
+                  <h3 className="font-bold text-xl text-flow-text">Message Sent!</h3>
+                  <p className="text-sm max-w-sm" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                    Thanks for reaching out. We'll get back to you within 24 hours.
+                  </p>
+                  <button
+                    onClick={() => setSent(false)}
+                    className="mt-2 text-sm font-semibold"
+                    style={{ color: ACCENT }}
+                  >
+                    Send another message
+                  </button>
+                </motion.div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-semibold uppercase tracking-widest" style={{ color: "rgb(var(--flow-text-soft))" }}>Name</label>
+                      <input
+                        type="text"
+                        required
+                        value={form.name}
+                        onChange={e => set("name", e.target.value)}
+                        placeholder="Jane Doe"
+                        className={inputClass}
+                        style={inputStyle}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-semibold uppercase tracking-widest" style={{ color: "rgb(var(--flow-text-soft))" }}>Email</label>
+                      <input
+                        type="email"
+                        required
+                        value={form.email}
+                        onChange={e => set("email", e.target.value)}
+                        placeholder="jane@example.com"
+                        className={inputClass}
+                        style={inputStyle}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-semibold uppercase tracking-widest" style={{ color: "rgb(var(--flow-text-soft))" }}>Subject</label>
+                    <input
+                      type="text"
+                      required
+                      value={form.subject}
+                      onChange={e => set("subject", e.target.value)}
+                      placeholder="How can we help you?"
+                      className={inputClass}
+                      style={inputStyle}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-semibold uppercase tracking-widest" style={{ color: "rgb(var(--flow-text-soft))" }}>Message</label>
+                    <textarea
+                      required
+                      rows={6}
+                      value={form.message}
+                      onChange={e => set("message", e.target.value)}
+                      placeholder="Tell us about your project…"
+                      className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all resize-none"
+                      style={inputStyle}
+                    />
+                  </div>
+
+                  {error && (
+                    <p className="text-sm px-4 py-2.5 rounded-xl" style={{ background: "rgb(239 68 68 / 0.1)", color: "rgb(239 68 68)", border: "1px solid rgb(239 68 68 / 0.2)" }}>
+                      {error}
+                    </p>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={sending}
+                    className="inline-flex items-center gap-2 px-7 py-3 rounded-xl text-sm font-semibold text-white shine relative overflow-hidden transition-all"
+                    style={{ background: `linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))`, boxShadow: "0 4px 18px rgb(var(--accent-1) / 0.3)" }}
+                  >
+                    {sending ? (
+                      <><span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />Sending…</>
+                    ) : (
+                      <><Send size={14} />Send Message</>
+                    )}
+                  </button>
+                </form>
+              )}
+            </div>
           </motion.div>
 
-          {/* Contact Details */}
+          {/* ─── Contact Info ─── */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="flex flex-col gap-8"
+            transition={{ duration: 0.7, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col gap-4"
           >
-            <div className="bg-flow-card border border-flow-border rounded-sm p-8 shadow-sm">
-              <h3 className="text-xl font-heading font-extrabold mb-6 tracking-tight">Contact Info</h3>
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-full bg-flow-bg border border-flow-border flex-shrink-0">
-                    <MapPin className="w-5 h-5 text-flow-green" />
+            <div className="glass rounded-2xl p-6 sm:p-7" style={{ border: "1px solid var(--flow-border-strong)" }}>
+              <h3 className="font-bold text-flow-text mb-6 text-lg" style={{ fontFamily: "var(--font-heading)" }}>
+                Contact Info
+              </h3>
+              <div className="space-y-5">
+                {contactItems.map(({ icon: Icon, label, value, href }) => (
+                  <div key={label} className="flex items-start gap-4">
+                    <div className="w-9 h-9 rounded-xl shrink-0 flex items-center justify-center" style={{ background: ACCENT_SOFT }}>
+                      <Icon size={15} style={{ color: ACCENT }} />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-widest mb-0.5" style={{ color: "rgb(var(--flow-text-soft))" }}>{label}</p>
+                      {href ? (
+                        <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer"
+                          className="text-sm font-medium text-flow-text hover:opacity-70 transition-opacity flex items-center gap-1">
+                          {value}
+                          <ArrowUpRight size={11} className="opacity-40" />
+                        </a>
+                      ) : (
+                        <p className="text-sm font-medium text-flow-text">{value}</p>
+                      )}
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-flow-text mb-1">Address</h4>
-                    <p className="text-flow-text/70 text-sm leading-relaxed">Dhaka<br/>Bangladesh</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-full bg-flow-bg border border-flow-border flex-shrink-0">
-                    <Mail className="w-5 h-5 text-flow-green" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-flow-text mb-1">Email</h4>
-                    <p className="text-flow-text/70 text-sm leading-relaxed">contact@creativesurf.agency</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-full bg-flow-bg border border-flow-border flex-shrink-0">
-                    <Phone className="w-5 h-5 text-flow-green" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-flow-text mb-1">Phone</h4>
-                    <p className="text-flow-text/70 text-sm leading-relaxed">+880 1988-467099</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-full bg-flow-bg border border-flow-border flex-shrink-0">
-                    <Clock className="w-5 h-5 text-flow-green" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-flow-text mb-1">Hours</h4>
-                    <p className="text-flow-text/70 text-sm leading-relaxed">Mon–Fri: 9am – 6pm<br/>Sat–Sun: Closed</p>
-                  </div>
-                </div>
-
+                ))}
               </div>
             </div>
-            
+
+            {/* Quick CTA */}
+            <div
+              className="glass rounded-2xl p-6 sm:p-7"
+              style={{ border: "1px solid var(--flow-border-strong)", background: ACCENT_SOFT }}
+            >
+              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: ACCENT }}>Prefer WhatsApp?</p>
+              <p className="text-sm leading-relaxed mb-4" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                Reach us directly for a faster response.
+              </p>
+              <a
+                href="https://wa.me/8801988467099"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all"
+                style={{ background: `linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))`, boxShadow: "0 4px 14px rgb(var(--accent-1) / 0.25)" }}
+              >
+                <Phone size={13} /> Chat on WhatsApp
+              </a>
+            </div>
           </motion.div>
 
         </div>
       </div>
     </main>
-  );
+  )
 }

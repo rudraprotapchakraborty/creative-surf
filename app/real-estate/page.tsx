@@ -811,9 +811,12 @@ export default function RealEstatePage() {
                   <span className="p-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm"><Mail className="w-4 h-4" /></span>
                   contact@creativesurf.agency
                 </a>
-                <a href="https://wa.me/8801988467099" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 text-flow-text/80 font-medium hover:text-white transition-colors text-sm">
-                  <span className="p-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm"><Phone className="w-4 h-4" /></span>
-                  +880 1988-467099
+                <a href="https://wa.me/8801988467099" target="_blank" rel="noopener noreferrer"
+                  className="shine inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white overflow-hidden transition-all self-start"
+                  style={{ background: "#25D366", boxShadow: "0 4px 16px #25D36640" }}
+                >
+                  <Phone className="w-4 h-4" />
+                  Chat on WhatsApp
                 </a>
                 <div className="flex gap-3">
                   {[

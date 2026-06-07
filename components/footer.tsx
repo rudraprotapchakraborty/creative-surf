@@ -96,12 +96,11 @@ export function Footer() {
                 href="https://wa.me/8801988467099"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center gap-3 hover:text-aurora-1 transition-colors"
+                className="shine group inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white overflow-hidden transition-all self-start"
+                style={{ background: "#25D366", boxShadow: "0 4px 16px #25D36640" }}
               >
-                <span className="p-2 rounded-full glass border border-flow-border group-hover:border-aurora-1/40 transition-colors">
-                  <Phone className="w-4 h-4 text-aurora-1" />
-                </span>
-                +880 1988-467099
+                <Phone className="w-4 h-4" />
+                Chat on WhatsApp
               </a>
             </motion.div>
 
