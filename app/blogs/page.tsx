@@ -219,6 +219,19 @@ export default function BlogsPage() {
                   className="glass rounded-2xl overflow-hidden flex flex-col"
                   style={{ border: "1px solid var(--flow-border-strong)" }}
                 >
+                  {/* Cover */}
+                  <div className="w-full overflow-hidden" style={{ height: 160 }}>
+                    {blog.coverImage ? (
+                      <img src={blog.coverImage} alt={blog.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center px-5 text-center" style={{ background: "linear-gradient(135deg, rgb(var(--accent-1) / 0.15), rgb(var(--accent-2) / 0.15))" }}>
+                        <span className="font-bold text-sm leading-snug line-clamp-3" style={{ fontFamily: "var(--font-heading)", color: "rgb(var(--flow-text-soft))" }}>
+                          {blog.title}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
                   <div className="p-4 sm:p-5 flex flex-col flex-1">
                     {/* Category + Admin controls */}
                     <div className="flex items-center justify-between mb-3">

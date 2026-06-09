@@ -17,6 +17,7 @@ interface BlogForm {
   tags: string[]
   author: string
   readTime: string
+  coverImage: string
 }
 
 const CATEGORIES = ["Digital Marketing", "SEO", "Design", "UX", "Strategy", "General"]
@@ -30,6 +31,7 @@ const DEFAULT_FORM: BlogForm = {
   tags: [],
   author: "Creative Surf",
   readTime: "5 min read",
+  coverImage: "",
 }
 
 function calcReadTime(content: string): string {
@@ -80,6 +82,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
           tags: data.tags ?? [],
           author: data.author ?? "Creative Surf",
           readTime: data.readTime ?? "5 min read",
+          coverImage: data.coverImage ?? "",
         })
         setLoading(false)
       })
@@ -297,6 +300,23 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                 >
                   {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
+              </div>
+
+              {/* Cover Image */}
+              <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
+                <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>Cover Image URL</label>
+                <input type="text" value={form.coverImage} onChange={e => set("coverImage", e.target.value)} placeholder="https://…" className="w-full bg-transparent outline-none text-sm text-flow-text placeholder:opacity-30 border-b pb-1" style={{ borderColor: "var(--flow-border)" }} />
+                <div className="mt-3 w-full rounded-lg overflow-hidden" style={{ height: 140 }}>
+                  {form.coverImage ? (
+                    <img src={form.coverImage} alt="cover preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center px-4 text-center" style={{ background: "linear-gradient(135deg, rgb(var(--accent-1) / 0.15), rgb(var(--accent-2) / 0.15))", border: "1px dashed rgb(var(--accent-1) / 0.3)" }}>
+                      <span className="font-bold leading-snug text-sm" style={{ fontFamily: "var(--font-heading)", color: "rgb(var(--flow-text-soft))" }}>
+                        {form.title || "Post title will appear here"}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Tags */}

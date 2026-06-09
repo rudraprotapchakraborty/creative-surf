@@ -285,7 +285,7 @@ export default function ProjectsPage() {
 
                     <div className="pt-3 flex justify-end" style={{ borderTop: "1px solid var(--flow-border)" }}>
                       <Link
-                        href={`/real-estate/projects/${project._id}`}
+                        href={`/real-estate/projects/${project.slug}`}
                         className="text-[11px] font-semibold"
                         style={{ color: "#0066A2" }}
                       >

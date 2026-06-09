@@ -223,7 +223,7 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
       }
 
       const saved = await res.json()
-      router.push(`/real-estate/projects/${saved._id}`)
+      router.push(`/real-estate/projects/${saved.slug}`)
     } catch {
       setError("Network error. Please try again.")
       setSaving(false)

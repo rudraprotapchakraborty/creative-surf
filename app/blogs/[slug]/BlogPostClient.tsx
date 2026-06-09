@@ -14,6 +14,7 @@ interface Blog {
   slug: string
   excerpt: string
   content: string
+  coverImage: string
   category: string
   tags: string[]
   author: string
@@ -138,6 +139,27 @@ export default function BlogPostClient({ slug }: { slug: string }) {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Cover image */}
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-8">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full rounded-2xl overflow-hidden"
+          style={{ height: 300 }}
+        >
+          {blog.coverImage ? (
+            <img src={blog.coverImage} alt={blog.title} className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center px-8 text-center" style={{ background: "linear-gradient(135deg, rgb(var(--accent-1) / 0.15), rgb(var(--accent-2) / 0.15))" }}>
+              <span className="font-bold leading-snug" style={{ fontSize: "clamp(1.2rem, 3vw, 1.8rem)", fontFamily: "var(--font-heading)", color: "rgb(var(--flow-text-soft))" }}>
+                {blog.title}
+              </span>
+            </div>
+          )}
+        </motion.div>
       </div>
 
       {/* Article content */}
