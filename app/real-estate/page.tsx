@@ -710,43 +710,63 @@ export default function RealEstatePage() {
 
 
       {/* ════════════════════════════════════════
-          PROJECTS CTA
+          BUYERS CTA — find your next home
       ════════════════════════════════════════ */}
-      <section className="relative py-20 sm:py-28 px-6 sm:px-10 lg:px-20 xl:px-28 overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${B}08 0%, ${G}05 100%)` }} />
-        </div>
-        <div className="relative z-10 max-w-5xl mx-auto">
-          <motion.div
+      <section className="relative py-24 sm:py-32 overflow-hidden bg-flow-surface">
+        <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, var(--flow-surface) 0%, ${G}08 50%, var(--flow-surface) 100%)` }} />
+
+        {/* decorative rings */}
+        <div className="absolute top-10 right-10 w-64 h-64 rounded-full pointer-events-none hidden lg:block" style={{ border: `1px solid ${G}20` }} />
+        <div className="absolute bottom-10 right-24 w-36 h-36 rounded-full pointer-events-none hidden lg:block" style={{ border: `1px solid ${G}15` }} />
+
+        <div className="relative z-10 max-w-3xl mx-auto px-6 sm:px-10 text-center">
+          <Tag label="For Home Buyers" />
+
+          <motion.h2
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: EASE }}
-            className="flex flex-col lg:flex-row lg:items-center justify-between gap-10"
+            className="font-black leading-tight mb-6"
+            style={{ fontSize: "clamp(2rem,4.5vw,4rem)", color: "rgb(var(--flow-text))" }}
           >
-            <div>
-              <span className="inline-flex items-center gap-2 mb-4">
-                <span className="w-5 h-[2px]" style={{ background: B }} />
-                <span className="text-[10px] font-bold uppercase tracking-[0.3em]" style={{ color: B }}>Our Portfolio</span>
-              </span>
-              <h2 className="font-black leading-tight mb-4" style={{ fontFamily: "var(--font-re)", fontSize: "clamp(2rem, 4vw, 3.5rem)", color: "rgb(var(--flow-text))" }}>
-                Explore Our <span style={{ color: G }}>Projects</span>
-              </h2>
-              <p className="max-w-lg text-sm sm:text-base leading-relaxed" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                Browse our curated portfolio of premium residential developments — complete with floor plans, specs, and full project details.
-              </p>
-            </div>
+            Find Your Next Home<br />
+            <span className="shimmer-gold">in Dhaka</span>
+          </motion.h2>
 
-            <div className="shrink-0">
-              <Link
-                href="/real-estate/projects"
-                className="group inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-base font-semibold text-white transition-all"
-                style={{ background: G, boxShadow: `0 8px 32px ${G}60` }}
-              >
-                View All Projects
-                <ArrowUpRight className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </Link>
-            </div>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: EASE, delay: 0.15 }}
+            className="text-flow-textSoft text-base sm:text-lg leading-relaxed mb-10 max-w-xl mx-auto"
+          >
+            Browse verified residential projects across Dhaka — from luxury apartments to affordable flats — and find the perfect home for you and your family.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: EASE, delay: 0.3 }}
+            className="flex flex-wrap items-center justify-center gap-4"
+          >
+            <Link
+              href="/real-estate/projects"
+              className="group inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-sm text-white"
+              style={{ background: `linear-gradient(135deg,${G},${GL})`, boxShadow: `0 8px 28px ${G}50` }}
+            >
+              View Available Flats
+              <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            </Link>
+            <Link
+              href="/contact"
+              className="group inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-sm text-flow-text border transition-colors duration-300 hover:bg-flow-card"
+              style={{ borderColor: `${G}45` }}
+            >
+              Schedule a Site Visit
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" style={{ color: G }} />
+            </Link>
           </motion.div>
         </div>
       </section>
