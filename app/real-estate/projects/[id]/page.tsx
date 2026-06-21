@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
-import { ArrowLeft, Pencil, Trash2, MapPin, Building2, Home, Users, Layers } from "lucide-react"
+import { ArrowLeft, Pencil, Trash2, MapPin, Building2, Home, Users, Layers, Clock, Calendar, User } from "lucide-react"
 
 interface Project {
   _id: string
@@ -25,6 +25,25 @@ interface Project {
   coverImage: string
   images: string[]
   createdAt: string
+}
+
+interface Blog {
+  _id: string
+  title: string
+  slug: string
+  excerpt: string
+  content: string
+  coverImage: string
+  category: string
+  tags: string[]
+  author: string
+  readTime: string
+  published: boolean
+  createdAt: string
+}
+
+function formatBlogDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
 }
 
 const STATUS_COLOR: Record<string, string> = {
@@ -61,12 +80,18 @@ export default function ProjectDetailPage() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [blogs, setBlogs] = useState<Blog[]>([])
 
   useEffect(() => {
     fetch(`/api/real-estate-projects/${id}`)
       .then(r => r.ok ? r.json() : null)
       .then(data => { setProject(data); setLoading(false) })
       .catch(() => setLoading(false))
+
+    fetch("/api/real-estate-blogs")
+      .then(r => r.ok ? r.json() : [])
+      .then(data => setBlogs(data))
+      .catch(() => {})
 
     fetch("/api/auth/me")
       .then(r => r.json())
@@ -105,6 +130,30 @@ export default function ProjectDetailPage() {
     .filter(k => project[k])
 
   const allImages = [project.coverImage, ...(project.images ?? [])].filter(Boolean)
+
+  const relatedBlogs = blogs.filter(blog => {
+    const nameMatch = project.name && (
+      blog.title.toLowerCase().includes(project.name.toLowerCase()) || 
+      blog.tags?.some(t => t.toLowerCase() === project.name.toLowerCase())
+    );
+    const sectorMatch = project.sector && (
+      blog.title.toLowerCase().includes(project.sector.toLowerCase()) || 
+      blog.tags?.some(t => t.toLowerCase() === project.sector.toLowerCase())
+    );
+    const subtitleMatch = project.subtitle && (
+      blog.title.toLowerCase().includes(project.subtitle.toLowerCase()) || 
+      blog.tags?.some(t => t.toLowerCase() === project.subtitle.toLowerCase())
+    );
+    return nameMatch || sectorMatch || subtitleMatch;
+  });
+
+  const displayBlogs = [...relatedBlogs];
+  for (const blog of blogs) {
+    if (displayBlogs.length >= 3) break;
+    if (!displayBlogs.some(b => b._id === blog._id)) {
+      displayBlogs.push(blog);
+    }
+  }
 
   return (
     <main className="min-h-screen bg-flow-bg relative">
@@ -289,6 +338,85 @@ export default function ProjectDetailPage() {
                 >
                   <img src={url} alt={`${project.name} ${i + 1}`} className="w-full h-full object-cover" />
                 </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* ─── Related/Latest Blogs ─── */}
+        {displayBlogs.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.45 }}
+            className="mt-16 pt-12 border-t"
+            style={{ borderColor: "var(--flow-border-strong)" }}
+          >
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+              <div>
+                <span className="inline-flex items-center gap-2 mb-3">
+                  <span className="w-4 h-[2px]" style={{ background: "#B8892A" }} />
+                  <span className="text-[9px] font-bold uppercase tracking-[0.25em]" style={{ color: "#B8892A" }}>
+                    Real Estate Insights
+                  </span>
+                </span>
+                <h2 className="font-bold text-flow-text text-xl sm:text-2xl" style={{ fontFamily: "var(--font-heading)" }}>
+                  Latest Articles &amp; Advice
+                </h2>
+              </div>
+              <Link href="/real-estate/blogs" className="text-xs font-semibold hover:opacity-75 transition-opacity" style={{ color: "#0066A2" }}>
+                View All Articles →
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {displayBlogs.map(blog => (
+                <article
+                  key={blog._id}
+                  className="glass rounded-2xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1"
+                  style={{ border: "1px solid var(--flow-border-strong)" }}
+                >
+                  {/* Cover */}
+                  <Link href={`/real-estate/blogs/${blog.slug}`} className="block w-full overflow-hidden group" style={{ height: 160 }}>
+                    {blog.coverImage ? (
+                      <img src={blog.coverImage} alt={blog.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center px-5 text-center transition-transform duration-500 group-hover:scale-105" style={{ background: "linear-gradient(135deg, rgba(184,137,42,0.15), rgba(0,102,162,0.15))" }}>
+                        <span className="font-bold text-xs leading-snug line-clamp-3" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                          {blog.title}
+                        </span>
+                      </div>
+                    )}
+                  </Link>
+
+                  <div className="p-4 flex flex-col flex-1">
+                    <div className="mb-2">
+                      <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider text-white" style={{ background: "#B8892A" }}>
+                        {blog.category}
+                      </span>
+                    </div>
+
+                    <Link href={`/real-estate/blogs/${blog.slug}`} className="group">
+                      <h3 className="font-bold text-flow-text mb-2 leading-snug line-clamp-2 text-sm sm:text-base transition-colors group-hover:text-[#0066A2]">
+                        {blog.title}
+                      </h3>
+                    </Link>
+
+                    <p className="text-xs leading-relaxed mb-4 line-clamp-2 flex-1" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                      {blog.excerpt}
+                    </p>
+
+                    <div className="flex items-center justify-between gap-2 pt-3" style={{ borderTop: "1px solid var(--flow-border)" }}>
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px]" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                        <span className="flex items-center gap-1"><User size={9} />{blog.author}</span>
+                        <span className="flex items-center gap-1"><Clock size={9} />{blog.readTime}</span>
+                      </div>
+                      <Link href={`/real-estate/blogs/${blog.slug}`} className="text-[10px] font-semibold shrink-0" style={{ color: "#0066A2" }}>
+                        Read →
+                      </Link>
+                    </div>
+                  </div>
+                </article>
               ))}
             </div>
           </motion.div>
