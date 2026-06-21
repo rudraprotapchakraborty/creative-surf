@@ -21,6 +21,7 @@ interface Project {
   flatSize: string
   description: string
   coverImage: string
+  googleMapUrl: string
   createdAt: string
 }
 

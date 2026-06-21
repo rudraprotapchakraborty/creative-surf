@@ -24,6 +24,7 @@ interface Project {
   groundFloorFeatures: string[]
   coverImage: string
   images: string[]
+  googleMapUrl: string
   createdAt: string
 }
 
@@ -271,6 +272,82 @@ export default function ProjectDetailPage() {
           </motion.div>
         )}
 
+        {/* ─── Location Map ─── */}
+        {(() => {
+          const DHAKA_DEFAULT = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117964.97260849693!2d90.34937955!3d23.7806207!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8b087026b81%3A0x8fa563bbdd5904c2!2sDhaka!5e0!3m2!1sen!2sbd!4v1718983200000!5m2!1sen!2sbd"
+          const isEmbed = project.googleMapUrl?.includes("google.com/maps/embed")
+          const mapSrc = isEmbed ? project.googleMapUrl : DHAKA_DEFAULT
+          const hasCustomUrl = !!project.googleMapUrl
+
+          return (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.28 }}
+              className="mb-10"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-bold uppercase tracking-widest flex items-center gap-2" style={{ color: "#0066A2", fontSize: "0.75rem" }}>
+                  <MapPin size={13} style={{ color: "#0066A2" }} />
+                  Location
+                  {!hasCustomUrl && (
+                    <span className="text-[9px] font-normal opacity-40 normal-case tracking-normal">— Dhaka overview</span>
+                  )}
+                </h2>
+                {hasCustomUrl && (
+                  <a
+                    href={project.googleMapUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-[11px] font-semibold transition-opacity hover:opacity-70"
+                    style={{ color: "#B8892A" }}
+                  >
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                      <polyline points="15 3 21 3 21 9" />
+                      <line x1="10" y1="14" x2="21" y2="3" />
+                    </svg>
+                    View on Google Maps
+                  </a>
+                )}
+              </div>
+              <div
+                className="rounded-2xl overflow-hidden relative"
+                style={{ border: "1px solid var(--flow-border-strong)", height: 360 }}
+              >
+                <iframe
+                  key={mapSrc}
+                  src={mapSrc}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0, display: "block" }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title={hasCustomUrl ? `${project.name} location` : "Dhaka, Bangladesh"}
+                />
+                {hasCustomUrl && !isEmbed && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3" style={{ background: "var(--flow-surface)" }}>
+                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ background: "rgba(0,102,162,0.12)", border: "1px solid rgba(0,102,162,0.25)" }}>
+                      <MapPin size={26} style={{ color: "#0066A2" }} />
+                    </div>
+                    <span className="text-sm font-semibold" style={{ color: "#0066A2" }}>Tap to open on Google Maps</span>
+                    <a
+                      href={project.googleMapUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-medium px-4 py-2 rounded-full transition-opacity hover:opacity-80"
+                      style={{ background: "rgba(0,102,162,0.12)", color: "#0066A2", border: "1px solid rgba(0,102,162,0.25)" }}
+                    >
+                      Open in Maps →
+                    </a>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )
+        })()}
+
         {/* ─── Features sections ─── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
           {project.rooftopFeatures?.length > 0 && (
@@ -324,6 +401,7 @@ export default function ProjectDetailPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
+            className="mb-10"
           >
             <h2 className="font-bold mb-5 uppercase tracking-widest" style={{ color: "rgb(var(--flow-text-soft))", fontSize: "0.7rem" }}>
               Gallery
@@ -342,6 +420,7 @@ export default function ProjectDetailPage() {
             </div>
           </motion.div>
         )}
+
 
         {/* ─── Related/Latest Blogs ─── */}
         {displayBlogs.length > 0 && (

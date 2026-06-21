@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, Save, X, Plus, Trash2 } from "lucide-react"
+import { ArrowLeft, Save, X, Plus, Trash2, MapPin, ExternalLink } from "lucide-react"
 
 interface ProjectForm {
   name: string
@@ -23,6 +23,7 @@ interface ProjectForm {
   groundFloorFeatures: string[]
   coverImage: string
   images: string[]
+  googleMapUrl: string
 }
 
 const STATUS_OPTIONS = ["Ongoing", "Completed", "Upcoming"]
@@ -44,6 +45,7 @@ const DEFAULT_FORM: ProjectForm = {
   groundFloorFeatures: [],
   coverImage: "",
   images: [],
+  googleMapUrl: "",
 }
 
 function slugify(text: string) {
@@ -185,6 +187,7 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
           groundFloorFeatures: data.groundFloorFeatures ?? [],
           coverImage: data.coverImage ?? "",
           images: data.images ?? [],
+          googleMapUrl: data.googleMapUrl ?? "",
         })
         setLoading(false)
       })
@@ -358,6 +361,38 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
             </div>
 
             <ImageListEditor label="Additional Images" items={form.images} onChange={v => set("images", v)} />
+
+            {/* Google Map URL */}
+            <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
+              <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                <span className="flex items-center gap-1.5">
+                  <MapPin size={11} style={{ color: "rgb(var(--accent-1))" }} />
+                  Google Map Location
+                </span>
+              </label>
+              <input
+                type="text"
+                value={form.googleMapUrl}
+                onChange={e => set("googleMapUrl", e.target.value)}
+                placeholder="Paste Google Maps embed URL or share link…"
+                className={fieldClass}
+                style={fieldStyle}
+              />
+              <p className="text-[10px] mt-2 opacity-40 leading-relaxed">
+                Paste the Google Maps <strong>embed URL</strong> (from Share → Embed a map → copy the src URL) or a regular Google Maps link.
+              </p>
+              {form.googleMapUrl && (
+                <a
+                  href={form.googleMapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 mt-3 text-[11px] font-semibold transition-opacity hover:opacity-70"
+                  style={{ color: "rgb(var(--accent-1))" }}
+                >
+                  <ExternalLink size={10} /> Preview location
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </div>
