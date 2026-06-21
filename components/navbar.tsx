@@ -18,6 +18,7 @@ export function Navbar() {
     ? [
         { label: "Home",     href: "/real-estate" },
         { label: "Projects", href: "/real-estate/projects" },
+        { label: "Blogs",    href: "/real-estate/blogs" },
       ]
     : [
         { label: "Home",  href: "/" },

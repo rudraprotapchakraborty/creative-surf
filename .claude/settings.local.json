@@ -6,7 +6,8 @@
       "Bash(rm -rv app/api/chat)",
       "Bash(rm public/chatgpt.png)",
       "Bash(rm -rf .next)",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(npx tsc *)"
     ]
   }
 }
