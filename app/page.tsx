@@ -5,6 +5,7 @@ import TrustedByCompanies from "./components/TrustedByCompanies";
 import HeroSection from "./components/HeroSection";
 import ServicesSection from "./components/ServicesSection";
 import ImpactSection from "./components/ImpactSection";
+import RealEstateSection from "./components/RealEstateSection";
 import PricingSection from "./components/PricingSection";
 import ReviewsSection from "./components/ReviewsSection";
 import { NoSSR } from "./NoSSR";
@@ -18,6 +19,7 @@ export default function Page() {
           <TrustedByCompanies />
           <ServicesSection />
           <ImpactSection />
+          <RealEstateSection />
           <PricingSection />
           <ReviewsSection />
         </NoSSR>

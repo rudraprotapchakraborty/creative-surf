@@ -19,12 +19,7 @@ const B  = "#0066A2"   // cs blue
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
 /* ── data ─────────────────────────────────────────── */
-const stats = [
-  { val: 200, sfx: "+",  lbl: "Projects Listed" },
-  { val: 50,  sfx: "+",  lbl: "Developer Partners" },
-  { val: 10,  sfx: "K+", lbl: "Qualified Buyers" },
-  { val: 98,  sfx: "%",  lbl: "Client Satisfaction" },
-]
+
 
 const objectives = [
   { n: "01", title: "Digital Ecosystem",   body: "Build a dedicated platform for Dhaka developers to showcase residential and commercial projects at scale." },
@@ -94,22 +89,7 @@ function Tag({ label }: { label: string }) {
   )
 }
 
-function Counter({ val, sfx }: { val: number; sfx: string }) {
-  const [n, setN] = useState(0)
-  const ref = useRef<HTMLSpanElement>(null)
-  const inView = useInView(ref, { once: true })
-  useEffect(() => {
-    if (!inView) return
-    let c = 0
-    const step = val / 50
-    const t = setInterval(() => {
-      c += step
-      if (c >= val) { setN(val); clearInterval(t) } else setN(Math.floor(c))
-    }, 30)
-    return () => clearInterval(t)
-  }, [inView, val])
-  return <span ref={ref}>{n}{sfx}</span>
-}
+
 
 /* ── page ─────────────────────────────────────────── */
 export default function RealEstatePage() {
@@ -263,29 +243,7 @@ export default function RealEstatePage() {
       </section>
 
 
-      {/* ════════════════════════════════════════
-          STATS — premium counter band
-      ════════════════════════════════════════ */}
-      <section className="relative z-20 bg-flow-surface border-y border-flow-border">
-        <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-20 xl:px-28 py-8 sm:py-10 grid grid-cols-2 lg:grid-cols-4">
-          {stats.map(({ val, sfx, lbl }, i) => (
-            <motion.div
-              key={lbl}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: EASE, delay: i * 0.1 }}
-              className={`px-4 sm:px-6 py-3 ${i % 2 === 1 ? "border-l" : ""} lg:border-l ${i === 0 ? "lg:border-l-0" : ""} ${i < 2 ? "border-b lg:border-b-0" : ""}`}
-              style={{ borderColor: "var(--flow-border)" }}
-            >
-              <div className="font-black leading-none shimmer-gold" style={{ fontSize: "clamp(1.9rem,3.5vw,3rem)" }}>
-                <Counter val={val} sfx={sfx} />
-              </div>
-              <div className="text-[10px] sm:text-xs uppercase tracking-[0.18em] text-flow-textSoft mt-2 font-semibold">{lbl}</div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+
 
 
       {/* ════════════════════════════════════════
