@@ -106,7 +106,7 @@ export default function BlogPostClient({ slug }: { slug: string }) {
 
       {/* Action bar */}
       <div
-        className="sticky top-[60px] sm:top-[70px] z-20 border-b"
+        className="relative z-20 border-b"
         style={{ background: "var(--flow-card-strong)", borderColor: "var(--flow-border)", backdropFilter: "blur(16px)" }}
       >
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">

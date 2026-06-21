@@ -32,7 +32,7 @@ export default function EcommerceDesignPage() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button
                   size="lg"
-                  className="bg-white text-blue-700 hover:bg-gray-100"
+                  className="bg-white text-blue-700 hover:bg-flow-card"
                 >
                   <Link href="/contact">Get a Free Proposal</Link>
                 </Button>
@@ -59,32 +59,32 @@ export default function EcommerceDesignPage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 bg-gray-50">
+      <section className="py-12 bg-flow-bg">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div className="p-6 bg-white rounded-lg shadow-sm">
+            <div className="p-6 bg-flow-surface rounded-lg shadow-sm">
               <p className="text-3xl md:text-4xl font-bold text-blue-600">
                 35%
               </p>
-              <p className="text-gray-600">Average Conversion Rate Increase</p>
+              <p className="text-flow-textSoft">Average Conversion Rate Increase</p>
             </div>
-            <div className="p-6 bg-white rounded-lg shadow-sm">
+            <div className="p-6 bg-flow-surface rounded-lg shadow-sm">
               <p className="text-3xl md:text-4xl font-bold text-blue-600">
                 500+
               </p>
-              <p className="text-gray-600">Ecommerce Sites Launched</p>
+              <p className="text-flow-textSoft">Ecommerce Sites Launched</p>
             </div>
-            <div className="p-6 bg-white rounded-lg shadow-sm">
+            <div className="p-6 bg-flow-surface rounded-lg shadow-sm">
               <p className="text-3xl md:text-4xl font-bold text-blue-600">
                 42%
               </p>
-              <p className="text-gray-600">Cart Abandonment Reduction</p>
+              <p className="text-flow-textSoft">Cart Abandonment Reduction</p>
             </div>
-            <div className="p-6 bg-white rounded-lg shadow-sm">
+            <div className="p-6 bg-flow-surface rounded-lg shadow-sm">
               <p className="text-3xl md:text-4xl font-bold text-blue-600">
                 98%
               </p>
-              <p className="text-gray-600">Client Satisfaction Rate</p>
+              <p className="text-flow-textSoft">Client Satisfaction Rate</p>
             </div>
           </div>
         </div>
@@ -105,7 +105,7 @@ export default function EcommerceDesignPage() {
                 <h3 className="text-xl font-bold mb-2">
                   Conversion-Focused Design
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-flow-textSoft">
                   We design with your bottom line in mind, optimizing every
                   element to guide visitors toward purchase.
                 </p>
@@ -119,7 +119,7 @@ export default function EcommerceDesignPage() {
                 <h3 className="text-xl font-bold mb-2">
                   Custom Brand Experience
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-flow-textSoft">
                   Your ecommerce site will stand out with unique design that
                   reflects your brand identity and values.
                 </p>
@@ -131,7 +131,7 @@ export default function EcommerceDesignPage() {
                   <Code size={48} />
                 </div>
                 <h3 className="text-xl font-bold mb-2">Technical Excellence</h3>
-                <p className="text-gray-600">
+                <p className="text-flow-textSoft">
                   Built with clean code and best practices for speed, security,
                   and seamless functionality.
                 </p>
@@ -145,7 +145,7 @@ export default function EcommerceDesignPage() {
                 <h3 className="text-xl font-bold mb-2">
                   Data-Driven Decisions
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-flow-textSoft">
                   We use analytics and user behavior insights to inform design
                   choices that maximize results.
                 </p>
@@ -159,7 +159,7 @@ export default function EcommerceDesignPage() {
                 <h3 className="text-xl font-bold mb-2">
                   Optimized Checkout Flow
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-flow-textSoft">
                   Streamlined checkout process designed to reduce abandonment
                   and increase completed purchases.
                 </p>
@@ -173,7 +173,7 @@ export default function EcommerceDesignPage() {
                 <h3 className="text-xl font-bold mb-2">
                   User-Centric Approach
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-flow-textSoft">
                   Every design decision is made with your customers' needs and
                   preferences in mind.
                 </p>
@@ -184,54 +184,54 @@ export default function EcommerceDesignPage() {
       </section>
 
       {/* Process Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-flow-bg">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             Our Ecommerce Design Process
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="bg-white p-6 rounded-lg shadow-sm relative">
+            <div className="bg-flow-surface p-6 rounded-lg shadow-sm relative">
               <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-xl">
                 1
               </div>
               <h3 className="text-xl font-bold mb-3 mt-2">
                 Discovery & Strategy
               </h3>
-              <p className="text-gray-600">
+              <p className="text-flow-textSoft">
                 We analyze your business goals, target audience, and competitors
                 to develop a strategic roadmap for your ecommerce site.
               </p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-sm relative">
+            <div className="bg-flow-surface p-6 rounded-lg shadow-sm relative">
               <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-xl">
                 2
               </div>
               <h3 className="text-xl font-bold mb-3 mt-2">
                 UX Design & Wireframing
               </h3>
-              <p className="text-gray-600">
+              <p className="text-flow-textSoft">
                 We create the blueprint for your site with user flows,
                 information architecture, and wireframes focused on conversion.
               </p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-sm relative">
+            <div className="bg-flow-surface p-6 rounded-lg shadow-sm relative">
               <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-xl">
                 3
               </div>
               <h3 className="text-xl font-bold mb-3 mt-2">Visual Design</h3>
-              <p className="text-gray-600">
+              <p className="text-flow-textSoft">
                 Our designers craft a stunning visual identity that aligns with
                 your brand and appeals to your target customers.
               </p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-sm relative">
+            <div className="bg-flow-surface p-6 rounded-lg shadow-sm relative">
               <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-xl">
                 4
               </div>
               <h3 className="text-xl font-bold mb-3 mt-2">
                 Development & Launch
               </h3>
-              <p className="text-gray-600">
+              <p className="text-flow-textSoft">
                 We build your site with clean code, integrate payment gateways
                 and shipping solutions, and launch with thorough testing.
               </p>
@@ -255,7 +255,7 @@ export default function EcommerceDesignPage() {
             </TabsList>
             <TabsContent
               value="shopify"
-              className="p-6 bg-white rounded-lg shadow-sm"
+              className="p-6 bg-flow-surface rounded-lg shadow-sm"
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 <div>
@@ -296,7 +296,7 @@ export default function EcommerceDesignPage() {
             </TabsContent>
             <TabsContent
               value="woocommerce"
-              className="p-6 bg-white rounded-lg shadow-sm"
+              className="p-6 bg-flow-surface rounded-lg shadow-sm"
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 <div>
@@ -338,7 +338,7 @@ export default function EcommerceDesignPage() {
             </TabsContent>
             <TabsContent
               value="magento"
-              className="p-6 bg-white rounded-lg shadow-sm"
+              className="p-6 bg-flow-surface rounded-lg shadow-sm"
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 <div>
@@ -379,7 +379,7 @@ export default function EcommerceDesignPage() {
             </TabsContent>
             <TabsContent
               value="bigcommerce"
-              className="p-6 bg-white rounded-lg shadow-sm"
+              className="p-6 bg-flow-surface rounded-lg shadow-sm"
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 <div>
@@ -424,12 +424,12 @@ export default function EcommerceDesignPage() {
       </section>
 
       {/* Portfolio Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-flow-bg">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
             Our Ecommerce Portfolio
           </h2>
-          <p className="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
+          <p className="text-center text-flow-textSoft mb-12 max-w-3xl mx-auto">
             Take a look at some of our recent ecommerce website design projects
             and the results they've achieved.
           </p>
@@ -446,7 +446,7 @@ export default function EcommerceDesignPage() {
                 </div>
                 <CardContent className="p-6">
                   <h3 className="text-xl font-bold mb-2">Client Name {item}</h3>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-flow-textSoft mb-4">
                     {item === 1
                       ? "Fashion retailer saw 45% increase in mobile conversions"
                       : item === 2
@@ -505,12 +505,12 @@ export default function EcommerceDesignPage() {
                     </div>
                     <div>
                       <h3 className="font-bold">{testimonial.name}</h3>
-                      <p className="text-gray-600 text-sm">
+                      <p className="text-flow-textSoft text-sm">
                         {testimonial.company}
                       </p>
                     </div>
                   </div>
-                  <p className="text-gray-700 italic">"{testimonial.quote}"</p>
+                  <p className="text-flow-textSoft italic">"{testimonial.quote}"</p>
                 </CardContent>
               </Card>
             ))}
@@ -519,7 +519,7 @@ export default function EcommerceDesignPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-flow-bg">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             Frequently Asked Questions
@@ -560,9 +560,9 @@ export default function EcommerceDesignPage() {
                   "Definitely. All our ecommerce designs are fully responsive and optimized for all devices. We put special emphasis on the mobile shopping experience, as it accounts for a growing percentage of ecommerce sales.",
               },
             ].map((faq, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
+              <div key={index} className="bg-flow-surface p-6 rounded-lg shadow-sm">
                 <h3 className="text-xl font-bold mb-3">{faq.question}</h3>
-                <p className="text-gray-600">{faq.answer}</p>
+                <p className="text-flow-textSoft">{faq.answer}</p>
               </div>
             ))}
           </div>
@@ -582,7 +582,7 @@ export default function EcommerceDesignPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
-              className="bg-white text-blue-700 hover:bg-gray-100"
+              className="bg-white text-blue-700 hover:bg-flow-card"
             >
               <Link href="/contact">Get a Free Proposal</Link>
             </Button>

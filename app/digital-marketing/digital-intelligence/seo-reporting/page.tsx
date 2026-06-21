@@ -14,10 +14,10 @@ export const metadata: Metadata = generateMetadata({
 
 export default function SEOReportingPage() {
   return (
-    <div className="bg-gray-50 min-h-screen py-16">
+    <div className="bg-flow-bg min-h-screen py-16">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
-        <div className="flex items-center text-sm text-gray-500 mb-8 flex-wrap">
+        <div className="flex items-center text-sm text-flow-textSoft mb-8 flex-wrap">
           <Link href="/" className="hover:text-blue-600">
             Home
           </Link>
@@ -30,32 +30,32 @@ export default function SEOReportingPage() {
             Digital Intelligence
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-gray-700">SEO Reporting & Forecasting</span>
+          <span className="text-flow-textSoft">SEO Reporting & Forecasting</span>
         </div>
 
         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
           <div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">SEO Reporting & Forecasting</h1>
-            <p className="text-xl text-gray-600 mb-6">
+            <p className="text-xl text-flow-textSoft mb-6">
               Gain actionable insights with comprehensive SEO performance reports and predictive analytics to guide your
               strategy.
             </p>
             <div className="space-y-4 mb-8">
               <div className="flex items-start">
                 <CheckCircle className="h-6 w-6 text-blue-600 mr-2 flex-shrink-0 mt-1" />
-                <p className="text-gray-700">Detailed keyword ranking reports with competitive analysis</p>
+                <p className="text-flow-textSoft">Detailed keyword ranking reports with competitive analysis</p>
               </div>
               <div className="flex items-start">
                 <CheckCircle className="h-6 w-6 text-blue-600 mr-2 flex-shrink-0 mt-1" />
-                <p className="text-gray-700">Traffic and conversion analytics tied to SEO performance</p>
+                <p className="text-flow-textSoft">Traffic and conversion analytics tied to SEO performance</p>
               </div>
               <div className="flex items-start">
                 <CheckCircle className="h-6 w-6 text-blue-600 mr-2 flex-shrink-0 mt-1" />
-                <p className="text-gray-700">Predictive modeling to forecast future SEO results</p>
+                <p className="text-flow-textSoft">Predictive modeling to forecast future SEO results</p>
               </div>
               <div className="flex items-start">
                 <CheckCircle className="h-6 w-6 text-blue-600 mr-2 flex-shrink-0 mt-1" />
-                <p className="text-gray-700">Custom dashboards tailored to your business KPIs</p>
+                <p className="text-flow-textSoft">Custom dashboards tailored to your business KPIs</p>
               </div>
             </div>
             <Button asChild className="bg-blue-600 hover:bg-blue-700">
@@ -73,42 +73,42 @@ export default function SEOReportingPage() {
         </div>
 
         {/* Features Section */}
-        <div className="bg-white rounded-xl shadow-md p-8 mb-16">
+        <div className="bg-flow-surface rounded-xl shadow-md p-8 mb-16">
           <h2 className="text-3xl font-bold mb-10 text-center">Our SEO Reporting & Forecasting Features</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center p-6 border border-gray-100 rounded-lg hover:shadow-md transition-shadow">
+            <div className="text-center p-6 border border-flow-border rounded-lg hover:shadow-md transition-shadow">
               <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <BarChart2 className="h-8 w-8 text-blue-600" />
               </div>
               <h3 className="text-xl font-bold mb-3">Comprehensive Dashboards</h3>
-              <p className="text-gray-600">
+              <p className="text-flow-textSoft">
                 Custom dashboards that visualize your SEO performance metrics in real-time.
               </p>
             </div>
-            <div className="text-center p-6 border border-gray-100 rounded-lg hover:shadow-md transition-shadow">
+            <div className="text-center p-6 border border-flow-border rounded-lg hover:shadow-md transition-shadow">
               <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <LineChart className="h-8 w-8 text-blue-600" />
               </div>
               <h3 className="text-xl font-bold mb-3">Keyword Tracking</h3>
-              <p className="text-gray-600">
+              <p className="text-flow-textSoft">
                 Monitor your rankings for hundreds of keywords across multiple search engines.
               </p>
             </div>
-            <div className="text-center p-6 border border-gray-100 rounded-lg hover:shadow-md transition-shadow">
+            <div className="text-center p-6 border border-flow-border rounded-lg hover:shadow-md transition-shadow">
               <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <TrendingUp className="h-8 w-8 text-blue-600" />
               </div>
               <h3 className="text-xl font-bold mb-3">Predictive Analytics</h3>
-              <p className="text-gray-600">
+              <p className="text-flow-textSoft">
                 AI-powered forecasting to predict future SEO performance and identify opportunities.
               </p>
             </div>
-            <div className="text-center p-6 border border-gray-100 rounded-lg hover:shadow-md transition-shadow">
+            <div className="text-center p-6 border border-flow-border rounded-lg hover:shadow-md transition-shadow">
               <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <PieChart className="h-8 w-8 text-blue-600" />
               </div>
               <h3 className="text-xl font-bold mb-3">Competitor Analysis</h3>
-              <p className="text-gray-600">
+              <p className="text-flow-textSoft">
                 Compare your SEO performance against competitors and identify gaps and opportunities.
               </p>
             </div>
@@ -119,32 +119,32 @@ export default function SEOReportingPage() {
         <div className="mb-16">
           <h2 className="text-3xl font-bold mb-10 text-center">How Our SEO Reporting Works</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-xl shadow-md">
+            <div className="bg-flow-surface p-6 rounded-xl shadow-md">
               <div className="bg-blue-100 rounded-full w-12 h-12 flex items-center justify-center mb-4">
                 <span className="text-blue-600 text-xl font-bold">1</span>
               </div>
               <h3 className="text-xl font-bold mb-3">Data Collection</h3>
-              <p className="text-gray-600">
+              <p className="text-flow-textSoft">
                 We connect to your analytics platforms and SEO tools to gather comprehensive data about your website's
                 performance.
               </p>
             </div>
-            <div className="bg-white p-6 rounded-xl shadow-md">
+            <div className="bg-flow-surface p-6 rounded-xl shadow-md">
               <div className="bg-blue-100 rounded-full w-12 h-12 flex items-center justify-center mb-4">
                 <span className="text-blue-600 text-xl font-bold">2</span>
               </div>
               <h3 className="text-xl font-bold mb-3">Analysis & Insights</h3>
-              <p className="text-gray-600">
+              <p className="text-flow-textSoft">
                 Our experts analyze the data to identify trends, opportunities, and areas for improvement in your SEO
                 strategy.
               </p>
             </div>
-            <div className="bg-white p-6 rounded-xl shadow-md">
+            <div className="bg-flow-surface p-6 rounded-xl shadow-md">
               <div className="bg-blue-100 rounded-full w-12 h-12 flex items-center justify-center mb-4">
                 <span className="text-blue-600 text-xl font-bold">3</span>
               </div>
               <h3 className="text-xl font-bold mb-3">Forecasting & Recommendations</h3>
-              <p className="text-gray-600">
+              <p className="text-flow-textSoft">
                 We provide predictive forecasts and actionable recommendations to improve your SEO performance.
               </p>
             </div>
@@ -152,7 +152,7 @@ export default function SEOReportingPage() {
         </div>
 
         {/* Case Study Section */}
-        <div className="bg-white rounded-xl shadow-md p-8 mb-16">
+        <div className="bg-flow-surface rounded-xl shadow-md p-8 mb-16">
           <h2 className="text-3xl font-bold mb-6 text-center">Case Study</h2>
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="relative h-[300px] rounded-lg overflow-hidden">
@@ -167,22 +167,22 @@ export default function SEOReportingPage() {
               <h3 className="text-2xl font-bold mb-3">
                 How We Increased Organic Traffic by 150% for a B2B Software Company
               </h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-flow-textSoft mb-4">
                 Using our SEO reporting and forecasting tools, we identified key opportunities for a B2B software
                 company to improve their organic search visibility. By implementing our recommendations, they achieved:
               </p>
               <ul className="space-y-2 mb-4">
                 <li className="flex items-start">
                   <CheckCircle className="h-5 w-5 text-blue-600 mr-2 flex-shrink-0 mt-1" />
-                  <p className="text-gray-700">150% increase in organic traffic within 6 months</p>
+                  <p className="text-flow-textSoft">150% increase in organic traffic within 6 months</p>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle className="h-5 w-5 text-blue-600 mr-2 flex-shrink-0 mt-1" />
-                  <p className="text-gray-700">200% increase in lead generation from organic search</p>
+                  <p className="text-flow-textSoft">200% increase in lead generation from organic search</p>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle className="h-5 w-5 text-blue-600 mr-2 flex-shrink-0 mt-1" />
-                  <p className="text-gray-700">35% reduction in cost per acquisition</p>
+                  <p className="text-flow-textSoft">35% reduction in cost per acquisition</p>
                 </li>
               </ul>
             </div>
@@ -192,7 +192,7 @@ export default function SEOReportingPage() {
         {/* CTA Section */}
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-6">Ready to Improve Your SEO Performance?</h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-flow-textSoft mb-8 max-w-3xl mx-auto">
             Contact us today to learn how our SEO Reporting & Forecasting services can help you achieve better results
             from your SEO efforts.
           </p>

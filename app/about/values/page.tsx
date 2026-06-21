@@ -59,10 +59,10 @@ const coreValues = [
 
 export default function ValuesPage() {
   return (
-    <div className="bg-gray-50 min-h-screen py-16">
+    <div className="bg-flow-bg min-h-screen py-16">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
-        <div className="flex items-center text-sm text-gray-500 mb-8">
+        <div className="flex items-center text-sm text-flow-textSoft mb-8">
           <Link href="/" className="hover:text-blue-600">
             Home
           </Link>
@@ -71,7 +71,7 @@ export default function ValuesPage() {
             About
           </Link>
           <ChevronRight className="h-4 w-4 mx-2" />
-          <span className="text-gray-700 font-medium">Our Values</span>
+          <span className="text-flow-textSoft font-medium">Our Values</span>
         </div>
 
         {/* Hero Section */}
@@ -79,11 +79,11 @@ export default function ValuesPage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <h1 className="text-4xl md:text-5xl font-bold mb-6">Our Core Values</h1>
-              <p className="text-xl text-gray-600 mb-6">
+              <p className="text-xl text-flow-textSoft mb-6">
                 At Creative Surf, our values are more than just words on a wall. They guide our decisions, shape our
                 culture, and define how we work with our clients and each other.
               </p>
-              <p className="text-lg text-gray-600 mb-8">
+              <p className="text-lg text-flow-textSoft mb-8">
                 These principles have been at the heart of our company since day one and continue to drive our success
                 and growth.
               </p>
@@ -106,12 +106,12 @@ export default function ValuesPage() {
             {coreValues.map((value, index) => {
               const Icon = value.icon
               return (
-                <div key={index} className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+                <div key={index} className="bg-flow-surface rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
                   <div className={`${value.color} p-3 rounded-full w-fit mb-4`}>
                     <Icon className="h-6 w-6" />
                   </div>
                   <h3 className="text-xl font-bold mb-3">{value.title}</h3>
-                  <p className="text-gray-600">{value.description}</p>
+                  <p className="text-flow-textSoft">{value.description}</p>
                 </div>
               )
             })}
@@ -119,7 +119,7 @@ export default function ValuesPage() {
         </div>
 
         {/* Values in Action */}
-        <div className="bg-white rounded-xl shadow-md p-8 mb-16">
+        <div className="bg-flow-surface rounded-xl shadow-md p-8 mb-16">
           <h2 className="text-3xl font-bold mb-8 text-center">Our Values in Action</h2>
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="relative h-[300px] rounded-lg overflow-hidden">
@@ -132,7 +132,7 @@ export default function ValuesPage() {
             </div>
             <div>
               <h3 className="text-2xl font-bold mb-4">How We Live Our Values Every Day</h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-flow-textSoft mb-4">
                 Our values aren't just aspirational statements—they're reflected in our daily work and decisions. From
                 the way we structure our teams to how we approach client challenges, our values are embedded in
                 everything we do.
@@ -142,25 +142,25 @@ export default function ValuesPage() {
                   <div className="bg-blue-100 p-1 rounded-full mr-2 mt-1">
                     <ChevronRight className="h-4 w-4 text-blue-600" />
                   </div>
-                  <span className="text-gray-700">We celebrate client wins as our own successes</span>
+                  <span className="text-flow-textSoft">We celebrate client wins as our own successes</span>
                 </li>
                 <li className="flex items-start">
                   <div className="bg-blue-100 p-1 rounded-full mr-2 mt-1">
                     <ChevronRight className="h-4 w-4 text-blue-600" />
                   </div>
-                  <span className="text-gray-700">We invest in continuous learning and development</span>
+                  <span className="text-flow-textSoft">We invest in continuous learning and development</span>
                 </li>
                 <li className="flex items-start">
                   <div className="bg-blue-100 p-1 rounded-full mr-2 mt-1">
                     <ChevronRight className="h-4 w-4 text-blue-600" />
                   </div>
-                  <span className="text-gray-700">We provide transparent reporting and honest feedback</span>
+                  <span className="text-flow-textSoft">We provide transparent reporting and honest feedback</span>
                 </li>
                 <li className="flex items-start">
                   <div className="bg-blue-100 p-1 rounded-full mr-2 mt-1">
                     <ChevronRight className="h-4 w-4 text-blue-600" />
                   </div>
-                  <span className="text-gray-700">We support community initiatives and sustainable practices</span>
+                  <span className="text-flow-textSoft">We support community initiatives and sustainable practices</span>
                 </li>
               </ul>
             </div>
@@ -171,7 +171,7 @@ export default function ValuesPage() {
         <div className="mb-16">
           <h2 className="text-3xl font-bold mb-8 text-center">Our Community Initiatives</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
+            <div className="bg-flow-surface rounded-xl shadow-md overflow-hidden">
               <div className="relative h-48">
                 <Image
                   src="/placeholder.svg?height=400&width=600&text=Education+Initiatives"
@@ -182,14 +182,14 @@ export default function ValuesPage() {
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold mb-3">Education Initiatives</h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   We partner with local schools and universities to provide digital marketing education and internship
                   opportunities for students.
                 </p>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
+            <div className="bg-flow-surface rounded-xl shadow-md overflow-hidden">
               <div className="relative h-48">
                 <Image
                   src="/placeholder.svg?height=400&width=600&text=Environmental+Efforts"
@@ -200,14 +200,14 @@ export default function ValuesPage() {
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold mb-3">Environmental Efforts</h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   Our sustainability initiatives include reducing our carbon footprint, implementing paperless
                   processes, and organizing community clean-up events.
                 </p>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
+            <div className="bg-flow-surface rounded-xl shadow-md overflow-hidden">
               <div className="relative h-48">
                 <Image
                   src="/placeholder.svg?height=400&width=600&text=Nonprofit+Support"
@@ -218,7 +218,7 @@ export default function ValuesPage() {
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold mb-3">Nonprofit Support</h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   We provide pro bono digital marketing services to selected nonprofit organizations each year to help
                   them amplify their impact.
                 </p>
@@ -235,7 +235,7 @@ export default function ValuesPage() {
             or team member.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild variant="outline" size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+            <Button asChild variant="outline" size="lg" className="bg-white text-blue-600 hover:bg-flow-card">
               <Link href="/contact">Contact Us</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-blue-700">

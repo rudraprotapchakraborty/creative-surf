@@ -27,10 +27,8 @@ const TrustedByCompanies: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* Edge-to-Edge Logos */}
+      {/* Logos grid */}
       <div className="w-full relative mt-4">
-        <div className="absolute left-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-r from-flow-bg to-transparent pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-l from-flow-bg to-transparent pointer-events-none" />
         <MovingLogos />
       </div>
     </section>

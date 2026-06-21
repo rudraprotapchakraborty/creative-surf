@@ -220,17 +220,21 @@ export default function RealEstateBlogsPage() {
                   style={{ border: "1px solid var(--flow-border-strong)" }}
                 >
                   {/* Cover */}
-                  <div className="w-full overflow-hidden" style={{ height: 160 }}>
+                  <Link
+                    href={`/real-estate/blogs/${blog.slug}`}
+                    className="block w-full overflow-hidden group"
+                    style={{ height: 160 }}
+                  >
                     {blog.coverImage ? (
-                      <img src={blog.coverImage} alt={blog.title} className="w-full h-full object-cover" />
+                      <img src={blog.coverImage} alt={blog.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center px-5 text-center" style={{ background: "linear-gradient(135deg, rgba(184,137,42,0.15), rgba(0,102,162,0.15))" }}>
+                      <div className="w-full h-full flex items-center justify-center px-5 text-center transition-transform duration-500 group-hover:scale-105" style={{ background: "linear-gradient(135deg, rgba(184,137,42,0.15), rgba(0,102,162,0.15))" }}>
                         <span className="font-bold text-sm leading-snug line-clamp-3" style={{ fontFamily: "var(--font-re)", color: "rgb(var(--flow-text-soft))" }}>
                           {blog.title}
                         </span>
                       </div>
                     )}
-                  </div>
+                  </Link>
 
                   <div className="p-4 sm:p-5 flex flex-col flex-1">
                     {/* Category + Admin controls */}
@@ -264,9 +268,11 @@ export default function RealEstateBlogsPage() {
                       )}
                     </div>
 
-                    <h3 className="font-bold text-flow-text mb-2 leading-snug line-clamp-2 text-base sm:text-[1.05rem]">
-                      {blog.title}
-                    </h3>
+                    <Link href={`/real-estate/blogs/${blog.slug}`} className="group">
+                      <h3 className="font-bold text-flow-text mb-2 leading-snug line-clamp-2 text-base sm:text-[1.05rem] transition-colors group-hover:text-[#0066A2]">
+                        {blog.title}
+                      </h3>
+                    </Link>
                     <p className="text-xs leading-relaxed mb-4 line-clamp-3 flex-1" style={{ color: "rgb(var(--flow-text-soft))" }}>
                       {blog.excerpt}
                     </p>

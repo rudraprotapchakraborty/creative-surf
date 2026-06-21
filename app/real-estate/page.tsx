@@ -264,9 +264,34 @@ export default function RealEstatePage() {
 
 
       {/* ════════════════════════════════════════
+          STATS — premium counter band
+      ════════════════════════════════════════ */}
+      <section className="relative z-20 bg-flow-surface border-y border-flow-border">
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-20 xl:px-28 py-8 sm:py-10 grid grid-cols-2 lg:grid-cols-4">
+          {stats.map(({ val, sfx, lbl }, i) => (
+            <motion.div
+              key={lbl}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: EASE, delay: i * 0.1 }}
+              className={`px-4 sm:px-6 py-3 ${i % 2 === 1 ? "border-l" : ""} lg:border-l ${i === 0 ? "lg:border-l-0" : ""} ${i < 2 ? "border-b lg:border-b-0" : ""}`}
+              style={{ borderColor: "var(--flow-border)" }}
+            >
+              <div className="font-black leading-none shimmer-gold" style={{ fontSize: "clamp(1.9rem,3.5vw,3rem)" }}>
+                <Counter val={val} sfx={sfx} />
+              </div>
+              <div className="text-[10px] sm:text-xs uppercase tracking-[0.18em] text-flow-textSoft mt-2 font-semibold">{lbl}</div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+
+      {/* ════════════════════════════════════════
           ABOUT — overlapping editorial layout
       ════════════════════════════════════════ */}
-      <section id="about" className="relative overflow-hidden py-16 md:py-28 px-6 sm:px-10 lg:px-20 xl:px-28 bg-flow-surface">
+      <section id="about" className="relative overflow-hidden py-14 md:py-20 px-6 sm:px-10 lg:px-20 xl:px-28 bg-flow-surface">
         {/* giant decorative number behind everything */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -288,7 +313,7 @@ export default function RealEstatePage() {
             <Tag label="About the Platform" />
             <motion.h2
               variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: EASE } } }}
-              className="font-bold leading-tight text-flow-textmb-8"
+              className="font-bold leading-tight text-flow-text mb-6"
               style={{ fontSize: "clamp(2rem,3.5vw,3.25rem)" }}
             >
               Where Developers <br />
@@ -355,15 +380,15 @@ export default function RealEstatePage() {
       {/* ════════════════════════════════════════
           OBJECTIVES — full-width numbered rows
       ════════════════════════════════════════ */}
-      <section className="relative overflow-hidden py-24 bg-flow-bg">
+      <section className="relative overflow-hidden py-16 bg-flow-bg">
         {/* background label */}
         <div className="absolute inset-0 flex items-center pointer-events-none select-none overflow-hidden">
-          <span className="font-black opacity-[0.025] text-flow-textleading-none" style={{ fontSize: "clamp(80px,15vw,180px)" }}>
+          <span className="font-black opacity-[0.025] text-flow-text leading-none" style={{ fontSize: "clamp(80px,15vw,180px)" }}>
             OBJECTIVES
           </span>
         </div>
 
-        <div className="relative z-10 px-6 sm:px-10 lg:px-20 xl:px-28 mb-16">
+        <div className="relative z-10 px-6 sm:px-10 lg:px-20 xl:px-28 mb-10">
           <Tag label="Our Objectives" />
           <h2 className="font-bold text-flow-text" style={{ fontSize: "clamp(2rem,3.5vw,3.25rem)" }}>
             What We Set Out <span className="shimmer-gold">To Achieve</span>
@@ -397,7 +422,7 @@ export default function RealEstatePage() {
               {/* content */}
               <div className="flex-1 pt-3 lg:flex lg:items-start lg:gap-12">
                 <h3
-                  className="font-bold text-flow-texttext-xl lg:text-2xl mb-3 lg:mb-0 lg:w-64 flex-shrink-0 group-hover:text-[#D4A843] transition-colors duration-300"
+                  className="font-bold text-flow-text text-xl lg:text-2xl mb-3 lg:mb-0 lg:w-64 flex-shrink-0 group-hover:text-[#D4A843] transition-colors duration-300"
                 >{title}</h3>
                 <p className="text-flow-textSoft leading-relaxed flex-1">{body}</p>
               </div>
@@ -422,7 +447,7 @@ export default function RealEstatePage() {
         <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full blur-[120px] pointer-events-none" style={{ background: `${G}10` }} />
         <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full blur-[120px] pointer-events-none" style={{ background: `${B}10` }} />
 
-        <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-10 lg:px-20 py-16 lg:py-32 text-center">
+        <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-10 lg:px-20 py-14 lg:py-20 text-center">
           <Tag label="Our Vision" />
 
           {/* giant quote mark */}
@@ -496,8 +521,8 @@ export default function RealEstatePage() {
       {/* ════════════════════════════════════════
           CORE VALUES — bento grid
       ════════════════════════════════════════ */}
-      <section className="relative overflow-hidden py-16 md:py-24 px-6 sm:px-10 lg:px-20 xl:px-28 bg-flow-bg">
-        <div className="relative z-10 mb-16 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+      <section className="relative overflow-hidden py-14 md:py-20 px-6 sm:px-10 lg:px-20 xl:px-28 bg-flow-bg">
+        <div className="relative z-10 mb-10 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div>
             <Tag label="Core Values" />
             <h2 className="font-bold text-flow-text" style={{ fontSize: "clamp(2rem,3.5vw,3.25rem)" }}>
@@ -539,7 +564,7 @@ export default function RealEstatePage() {
                 <Icon className="w-5 h-5" style={{ color: G }} />
               </motion.div>
 
-              <h3 className="font-bold text-flow-texttext-base mb-3 group-hover:text-[#D4A843] transition-colors duration-300">{title}</h3>
+              <h3 className="font-bold text-flow-text text-base mb-3 group-hover:text-[#D4A843] transition-colors duration-300">{title}</h3>
               <p className="text-flow-textSoft text-sm leading-relaxed">{desc}</p>
 
               {/* corner decoration on large cards */}
@@ -555,8 +580,8 @@ export default function RealEstatePage() {
       {/* ════════════════════════════════════════
           WHY CHOOSE US — alternating feature rows
       ════════════════════════════════════════ */}
-      <section className="relative overflow-hidden py-24 bg-flow-surface">
-        <div className="px-6 sm:px-10 lg:px-20 xl:px-28 mb-16">
+      <section className="relative overflow-hidden py-16 bg-flow-surface">
+        <div className="px-6 sm:px-10 lg:px-20 xl:px-28 mb-10">
           <Tag label="Why Choose Us" />
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
             <h2 className="font-bold text-flow-text" style={{ fontSize: "clamp(2rem,3.5vw,3.25rem)" }}>
@@ -594,7 +619,7 @@ export default function RealEstatePage() {
 
               {/* text */}
               <div className="flex-1 lg:flex lg:items-start lg:gap-12">
-                <h3 className="font-bold text-flow-texttext-lg lg:text-xl mb-2 lg:mb-0 lg:w-56 flex-shrink-0 group-hover:text-[#D4A843] transition-colors duration-300">{title}</h3>
+                <h3 className="font-bold text-flow-text text-lg lg:text-xl mb-2 lg:mb-0 lg:w-56 flex-shrink-0 group-hover:text-[#D4A843] transition-colors duration-300">{title}</h3>
                 <p className="text-flow-textSoft leading-relaxed flex-1">{desc}</p>
               </div>
 
@@ -609,8 +634,8 @@ export default function RealEstatePage() {
       {/* ════════════════════════════════════════
           SERVICES — vertical tab selector
       ════════════════════════════════════════ */}
-      <section className="relative overflow-hidden py-16 md:py-24 px-4 sm:px-8 lg:px-20 xl:px-28 bg-flow-bg">
-        <div className="mb-16">
+      <section className="relative overflow-hidden py-14 md:py-20 px-4 sm:px-8 lg:px-20 xl:px-28 bg-flow-bg">
+        <div className="mb-10">
           <Tag label="Our Services" />
           <h2 className="font-bold text-flow-text" style={{ fontSize: "clamp(2rem,3.5vw,3.25rem)" }}>
             Everything You Need <span className="shimmer-gold">To Get Found</span>
@@ -683,7 +708,7 @@ export default function RealEstatePage() {
                         >
                           <div className="flex items-center gap-2 mb-3">
                             <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: accent }} />
-                            <span className="font-semibold text-flow-texttext-sm">{sub}</span>
+                            <span className="font-semibold text-flow-text text-sm">{sub}</span>
                           </div>
                           <p className="text-flow-textSoft text-sm leading-relaxed">{text}</p>
                         </motion.div>
@@ -712,7 +737,7 @@ export default function RealEstatePage() {
       {/* ════════════════════════════════════════
           BUYERS CTA — find your next home
       ════════════════════════════════════════ */}
-      <section className="relative py-24 sm:py-32 overflow-hidden bg-flow-surface">
+      <section className="relative py-16 sm:py-20 overflow-hidden bg-flow-surface">
         <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, var(--flow-surface) 0%, ${G}08 50%, var(--flow-surface) 100%)` }} />
 
         {/* decorative rings */}

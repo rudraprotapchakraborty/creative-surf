@@ -451,20 +451,20 @@ const mainPages = [
 
 export default function SitemapPage() {
   return (
-    <div className="bg-gray-50 min-h-screen py-16">
+    <div className="bg-flow-bg min-h-screen py-16">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
-        <div className="flex items-center text-sm text-gray-500 mb-8">
+        <div className="flex items-center text-sm text-flow-textSoft mb-8">
           <Link href="/" className="hover:text-blue-600">
             Home
           </Link>
           <ChevronRight className="h-4 w-4 mx-2" />
-          <span className="text-gray-700 font-medium">Sitemap</span>
+          <span className="text-flow-textSoft font-medium">Sitemap</span>
         </div>
 
         <h1 className="text-4xl font-bold mb-12 text-center">Sitemap</h1>
 
-        <div className="bg-white rounded-xl shadow-md p-8 mb-16">
+        <div className="bg-flow-surface rounded-xl shadow-md p-8 mb-16">
           {/* Main Pages */}
           <div className="mb-12">
             <h2 className="text-2xl font-bold mb-6 text-blue-600 border-b pb-2">
@@ -475,7 +475,7 @@ export default function SitemapPage() {
                 <li key={page.href}>
                   <Link
                     href={page.href}
-                    className="text-gray-700 hover:text-blue-600"
+                    className="text-flow-textSoft hover:text-blue-600"
                   >
                     {page.name}
                   </Link>
@@ -496,7 +496,7 @@ export default function SitemapPage() {
                     <h3 className="text-xl font-semibold mb-3">
                       <Link
                         href={subsection.href}
-                        className="text-gray-800 hover:text-blue-600"
+                        className="text-flow-text hover:text-blue-600"
                       >
                         {subsection.title}
                       </Link>
@@ -506,7 +506,7 @@ export default function SitemapPage() {
                         <li key={item.href}>
                           <Link
                             href={item.href}
-                            className="text-gray-600 hover:text-blue-600"
+                            className="text-flow-textSoft hover:text-blue-600"
                           >
                             {item.name}
                           </Link>

@@ -14,10 +14,10 @@ export const metadata: Metadata = generateMetadata({
 
 export default function WebsiteDesignPage() {
   return (
-    <div className="bg-gray-50 min-h-screen py-16">
+    <div className="bg-flow-bg min-h-screen py-16">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
-        <div className="flex items-center text-sm text-gray-500 mb-8 flex-wrap">
+        <div className="flex items-center text-sm text-flow-textSoft mb-8 flex-wrap">
           <Link href="/" className="hover:text-blue-600">
             Home
           </Link>
@@ -30,31 +30,31 @@ export default function WebsiteDesignPage() {
             Design
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-gray-700">Website Design</span>
+          <span className="text-flow-textSoft">Website Design</span>
         </div>
 
         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
           <div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">Website Design Services</h1>
-            <p className="text-xl text-gray-600 mb-6">
+            <p className="text-xl text-flow-textSoft mb-6">
               Professional website design services that create beautiful, functional, and conversion-focused websites.
             </p>
             <div className="space-y-4 mb-8">
               <div className="flex items-start">
                 <CheckCircle className="h-6 w-6 text-blue-600 mr-2 flex-shrink-0 mt-1" />
-                <p className="text-gray-700">Custom designs tailored to your brand and business goals</p>
+                <p className="text-flow-textSoft">Custom designs tailored to your brand and business goals</p>
               </div>
               <div className="flex items-start">
                 <CheckCircle className="h-6 w-6 text-blue-600 mr-2 flex-shrink-0 mt-1" />
-                <p className="text-gray-700">Mobile-responsive layouts that work on all devices</p>
+                <p className="text-flow-textSoft">Mobile-responsive layouts that work on all devices</p>
               </div>
               <div className="flex items-start">
                 <CheckCircle className="h-6 w-6 text-blue-600 mr-2 flex-shrink-0 mt-1" />
-                <p className="text-gray-700">User experience optimization for better engagement</p>
+                <p className="text-flow-textSoft">User experience optimization for better engagement</p>
               </div>
               <div className="flex items-start">
                 <CheckCircle className="h-6 w-6 text-blue-600 mr-2 flex-shrink-0 mt-1" />
-                <p className="text-gray-700">SEO-friendly architecture built into every design</p>
+                <p className="text-flow-textSoft">SEO-friendly architecture built into every design</p>
               </div>
             </div>
             <Button asChild className="bg-blue-600 hover:bg-blue-700">

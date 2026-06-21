@@ -25,9 +25,17 @@ export function Navbar() {
         { label: "Blogs", href: "/blogs" },
       ];
 
-  const specialBtn = isRE
-    ? { label: "Marketing", href: "/" }
-    : { label: "Real Estate", href: "/real-estate" };
+  const sections = [
+    { label: "Marketing",   href: "/",            active: !isRE },
+    { label: "Real Estate", href: "/real-estate", active: isRE  },
+  ];
+  // Active index drives the sliding indicator (transform-based, so it never
+  // depends on scroll position — avoids the layoutId "fly from bottom" jump).
+  const activeIndex = isRE ? 1 : 0;
+  const activeGrad = isRE
+    ? "linear-gradient(135deg,#B8892A,#D4A843)"
+    : "linear-gradient(135deg,#0066A2,#0EA5E9)";
+  const pillSpring = { type: "spring", stiffness: 400, damping: 34 } as const;
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "auto";
@@ -49,7 +57,7 @@ export function Navbar() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className={`
-            w-full px-4 md:px-5 py-2 md:py-2.5 flex items-center justify-between
+            w-full px-5 md:px-7 py-2.5 md:py-3 flex items-center justify-between gap-3 md:gap-6
             rounded-full transition-all duration-500
             ${scrolledClass}
           `}
@@ -70,31 +78,41 @@ export function Navbar() {
           </Link>
 
           {/* DESKTOP — nav pill */}
-          <div className="hidden md:flex items-center gap-0.5 glass border border-flow-border px-1.5 py-1 rounded-full">
+          <div className="hidden md:flex items-center gap-1 glass border border-flow-border px-2 py-1.5 rounded-full">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="px-3 py-1.5 rounded-full text-flow-textSoft text-xs font-semibold hover:text-flow-text hover:bg-flow-card transition-all"
+                className="px-4 py-2 rounded-full text-flow-textSoft text-xs font-semibold hover:text-flow-text hover:bg-flow-card transition-all"
               >
                 {link.label}
               </Link>
             ))}
           </div>
 
-          {/* DESKTOP — special button (Real Estate / Marketing) */}
-          <div className="hidden md:flex">
-            <Link
-              href={specialBtn.href}
-              className="px-3 py-1.5 rounded-full text-xs font-semibold border transition-all hover:opacity-80"
-              style={{
-                color: isRE ? "#0066A2" : "#B8892A",
-                borderColor: isRE ? "#0066A230" : "#B8892A40",
-                backgroundColor: isRE ? "#0066A210" : "#B8892A10",
-              }}
-            >
-              {specialBtn.label}
-            </Link>
+          {/* DESKTOP — section toggle (Marketing ⇄ Real Estate) */}
+          <div className="hidden md:flex relative items-stretch rounded-full glass border border-flow-border p-1">
+            {/* sliding indicator */}
+            <motion.span
+              aria-hidden
+              className="absolute top-1 bottom-1 left-1 rounded-full shadow-sm"
+              style={{ width: "calc(50% - 0.25rem)", background: activeGrad }}
+              initial={false}
+              animate={{ x: `${activeIndex * 100}%` }}
+              transition={pillSpring}
+            />
+            {sections.map((s) => (
+              <Link
+                key={s.href}
+                href={s.href}
+                aria-current={s.active ? "page" : undefined}
+                className={`relative z-10 flex-1 whitespace-nowrap text-center px-5 py-2 rounded-full text-xs font-semibold transition-colors ${
+                  s.active ? "text-white" : "text-flow-textSoft hover:text-flow-text"
+                }`}
+              >
+                {s.label}
+              </Link>
+            ))}
           </div>
 
           {/* DESKTOP — theme + CTA */}
@@ -153,14 +171,31 @@ export function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                href={specialBtn.href}
-                onClick={() => setMobileOpen(false)}
-                className="px-4 py-3 rounded-xl text-sm font-semibold transition-all hover:bg-flow-card"
-                style={{ color: isRE ? "#0066A2" : "#B8892A" }}
-              >
-                {specialBtn.label}
-              </Link>
+              {/* Section toggle (Marketing ⇄ Real Estate) */}
+              <div className="mt-1 relative flex p-1 rounded-2xl glass border border-flow-border">
+                {/* sliding indicator */}
+                <motion.span
+                  aria-hidden
+                  className="absolute top-1 bottom-1 left-1 rounded-xl"
+                  style={{ width: "calc(50% - 0.25rem)", background: activeGrad }}
+                  initial={false}
+                  animate={{ x: `${activeIndex * 100}%` }}
+                  transition={pillSpring}
+                />
+                {sections.map((s) => (
+                  <Link
+                    key={s.href}
+                    href={s.href}
+                    onClick={() => setMobileOpen(false)}
+                    aria-current={s.active ? "page" : undefined}
+                    className={`relative z-10 flex-1 whitespace-nowrap text-center px-3 py-2 rounded-xl text-sm font-semibold transition-colors ${
+                      s.active ? "text-white" : "text-flow-textSoft"
+                    }`}
+                  >
+                    {s.label}
+                  </Link>
+                ))}
+              </div>
             </div>
 
             {/* Divider + CTA */}

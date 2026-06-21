@@ -402,3 +402,113 @@ body {
 .dark .shadow-soft {
   box-shadow: 0 1px 2px rgba(0,0,0,0.4), 0 12px 32px -12px rgba(0,0,0,0.6);
 }
+
+/* ============================================================
+   PREMIUM OVERHAUL LAYER  (additive — does not alter existing)
+   ============================================================ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+@layer base {
+  h1, h2, h3, h4, h5 {
+    letter-spacing: -0.02em;
+  }
+}
+
+/* ---- Premium motion keyframes ---- */
+@keyframes mesh-pan {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(-3%, 2%, 0) scale(1.08); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+@keyframes float-y-slow {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-16px); }
+}
+@keyframes sheen {
+  0%   { background-position: -150% 0; }
+  100% { background-position: 250% 0; }
+}
+
+.animate-mesh        { animation: mesh-pan 24s ease-in-out infinite; }
+.animate-float-y     { animation: float-y 7s ease-in-out infinite; }
+.animate-float-y-slow{ animation: float-y-slow 9s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .animate-mesh, .animate-float-y, .animate-float-y-slow,
+  .animate-aurora, .animate-aurora-alt, .animate-float-slow,
+  .animate-text-shimmer, .animate-spin-slow { animation: none !important; }
+}
+
+@layer utilities {
+  /* Consistent horizontal page rhythm (matches hero/sections) */
+  .section-px { @apply px-5 sm:px-10 lg:px-20 xl:px-28; }
+  /* Vertical section rhythm */
+  .section-py { @apply py-20 sm:py-24 md:py-28 lg:py-32; }
+
+  /* Premium focus ring (apply to interactive elements) */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aurora-1/60 focus-visible:ring-offset-2 focus-visible:ring-offset-flow-bg;
+  }
+
+  /* Animated mesh field for hero backdrops */
+  .bg-aurora-mesh {
+    background-image:
+      radial-gradient(40% 50% at 15% 20%, rgb(var(--accent-1) / 0.22), transparent 60%),
+      radial-gradient(45% 55% at 85% 15%, rgb(var(--accent-2) / 0.20), transparent 60%),
+      radial-gradient(50% 60% at 70% 85%, rgb(var(--accent-3) / 0.18), transparent 60%),
+      radial-gradient(40% 50% at 25% 90%, rgb(var(--accent-1) / 0.16), transparent 60%);
+  }
+
+  /* Premium glass card with built-in hover lift */
+  .premium-card {
+    background: var(--flow-card);
+    border: 1px solid var(--flow-border);
+    border-radius: 1.5rem;
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+    transition: transform 0.45s cubic-bezier(0.16,1,0.3,1),
+                border-color 0.45s ease, box-shadow 0.45s ease;
+  }
+  .premium-card:hover {
+    transform: translateY(-4px);
+    border-color: rgb(var(--accent-1) / 0.35);
+    box-shadow: 0 1px 2px rgba(5,26,46,0.05), 0 22px 48px -22px rgba(0,102,162,0.30);
+  }
+  .dark .premium-card:hover {
+    box-shadow: 0 1px 2px rgba(0,0,0,0.5), 0 22px 48px -22px rgba(56,189,248,0.30);
+  }
+}
+
+/* Deeper premium elevation */
+.shadow-premium {
+  box-shadow:
+    0 1px 2px rgba(5,26,46,0.05),
+    0 10px 30px -10px rgba(5,26,46,0.12),
+    0 30px 70px -28px rgba(0,102,162,0.28);
+}
+.dark .shadow-premium {
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.5),
+    0 10px 30px -10px rgba(0,0,0,0.6),
+    0 30px 70px -28px rgba(56,189,248,0.26);
+}
+
+/* Animated gradient sheen for headline accents (optional) */
+.sheen-text {
+  background-image: linear-gradient(110deg,
+    rgb(var(--accent-1)) 0%, rgb(var(--accent-3)) 45%,
+    rgb(var(--accent-2)) 55%, rgb(var(--accent-1)) 100%);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: sheen 6s linear infinite;
+}

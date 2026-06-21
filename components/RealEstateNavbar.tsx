@@ -32,9 +32,9 @@ export function RealEstateNavbar() {
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className={`w-full px-4 md:px-5 py-2 md:py-2.5 flex items-center justify-between rounded-full transition-all duration-500 border ${
+          className={`w-full px-4 md:px-5 py-1 md:py-1.5 flex items-center justify-between rounded-full transition-all duration-500 border ${
             scrolled
-              ? "bg-white/70 border-black/8 backdrop-blur-md shadow-sm"
+              ? "glass-strong border-flow-border shadow-sm"
               : "bg-transparent border-transparent"
           }`}
         >
@@ -45,7 +45,7 @@ export function RealEstateNavbar() {
               <img
                 src="/logo.png"
                 alt="logo"
-                className="relative w-7 h-7 md:w-8 md:h-8 transition-transform duration-500 group-hover:scale-110"
+                className="relative w-6 h-6 md:w-7 md:h-7 transition-transform duration-500 group-hover:scale-110"
               />
             </div>
             <span className="font-heading font-extrabold text-lg md:text-xl tracking-tight text-flow-text">
@@ -71,7 +71,7 @@ export function RealEstateNavbar() {
             <ThemeToggle />
             <Link
               href="/contact"
-              className="shine relative group inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold text-white bg-aurora-grad shadow-aurora overflow-hidden"
+              className="shine relative group inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold text-white bg-aurora-grad shadow-aurora overflow-hidden"
             >
               <span className="relative">Get Started</span>
               <ArrowRight className="relative w-4 h-4 group-hover:translate-x-0.5 transition-transform" />

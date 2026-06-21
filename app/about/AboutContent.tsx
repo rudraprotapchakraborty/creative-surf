@@ -67,7 +67,7 @@ export default function AboutPage() {
       </section>
 
       {/* Our Story */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-flow-surface">
         <div className="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, x: -60 }}
@@ -76,15 +76,15 @@ export default function AboutPage() {
             viewport={{ once: true }}
           >
             <h2 className="text-4xl font-bold mb-6">Our Story</h2>
-            <p className="text-gray-700 mb-4">
+            <p className="text-flow-textSoft mb-4">
               Founded in 2015, Creative Surf began with a simple mission: to create authentic brand experiences that
               resonate with audiences and drive meaningful results.
             </p>
-            <p className="text-gray-700 mb-4">
+            <p className="text-flow-textSoft mb-4">
               What started as a small team of three has grown into a diverse collective of strategists, designers,
               developers, and content creators united by our passion for creative excellence.
             </p>
-            <p className="text-gray-700">
+            <p className="text-flow-textSoft">
               Today, we're proud to partner with brands across industries, from emerging startups to established
               enterprises, helping them navigate the ever-changing digital landscape and connect with their audiences
               in authentic ways.
@@ -108,7 +108,7 @@ export default function AboutPage() {
       </section>
 
       {/* Values */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-flow-bg">
         <div className="container mx-auto px-6 text-center">
           <motion.h2
             className="text-4xl font-bold mb-12"
@@ -123,14 +123,14 @@ export default function AboutPage() {
             {values.map((value, index) => (
               <motion.div
                 key={index}
-                className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-transform hover:-translate-y-2"
+                className="bg-flow-surface p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-transform hover:-translate-y-2"
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
                 <h3 className="text-2xl font-bold mb-4">{value.title}</h3>
-                <p className="text-gray-600">{value.description}</p>
+                <p className="text-flow-textSoft">{value.description}</p>
               </motion.div>
             ))}
           </div>
@@ -138,7 +138,7 @@ export default function AboutPage() {
       </section>
 
       {/* Team */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-flow-surface">
         <div className="container mx-auto px-6">
           <motion.h2
             className="text-4xl font-bold text-center mb-12"
@@ -153,7 +153,7 @@ export default function AboutPage() {
             {teamMembers.map((member, index) => (
               <motion.div
                 key={index}
-                className="text-center bg-gray-50 p-6 rounded-2xl shadow-md hover:shadow-2xl transition-transform hover:-translate-y-2"
+                className="text-center bg-flow-bg p-6 rounded-2xl shadow-md hover:shadow-2xl transition-transform hover:-translate-y-2"
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -164,7 +164,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-xl font-bold">{member.name}</h3>
                 <p className="text-blue-600 mb-3">{member.role}</p>
-                <p className="text-gray-600 text-sm">{member.bio}</p>
+                <p className="text-flow-textSoft text-sm">{member.bio}</p>
               </motion.div>
             ))}
           </div>

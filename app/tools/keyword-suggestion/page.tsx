@@ -271,7 +271,7 @@ export default function KeywordSuggestionTool() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-flow-bg">
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-700 to-blue-900 text-white py-16">
         <div className="container mx-auto px-4">
@@ -283,14 +283,14 @@ export default function KeywordSuggestionTool() {
               Discover high-value keywords for your SEO and content strategy
             </p>
 
-            <div className="bg-white p-6 rounded-lg shadow-lg">
+            <div className="bg-flow-surface p-6 rounded-lg shadow-lg">
               <div className="relative">
                 <Input
                   type="text"
                   placeholder="Enter a keyword or topic..."
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
-                  className="pr-12 text-gray-800 text-lg"
+                  className="pr-12 text-flow-text text-lg"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") handleSearch();
                   }}
@@ -305,12 +305,12 @@ export default function KeywordSuggestionTool() {
               </div>
 
               <div className="mt-4 flex flex-wrap gap-2">
-                <span className="text-gray-500 mr-1">Popular searches:</span>
+                <span className="text-flow-textSoft mr-1">Popular searches:</span>
                 {popularSearches.slice(0, 4).map((term) => (
                   <Badge
                     key={term}
                     variant="outline"
-                    className="cursor-pointer hover:bg-gray-100 text-gray-700"
+                    className="cursor-pointer hover:bg-flow-card text-flow-textSoft"
                     onClick={() => handlePopularSearch(term)}
                   >
                     {term}
@@ -330,7 +330,7 @@ export default function KeywordSuggestionTool() {
               <h2 className="text-2xl font-bold mb-2">
                 Keyword Suggestions for "{keyword}"
               </h2>
-              <p className="text-gray-600">
+              <p className="text-flow-textSoft">
                 Found {results.length} keyword suggestions. Use these keywords
                 to improve your SEO strategy.
               </p>
@@ -338,7 +338,7 @@ export default function KeywordSuggestionTool() {
           )}
 
           {searchPerformed && (
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="bg-flow-surface rounded-lg shadow-md overflow-hidden">
               <div className="p-4 border-b flex justify-between items-center">
                 <Tabs
                   defaultValue="all"
@@ -379,16 +379,16 @@ export default function KeywordSuggestionTool() {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="bg-gray-50">
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                    <tr className="bg-flow-bg">
+                      <th className="px-4 py-3 text-left text-sm font-medium text-flow-textSoft uppercase tracking-wider">
                         Keyword
                       </th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-sm font-medium text-flow-textSoft uppercase tracking-wider">
                         Search Volume
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <Info className="h-4 w-4 inline-block ml-1 text-gray-400" />
+                              <Info className="h-4 w-4 inline-block ml-1 text-flow-textSoft" />
                             </TooltipTrigger>
                             <TooltipContent>
                               <p className="w-64">
@@ -398,12 +398,12 @@ export default function KeywordSuggestionTool() {
                           </Tooltip>
                         </TooltipProvider>
                       </th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-sm font-medium text-flow-textSoft uppercase tracking-wider">
                         Difficulty
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <Info className="h-4 w-4 inline-block ml-1 text-gray-400" />
+                              <Info className="h-4 w-4 inline-block ml-1 text-flow-textSoft" />
                             </TooltipTrigger>
                             <TooltipContent>
                               <p className="w-64">
@@ -414,12 +414,12 @@ export default function KeywordSuggestionTool() {
                           </Tooltip>
                         </TooltipProvider>
                       </th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-sm font-medium text-flow-textSoft uppercase tracking-wider">
                         CPC
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <Info className="h-4 w-4 inline-block ml-1 text-gray-400" />
+                              <Info className="h-4 w-4 inline-block ml-1 text-flow-textSoft" />
                             </TooltipTrigger>
                             <TooltipContent>
                               <p className="w-64">
@@ -433,11 +433,11 @@ export default function KeywordSuggestionTool() {
                   </thead>
                   <tbody className="divide-y divide-gray-200">
                     {filteredResults.map((item, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
-                        <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                      <tr key={index} className="hover:bg-flow-bg">
+                        <td className="px-4 py-3 text-sm font-medium text-flow-text">
                           {item.keyword}
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-700">
+                        <td className="px-4 py-3 text-sm text-flow-textSoft">
                           {item.volume.toLocaleString()}
                         </td>
                         <td className="px-4 py-3 text-sm">
@@ -447,7 +447,7 @@ export default function KeywordSuggestionTool() {
                             {item.difficulty}/100
                           </Badge>
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-700">
+                        <td className="px-4 py-3 text-sm text-flow-textSoft">
                           ${item.cpc.toFixed(2)}
                         </td>
                       </tr>
@@ -458,7 +458,7 @@ export default function KeywordSuggestionTool() {
 
               {filteredResults.length === 0 && (
                 <div className="p-8 text-center">
-                  <p className="text-gray-500">
+                  <p className="text-flow-textSoft">
                     No keywords match the selected filter. Try another
                     difficulty level.
                   </p>
@@ -485,7 +485,7 @@ export default function KeywordSuggestionTool() {
                       </div>
                       <div>
                         <h3 className="font-medium">Enter a seed keyword</h3>
-                        <p className="text-gray-600">
+                        <p className="text-flow-textSoft">
                           Type in a keyword related to your business or content
                         </p>
                       </div>
@@ -499,7 +499,7 @@ export default function KeywordSuggestionTool() {
                         <h3 className="font-medium">
                           Review keyword suggestions
                         </h3>
-                        <p className="text-gray-600">
+                        <p className="text-flow-textSoft">
                           Analyze search volume, difficulty, and CPC data
                         </p>
                       </div>
@@ -511,7 +511,7 @@ export default function KeywordSuggestionTool() {
                       </div>
                       <div>
                         <h3 className="font-medium">Export your keywords</h3>
-                        <p className="text-gray-600">
+                        <p className="text-flow-textSoft">
                           Download as CSV or copy to clipboard for your SEO
                           strategy
                         </p>
@@ -526,7 +526,7 @@ export default function KeywordSuggestionTool() {
       </section>
 
       {/* Features Section */}
-      <section className="py-12 bg-white">
+      <section className="py-12 bg-flow-surface">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">
             Why Use Our Keyword Suggestion Tool?
@@ -538,7 +538,7 @@ export default function KeywordSuggestionTool() {
                 <CardTitle>Discover Untapped Opportunities</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
+                <p className="text-flow-textSoft">
                   Find valuable keywords your competitors might have missed. Our
                   tool helps you identify low-competition, high-volume keywords.
                 </p>
@@ -550,7 +550,7 @@ export default function KeywordSuggestionTool() {
                 <CardTitle>Optimize Your Content Strategy</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
+                <p className="text-flow-textSoft">
                   Create content that ranks by targeting the right keywords.
                   Understand search intent and difficulty to prioritize your
                   efforts.
@@ -563,7 +563,7 @@ export default function KeywordSuggestionTool() {
                 <CardTitle>Improve Your PPC Campaigns</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
+                <p className="text-flow-textSoft">
                   Get CPC data to optimize your ad spend. Find more affordable
                   keywords with good search volume to maximize ROI.
                 </p>
@@ -574,7 +574,7 @@ export default function KeywordSuggestionTool() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-12 bg-gray-50">
+      <section className="py-12 bg-flow-bg">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">
             Frequently Asked Questions
@@ -584,7 +584,7 @@ export default function KeywordSuggestionTool() {
             <Accordion
               type="single"
               collapsible
-              className="bg-white rounded-lg shadow-md"
+              className="bg-flow-surface rounded-lg shadow-md"
             >
               <AccordionItem value="item-1">
                 <AccordionTrigger className="px-6 py-4">
@@ -665,7 +665,7 @@ export default function KeywordSuggestionTool() {
           </p>
           <Button
             size="lg"
-            className="bg-white text-blue-800 hover:bg-gray-100"
+            className="bg-white text-blue-800 hover:bg-flow-card"
             asChild
           >
             <a href="/contact">

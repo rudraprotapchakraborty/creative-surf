@@ -219,10 +219,14 @@ export default function ProjectsPage() {
                 >
                   {/* Cover image */}
                   {project.coverImage && (
-                    <div className="relative w-full overflow-hidden" style={{ height: 200 }}>
-                      <img src={project.coverImage} alt={project.name} className="w-full h-full object-cover" />
+                    <Link
+                      href={`/real-estate/projects/${project.slug}`}
+                      className="relative block w-full overflow-hidden group"
+                      style={{ height: 200 }}
+                    >
+                      <img src={project.coverImage} alt={project.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                       <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%)" }} />
-                    </div>
+                    </Link>
                   )}
 
                   <div className="p-4 sm:p-5 flex flex-col flex-1">
@@ -257,9 +261,11 @@ export default function ProjectsPage() {
                       )}
                     </div>
 
-                    <h3 className="font-bold text-flow-text mb-1 leading-snug text-base sm:text-[1.05rem]">
-                      {project.name}
-                    </h3>
+                    <Link href={`/real-estate/projects/${project.slug}`} className="group">
+                      <h3 className="font-bold text-flow-text mb-1 leading-snug text-base sm:text-[1.05rem] transition-colors group-hover:text-[#0066A2]">
+                        {project.name}
+                      </h3>
+                    </Link>
                     {project.subtitle && (
                       <p className="text-[11px] font-semibold uppercase tracking-wider mb-3 opacity-60">{project.subtitle}</p>
                     )}

@@ -1,54 +1,53 @@
+"use client";
+
+import { motion } from "framer-motion";
+
+const logos = [
+  { src: "/waffletime.jpg",  name: "Waffle Time" },
+  { src: "/zafenity.jpg",    name: "Zafenity" },
+  { src: "/ghuddy.jpg",      name: "Ghuddy" },
+  { src: "/namimoon.jpg",    name: "Nami Moon" },
+  { src: "/kudos.jpg",       name: "Kudos" },
+  { src: "/masalaking.jpg",  name: "Masala King" },
+  { src: "/bridgepoint.jpg", name: "Bridge Point" },
+  { src: "/beeteam.jpeg",    name: "Bee Team" },
+  { src: "/icreation.jpeg",  name: "iCreation" },
+  { src: "/hm.jpeg",         name: "HM Production" },
+];
+
+const container = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.06 } },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 18, scale: 0.96 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.45, ease: "easeOut" } },
+};
+
 const MovingLogos = () => {
-  const logos = [
-    "/waffletime.jpg",
-    "/zafenity.jpg",
-    "/ghuddy.jpg",
-    "/namimoon.jpg",
-    "/kudos.jpg",
-    "/masalaking.jpg",
-    "/bridgepoint.jpg",
-  ];
-
   return (
-    <div className="relative w-full overflow-hidden py-8 bg-transparent">
-      <div className="flex animate-marquee whitespace-nowrap">
-        {[...logos, ...logos, ...logos, ...logos].map((logo, index) => (
-          <div
-            key={index}
-            className="w-28 h-28 mx-6 inline-flex items-center justify-center flex-shrink-0"
-          >
-            <div className="w-24 h-24 rounded-full overflow-hidden border border-flow-border bg-flow-card shadow-xl transform hover:scale-110 transition-all duration-300">
-              <img
-                src={logo}
-                alt={`Company logo ${index + 1}`}
-                className="w-full h-full object-cover transition-transform duration-300"
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <style jsx>{`
-        @keyframes marquee {
-          0% {
-            transform: translateX(0%);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-
-        .animate-marquee {
-          animation: marquee 30s linear infinite;
-        }
-
-        @media (max-width: 768px) {
-          .animate-marquee {
-            animation-duration: 15s;
-          }
-        }
-      `}</style>
-    </div>
+    <motion.div
+      variants={container}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-60px" }}
+      className="mx-auto max-w-5xl px-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-5"
+    >
+      {logos.map((logo) => (
+        <motion.div
+          key={logo.src}
+          variants={item}
+          className="group conic-ring relative aspect-square rounded-2xl bg-white border border-flow-border shadow-soft flex items-center justify-center p-5 sm:p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-aurora"
+        >
+          <img
+            src={logo.src}
+            alt={`${logo.name} logo`}
+            className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
+          />
+        </motion.div>
+      ))}
+    </motion.div>
   );
 };
 

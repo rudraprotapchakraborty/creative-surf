@@ -118,10 +118,10 @@ const certifications = [
 
 export default function AwardsPage() {
   return (
-    <div className="bg-gray-50 min-h-screen py-16">
+    <div className="bg-flow-bg min-h-screen py-16">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
-        <div className="flex items-center text-sm text-gray-500 mb-8">
+        <div className="flex items-center text-sm text-flow-textSoft mb-8">
           <Link href="/" className="hover:text-blue-600">
             Home
           </Link>
@@ -130,13 +130,13 @@ export default function AwardsPage() {
             About
           </Link>
           <ChevronRight className="h-4 w-4 mx-2" />
-          <span className="text-gray-700 font-medium">Awards</span>
+          <span className="text-flow-textSoft font-medium">Awards</span>
         </div>
 
         {/* Hero Section */}
         <div className="mb-16 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Awards & Recognition</h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-flow-textSoft mb-8 max-w-3xl mx-auto">
             We're proud to be recognized for our commitment to excellence, innovation, and client success in the digital
             marketing industry.
           </p>
@@ -164,13 +164,13 @@ export default function AwardsPage() {
                   {yearGroup.awards.map((award, index) => {
                     const Icon = award.icon
                     return (
-                      <div key={index} className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+                      <div key={index} className="bg-flow-surface rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
                         <div className="bg-blue-100 p-3 rounded-full w-fit mb-4">
                           <Icon className="h-6 w-6 text-blue-600" />
                         </div>
                         <h3 className="text-xl font-bold mb-2">{award.name}</h3>
                         <p className="text-blue-600 font-medium mb-3">{award.organization}</p>
-                        <p className="text-gray-600">{award.description}</p>
+                        <p className="text-flow-textSoft">{award.description}</p>
                       </div>
                     )
                   })}
@@ -181,7 +181,7 @@ export default function AwardsPage() {
         </div>
 
         {/* Industry Certifications */}
-        <div className="bg-white rounded-xl shadow-md p-8 mb-16">
+        <div className="bg-flow-surface rounded-xl shadow-md p-8 mb-16">
           <h2 className="text-3xl font-bold mb-8 text-center">Industry Certifications</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {certifications.map((cert, index) => (
@@ -190,7 +190,7 @@ export default function AwardsPage() {
                   <Image src={cert.logo || "/placeholder.svg"} alt={cert.name} fill className="object-contain" />
                 </div>
                 <h3 className="font-bold mb-2">{cert.name}</h3>
-                <p className="text-sm text-gray-600">{cert.description}</p>
+                <p className="text-sm text-flow-textSoft">{cert.description}</p>
               </div>
             ))}
           </div>
@@ -226,7 +226,7 @@ export default function AwardsPage() {
         <div className="mb-16">
           <h2 className="text-3xl font-bold mb-8 text-center">Award-Winning Client Success Stories</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
+            <div className="bg-flow-surface rounded-xl shadow-md overflow-hidden">
               <div className="relative h-48">
                 <Image
                   src="/placeholder.svg?height=400&width=600&text=E-commerce+Success"
@@ -241,7 +241,7 @@ export default function AwardsPage() {
                   <span className="text-sm text-blue-600 font-medium">Best E-commerce Campaign</span>
                 </div>
                 <h3 className="text-xl font-bold mb-2">StyleHouse Boutique</h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   Our award-winning e-commerce strategy increased online sales by 78% and expanded their customer base
                   across three new markets.
                 </p>
@@ -251,7 +251,7 @@ export default function AwardsPage() {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
+            <div className="bg-flow-surface rounded-xl shadow-md overflow-hidden">
               <div className="relative h-48">
                 <Image
                   src="/placeholder.svg?height=400&width=600&text=SEO+Success"
@@ -266,7 +266,7 @@ export default function AwardsPage() {
                   <span className="text-sm text-blue-600 font-medium">Best SEO Campaign</span>
                 </div>
                 <h3 className="text-xl font-bold mb-2">TechVision Inc.</h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   Our SEO strategy helped TechVision achieve a 150% increase in organic traffic and a 200% increase in
                   qualified leads.
                 </p>
@@ -276,7 +276,7 @@ export default function AwardsPage() {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
+            <div className="bg-flow-surface rounded-xl shadow-md overflow-hidden">
               <div className="relative h-48">
                 <Image
                   src="/placeholder.svg?height=400&width=600&text=Social+Media+Success"
@@ -291,7 +291,7 @@ export default function AwardsPage() {
                   <span className="text-sm text-blue-600 font-medium">Best Social Media Campaign</span>
                 </div>
                 <h3 className="text-xl font-bold mb-2">Innovate Solutions</h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   Our innovative social media campaign helped this startup achieve 120% growth in followers and secure
                   Series A funding.
                 </p>
@@ -310,7 +310,7 @@ export default function AwardsPage() {
             Partner with Creative Surf and experience the difference that award-winning digital marketing can make for
             your business.
           </p>
-          <Button asChild variant="outline" size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+          <Button asChild variant="outline" size="lg" className="bg-white text-blue-600 hover:bg-flow-card">
             <Link href="/contact">Contact Us Today</Link>
           </Button>
         </div>

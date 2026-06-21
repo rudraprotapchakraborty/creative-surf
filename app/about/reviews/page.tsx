@@ -75,10 +75,10 @@ const averageRating = clientReviews.reduce((acc, review) => acc + review.rating,
 
 export default function ReviewsPage() {
   return (
-    <div className="bg-gray-50 min-h-screen py-16">
+    <div className="bg-flow-bg min-h-screen py-16">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
-        <div className="flex items-center text-sm text-gray-500 mb-8">
+        <div className="flex items-center text-sm text-flow-textSoft mb-8">
           <Link href="/" className="hover:text-blue-600">
             Home
           </Link>
@@ -87,18 +87,18 @@ export default function ReviewsPage() {
             About
           </Link>
           <ChevronRight className="h-4 w-4 mx-2" />
-          <span className="text-gray-700 font-medium">Reviews</span>
+          <span className="text-flow-textSoft font-medium">Reviews</span>
         </div>
 
         {/* Hero Section */}
         <div className="mb-16 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Client Reviews & Testimonials</h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-flow-textSoft mb-8 max-w-3xl mx-auto">
             Don't just take our word for it. See what our clients have to say about working with Creative Surf.
           </p>
 
           {/* Rating Summary */}
-          <div className="bg-white rounded-xl shadow-md p-8 max-w-md mx-auto">
+          <div className="bg-flow-surface rounded-xl shadow-md p-8 max-w-md mx-auto">
             <div className="flex justify-center mb-2">
               {[...Array(5)].map((_, i) => (
                 <Star
@@ -108,14 +108,14 @@ export default function ReviewsPage() {
               ))}
             </div>
             <div className="text-3xl font-bold text-center mb-2">{averageRating.toFixed(1)} out of 5</div>
-            <p className="text-gray-600 text-center">Based on {clientReviews.length} client reviews</p>
+            <p className="text-flow-textSoft text-center">Based on {clientReviews.length} client reviews</p>
           </div>
         </div>
 
         {/* Reviews Grid */}
         <div className="grid md:grid-cols-2 gap-8 mb-16">
           {clientReviews.map((review, index) => (
-            <div key={index} className="bg-white rounded-xl shadow-md p-6 relative">
+            <div key={index} className="bg-flow-surface rounded-xl shadow-md p-6 relative">
               {/* Quote Icon */}
               <div className="absolute -top-4 left-6 bg-blue-600 text-white p-3 rounded-full shadow-lg">
                 <Quote className="h-5 w-5" />
@@ -132,7 +132,7 @@ export default function ReviewsPage() {
               </div>
 
               {/* Review Text */}
-              <p className="text-gray-700 italic mb-6">"{review.text}"</p>
+              <p className="text-flow-textSoft italic mb-6">"{review.text}"</p>
 
               {/* Reviewer Info */}
               <div className="flex items-center">
@@ -141,20 +141,20 @@ export default function ReviewsPage() {
                 </div>
                 <div>
                   <h3 className="font-bold">{review.name}</h3>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-flow-textSoft">
                     {review.position}, {review.company}
                   </p>
                 </div>
               </div>
 
               {/* Date */}
-              <div className="text-xs text-gray-500 mt-4 text-right">{review.date}</div>
+              <div className="text-xs text-flow-textSoft mt-4 text-right">{review.date}</div>
             </div>
           ))}
         </div>
 
         {/* Industry Recognition */}
-        <div className="bg-white rounded-xl shadow-md p-8 mb-16">
+        <div className="bg-flow-surface rounded-xl shadow-md p-8 mb-16">
           <h2 className="text-3xl font-bold mb-8 text-center">Industry Recognition</h2>
           <div className="grid md:grid-cols-4 gap-8">
             <div className="text-center">
@@ -167,7 +167,7 @@ export default function ReviewsPage() {
                 />
               </div>
               <h3 className="font-bold mb-1">Marketing Excellence</h3>
-              <p className="text-sm text-gray-600">2024 Digital Innovation Awards</p>
+              <p className="text-sm text-flow-textSoft">2024 Digital Innovation Awards</p>
             </div>
             <div className="text-center">
               <div className="relative h-24 mb-4">
@@ -179,7 +179,7 @@ export default function ReviewsPage() {
                 />
               </div>
               <h3 className="font-bold mb-1">Best SEO Agency</h3>
-              <p className="text-sm text-gray-600">2023 Digital Marketing Awards</p>
+              <p className="text-sm text-flow-textSoft">2023 Digital Marketing Awards</p>
             </div>
             <div className="text-center">
               <div className="relative h-24 mb-4">
@@ -191,7 +191,7 @@ export default function ReviewsPage() {
                 />
               </div>
               <h3 className="font-bold mb-1">Top Web Design Firm</h3>
-              <p className="text-sm text-gray-600">2023 Creative Excellence Awards</p>
+              <p className="text-sm text-flow-textSoft">2023 Creative Excellence Awards</p>
             </div>
             <div className="text-center">
               <div className="relative h-24 mb-4">
@@ -203,7 +203,7 @@ export default function ReviewsPage() {
                 />
               </div>
               <h3 className="font-bold mb-1">Best Place to Work</h3>
-              <p className="text-sm text-gray-600">2022 Employer Excellence Awards</p>
+              <p className="text-sm text-flow-textSoft">2022 Employer Excellence Awards</p>
             </div>
           </div>
         </div>
@@ -212,7 +212,7 @@ export default function ReviewsPage() {
         <div className="mb-16">
           <h2 className="text-3xl font-bold mb-8 text-center">Find Us On Review Platforms</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-xl shadow-md text-center">
+            <div className="bg-flow-surface p-6 rounded-xl shadow-md text-center">
               <div className="relative h-16 mb-4">
                 <Image
                   src="/placeholder.svg?height=60&width=200&text=Google+Reviews"
@@ -226,14 +226,14 @@ export default function ReviewsPage() {
                   <Star key={i} className="h-5 w-5 text-yellow-400 fill-yellow-400" />
                 ))}
               </div>
-              <p className="text-gray-600 mb-4">4.9 out of 5 based on 87 reviews</p>
+              <p className="text-flow-textSoft mb-4">4.9 out of 5 based on 87 reviews</p>
               <Button asChild variant="outline" className="w-full">
                 <Link href="https://google.com" target="_blank" rel="noopener noreferrer">
                   Read Google Reviews
                 </Link>
               </Button>
             </div>
-            <div className="bg-white p-6 rounded-xl shadow-md text-center">
+            <div className="bg-flow-surface p-6 rounded-xl shadow-md text-center">
               <div className="relative h-16 mb-4">
                 <Image
                   src="/placeholder.svg?height=60&width=200&text=Clutch"
@@ -247,14 +247,14 @@ export default function ReviewsPage() {
                   <Star key={i} className="h-5 w-5 text-yellow-400 fill-yellow-400" />
                 ))}
               </div>
-              <p className="text-gray-600 mb-4">4.8 out of 5 based on 42 reviews</p>
+              <p className="text-flow-textSoft mb-4">4.8 out of 5 based on 42 reviews</p>
               <Button asChild variant="outline" className="w-full">
                 <Link href="https://clutch.co" target="_blank" rel="noopener noreferrer">
                   Read Clutch Reviews
                 </Link>
               </Button>
             </div>
-            <div className="bg-white p-6 rounded-xl shadow-md text-center">
+            <div className="bg-flow-surface p-6 rounded-xl shadow-md text-center">
               <div className="relative h-16 mb-4">
                 <Image
                   src="/placeholder.svg?height=60&width=200&text=Trustpilot"
@@ -268,7 +268,7 @@ export default function ReviewsPage() {
                   <Star key={i} className={`h-5 w-5 ${i < 4 ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`} />
                 ))}
               </div>
-              <p className="text-gray-600 mb-4">4.7 out of 5 based on 63 reviews</p>
+              <p className="text-flow-textSoft mb-4">4.7 out of 5 based on 63 reviews</p>
               <Button asChild variant="outline" className="w-full">
                 <Link href="https://trustpilot.com" target="_blank" rel="noopener noreferrer">
                   Read Trustpilot Reviews
@@ -284,7 +284,7 @@ export default function ReviewsPage() {
           <p className="text-xl mb-6 max-w-2xl mx-auto">
             Join our growing list of satisfied clients and see how Creative Surf can transform your digital presence.
           </p>
-          <Button asChild variant="outline" size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+          <Button asChild variant="outline" size="lg" className="bg-white text-blue-600 hover:bg-flow-card">
             <Link href="/contact">Contact Us Today</Link>
           </Button>
         </div>

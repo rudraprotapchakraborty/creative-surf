@@ -7,7 +7,6 @@ import ServicesSection from "./components/ServicesSection";
 import ImpactSection from "./components/ImpactSection";
 import PricingSection from "./components/PricingSection";
 import ReviewsSection from "./components/ReviewsSection";
-import TeamSection from "./components/TeamSection";
 import { NoSSR } from "./NoSSR";
 
 export default function Page() {
@@ -21,7 +20,6 @@ export default function Page() {
           <ImpactSection />
           <PricingSection />
           <ReviewsSection />
-          <TeamSection />
         </NoSSR>
       </div>
     </>

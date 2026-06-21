@@ -71,30 +71,30 @@ export default function EcommerceSEOPage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-flow-surface">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="bg-gray-50 p-6 rounded-lg text-center">
+            <div className="bg-flow-bg p-6 rounded-lg text-center">
               <p className="text-4xl font-bold text-blue-600 mb-2">93%</p>
-              <p className="text-gray-700">
+              <p className="text-flow-textSoft">
                 of online experiences begin with search engines
               </p>
             </div>
-            <div className="bg-gray-50 p-6 rounded-lg text-center">
+            <div className="bg-flow-bg p-6 rounded-lg text-center">
               <p className="text-4xl font-bold text-blue-600 mb-2">44%</p>
-              <p className="text-gray-700">
+              <p className="text-flow-textSoft">
                 of shoppers start their product search on Google
               </p>
             </div>
-            <div className="bg-gray-50 p-6 rounded-lg text-center">
+            <div className="bg-flow-bg p-6 rounded-lg text-center">
               <p className="text-4xl font-bold text-blue-600 mb-2">35%</p>
-              <p className="text-gray-700">
+              <p className="text-flow-textSoft">
                 higher conversion rates from organic search
               </p>
             </div>
-            <div className="bg-gray-50 p-6 rounded-lg text-center">
+            <div className="bg-flow-bg p-6 rounded-lg text-center">
               <p className="text-4xl font-bold text-blue-600 mb-2">$1.8T</p>
-              <p className="text-gray-700">
+              <p className="text-flow-textSoft">
                 global ecommerce sales influenced by search
               </p>
             </div>
@@ -103,13 +103,13 @@ export default function EcommerceSEOPage() {
       </section>
 
       {/* Services Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-flow-bg">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Comprehensive Ecommerce SEO Services
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-flow-textSoft max-w-3xl mx-auto">
               Our ecommerce SEO services are designed to increase your online
               store's visibility, drive qualified traffic, and boost your
               conversion rates.
@@ -125,7 +125,7 @@ export default function EcommerceSEOPage() {
                 <h3 className="text-xl font-bold mb-2">
                   Product Page Optimization
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   Optimize your product pages with targeted keywords, enhanced
                   descriptions, and structured data to improve visibility and
                   click-through rates.
@@ -155,7 +155,7 @@ export default function EcommerceSEOPage() {
                 <h3 className="text-xl font-bold mb-2">
                   Category Page Optimization
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   Structure and optimize category pages to rank for competitive
                   keywords and provide an excellent user experience that drives
                   conversions.
@@ -185,7 +185,7 @@ export default function EcommerceSEOPage() {
                 <h3 className="text-xl font-bold mb-2">
                   Technical SEO for Ecommerce
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   Resolve technical issues that prevent search engines from
                   properly crawling and indexing your ecommerce site to improve
                   rankings.
@@ -215,7 +215,7 @@ export default function EcommerceSEOPage() {
                 <h3 className="text-xl font-bold mb-2">
                   Content Marketing for Ecommerce
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   Create valuable content that attracts potential customers at
                   every stage of the buying journey and builds your brand
                   authority.
@@ -245,7 +245,7 @@ export default function EcommerceSEOPage() {
                 <h3 className="text-xl font-bold mb-2">
                   Review & Reputation Management
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   Leverage customer reviews to improve your search visibility
                   and conversion rates while building trust with potential
                   customers.
@@ -275,7 +275,7 @@ export default function EcommerceSEOPage() {
                 <h3 className="text-xl font-bold mb-2">
                   Conversion Rate Optimization
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   Turn more visitors into customers with data-driven CRO
                   strategies specifically designed for ecommerce websites.
                 </p>
@@ -300,13 +300,13 @@ export default function EcommerceSEOPage() {
       </section>
 
       {/* Process Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-flow-surface">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Our Ecommerce SEO Process
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-flow-textSoft max-w-3xl mx-auto">
               We follow a proven methodology to deliver results for your
               ecommerce store.
             </p>
@@ -319,7 +319,7 @@ export default function EcommerceSEOPage() {
                   1
                 </div>
                 <h3 className="text-xl font-bold mb-2">Comprehensive Audit</h3>
-                <p className="text-gray-600">
+                <p className="text-flow-textSoft">
                   We analyze your current ecommerce SEO performance, identify
                   issues, and uncover opportunities for growth.
                 </p>
@@ -335,7 +335,7 @@ export default function EcommerceSEOPage() {
                   2
                 </div>
                 <h3 className="text-xl font-bold mb-2">Strategy Development</h3>
-                <p className="text-gray-600">
+                <p className="text-flow-textSoft">
                   We create a customized ecommerce SEO strategy based on your
                   specific products, market, and business goals.
                 </p>
@@ -351,7 +351,7 @@ export default function EcommerceSEOPage() {
                   3
                 </div>
                 <h3 className="text-xl font-bold mb-2">Implementation</h3>
-                <p className="text-gray-600">
+                <p className="text-flow-textSoft">
                   Our team executes the strategy, optimizing your product pages,
                   technical structure, and content.
                 </p>
@@ -369,7 +369,7 @@ export default function EcommerceSEOPage() {
                 <h3 className="text-xl font-bold mb-2">
                   Monitoring & Optimization
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-flow-textSoft">
                   We continuously track performance, make data-driven
                   adjustments, and scale successful strategies.
                 </p>
@@ -380,13 +380,13 @@ export default function EcommerceSEOPage() {
       </section>
 
       {/* Platform Expertise */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-flow-bg">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Ecommerce Platform Expertise
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-flow-textSoft max-w-3xl mx-auto">
               We have specialized experience optimizing SEO for all major
               ecommerce platforms.
             </p>
@@ -416,7 +416,7 @@ export default function EcommerceSEOPage() {
                       <h3 className="text-xl font-bold mb-3">
                         Shopify SEO Expertise
                       </h3>
-                      <p className="text-gray-600 mb-4">
+                      <p className="text-flow-textSoft mb-4">
                         Our team has deep expertise in optimizing Shopify stores
                         for search engines, working around platform limitations
                         and leveraging its strengths.
@@ -457,7 +457,7 @@ export default function EcommerceSEOPage() {
                       <h3 className="text-xl font-bold mb-3">
                         WooCommerce SEO Expertise
                       </h3>
-                      <p className="text-gray-600 mb-4">
+                      <p className="text-flow-textSoft mb-4">
                         We leverage the flexibility of WordPress and WooCommerce
                         to create highly optimized ecommerce stores with
                         excellent search visibility.
@@ -498,7 +498,7 @@ export default function EcommerceSEOPage() {
                       <h3 className="text-xl font-bold mb-3">
                         Magento SEO Expertise
                       </h3>
-                      <p className="text-gray-600 mb-4">
+                      <p className="text-flow-textSoft mb-4">
                         Our specialists understand the complexities of Magento
                         and Adobe Commerce, optimizing enterprise ecommerce
                         sites for maximum search visibility.
@@ -539,7 +539,7 @@ export default function EcommerceSEOPage() {
                       <h3 className="text-xl font-bold mb-3">
                         BigCommerce SEO Expertise
                       </h3>
-                      <p className="text-gray-600 mb-4">
+                      <p className="text-flow-textSoft mb-4">
                         We maximize the built-in SEO features of BigCommerce
                         while implementing advanced strategies to outrank
                         competitors.
@@ -568,13 +568,13 @@ export default function EcommerceSEOPage() {
       </section>
 
       {/* Case Studies Section */}
-      <section id="case-studies" className="py-16 bg-white">
+      <section id="case-studies" className="py-16 bg-flow-surface">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Ecommerce SEO Success Stories
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-flow-textSoft max-w-3xl mx-auto">
               See how we've helped ecommerce businesses increase their organic
               traffic and revenue.
             </p>
@@ -599,14 +599,14 @@ export default function EcommerceSEOPage() {
                 <h3 className="text-xl font-bold mb-2">
                   213% Increase in Organic Traffic
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   We helped a fashion ecommerce store overcome a Google
                   algorithm update and achieve record-breaking organic traffic
                   and sales.
                 </p>
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="text-sm text-gray-500">Results:</p>
+                    <p className="text-sm text-flow-textSoft">Results:</p>
                     <p className="font-medium">+189% Revenue Growth</p>
                   </div>
                   <Button variant="outline" size="sm" asChild>
@@ -636,14 +636,14 @@ export default function EcommerceSEOPage() {
                 <h3 className="text-xl font-bold mb-2">
                   157% Increase in Organic Conversions
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   Our product page optimization strategy helped this home goods
                   retailer dramatically increase their conversion rate from
                   organic traffic.
                 </p>
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="text-sm text-gray-500">Results:</p>
+                    <p className="text-sm text-flow-textSoft">Results:</p>
                     <p className="font-medium">+142% Organic Revenue</p>
                   </div>
                   <Button variant="outline" size="sm" asChild>
@@ -673,14 +673,14 @@ export default function EcommerceSEOPage() {
                 <h3 className="text-xl font-bold mb-2">
                   278% Increase in Keyword Rankings
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   We helped this electronics retailer dominate competitive
                   product keywords and significantly increase their organic
                   visibility.
                 </p>
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="text-sm text-gray-500">Results:</p>
+                    <p className="text-sm text-flow-textSoft">Results:</p>
                     <p className="font-medium">+203% Organic Traffic</p>
                   </div>
                   <Button variant="outline" size="sm" asChild>
@@ -704,13 +704,13 @@ export default function EcommerceSEOPage() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-flow-bg">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               What Our Clients Say
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-flow-textSoft max-w-3xl mx-auto">
               Hear from ecommerce businesses that have transformed their organic
               search performance with our services.
             </p>
@@ -727,17 +727,17 @@ export default function EcommerceSEOPage() {
                     />
                   ))}
                 </div>
-                <p className="text-gray-600 mb-6">
+                <p className="text-flow-textSoft mb-6">
                   "Creative Surf's ecommerce SEO services have been
                   transformative for our online store. Our organic traffic has
                   increased by 187% and our revenue from organic search has more
                   than doubled in just 6 months."
                 </p>
                 <div className="flex items-center">
-                  <div className="w-12 h-12 rounded-full bg-gray-200 mr-4"></div>
+                  <div className="w-12 h-12 rounded-full bg-flow-card mr-4"></div>
                   <div>
                     <p className="font-bold">Sarah Johnson</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-flow-textSoft">
                       Marketing Director, Fashion Retailer
                     </p>
                   </div>
@@ -755,17 +755,17 @@ export default function EcommerceSEOPage() {
                     />
                   ))}
                 </div>
-                <p className="text-gray-600 mb-6">
+                <p className="text-flow-textSoft mb-6">
                   "We were struggling with technical SEO issues that were
                   preventing our products from ranking. The team at Creative
                   Surf identified and fixed these issues, resulting in a 142%
                   increase in organic traffic and a significant boost in sales."
                 </p>
                 <div className="flex items-center">
-                  <div className="w-12 h-12 rounded-full bg-gray-200 mr-4"></div>
+                  <div className="w-12 h-12 rounded-full bg-flow-card mr-4"></div>
                   <div>
                     <p className="font-bold">Michael Chen</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-flow-textSoft">
                       CEO, Electronics Ecommerce
                     </p>
                   </div>
@@ -783,17 +783,17 @@ export default function EcommerceSEOPage() {
                     />
                   ))}
                 </div>
-                <p className="text-gray-600 mb-6">
+                <p className="text-flow-textSoft mb-6">
                   "The product page optimization strategy implemented by
                   Creative Surf has dramatically improved our conversion rates.
                   We're now seeing a 35% higher conversion rate from organic
                   traffic compared to our paid channels."
                 </p>
                 <div className="flex items-center">
-                  <div className="w-12 h-12 rounded-full bg-gray-200 mr-4"></div>
+                  <div className="w-12 h-12 rounded-full bg-flow-card mr-4"></div>
                   <div>
                     <p className="font-bold">Jessica Martinez</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-flow-textSoft">
                       Ecommerce Manager, Home Goods
                     </p>
                   </div>
@@ -805,13 +805,13 @@ export default function EcommerceSEOPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-flow-surface">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Frequently Asked Questions
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-flow-textSoft max-w-3xl mx-auto">
               Get answers to common questions about ecommerce SEO services.
             </p>
           </div>
@@ -823,7 +823,7 @@ export default function EcommerceSEOPage() {
                   <h3 className="text-xl font-bold mb-2">
                     How long does it take to see results from ecommerce SEO?
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-flow-textSoft">
                     While some improvements can be seen within weeks,
                     significant results from ecommerce SEO typically take 3-6
                     months. Technical fixes may show quicker results, while
@@ -839,7 +839,7 @@ export default function EcommerceSEOPage() {
                   <h3 className="text-xl font-bold mb-2">
                     How is ecommerce SEO different from regular SEO services?
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-flow-textSoft">
                     Ecommerce SEO focuses specifically on product and category
                     pages, schema markup for products, managing duplicate
                     content issues common in ecommerce sites, and optimizing for
@@ -855,7 +855,7 @@ export default function EcommerceSEOPage() {
                   <h3 className="text-xl font-bold mb-2">
                     Do you work with all ecommerce platforms?
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-flow-textSoft">
                     Yes, we have experience optimizing SEO for all major
                     ecommerce platforms including Shopify, WooCommerce, Magento,
                     BigCommerce, and custom-built ecommerce sites. Each platform
@@ -870,7 +870,7 @@ export default function EcommerceSEOPage() {
                   <h3 className="text-xl font-bold mb-2">
                     How much does ecommerce SEO cost?
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-flow-textSoft">
                     Our ecommerce SEO services start at $2,500 per month, with
                     pricing based on your store size, current SEO status,
                     competition level, and goals. We offer customized packages
@@ -885,7 +885,7 @@ export default function EcommerceSEOPage() {
                   <h3 className="text-xl font-bold mb-2">
                     Should I invest in SEO or PPC for my ecommerce store?
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-flow-textSoft">
                     Ideally, a balanced approach using both SEO and PPC yields
                     the best results. SEO provides long-term, sustainable
                     traffic with higher conversion rates and lower
@@ -901,7 +901,7 @@ export default function EcommerceSEOPage() {
                   <h3 className="text-xl font-bold mb-2">
                     What metrics do you track for ecommerce SEO success?
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-flow-textSoft">
                     We track organic traffic, keyword rankings, organic
                     conversion rate, revenue from organic search, average order
                     value from organic visitors, product page visibility, and

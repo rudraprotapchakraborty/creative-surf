@@ -12,10 +12,10 @@ export const metadata: Metadata = generateMetadata({
 
 export default function WebsiteCostPage() {
   return (
-    <div className="bg-gray-50 min-h-screen py-16">
+    <div className="bg-flow-bg min-h-screen py-16">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
-        <div className="flex items-center text-sm text-gray-500 mb-8 flex-wrap">
+        <div className="flex items-center text-sm text-flow-textSoft mb-8 flex-wrap">
           <Link href="/" className="hover:text-blue-600">
             Home
           </Link>
@@ -28,15 +28,15 @@ export default function WebsiteCostPage() {
             Pricing Guides
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-gray-700">Website Cost</span>
+          <span className="text-flow-textSoft">Website Cost</span>
         </div>
 
         <h1 className="text-4xl md:text-5xl font-bold mb-6 text-center">How Much Should a Website Cost?</h1>
-        <p className="text-xl text-gray-600 mb-12 text-center max-w-3xl mx-auto">
+        <p className="text-xl text-flow-textSoft mb-12 text-center max-w-3xl mx-auto">
           Understanding website development costs and what factors influence pricing for different types of websites.
         </p>
 
-        <div className="bg-white rounded-xl shadow-md p-8 mb-16">
+        <div className="bg-flow-surface rounded-xl shadow-md p-8 mb-16">
           <div className="prose max-w-none">
             <h2>Website Cost Factors</h2>
             <p>
@@ -67,7 +67,7 @@ export default function WebsiteCostPage() {
 
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-6">Ready to Get Started?</h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-flow-textSoft mb-8 max-w-3xl mx-auto">
             Contact us today for a personalized quote for your website project.
           </p>
           <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700">

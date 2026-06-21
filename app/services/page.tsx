@@ -68,14 +68,14 @@ export default function ServicesPage() {
       </section>
 
       {/* Services Grid */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-flow-surface">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">What We Offer</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => (
               <div
                 key={index}
-                className="bg-white rounded-lg shadow-lg p-8 transition-all duration-300 hover:shadow-xl"
+                className="bg-flow-surface rounded-lg shadow-lg p-8 transition-all duration-300 hover:shadow-xl"
               >
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
                   <Image
@@ -87,7 +87,7 @@ export default function ServicesPage() {
                   />
                 </div>
                 <h3 className="text-xl font-bold mb-4">{service.title}</h3>
-                <p className="text-gray-600">{service.description}</p>
+                <p className="text-flow-textSoft">{service.description}</p>
               </div>
             ))}
           </div>
@@ -95,7 +95,7 @@ export default function ServicesPage() {
       </section>
 
       {/* Process Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-flow-bg">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Our Process</h2>
           <div className="max-w-4xl mx-auto">
@@ -135,7 +135,7 @@ export default function ServicesPage() {
                       <h3 className="text-2xl font-bold mb-2">
                         {index + 1}. {item.step}
                       </h3>
-                      <p className="text-gray-600">{item.description}</p>
+                      <p className="text-flow-textSoft">{item.description}</p>
                     </div>
                     <div className="absolute left-0 md:left-1/2 transform -translate-y-1/2 md:-translate-x-1/2 w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
                       {index + 1}

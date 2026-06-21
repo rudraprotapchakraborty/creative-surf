@@ -132,10 +132,10 @@ const testimonials = [
 
 export default function CareersPage() {
   return (
-    <div className="bg-gray-50 min-h-screen py-16">
+    <div className="bg-flow-bg min-h-screen py-16">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
-        <div className="flex items-center text-sm text-gray-500 mb-8">
+        <div className="flex items-center text-sm text-flow-textSoft mb-8">
           <Link href="/" className="hover:text-blue-600">
             Home
           </Link>
@@ -144,7 +144,7 @@ export default function CareersPage() {
             About
           </Link>
           <ChevronRight className="h-4 w-4 mx-2" />
-          <span className="text-gray-700 font-medium">Career</span>
+          <span className="text-flow-textSoft font-medium">Career</span>
         </div>
 
         {/* Hero Section */}
@@ -152,11 +152,11 @@ export default function CareersPage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <h1 className="text-4xl md:text-5xl font-bold mb-6">Join Our Team</h1>
-              <p className="text-xl text-gray-600 mb-6">
+              <p className="text-xl text-flow-textSoft mb-6">
                 At Creative Surf, we're building a team of passionate, creative, and innovative professionals who are
                 dedicated to delivering exceptional results for our clients.
               </p>
-              <p className="text-lg text-gray-600 mb-8">
+              <p className="text-lg text-flow-textSoft mb-8">
                 If you're looking for a dynamic work environment where your ideas are valued and your career can
                 flourish, we'd love to hear from you.
               </p>
@@ -176,7 +176,7 @@ export default function CareersPage() {
         </div>
 
         {/* Our Culture Section */}
-        <div className="bg-white rounded-xl shadow-md p-8 mb-16">
+        <div className="bg-flow-surface rounded-xl shadow-md p-8 mb-16">
           <h2 className="text-3xl font-bold mb-8 text-center">Our Culture</h2>
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="relative h-[300px] rounded-lg overflow-hidden">
@@ -189,12 +189,12 @@ export default function CareersPage() {
             </div>
             <div>
               <h3 className="text-2xl font-bold mb-4">What Makes Us Different</h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-flow-textSoft mb-4">
                 At Creative Surf, we believe that our people are our greatest asset. We've built a culture that values
                 creativity, collaboration, and continuous learning. We're committed to creating an inclusive environment
                 where diverse perspectives are welcomed and celebrated.
               </p>
-              <p className="text-gray-600 mb-4">
+              <p className="text-flow-textSoft mb-4">
                 Our team members are encouraged to think outside the box, take ownership of their work, and contribute
                 to the company's growth and success. We believe in maintaining a healthy work-life balance and providing
                 the support and resources our team needs to thrive.
@@ -214,12 +214,12 @@ export default function CareersPage() {
             {benefits.map((benefit, index) => {
               const Icon = benefit.icon
               return (
-                <div key={index} className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+                <div key={index} className="bg-flow-surface rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
                   <div className="bg-blue-100 p-3 rounded-full w-fit mb-4">
                     <Icon className="h-6 w-6 text-blue-600" />
                   </div>
                   <h3 className="text-xl font-bold mb-3">{benefit.title}</h3>
-                  <p className="text-gray-600">{benefit.description}</p>
+                  <p className="text-flow-textSoft">{benefit.description}</p>
                 </div>
               )
             })}
@@ -231,37 +231,37 @@ export default function CareersPage() {
                 <div className="bg-blue-100 p-1 rounded-full mr-2 mt-1">
                   <ChevronRight className="h-4 w-4 text-blue-600" />
                 </div>
-                <span className="text-gray-700">401(k) with company match</span>
+                <span className="text-flow-textSoft">401(k) with company match</span>
               </div>
               <div className="flex items-start">
                 <div className="bg-blue-100 p-1 rounded-full mr-2 mt-1">
                   <ChevronRight className="h-4 w-4 text-blue-600" />
                 </div>
-                <span className="text-gray-700">Paid parental leave</span>
+                <span className="text-flow-textSoft">Paid parental leave</span>
               </div>
               <div className="flex items-start">
                 <div className="bg-blue-100 p-1 rounded-full mr-2 mt-1">
                   <ChevronRight className="h-4 w-4 text-blue-600" />
                 </div>
-                <span className="text-gray-700">Wellness program</span>
+                <span className="text-flow-textSoft">Wellness program</span>
               </div>
               <div className="flex items-start">
                 <div className="bg-blue-100 p-1 rounded-full mr-2 mt-1">
                   <ChevronRight className="h-4 w-4 text-blue-600" />
                 </div>
-                <span className="text-gray-700">Company-sponsored events</span>
+                <span className="text-flow-textSoft">Company-sponsored events</span>
               </div>
               <div className="flex items-start">
                 <div className="bg-blue-100 p-1 rounded-full mr-2 mt-1">
                   <ChevronRight className="h-4 w-4 text-blue-600" />
                 </div>
-                <span className="text-gray-700">Remote work options</span>
+                <span className="text-flow-textSoft">Remote work options</span>
               </div>
               <div className="flex items-start">
                 <div className="bg-blue-100 p-1 rounded-full mr-2 mt-1">
                   <ChevronRight className="h-4 w-4 text-blue-600" />
                 </div>
-                <span className="text-gray-700">Professional development budget</span>
+                <span className="text-flow-textSoft">Professional development budget</span>
               </div>
             </div>
           </div>
@@ -272,7 +272,7 @@ export default function CareersPage() {
           <h2 className="text-3xl font-bold mb-8 text-center">Meet Our Team</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white rounded-xl shadow-md p-6">
+              <div key={index} className="bg-flow-surface rounded-xl shadow-md p-6">
                 <div className="flex items-center mb-4">
                   <div className="relative w-16 h-16 rounded-full overflow-hidden mr-4">
                     <Image
@@ -284,11 +284,11 @@ export default function CareersPage() {
                   </div>
                   <div>
                     <h3 className="font-bold">{testimonial.name}</h3>
-                    <p className="text-sm text-gray-600">{testimonial.position}</p>
+                    <p className="text-sm text-flow-textSoft">{testimonial.position}</p>
                     <p className="text-xs text-blue-600">{testimonial.years}</p>
                   </div>
                 </div>
-                <p className="text-gray-600 italic">"{testimonial.quote}"</p>
+                <p className="text-flow-textSoft italic">"{testimonial.quote}"</p>
               </div>
             ))}
           </div>
@@ -299,7 +299,7 @@ export default function CareersPage() {
           <h2 className="text-3xl font-bold mb-8 text-center">Current Openings</h2>
           <div className="space-y-6">
             {jobOpenings.map((job, index) => (
-              <div key={index} className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+              <div key={index} className="bg-flow-surface rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                   <div>
                     <h3 className="text-xl font-bold">{job.title}</h3>
@@ -307,18 +307,18 @@ export default function CareersPage() {
                   </div>
                   <div className="flex items-center mt-2 md:mt-0">
                     <div className="flex items-center mr-4">
-                      <MapPin className="h-4 w-4 text-gray-500 mr-1" />
-                      <span className="text-sm text-gray-600">{job.location}</span>
+                      <MapPin className="h-4 w-4 text-flow-textSoft mr-1" />
+                      <span className="text-sm text-flow-textSoft">{job.location}</span>
                     </div>
                     <div className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
                       {job.type}
                     </div>
                   </div>
                 </div>
-                <p className="text-gray-600 mb-4">{job.description}</p>
+                <p className="text-flow-textSoft mb-4">{job.description}</p>
                 <div className="mb-4">
                   <h4 className="font-semibold mb-2">Requirements:</h4>
-                  <ul className="list-disc list-inside text-gray-600 space-y-1">
+                  <ul className="list-disc list-inside text-flow-textSoft space-y-1">
                     {job.requirements.map((req, reqIndex) => (
                       <li key={reqIndex}>{req}</li>
                     ))}
@@ -333,7 +333,7 @@ export default function CareersPage() {
         </div>
 
         {/* Application Process */}
-        <div className="bg-white rounded-xl shadow-md p-8 mb-16">
+        <div className="bg-flow-surface rounded-xl shadow-md p-8 mb-16">
           <h2 className="text-3xl font-bold mb-8 text-center">Our Application Process</h2>
           <div className="grid md:grid-cols-4 gap-8">
             <div className="text-center">
@@ -341,7 +341,7 @@ export default function CareersPage() {
                 <span className="text-xl font-bold">1</span>
               </div>
               <h3 className="text-xl font-bold mb-2">Application</h3>
-              <p className="text-gray-600">
+              <p className="text-flow-textSoft">
                 Submit your resume and cover letter through our online application system.
               </p>
             </div>
@@ -350,7 +350,7 @@ export default function CareersPage() {
                 <span className="text-xl font-bold">2</span>
               </div>
               <h3 className="text-xl font-bold mb-2">Initial Interview</h3>
-              <p className="text-gray-600">
+              <p className="text-flow-textSoft">
                 A phone or video interview with our HR team to discuss your experience and goals.
               </p>
             </div>
@@ -359,7 +359,7 @@ export default function CareersPage() {
                 <span className="text-xl font-bold">3</span>
               </div>
               <h3 className="text-xl font-bold mb-2">Skills Assessment</h3>
-              <p className="text-gray-600">
+              <p className="text-flow-textSoft">
                 Complete a skills assessment or project relevant to the position you're applying for.
               </p>
             </div>
@@ -368,7 +368,7 @@ export default function CareersPage() {
                 <span className="text-xl font-bold">4</span>
               </div>
               <h3 className="text-xl font-bold mb-2">Final Interview</h3>
-              <p className="text-gray-600">
+              <p className="text-flow-textSoft">
                 Meet with the team you'll be working with to ensure a good fit for both parties.
               </p>
             </div>
@@ -382,7 +382,7 @@ export default function CareersPage() {
             We're always looking for talented individuals to join our team. Send us your resume, and we'll keep you in
             mind for future opportunities.
           </p>
-          <Button asChild variant="outline" size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+          <Button asChild variant="outline" size="lg" className="bg-white text-blue-600 hover:bg-flow-card">
             <Link href="/contact?subject=Career Inquiry">Send Us Your Resume</Link>
           </Button>
         </div>

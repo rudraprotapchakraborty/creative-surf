@@ -84,7 +84,7 @@ export default function FixFunnelPage() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button
                   size="lg"
-                  className="bg-white text-blue-700 hover:bg-gray-100"
+                  className="bg-white text-blue-700 hover:bg-flow-card"
                   onClick={() =>
                     document
                       .getElementById("tool-section")
@@ -111,13 +111,13 @@ export default function FixFunnelPage() {
       </section>
 
       {/* Tool Section */}
-      <section id="tool-section" className="py-16 bg-gray-50">
+      <section id="tool-section" className="py-16 bg-flow-bg">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Analyze Your Conversion Funnel
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg text-flow-textSoft max-w-3xl mx-auto">
               Enter your website data below to receive a personalized analysis
               of your conversion funnel with actionable recommendations to
               improve your results.
@@ -135,7 +135,7 @@ export default function FixFunnelPage() {
                         className={`flex flex-col items-center ${
                           currentStep >= step
                             ? "text-blue-600"
-                            : "text-gray-400"
+                            : "text-flow-textSoft"
                         }`}
                       >
                         <div
@@ -144,7 +144,7 @@ export default function FixFunnelPage() {
                               ? "bg-blue-600 text-white"
                               : currentStep === step
                               ? "border-2 border-blue-600 text-blue-600"
-                              : "border-2 border-gray-300 text-gray-400"
+                              : "border-2 border-flow-border text-flow-textSoft"
                           }`}
                         >
                           {currentStep > step ? (
@@ -171,14 +171,14 @@ export default function FixFunnelPage() {
                       <h3 className="text-xl font-semibold">
                         Select Your Industry
                       </h3>
-                      <p className="text-gray-600">
+                      <p className="text-flow-textSoft">
                         We'll benchmark your performance against industry
                         standards.
                       </p>
                       <div>
                         <label
                           htmlFor="industry"
-                          className="block text-sm font-medium text-gray-700 mb-1"
+                          className="block text-sm font-medium text-flow-textSoft mb-1"
                         >
                           Industry
                         </label>
@@ -187,7 +187,7 @@ export default function FixFunnelPage() {
                           name="industry"
                           value={funnelData.industry}
                           onChange={handleInputChange}
-                          className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full p-3 border border-flow-border rounded-md focus:ring-blue-500 focus:border-blue-500"
                           required
                         >
                           <option value="" disabled>
@@ -209,13 +209,13 @@ export default function FixFunnelPage() {
                   {currentStep === 2 && (
                     <div className="space-y-6">
                       <h3 className="text-xl font-semibold">Website Traffic</h3>
-                      <p className="text-gray-600">
+                      <p className="text-flow-textSoft">
                         Tell us about your monthly website visitors.
                       </p>
                       <div>
                         <label
                           htmlFor="visitors"
-                          className="block text-sm font-medium text-gray-700 mb-1"
+                          className="block text-sm font-medium text-flow-textSoft mb-1"
                         >
                           Monthly Website Visitors
                         </label>
@@ -226,7 +226,7 @@ export default function FixFunnelPage() {
                           value={funnelData.visitors}
                           onChange={handleInputChange}
                           placeholder="e.g., 10000"
-                          className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full p-3 border border-flow-border rounded-md focus:ring-blue-500 focus:border-blue-500"
                           required
                         />
                       </div>
@@ -236,14 +236,14 @@ export default function FixFunnelPage() {
                   {currentStep === 3 && (
                     <div className="space-y-6">
                       <h3 className="text-xl font-semibold">Conversion Rate</h3>
-                      <p className="text-gray-600">
+                      <p className="text-flow-textSoft">
                         What percentage of visitors convert to leads or
                         customers?
                       </p>
                       <div>
                         <label
                           htmlFor="conversions"
-                          className="block text-sm font-medium text-gray-700 mb-1"
+                          className="block text-sm font-medium text-flow-textSoft mb-1"
                         >
                           Conversion Rate (%)
                         </label>
@@ -254,7 +254,7 @@ export default function FixFunnelPage() {
                           value={funnelData.conversions}
                           onChange={handleInputChange}
                           placeholder="e.g., 2.5"
-                          className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full p-3 border border-flow-border rounded-md focus:ring-blue-500 focus:border-blue-500"
                           required
                           min="0"
                           max="100"
@@ -267,13 +267,13 @@ export default function FixFunnelPage() {
                   {currentStep === 4 && (
                     <div className="space-y-6">
                       <h3 className="text-xl font-semibold">Average Revenue</h3>
-                      <p className="text-gray-600">
+                      <p className="text-flow-textSoft">
                         What is your average revenue per conversion?
                       </p>
                       <div>
                         <label
                           htmlFor="revenue"
-                          className="block text-sm font-medium text-gray-700 mb-1"
+                          className="block text-sm font-medium text-flow-textSoft mb-1"
                         >
                           Average Revenue Per Conversion ($)
                         </label>
@@ -284,7 +284,7 @@ export default function FixFunnelPage() {
                           value={funnelData.revenue}
                           onChange={handleInputChange}
                           placeholder="e.g., 100"
-                          className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full p-3 border border-flow-border rounded-md focus:ring-blue-500 focus:border-blue-500"
                           required
                           min="0"
                         />
@@ -319,7 +319,7 @@ export default function FixFunnelPage() {
                     <h3 className="text-2xl font-bold text-blue-600 mb-2">
                       Your Funnel Analysis
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-flow-textSoft">
                       Based on your inputs, here's how your funnel is performing
                     </p>
                   </div>
@@ -337,7 +337,7 @@ export default function FixFunnelPage() {
                             (Number.parseFloat(funnelData.conversions) / 100) *
                             Number.parseInt(funnelData.revenue) || 0}
                         </p>
-                        <p className="text-sm text-gray-500">Monthly Revenue</p>
+                        <p className="text-sm text-flow-textSoft">Monthly Revenue</p>
                       </CardContent>
                     </Card>
                     <Card>
@@ -357,7 +357,7 @@ export default function FixFunnelPage() {
                                 100) *
                               Number.parseInt(funnelData.revenue) || 0}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-flow-textSoft">
                           Additional Revenue Potential
                         </p>
                       </CardContent>
@@ -385,7 +385,7 @@ export default function FixFunnelPage() {
                             ? "2.5%"
                             : "3.5%"}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-flow-textSoft">
                           Average Conversion Rate
                         </p>
                       </CardContent>
@@ -457,7 +457,7 @@ export default function FixFunnelPage() {
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               How Our Funnel Analysis Works
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg text-flow-textSoft max-w-3xl mx-auto">
               Our tool uses industry benchmarks and conversion optimization best
               practices to identify opportunities in your sales funnel.
             </p>
@@ -470,7 +470,7 @@ export default function FixFunnelPage() {
                   <BarChart3 className="h-8 w-8 text-blue-600" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Data Analysis</h3>
-                <p className="text-gray-600">
+                <p className="text-flow-textSoft">
                   We analyze your current traffic, conversion rates, and revenue
                   to establish your baseline performance.
                 </p>
@@ -484,7 +484,7 @@ export default function FixFunnelPage() {
                 <h3 className="text-xl font-semibold mb-2">
                   Benchmark Comparison
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-flow-textSoft">
                   Your metrics are compared against industry standards to
                   identify gaps and opportunities.
                 </p>
@@ -498,7 +498,7 @@ export default function FixFunnelPage() {
                 <h3 className="text-xl font-semibold mb-2">
                   Actionable Recommendations
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-flow-textSoft">
                   Receive personalized suggestions to optimize each stage of
                   your conversion funnel.
                 </p>
@@ -509,13 +509,13 @@ export default function FixFunnelPage() {
       </section>
 
       {/* Use Cases */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-flow-bg">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Who Can Benefit
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg text-flow-textSoft max-w-3xl mx-auto">
               Our funnel analysis tool helps businesses of all sizes identify
               and fix conversion bottlenecks.
             </p>
@@ -536,7 +536,7 @@ export default function FixFunnelPage() {
                       <h3 className="text-xl font-semibold mb-2">
                         E-commerce Stores
                       </h3>
-                      <p className="text-gray-600">
+                      <p className="text-flow-textSoft">
                         Identify why shoppers abandon carts and optimize your
                         product pages for higher conversion rates.
                       </p>
@@ -582,7 +582,7 @@ export default function FixFunnelPage() {
                       <h3 className="text-xl font-semibold mb-2">
                         SaaS Companies
                       </h3>
-                      <p className="text-gray-600">
+                      <p className="text-flow-textSoft">
                         Optimize your trial-to-paid conversion rates and reduce
                         churn in your subscription funnel.
                       </p>
@@ -623,7 +623,7 @@ export default function FixFunnelPage() {
                       <h3 className="text-xl font-semibold mb-2">
                         Service Businesses
                       </h3>
-                      <p className="text-gray-600">
+                      <p className="text-flow-textSoft">
                         Improve lead generation and consultation booking rates
                         for your service-based business.
                       </p>
@@ -666,7 +666,7 @@ export default function FixFunnelPage() {
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Success Stories
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg text-flow-textSoft max-w-3xl mx-auto">
               See how businesses have improved their conversion rates using our
               funnel analysis.
             </p>
@@ -676,13 +676,13 @@ export default function FixFunnelPage() {
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 rounded-full bg-gray-200 mr-4"></div>
+                  <div className="w-12 h-12 rounded-full bg-flow-card mr-4"></div>
                   <div>
                     <h4 className="font-semibold">Sarah Johnson</h4>
-                    <p className="text-sm text-gray-500">E-commerce Director</p>
+                    <p className="text-sm text-flow-textSoft">E-commerce Director</p>
                   </div>
                 </div>
-                <p className="text-gray-600 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   "The funnel analysis tool helped us identify a major drop-off
                   point in our checkout process. After implementing the
                   recommended changes, our conversion rate increased by 28%."
@@ -709,13 +709,13 @@ export default function FixFunnelPage() {
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 rounded-full bg-gray-200 mr-4"></div>
+                  <div className="w-12 h-12 rounded-full bg-flow-card mr-4"></div>
                   <div>
                     <h4 className="font-semibold">Michael Chen</h4>
-                    <p className="text-sm text-gray-500">Marketing Manager</p>
+                    <p className="text-sm text-flow-textSoft">Marketing Manager</p>
                   </div>
                 </div>
-                <p className="text-gray-600 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   "We were struggling with low lead quality. The funnel analysis
                   helped us restructure our lead capture forms, resulting in 35%
                   fewer but much higher quality leads that convert better."
@@ -742,13 +742,13 @@ export default function FixFunnelPage() {
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 rounded-full bg-gray-200 mr-4"></div>
+                  <div className="w-12 h-12 rounded-full bg-flow-card mr-4"></div>
                   <div>
                     <h4 className="font-semibold">Jessica Williams</h4>
-                    <p className="text-sm text-gray-500">SaaS Founder</p>
+                    <p className="text-sm text-flow-textSoft">SaaS Founder</p>
                   </div>
                 </div>
-                <p className="text-gray-600 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   "Our trial-to-paid conversion rate was stuck at 8%. After
                   using the funnel analysis tool and implementing the
                   recommendations, we've increased it to 12.5%, which has been
@@ -778,13 +778,13 @@ export default function FixFunnelPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-flow-bg">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Frequently Asked Questions
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg text-flow-textSoft max-w-3xl mx-auto">
               Get answers to common questions about our funnel analysis tool.
             </p>
           </div>
@@ -793,7 +793,7 @@ export default function FixFunnelPage() {
             <Accordion type="single" collapsible className="space-y-4">
               <AccordionItem
                 value="item-1"
-                className="bg-white rounded-lg shadow-sm"
+                className="bg-flow-surface rounded-lg shadow-sm"
               >
                 <AccordionTrigger className="px-6 py-4 hover:no-underline">
                   <span className="text-left font-semibold">
@@ -810,7 +810,7 @@ export default function FixFunnelPage() {
               </AccordionItem>
               <AccordionItem
                 value="item-2"
-                className="bg-white rounded-lg shadow-sm"
+                className="bg-flow-surface rounded-lg shadow-sm"
               >
                 <AccordionTrigger className="px-6 py-4 hover:no-underline">
                   <span className="text-left font-semibold">
@@ -826,7 +826,7 @@ export default function FixFunnelPage() {
               </AccordionItem>
               <AccordionItem
                 value="item-3"
-                className="bg-white rounded-lg shadow-sm"
+                className="bg-flow-surface rounded-lg shadow-sm"
               >
                 <AccordionTrigger className="px-6 py-4 hover:no-underline">
                   <span className="text-left font-semibold">
@@ -842,7 +842,7 @@ export default function FixFunnelPage() {
               </AccordionItem>
               <AccordionItem
                 value="item-4"
-                className="bg-white rounded-lg shadow-sm"
+                className="bg-flow-surface rounded-lg shadow-sm"
               >
                 <AccordionTrigger className="px-6 py-4 hover:no-underline">
                   <span className="text-left font-semibold">
@@ -858,7 +858,7 @@ export default function FixFunnelPage() {
               </AccordionItem>
               <AccordionItem
                 value="item-5"
-                className="bg-white rounded-lg shadow-sm"
+                className="bg-flow-surface rounded-lg shadow-sm"
               >
                 <AccordionTrigger className="px-6 py-4 hover:no-underline">
                   <span className="text-left font-semibold">
@@ -890,7 +890,7 @@ export default function FixFunnelPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
-              className="bg-white text-blue-700 hover:bg-gray-100"
+              className="bg-white text-blue-700 hover:bg-flow-card"
               onClick={() =>
                 document
                   .getElementById("tool-section")

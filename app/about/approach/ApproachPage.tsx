@@ -39,13 +39,13 @@ export default function ApproachPage() {
       </section>
 
       {/* Philosophy Section */}
-      <section className="py-12 md:py-20 bg-white">
+      <section className="py-12 md:py-20 bg-flow-surface">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-[#051C2C] mb-4">
               Our Philosophy
             </h2>
-            <p className="text-lg text-gray-700">
+            <p className="text-lg text-flow-textSoft">
               At Creative Surf, we believe in a data-driven, client-focused
               approach that delivers measurable results. Our methodology
               combines strategic thinking, creative excellence, and technical
@@ -54,38 +54,38 @@ export default function ApproachPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+            <div className="bg-flow-bg p-6 rounded-lg shadow-sm border border-flow-border">
               <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
                 <Target className="h-6 w-6 text-blue-600" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Strategic Focus</h3>
-              <p className="text-gray-700">
+              <p className="text-flow-textSoft">
                 We begin with understanding your business goals and target
                 audience to create strategies that align with your objectives.
               </p>
             </div>
 
-            <div className="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+            <div className="bg-flow-bg p-6 rounded-lg shadow-sm border border-flow-border">
               <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
                 <BarChart className="h-6 w-6 text-blue-600" />
               </div>
               <h3 className="text-xl font-semibold mb-3">
                 Data-Driven Decisions
               </h3>
-              <p className="text-gray-700">
+              <p className="text-flow-textSoft">
                 We leverage analytics and market research to inform our
                 strategies and continuously optimize for better performance.
               </p>
             </div>
 
-            <div className="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+            <div className="bg-flow-bg p-6 rounded-lg shadow-sm border border-flow-border">
               <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
                 <Lightbulb className="h-6 w-6 text-blue-600" />
               </div>
               <h3 className="text-xl font-semibold mb-3">
                 Creative Innovation
               </h3>
-              <p className="text-gray-700">
+              <p className="text-flow-textSoft">
                 We combine creativity with technology to develop innovative
                 solutions that help your brand stand out in a crowded market.
               </p>
@@ -95,13 +95,13 @@ export default function ApproachPage() {
       </section>
 
       {/* Process Section */}
-      <section className="py-12 md:py-20 bg-gray-50">
+      <section className="py-12 md:py-20 bg-flow-bg">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-[#051C2C] mb-4">
               Our Process
             </h2>
-            <p className="text-lg text-gray-700">
+            <p className="text-lg text-flow-textSoft">
               A systematic approach that ensures consistent quality and results
             </p>
           </div>
@@ -123,13 +123,13 @@ export default function ApproachPage() {
                   <h3 className="text-xl font-bold text-[#051C2C] mb-2">
                     Discovery & Analysis
                   </h3>
-                  <p className="text-gray-700 mb-4">
+                  <p className="text-flow-textSoft mb-4">
                     We begin by understanding your business, goals, target
                     audience, and competitive landscape. Our team conducts
                     thorough research and analysis to identify opportunities and
                     challenges.
                   </p>
-                  <div className="bg-white p-4 rounded-lg border border-gray-200">
+                  <div className="bg-flow-surface p-4 rounded-lg border border-flow-border">
                     <h4 className="font-semibold mb-2">What to expect:</h4>
                     <ul className="space-y-2">
                       <li className="flex items-start">
@@ -160,12 +160,12 @@ export default function ApproachPage() {
                   <h3 className="text-xl font-bold text-[#051C2C] mb-2">
                     Strategy Development
                   </h3>
-                  <p className="text-gray-700 mb-4">
+                  <p className="text-flow-textSoft mb-4">
                     Based on our findings, we develop a customized strategy that
                     aligns with your business objectives. We establish clear
                     KPIs and create a roadmap for implementation.
                   </p>
-                  <div className="bg-white p-4 rounded-lg border border-gray-200">
+                  <div className="bg-flow-surface p-4 rounded-lg border border-flow-border">
                     <h4 className="font-semibold mb-2">What to expect:</h4>
                     <ul className="space-y-2">
                       <li className="flex items-start">
@@ -196,12 +196,12 @@ export default function ApproachPage() {
                   <h3 className="text-xl font-bold text-[#051C2C] mb-2">
                     Execution & Implementation
                   </h3>
-                  <p className="text-gray-700 mb-4">
+                  <p className="text-flow-textSoft mb-4">
                     Our expert team executes the strategy with precision and
                     attention to detail. We leverage the latest tools and
                     technologies to deliver high-quality results.
                   </p>
-                  <div className="bg-white p-4 rounded-lg border border-gray-200">
+                  <div className="bg-flow-surface p-4 rounded-lg border border-flow-border">
                     <h4 className="font-semibold mb-2">What to expect:</h4>
                     <ul className="space-y-2">
                       <li className="flex items-start">
@@ -232,12 +232,12 @@ export default function ApproachPage() {
                   <h3 className="text-xl font-bold text-[#051C2C] mb-2">
                     Measurement & Optimization
                   </h3>
-                  <p className="text-gray-700 mb-4">
+                  <p className="text-flow-textSoft mb-4">
                     We continuously monitor performance, analyze results, and
                     make data-driven optimizations to improve outcomes and
                     maximize ROI.
                   </p>
-                  <div className="bg-white p-4 rounded-lg border border-gray-200">
+                  <div className="bg-flow-surface p-4 rounded-lg border border-flow-border">
                     <h4 className="font-semibold mb-2">What to expect:</h4>
                     <ul className="space-y-2">
                       <li className="flex items-start">
@@ -262,13 +262,13 @@ export default function ApproachPage() {
       </section>
 
       {/* Methodology Section */}
-      <section className="py-12 md:py-20 bg-white">
+      <section className="py-12 md:py-20 bg-flow-surface">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-[#051C2C] mb-4">
               Our Methodology
             </h2>
-            <p className="text-lg text-gray-700">
+            <p className="text-lg text-flow-textSoft">
               The core principles that guide our work and ensure exceptional
               results
             </p>
@@ -280,7 +280,7 @@ export default function ApproachPage() {
                 <Users className="h-6 w-6 text-blue-600 mr-3" />
                 <h3 className="text-xl font-semibold">Client Partnership</h3>
               </div>
-              <p className="text-gray-700">
+              <p className="text-flow-textSoft">
                 We view ourselves as an extension of your team, working
                 collaboratively to achieve your goals. Our transparent
                 communication and regular updates ensure you're always informed
@@ -293,7 +293,7 @@ export default function ApproachPage() {
                 <Zap className="h-6 w-6 text-blue-600 mr-3" />
                 <h3 className="text-xl font-semibold">Agile Execution</h3>
               </div>
-              <p className="text-gray-700">
+              <p className="text-flow-textSoft">
                 Our agile approach allows us to adapt quickly to changing market
                 conditions and business needs. We iterate rapidly, test
                 continuously, and optimize for maximum impact.
@@ -305,7 +305,7 @@ export default function ApproachPage() {
                 <BarChart className="h-6 w-6 text-blue-600 mr-3" />
                 <h3 className="text-xl font-semibold">Results-Focused</h3>
               </div>
-              <p className="text-gray-700">
+              <p className="text-flow-textSoft">
                 We're obsessed with delivering measurable results that impact
                 your bottom line. Every strategy and tactic is designed with
                 clear objectives and KPIs in mind.
@@ -317,7 +317,7 @@ export default function ApproachPage() {
                 <Lightbulb className="h-6 w-6 text-blue-600 mr-3" />
                 <h3 className="text-xl font-semibold">Continuous Innovation</h3>
               </div>
-              <p className="text-gray-700">
+              <p className="text-flow-textSoft">
                 We stay at the forefront of industry trends and technologies to
                 bring innovative solutions that give your business a competitive
                 edge in the market.
@@ -328,13 +328,13 @@ export default function ApproachPage() {
       </section>
 
       {/* Case Studies Preview */}
-      <section className="py-12 md:py-20 bg-gray-50">
+      <section className="py-12 md:py-20 bg-flow-bg">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-[#051C2C] mb-4">
               Our Approach in Action
             </h2>
-            <p className="text-lg text-gray-700">
+            <p className="text-lg text-flow-textSoft">
               See how our methodology has delivered exceptional results for our
               clients
             </p>
@@ -342,8 +342,8 @@ export default function ApproachPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Case Study 1 */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-md">
-              <div className="h-48 bg-gray-200 relative">
+            <div className="bg-flow-surface rounded-lg overflow-hidden shadow-md">
+              <div className="h-48 bg-flow-card relative">
                 <Image
                   src="/placeholder.svg?height=200&width=400"
                   alt="E-commerce Growth Case Study"
@@ -356,7 +356,7 @@ export default function ApproachPage() {
                   E-commerce
                 </span>
                 <h3 className="text-xl font-bold mb-2">300% Revenue Growth</h3>
-                <p className="text-gray-700 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   How we helped an e-commerce brand triple their revenue through
                   strategic digital marketing.
                 </p>
@@ -370,8 +370,8 @@ export default function ApproachPage() {
             </div>
 
             {/* Case Study 2 */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-md">
-              <div className="h-48 bg-gray-200 relative">
+            <div className="bg-flow-surface rounded-lg overflow-hidden shadow-md">
+              <div className="h-48 bg-flow-card relative">
                 <Image
                   src="/placeholder.svg?height=200&width=400"
                   alt="B2B Lead Generation Case Study"
@@ -384,7 +384,7 @@ export default function ApproachPage() {
                   B2B
                 </span>
                 <h3 className="text-xl font-bold mb-2">10x Lead Generation</h3>
-                <p className="text-gray-700 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   How our approach helped a B2B company increase qualified leads
                   by 10x in 6 months.
                 </p>
@@ -398,8 +398,8 @@ export default function ApproachPage() {
             </div>
 
             {/* Case Study 3 */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-md">
-              <div className="h-48 bg-gray-200 relative">
+            <div className="bg-flow-surface rounded-lg overflow-hidden shadow-md">
+              <div className="h-48 bg-flow-card relative">
                 <Image
                   src="/placeholder.svg?height=200&width=400"
                   alt="Brand Transformation Case Study"
@@ -414,7 +414,7 @@ export default function ApproachPage() {
                 <h3 className="text-xl font-bold mb-2">
                   Brand Relaunch Success
                 </h3>
-                <p className="text-gray-700 mb-4">
+                <p className="text-flow-textSoft mb-4">
                   How we helped a legacy brand transform digitally and capture a
                   new market segment.
                 </p>
@@ -455,7 +455,7 @@ export default function ApproachPage() {
               <Button
                 asChild
                 size="lg"
-                className="bg-white text-[#051C2C] hover:bg-gray-100"
+                className="bg-white text-[#051C2C] hover:bg-flow-card"
               >
                 <Link href="/contact">Contact Us</Link>
               </Button>
