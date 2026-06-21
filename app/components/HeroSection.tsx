@@ -15,7 +15,6 @@ const lines = [
 const stats = [
   { value: "150+", label: "Projects Delivered" },
   { value: "98%", label: "Client Retention" },
-  { value: "10+", label: "Years of Craft" },
 ];
 
 export default function HeroSection() {

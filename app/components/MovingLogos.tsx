@@ -13,6 +13,8 @@ const logos = [
   { src: "/beeteam.jpeg",    name: "Bee Team" },
   { src: "/icreation.jpeg",  name: "iCreation" },
   { src: "/hm.jpeg",         name: "HM Production" },
+  { src: "/nextgen.png",     name: "NextGen" },
+  { src: "/springfield.png", name: "Springfield" },
 ];
 
 const container = {
@@ -32,7 +34,7 @@ const MovingLogos = () => {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, margin: "-60px" }}
-      className="mx-auto max-w-5xl px-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-5"
+      className="mx-auto max-w-5xl px-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 sm:gap-5"
     >
       {logos.map((logo) => (
         <motion.div
