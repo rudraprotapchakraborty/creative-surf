@@ -445,7 +445,8 @@ const mainPages = [
   { name: "Blog", href: "/blog" },
   { name: "Case Studies", href: "/case-studies" },
   { name: "Get a Proposal", href: "/contact" },
-  { name: "Privacy & Terms", href: "/privacy-terms" },
+  { name: "Privacy Policy", href: "/privacy-policy" },
+  { name: "Terms of Service", href: "/terms" },
   { name: "Sitemap", href: "/sitemap" },
 ];
 

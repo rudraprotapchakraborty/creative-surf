@@ -149,12 +149,23 @@ export function Footer() {
         </motion.div>
 
         {/* Bottom bar */}
-        <div className="mt-12 pt-6 border-t border-flow-border flex flex-col sm:flex-row justify-between items-center gap-3">
-          <div className="flex items-center gap-2.5">
-            <Image src="/logo.png" alt="Creative Surf" width={22} height={22} className="opacity-90" />
-            <p className="text-xs text-flow-textSoft font-medium">
-              © {new Date().getFullYear()} Creative Surf. All rights reserved.
-            </p>
+        <div className="mt-12 pt-6 border-t border-flow-border flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
+            <div className="flex items-center gap-2.5">
+              <Image src="/logo.png" alt="Creative Surf" width={22} height={22} className="opacity-90" />
+              <p className="text-xs text-flow-textSoft font-medium">
+                © {new Date().getFullYear()} Creative Surf. All rights reserved.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 text-xs text-flow-textSoft">
+              <Link href="/terms" className="hover:text-flow-text transition-colors">
+                Terms of Service
+              </Link>
+              <span className="w-1 h-1 rounded-full bg-flow-border" />
+              <Link href="/privacy-policy" className="hover:text-flow-text transition-colors">
+                Privacy Policy
+              </Link>
+            </div>
           </div>
           <p className="text-xs text-flow-textSoft tracking-widest uppercase font-semibold">
             Crafted with <span className="text-aurora">aurora</span> energy

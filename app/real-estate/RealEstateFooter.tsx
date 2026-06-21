@@ -151,12 +151,23 @@ export default function RealEstateFooter() {
         </motion.div>
 
         {/* Bottom bar */}
-        <div className="mt-10 pt-5 border-t border-white/15 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <div className="flex items-center gap-2.5">
-            <Image src="/logo.png" alt="Creative Surf" width={22} height={22} className="opacity-90" />
-            <p className="text-xs text-white/50 font-medium">
-              © {new Date().getFullYear()} Creative Surf. All rights reserved.
-            </p>
+        <div className="mt-10 pt-5 border-t border-white/15 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
+            <div className="flex items-center gap-2.5">
+              <Image src="/logo.png" alt="Creative Surf" width={22} height={22} className="opacity-90" />
+              <p className="text-xs text-white/50 font-medium">
+                © {new Date().getFullYear()} Creative Surf. All rights reserved.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 text-xs text-white/50">
+              <Link href="/terms" className="hover:text-white transition-colors">
+                Terms of Service
+              </Link>
+              <span className="w-1 h-1 rounded-full bg-white/10" />
+              <Link href="/privacy-policy" className="hover:text-white transition-colors">
+                Privacy Policy
+              </Link>
+            </div>
           </div>
           <p className="text-xs text-white/45 tracking-widest uppercase font-semibold">
             Crafted with <span style={{ color: G }}>aurora</span> energy

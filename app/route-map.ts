@@ -13,6 +13,8 @@ export const routeMap = {
   caseStudies: "/case-studies",
   proposal: "/contact",
   privacyTerms: "/privacy-terms",
+  privacyPolicy: "/privacy-policy",
+  terms: "/terms",
 
   // Digital Marketing section
   digitalMarketing: {
