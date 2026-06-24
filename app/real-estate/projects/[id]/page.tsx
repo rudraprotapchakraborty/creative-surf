@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
-import { ArrowLeft, MapPin, Building2, Home, Users, Layers, Clock, Calendar, User, Pencil, Trash2 } from "lucide-react"
+import { ArrowLeft, MapPin, Building2, Home, Users, Layers, Clock, Calendar, User, Pencil, Trash2, ChevronLeft, ChevronRight, X } from "lucide-react"
 
 interface Project {
   _id: string
@@ -22,6 +22,7 @@ interface Project {
   description: string
   rooftopFeatures: string[]
   groundFloorFeatures: string[]
+  availableFlats?: string[]
   coverImage: string
   images: string[]
   googleMapUrl: string
@@ -80,7 +81,7 @@ export default function ProjectDetailPage() {
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
   const [deleting, setDeleting] = useState(false)
-  const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [blogs, setBlogs] = useState<Blog[]>([])
 
   useEffect(() => {
@@ -99,6 +100,19 @@ export default function ProjectDetailPage() {
       .then(d => { if (d.authenticated) setIsAdmin(true) })
       .catch(() => {})
   }, [id])
+
+  // Keyboard navigation for the lightbox (← prev, → next, Esc close)
+  useEffect(() => {
+    if (lightboxIndex === null || !project) return
+    const imgs = [project.coverImage, ...(project.images ?? [])].filter(Boolean)
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setLightboxIndex(null)
+      else if (e.key === "ArrowLeft") setLightboxIndex(i => i === null ? i : (i - 1 + imgs.length) % imgs.length)
+      else if (e.key === "ArrowRight") setLightboxIndex(i => i === null ? i : (i + 1) % imgs.length)
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [lightboxIndex, project])
 
   async function handleDelete() {
     if (!project || !confirm(`Delete "${project.name}"? This cannot be undone.`)) return
@@ -236,7 +250,7 @@ export default function ProjectDetailPage() {
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
               className="rounded-2xl overflow-hidden cursor-pointer"
               style={{ border: "1px solid var(--flow-border-strong)", minHeight: 280 }}
-              onClick={() => setSelectedImage(project.coverImage)}
+              onClick={() => setLightboxIndex(0)}
             >
               <img src={project.coverImage} alt={project.name} className="w-full h-full object-cover" style={{ minHeight: 280 }} />
             </motion.div>
@@ -348,6 +362,37 @@ export default function ProjectDetailPage() {
           )
         })()}
 
+        {/* ─── Available Flats ─── */}
+        {project.availableFlats && project.availableFlats.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.25 }}
+            className="glass rounded-2xl p-6 mb-10"
+            style={{ border: "1px solid var(--flow-border-strong)" }}
+          >
+            <h2 className="font-bold mb-4 uppercase tracking-widest flex items-center gap-2" style={{ color: "#16a34a", fontSize: "0.7rem" }}>
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: "#16a34a" }} />
+                <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: "#16a34a" }} />
+              </span>
+              Available Flats
+            </h2>
+            <div className="flex flex-wrap gap-2.5">
+              {project.availableFlats.map((flat, i) => (
+                <span
+                  key={i}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold"
+                  style={{ background: "rgba(22,163,74,0.1)", color: "#16a34a", border: "1px solid rgba(22,163,74,0.25)" }}
+                >
+                  <Building2 size={14} />
+                  {flat}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
         {/* ─── Features sections ─── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
           {project.rooftopFeatures?.length > 0 && (
@@ -412,7 +457,7 @@ export default function ProjectDetailPage() {
                   key={i}
                   className="rounded-xl overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
                   style={{ aspectRatio: "4/3", border: "1px solid var(--flow-border)" }}
-                  onClick={() => setSelectedImage(url)}
+                  onClick={() => setLightboxIndex(i)}
                 >
                   <img src={url} alt={`${project.name} ${i + 1}`} className="w-full h-full object-cover" />
                 </div>
@@ -503,25 +548,60 @@ export default function ProjectDetailPage() {
       </div>
 
       {/* ─── Lightbox ─── */}
-      {selectedImage && (
+      {lightboxIndex !== null && allImages[lightboxIndex] && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: "rgba(0,0,0,0.85)" }}
-          onClick={() => setSelectedImage(null)}
+          className="fixed inset-0 z-[10000] flex items-center justify-center p-4"
+          style={{ background: "rgba(0,0,0,0.9)" }}
+          onClick={() => setLightboxIndex(null)}
         >
+          {/* Close */}
+          <button
+            onClick={() => setLightboxIndex(null)}
+            className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center text-white"
+            style={{ background: "rgba(255,255,255,0.12)" }}
+            aria-label="Close"
+          >
+            <X size={20} />
+          </button>
+
+          {/* Prev / Next */}
+          {allImages.length > 1 && (
+            <>
+              <button
+                onClick={e => { e.stopPropagation(); setLightboxIndex(i => i === null ? i : (i - 1 + allImages.length) % allImages.length) }}
+                className="absolute left-3 sm:left-5 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white transition-colors hover:bg-white/25"
+                style={{ background: "rgba(255,255,255,0.12)" }}
+                aria-label="Previous image"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              <button
+                onClick={e => { e.stopPropagation(); setLightboxIndex(i => i === null ? i : (i + 1) % allImages.length) }}
+                className="absolute right-3 sm:right-5 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white transition-colors hover:bg-white/25"
+                style={{ background: "rgba(255,255,255,0.12)" }}
+                aria-label="Next image"
+              >
+                <ChevronRight size={24} />
+              </button>
+            </>
+          )}
+
           <img
-            src={selectedImage}
-            alt="Preview"
+            src={allImages[lightboxIndex]}
+            alt={`${project.name} ${lightboxIndex + 1}`}
             className="max-w-full max-h-full rounded-xl shadow-2xl"
             onClick={e => e.stopPropagation()}
           />
-          <button
-            onClick={() => setSelectedImage(null)}
-            className="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center text-white text-lg font-bold"
-            style={{ background: "rgba(255,255,255,0.1)" }}
-          >
-            ×
-          </button>
+
+          {/* Counter */}
+          {allImages.length > 1 && (
+            <span
+              className="absolute bottom-5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-xs font-medium text-white"
+              style={{ background: "rgba(0,0,0,0.5)" }}
+            >
+              {lightboxIndex + 1} / {allImages.length}
+            </span>
+          )}
         </div>
       )}
     </main>

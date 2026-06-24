@@ -22,6 +22,7 @@ interface ProjectForm {
   description: string
   rooftopFeatures: string[]
   groundFloorFeatures: string[]
+  availableFlats: string[]
   coverImage: string
   images: string[]
   googleMapUrl: string
@@ -44,6 +45,7 @@ const DEFAULT_FORM: ProjectForm = {
   description: "",
   rooftopFeatures: [],
   groundFloorFeatures: [],
+  availableFlats: [],
   coverImage: "",
   images: [],
   googleMapUrl: "",
@@ -212,6 +214,7 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
           description: data.description ?? "",
           rooftopFeatures: data.rooftopFeatures ?? [],
           groundFloorFeatures: data.groundFloorFeatures ?? [],
+          availableFlats: data.availableFlats ?? [],
           coverImage: data.coverImage ?? "",
           images: data.images ?? [],
           googleMapUrl: data.googleMapUrl ?? "",
@@ -366,6 +369,7 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
 
             <FeatureListEditor label="Rooftop Features" items={form.rooftopFeatures} onChange={v => set("rooftopFeatures", v)} />
             <FeatureListEditor label="Ground Floor Features" items={form.groundFloorFeatures} onChange={v => set("groundFloorFeatures", v)} />
+            <FeatureListEditor label="Available Flats" items={form.availableFlats} onChange={v => set("availableFlats", v)} />
           </div>
 
           {/* ─── Right: meta sidebar ─── */}
