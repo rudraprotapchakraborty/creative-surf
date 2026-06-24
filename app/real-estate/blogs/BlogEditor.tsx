@@ -22,6 +22,13 @@ interface BlogForm {
 
 const CATEGORIES = ["Market Insights", "Guides", "Investment", "Developments", "Lifestyle", "General"]
 
+const RE_CATEGORY_EMOJI: Record<string, string> = {
+  General: "🏠", Investment: "💰", "Market Analysis": "📊", "Market Insights": "📊",
+  "Property Guide": "🔑", Guides: "🔑", Renting: "📋", "Buying Guide": "🏡",
+  Legal: "⚖️", Finance: "💳", Location: "📍", Lifestyle: "✨",
+  Construction: "🏗️", Commercial: "🏢", Developments: "🏗️",
+}
+
 const DEFAULT_FORM: BlogForm = {
   title: "",
   slug: "",
@@ -310,10 +317,30 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                   {form.coverImage ? (
                     <img src={form.coverImage} alt="cover preview" className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center px-4 text-center" style={{ background: "linear-gradient(135deg, rgba(184,137,42,0.15), rgba(0,102,162,0.15))", border: "1px dashed rgba(184,137,42,0.3)" }}>
-                      <span className="font-bold leading-snug text-sm" style={{ fontFamily: "var(--font-re)", color: "rgb(var(--flow-text-soft))" }}>
-                        {form.title || "Post title will appear here"}
-                      </span>
+                    <div className="w-full h-full relative overflow-hidden" style={{ border: "1px dashed rgba(184,137,42,0.3)" }}>
+                      <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #0a0e1a 0%, #0d1f35 55%, #12100a 100%)" }} />
+                      <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px)", backgroundSize: "12px 12px" }} />
+                      <div className="absolute" style={{ width: 90, height: 90, borderRadius: "50%", background: "rgba(184,137,42,0.35)", filter: "blur(22px)", top: -18, right: -8 }} />
+                      <div className="absolute" style={{ width: 70, height: 70, borderRadius: "50%", background: "rgba(0,102,162,0.25)", filter: "blur(18px)", bottom: -10, left: -10 }} />
+                      <div className="absolute" style={{ width: "200%", height: "1px", background: "linear-gradient(90deg, transparent, rgba(184,137,42,0.8), transparent)", top: "44%", left: "-50%", transform: "rotate(-6deg)" }} />
+                      <div className="absolute" style={{ width: "200%", height: "1px", background: "linear-gradient(90deg, transparent, rgba(0,102,162,0.5), transparent)", top: "49%", left: "-50%", transform: "rotate(-6deg)" }} />
+                      <div className="absolute" style={{ fontSize: "3rem", lineHeight: 1, right: "6%", top: "50%", transform: "translateY(-52%) rotate(8deg)", filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.5))", userSelect: "none" }}>
+                        {RE_CATEGORY_EMOJI[form.category] ?? "🏠"}
+                      </div>
+                      <div className="absolute inset-0 flex flex-col justify-between p-2.5 z-10">
+                        <span style={{ fontSize: "7px", fontWeight: 800, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(184,137,42,0.9)" }}>{form.category}</span>
+                        <div style={{ maxWidth: "62%" }}>
+                          <span style={{ fontSize: "0.72rem", fontWeight: 900, color: "white", fontFamily: "var(--font-re)", lineHeight: 1.3, textShadow: "0 2px 10px rgba(0,0,0,0.7)", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                            {form.title || "Post title will appear here"}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <div style={{ width: 13, height: 13, borderRadius: 3, background: "linear-gradient(135deg, #B8892A, #0066A2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                            <span style={{ fontSize: 6, fontWeight: 900, color: "white" }}>CS</span>
+                          </div>
+                          <span style={{ fontSize: "9px", fontWeight: 600, color: "rgba(255,255,255,0.5)" }}>Creative Surf</span>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>

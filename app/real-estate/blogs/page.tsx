@@ -23,6 +23,13 @@ interface Blog {
 
 const CATEGORY_COLOR = "#B8892A"
 
+const RE_CATEGORY_EMOJI: Record<string, string> = {
+  General: "🏠", Investment: "💰", "Market Analysis": "📊",
+  "Property Guide": "🔑", Renting: "📋", "Buying Guide": "🏡",
+  Legal: "⚖️", Finance: "💳", Location: "📍", Lifestyle: "✨",
+  Construction: "🏗️", Commercial: "🏢",
+}
+
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
 }
@@ -228,10 +235,38 @@ export default function RealEstateBlogsPage() {
                     {blog.coverImage ? (
                       <img src={blog.coverImage} alt={blog.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center px-5 text-center transition-transform duration-500 group-hover:scale-105" style={{ background: "linear-gradient(135deg, rgba(184,137,42,0.15), rgba(0,102,162,0.15))" }}>
-                        <span className="font-bold text-sm leading-snug line-clamp-3" style={{ fontFamily: "var(--font-re)", color: "rgb(var(--flow-text-soft))" }}>
-                          {blog.title}
-                        </span>
+                      <div className="w-full h-full relative overflow-hidden transition-transform duration-500 group-hover:scale-105">
+                        {/* deep dark bg */}
+                        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #0a0e1a 0%, #0d1f35 55%, #12100a 100%)" }} />
+                        {/* dot grid */}
+                        <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px)", backgroundSize: "14px 14px" }} />
+                        {/* gold glow top-right */}
+                        <div className="absolute" style={{ width: 110, height: 110, borderRadius: "50%", background: "rgba(184,137,42,0.35)", filter: "blur(28px)", top: -20, right: 0 }} />
+                        {/* blue glow bottom-left */}
+                        <div className="absolute" style={{ width: 80, height: 80, borderRadius: "50%", background: "rgba(0,102,162,0.25)", filter: "blur(22px)", bottom: 0, left: -10 }} />
+                        {/* neon line 1 */}
+                        <div className="absolute" style={{ width: "200%", height: "1px", background: "linear-gradient(90deg, transparent, rgba(184,137,42,0.8), transparent)", top: "44%", left: "-50%", transform: "rotate(-6deg)" }} />
+                        {/* neon line 2 */}
+                        <div className="absolute" style={{ width: "200%", height: "1px", background: "linear-gradient(90deg, transparent, rgba(0,102,162,0.5), transparent)", top: "48%", left: "-50%", transform: "rotate(-6deg)" }} />
+                        {/* emoji right */}
+                        <div className="absolute" style={{ fontSize: "4rem", lineHeight: 1, right: "6%", top: "50%", transform: "translateY(-52%) rotate(8deg)", filter: "drop-shadow(0 6px 18px rgba(0,0,0,0.5))", userSelect: "none" }}>
+                          {RE_CATEGORY_EMOJI[blog.category] ?? "🏠"}
+                        </div>
+                        {/* content left */}
+                        <div className="absolute inset-0 flex flex-col justify-between p-3.5 z-10">
+                          <span style={{ fontSize: "8px", fontWeight: 800, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(184,137,42,0.9)" }}>{blog.category}</span>
+                          <div style={{ maxWidth: "62%" }}>
+                            <span style={{ fontSize: "clamp(0.85rem, 2.5vw, 1rem)", fontWeight: 900, color: "white", fontFamily: "var(--font-re)", lineHeight: 1.3, textShadow: "0 2px 12px rgba(0,0,0,0.7)", display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                              {blog.title}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <div style={{ width: 16, height: 16, borderRadius: 4, background: "linear-gradient(135deg, #B8892A, #0066A2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                              <span style={{ fontSize: 7, fontWeight: 900, color: "white" }}>CS</span>
+                            </div>
+                            <span style={{ fontSize: "10px", fontWeight: 600, color: "rgba(255,255,255,0.5)", letterSpacing: "0.04em" }}>Creative Surf</span>
+                          </div>
+                        </div>
                       </div>
                     )}
                   </Link>
@@ -299,13 +334,6 @@ export default function RealEstateBlogsPage() {
           </motion.div>
         )}
 
-        {!isAdmin && !loading && (
-          <div className="mt-16 text-center">
-            <Link href="/login?from=/real-estate/blogs" className="text-xs opacity-30 hover:opacity-60 transition-opacity" style={{ color: "rgb(var(--flow-text))" }}>
-              Admin
-            </Link>
-          </div>
-        )}
       </div>
     </main>
   )

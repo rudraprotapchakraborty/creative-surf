@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Plus, Pencil, Trash2, LogOut, MapPin, Building2, Home } from "lucide-react"
+import { Plus, Pencil, Trash2, MapPin, Building2, Home, LogOut } from "lucide-react"
 
 interface Project {
   _id: string
@@ -306,13 +306,6 @@ export default function ProjectsPage() {
           </motion.div>
         )}
 
-        {!isAdmin && !loading && (
-          <div className="mt-16 text-center">
-            <Link href="/login?from=/real-estate/projects" className="text-xs opacity-30 hover:opacity-60 transition-opacity" style={{ color: "rgb(var(--flow-text))" }}>
-              Admin
-            </Link>
-          </div>
-        )}
       </div>
     </main>
   )

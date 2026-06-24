@@ -6,7 +6,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
-import { ArrowLeft, Clock, Calendar, User, Pencil, Trash2, Tag } from "lucide-react"
+import { ArrowLeft, Clock, Calendar, User, Tag, Pencil, Trash2 } from "lucide-react"
 
 interface Blog {
   _id: string
@@ -24,6 +24,13 @@ interface Blog {
 }
 
 const CATEGORY_COLOR = "rgb(var(--accent-1))"
+
+const CATEGORY_EMOJI: Record<string, string> = {
+  Strategy: "🎯", Marketing: "📈", Design: "🎨", SEO: "🔍",
+  "Social Media": "📱", Content: "✍️", General: "💡", Technology: "⚡",
+  Business: "💼", Branding: "🌟", UX: "🖥️", Analytics: "📊",
+  Growth: "🚀", Copywriting: "🖊️", Advertising: "📣",
+}
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
@@ -153,10 +160,38 @@ export default function BlogPostClient({ slug }: { slug: string }) {
           {blog.coverImage ? (
             <img src={blog.coverImage} alt={blog.title} className="w-full h-full object-cover" />
           ) : (
-            <div className="w-full h-full flex items-center justify-center px-8 text-center" style={{ background: "linear-gradient(135deg, rgb(var(--accent-1) / 0.15), rgb(var(--accent-2) / 0.15))" }}>
-              <span className="font-bold leading-snug" style={{ fontSize: "clamp(1.2rem, 3vw, 1.8rem)", fontFamily: "var(--font-heading)", color: "rgb(var(--flow-text-soft))" }}>
-                {blog.title}
-              </span>
+            <div className="w-full h-full relative overflow-hidden">
+              {/* deep dark bg */}
+              <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #0d1117 0%, #1a1040 60%, #0d1b2a 100%)" }} />
+              {/* dot grid */}
+              <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px)", backgroundSize: "16px 16px" }} />
+              {/* glow top-right */}
+              <div className="absolute" style={{ width: 180, height: 180, borderRadius: "50%", background: "rgb(var(--accent-1) / 0.3)", filter: "blur(40px)", top: -40, right: -10 }} />
+              {/* glow bottom-left */}
+              <div className="absolute" style={{ width: 140, height: 140, borderRadius: "50%", background: "rgb(var(--accent-2) / 0.2)", filter: "blur(32px)", bottom: -20, left: -20 }} />
+              {/* neon line 1 */}
+              <div className="absolute" style={{ width: "200%", height: "1px", background: "linear-gradient(90deg, transparent, rgb(var(--accent-1) / 0.7), transparent)", top: "48%", left: "-50%", transform: "rotate(-5deg)" }} />
+              {/* neon line 2 */}
+              <div className="absolute" style={{ width: "200%", height: "1px", background: "linear-gradient(90deg, transparent, rgb(var(--accent-2) / 0.4), transparent)", top: "52%", left: "-50%", transform: "rotate(-5deg)" }} />
+              {/* emoji right */}
+              <div className="absolute" style={{ fontSize: "6rem", lineHeight: 1, right: "8%", top: "50%", transform: "translateY(-52%) rotate(8deg)", filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.5))", userSelect: "none" }}>
+                {CATEGORY_EMOJI[blog.category] ?? "💡"}
+              </div>
+              {/* content left */}
+              <div className="absolute inset-0 flex flex-col justify-between p-6 z-10">
+                <span style={{ fontSize: "9px", fontWeight: 800, letterSpacing: "0.3em", textTransform: "uppercase", color: "rgb(var(--accent-1) / 0.9)" }}>{blog.category}</span>
+                <div style={{ maxWidth: "60%" }}>
+                  <span style={{ fontSize: "clamp(1.1rem, 3vw, 1.5rem)", fontWeight: 900, color: "white", fontFamily: "var(--font-heading)", lineHeight: 1.25, textShadow: "0 2px 16px rgba(0,0,0,0.7)", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                    {blog.title}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div style={{ width: 20, height: 20, borderRadius: 5, background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <span style={{ fontSize: 9, fontWeight: 900, color: "white" }}>CS</span>
+                  </div>
+                  <span style={{ fontSize: "11px", fontWeight: 600, color: "rgba(255,255,255,0.5)", letterSpacing: "0.04em" }}>Creative Surf</span>
+                </div>
+              </div>
             </div>
           )}
         </motion.div>

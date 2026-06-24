@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
-import { ArrowLeft, Pencil, Trash2, MapPin, Building2, Home, Users, Layers, Clock, Calendar, User } from "lucide-react"
+import { ArrowLeft, MapPin, Building2, Home, Users, Layers, Clock, Calendar, User, Pencil, Trash2 } from "lucide-react"
 
 interface Project {
   _id: string

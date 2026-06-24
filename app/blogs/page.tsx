@@ -23,6 +23,13 @@ interface Blog {
 
 const CATEGORY_COLOR = "rgb(var(--accent-1))"
 
+const CATEGORY_EMOJI: Record<string, string> = {
+  Strategy: "🎯", Marketing: "📈", Design: "🎨", SEO: "🔍",
+  "Social Media": "📱", Content: "✍️", General: "💡", Technology: "⚡",
+  Business: "💼", Branding: "🌟", UX: "🖥️", Analytics: "📊",
+  Growth: "🚀", Copywriting: "🖊️", Advertising: "📣",
+}
+
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
 }
@@ -228,10 +235,38 @@ export default function BlogsPage() {
                     {blog.coverImage ? (
                       <img src={blog.coverImage} alt={blog.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center px-5 text-center transition-transform duration-500 group-hover:scale-105" style={{ background: "linear-gradient(135deg, rgb(var(--accent-1) / 0.15), rgb(var(--accent-2) / 0.15))" }}>
-                        <span className="font-bold text-sm leading-snug line-clamp-3" style={{ fontFamily: "var(--font-heading)", color: "rgb(var(--flow-text-soft))" }}>
-                          {blog.title}
-                        </span>
+                      <div className="w-full h-full relative overflow-hidden transition-transform duration-500 group-hover:scale-105">
+                        {/* deep dark bg */}
+                        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #0d1117 0%, #1a1040 60%, #0d1b2a 100%)" }} />
+                        {/* dot grid */}
+                        <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px)", backgroundSize: "14px 14px" }} />
+                        {/* glow top-right */}
+                        <div className="absolute" style={{ width: 110, height: 110, borderRadius: "50%", background: "rgb(var(--accent-1) / 0.3)", filter: "blur(28px)", top: -20, right: 0 }} />
+                        {/* glow bottom-left */}
+                        <div className="absolute" style={{ width: 80, height: 80, borderRadius: "50%", background: "rgb(var(--accent-2) / 0.2)", filter: "blur(22px)", bottom: 0, left: -10 }} />
+                        {/* neon line 1 */}
+                        <div className="absolute" style={{ width: "200%", height: "1px", background: "linear-gradient(90deg, transparent, rgb(var(--accent-1) / 0.7), transparent)", top: "44%", left: "-50%", transform: "rotate(-6deg)" }} />
+                        {/* neon line 2 */}
+                        <div className="absolute" style={{ width: "200%", height: "1px", background: "linear-gradient(90deg, transparent, rgb(var(--accent-2) / 0.4), transparent)", top: "48%", left: "-50%", transform: "rotate(-6deg)" }} />
+                        {/* emoji right */}
+                        <div className="absolute" style={{ fontSize: "4rem", lineHeight: 1, right: "6%", top: "50%", transform: "translateY(-52%) rotate(8deg)", filter: "drop-shadow(0 6px 18px rgba(0,0,0,0.5))", userSelect: "none" }}>
+                          {CATEGORY_EMOJI[blog.category] ?? "💡"}
+                        </div>
+                        {/* content left */}
+                        <div className="absolute inset-0 flex flex-col justify-between p-3.5 z-10">
+                          <span style={{ fontSize: "8px", fontWeight: 800, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgb(var(--accent-1) / 0.9)" }}>{blog.category}</span>
+                          <div style={{ maxWidth: "62%" }}>
+                            <span style={{ fontSize: "clamp(0.85rem, 2.5vw, 1rem)", fontWeight: 900, color: "white", fontFamily: "var(--font-heading)", lineHeight: 1.3, textShadow: "0 2px 12px rgba(0,0,0,0.7)", display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                              {blog.title}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <div style={{ width: 16, height: 16, borderRadius: 4, background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                              <span style={{ fontSize: 7, fontWeight: 900, color: "white" }}>CS</span>
+                            </div>
+                            <span style={{ fontSize: "10px", fontWeight: 600, color: "rgba(255,255,255,0.5)", letterSpacing: "0.04em" }}>Creative Surf</span>
+                          </div>
+                        </div>
                       </div>
                     )}
                   </Link>
@@ -297,14 +332,6 @@ export default function BlogsPage() {
               ))}
             </AnimatePresence>
           </motion.div>
-        )}
-
-        {!isAdmin && !loading && (
-          <div className="mt-16 text-center">
-            <Link href="/login?from=/blogs" className="text-xs opacity-30 hover:opacity-60 transition-opacity" style={{ color: "rgb(var(--flow-text))" }}>
-              Admin
-            </Link>
-          </div>
         )}
       </div>
     </main>

@@ -1,6 +1,5 @@
 import "./globals.css"
 import { Navbar } from "@/components/navbar"
-import { RouteTheme } from "@/components/RouteTheme"
 import { ConditionalFooter } from "@/components/ConditionalFooter"
 import { LoadingBarProvider } from "@/components/LoadingBarContext"
 import type { Metadata } from "next"
@@ -36,8 +35,6 @@ export default function RootLayout({
           <Suspense fallback={null}>
             <GoogleAnalytics />
           </Suspense>
-
-          <RouteTheme />
 
           {/* NAV */}
           <Navbar />

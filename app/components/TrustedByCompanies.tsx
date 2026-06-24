@@ -17,12 +17,18 @@ const TrustedByCompanies: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="mb-12 flex flex-col items-center gap-4"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border border-flow-border text-xs font-bold uppercase tracking-[0.2em] text-aurora-1">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border border-flow-border text-xs font-bold uppercase tracking-[0.2em] text-aurora-1 mb-2">
             <span className="w-1.5 h-1.5 rounded-full bg-aurora-1" />
             Our Clients
           </span>
+          <h2
+            className="font-bold text-flow-text leading-tight mb-3"
+            style={{ fontSize: "clamp(2rem, 3.5vw, 3.25rem)" }}
+          >
+            Trusted by <span className="text-aurora">forward-thinking</span> teams
+          </h2>
           <p className="text-flow-textSoft font-medium text-sm md:text-base">
-            Trusted by forward-thinking teams worldwide
+            Brands that chose Creative Surf to grow their presence
           </p>
         </motion.div>
       </div>

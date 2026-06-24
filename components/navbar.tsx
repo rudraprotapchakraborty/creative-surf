@@ -73,7 +73,7 @@ export function Navbar() {
               />
             </div>
             <span className="font-heading font-extrabold text-lg md:text-xl tracking-tight text-flow-text">
-              Creative <span className={isRE ? "text-[#B8892A]" : "text-aurora"}>Surf</span>
+              Creative <span className="text-aurora">Surf</span>
             </span>
           </Link>
 
