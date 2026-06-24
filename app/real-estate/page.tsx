@@ -3,11 +3,14 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useState, useRef, useEffect } from "react"
-import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion"
+import {
+  motion, useScroll, useTransform, useInView, AnimatePresence,
+  useMotionValue, animate,
+} from "framer-motion"
 import {
   Building2, Users, Handshake, Mail, Phone, ArrowUpRight, ArrowRight,
   Award, Shield, Lightbulb, Leaf, Star, CheckCircle,
-  BarChart3, Headphones, Zap, Globe, TrendingUp, ChevronRight,
+  BarChart3, Headphones, Zap, Globe, TrendingUp,
 } from "lucide-react"
 
 /* ── palette ──────────────────────────────────────── */
@@ -22,58 +25,42 @@ const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
 
 const objectives = [
-  { n: "01", title: "Digital Ecosystem",   body: "Build a dedicated platform for Dhaka developers to showcase residential and commercial projects at scale." },
-  { n: "02", title: "Maximum Visibility",  body: "Leverage SEO, social media, and performance ads to deliver peak exposure for every listed property." },
-  { n: "03", title: "Qualified Reach",     body: "Connect developers with land-share opportunities to the right buyers through intelligent audience targeting." },
-  { n: "04", title: "Measurable ROI",      body: "Maintain the highest standard of creativity, transparency, and results for every partner." },
+  { icon: Building2, n: "01", title: "Digital Ecosystem",   body: "Build a dedicated platform for Dhaka developers to showcase residential and commercial projects at scale." },
+  { icon: Lightbulb, n: "02", title: "Maximum Visibility",  body: "Leverage SEO, social media, and performance ads to deliver peak exposure for every listed property." },
+  { icon: Users, n: "03", title: "Qualified Reach",     body: "Connect developers with land-share opportunities to the right buyers through intelligent audience targeting." },
+  { icon: Award, n: "04", title: "Measurable ROI",      body: "Maintain the highest standard of creativity, transparency, and results for every partner." },
 ]
 
-const values = [
-  { icon: Lightbulb, title: "Innovation",     desc: "We constantly evolve our strategies to stay ahead of market trends.", size: "large" },
-  { icon: Award,     title: "Excellence",     desc: "Outstanding quality in every listing and interaction.", size: "small" },
-  { icon: Shield,    title: "Integrity",      desc: "Full transparency in every partnership.", size: "small" },
-  { icon: Star,      title: "Client Success", desc: "Your project's success is our ultimate metric.", size: "small" },
-  { icon: Leaf,      title: "Sustainability", desc: "We promote responsible, green development.", size: "small" },
-  { icon: Users,     title: "Collaboration",  desc: "We work as a true extension of your team.", size: "large" },
+const testimonials = [
+  {
+    quote: "Creative Surf turned our listings into a steady pipeline of qualified buyers. The campaigns paid for themselves within the first month.",
+    name: "Tanvir Ahmed",
+    role: "Managing Director",
+    project: "Skyline Developments",
+  },
+  {
+    quote: "Professional photography, a dedicated microsite, and real analytics — finally a partner that understands both marketing and property.",
+    name: "Nusrat Jahan",
+    role: "Head of Sales",
+    project: "Bashundhara Heights",
+  },
+  {
+    quote: "Our project was live in 48 hours and fully booked ahead of schedule. The transparency and reporting are unmatched in Dhaka.",
+    name: "Rafiqul Islam",
+    role: "Chairman",
+    project: "Green Meadows",
+  },
 ]
 
-const features = [
-  { icon: CheckCircle, n: "01", title: "Verified Listings",  desc: "Every property verified with professional photography, accurate floor data, and quality-checked copy." },
-  { icon: TrendingUp,  n: "02", title: "Targeted Reach",     desc: "Data-driven campaigns that find qualified buyers and investors actively searching in Dhaka." },
-  { icon: Globe,       n: "03", title: "Expert Team",        desc: "Specialists in both digital marketing and Bangladesh's real estate landscape." },
-  { icon: BarChart3,   n: "04", title: "Live Analytics",     desc: "Real-time dashboards tracking every impression, click, and conversion." },
-  { icon: Headphones,  n: "05", title: "Dedicated Support",  desc: "A personal account manager for every developer partner — one point of contact." },
-  { icon: Zap,         n: "06", title: "Fast Onboarding",    desc: "Get your project listed and live in 48 hours. We do the heavy lifting." },
-]
-
-const services = [
-  {
-    num: "01", title: "Listing & Management", accent: B,
-    tagline: "Your property, professionally presented.",
-    items: [
-      { sub: "Professional Listings", text: "Photography, floor plans, virtual tours, and compelling copy that converts browsers into buyers." },
-      { sub: "Project Microsites",    text: "Dedicated SEO-optimised landing pages built to capture and convert leads at scale." },
-    ],
-  },
-  {
-    num: "02", title: "Digital Campaigns", accent: G,
-    tagline: "Reach buyers where they actually look.",
-    items: [
-      { sub: "Search & Social Ads", text: "Targeted Google, Facebook, and Instagram campaigns reaching qualified buyers at the right moment." },
-      { sub: "SEO & Content",       text: "Long-term organic visibility through keyword strategy and local SEO that drives high-intent traffic." },
-    ],
-  },
-  {
-    num: "03", title: "Brand & Analytics", accent: "#22c55e",
-    tagline: "Build trust. Measure everything.",
-    items: [
-      { sub: "Developer Branding",   text: "A trusted online identity — logo, brand voice, social presence, and reputation management." },
-      { sub: "Performance Reports",  text: "Monthly deep-dive reports with actionable insights on reach, engagement, and conversions." },
-    ],
-  },
+const processSteps = [
+  { step: "01", title: "Discover", body: "Share your project details — location, inventory, target audience. We analyze market demand and define your property's unique digital positioning." },
+  { step: "02", title: "Design", body: "We build dedicated, SEO-optimized project microsites and craft premium ad campaigns tailored to your development." },
+  { step: "03", title: "Deploy", body: "We launch targeted, high-performance campaigns across search and social channels to capture qualified buyer inquiries." },
+  { step: "04", title: "Deliver", body: "We pass pre-qualified leads directly to your sales team, tracking conversions and optimizing until your inventory is fully booked." },
 ]
 
 /* ── micro components ─────────────────────────────── */
+
 function Tag({ label }: { label: string }) {
   return (
     <motion.div
@@ -99,7 +86,20 @@ export default function RealEstatePage() {
   const textY   = useTransform(scrollYProgress, [0, 1], ["0%", "15%"])
   const fade    = useTransform(scrollYProgress, [0, 0.6], [1, 0])
 
-  const [activeService, setActiveService] = useState(0)
+  const [activeTab, setActiveTab] = useState<'background' | 'message'>('background')
+
+  type FeaturedProject = {
+    _id: string; name: string; slug: string; subtitle?: string
+    status: string; coverImage?: string
+    plotNo?: string; roadNo?: string; sector?: string
+  }
+  const [featured, setFeatured] = useState<FeaturedProject[]>([])
+  useEffect(() => {
+    fetch("/api/real-estate-projects")
+      .then((r) => (r.ok ? r.json() : []))
+      .then((d: FeaturedProject[]) => setFeatured(Array.isArray(d) ? d.slice(0, 6) : []))
+      .catch(() => {})
+  }, [])
 
   return (
     <div className="bg-flow-bg" style={{ fontFamily: "var(--font-re)" }}>
@@ -110,6 +110,7 @@ export default function RealEstatePage() {
         @keyframes spin    { to{transform:rotate(360deg)} }
         @keyframes pulse   { 0%,100%{opacity:.15} 50%{opacity:.35} }
         @keyframes drawH   { from{width:0} to{width:100%} }
+        @keyframes floatBadge { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
         .shimmer-gold {
           background: linear-gradient(90deg,${G},${GL},#F5D78E,${GL},${G});
           background-size:200% auto;
@@ -118,11 +119,22 @@ export default function RealEstatePage() {
           background-clip:text;
           animation:shimmer 4s linear infinite;
         }
+        .font-serif-re {
+          font-family: var(--font-re-display), "Fraunces", ui-serif, Georgia, serif;
+          letter-spacing:-0.02em;
+          font-feature-settings:"liga","ss01";
+        }
         .float-a { animation:floatA 6s ease-in-out infinite; }
         .float-b { animation:floatB 8s ease-in-out infinite; }
+        .float-badge { animation:floatBadge 6s ease-in-out infinite; }
         .spin-slow { animation:spin 20s linear infinite; }
         .pulse-shape { animation:pulse 4s ease-in-out infinite; }
         .perspective { perspective:1200px; }
+        .glass-re {
+          background: var(--flow-card-strong);
+          backdrop-filter: blur(18px) saturate(150%);
+          -webkit-backdrop-filter: blur(18px) saturate(150%);
+        }
       `}</style>
 
       {/* ════════════════════════════════════════
@@ -156,8 +168,8 @@ export default function RealEstatePage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: EASE, delay: 0.2 + li * 0.15 }}
-                className="block font-bold leading-[1.05]"
-                style={{ fontSize: "clamp(2rem, 3.8vw, 3.8rem)", color: li === 2 ? G : "white" }}
+                className="font-serif-re block font-medium leading-[1.04]"
+                style={{ fontSize: "clamp(2.1rem, 4.2vw, 4.2rem)", color: li === 2 ? G : "white", fontStyle: li === 2 ? "italic" : "normal" }}
               >
                 {line}
               </motion.h1>
@@ -247,512 +259,407 @@ export default function RealEstatePage() {
 
 
       {/* ════════════════════════════════════════
-          ABOUT — overlapping editorial layout
+          ABOUT — merged tab layout (exactly like Springfield)
       ════════════════════════════════════════ */}
-      <section id="about" className="relative overflow-hidden py-14 md:py-20 px-6 sm:px-10 lg:px-20 xl:px-28 bg-flow-surface">
-        {/* giant decorative number behind everything */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.5 }}
-          className="absolute -top-8 -right-8 font-black select-none pointer-events-none leading-none"
-          style={{ fontSize: "clamp(140px,22vw,280px)", color: `${G}06`, fontFamily: "var(--font-re)" }}
-        >01</motion.div>
-
-        <div className="relative z-10 grid lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-16 items-start">
-          {/* left — text content */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.12 } } }}
-          >
-            <Tag label="About the Platform" />
-            <motion.h2
-              variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: EASE } } }}
-              className="font-bold leading-tight text-flow-text mb-6"
-              style={{ fontSize: "clamp(2rem,3.5vw,3.25rem)" }}
-            >
-              Where Developers <br />
-              <span className="shimmer-gold">Meet Their Buyers</span>
-            </motion.h2>
-
-            {[
-              "Creative Surf Real Estate is a rapidly growing digital platform dedicated to connecting Dhaka's developers with qualified buyers and investors across every property type.",
-              "Our team merges digital marketing expertise with deep knowledge of Bangladesh's property market — crafting listings, running campaigns, and building the online presence that drives real enquiries.",
-              "We are committed to quality, transparency, and measurable results. Your vision, combined with our expertise, creates the perfect balance between reach and results.",
-            ].map((p, i) => (
-              <motion.p
-                key={i}
-                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } } }}
-                className="text-flow-textSoft leading-relaxed mb-5 text-[0.95rem]"
-              >{p}</motion.p>
-            ))}
-
+      <section id="about" className="relative overflow-hidden py-24 md:py-32 px-6 sm:px-10 lg:px-20 xl:px-28 bg-flow-surface">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            {/* left column — image container */}
             <motion.div
-              variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } }}
-              className="mt-8"
-            >
-              <Link href="/contact"
-                className="group inline-flex items-center gap-2 text-sm font-semibold"
-                style={{ color: G }}
-              >
-                Start a conversation
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </motion.div>
-          </motion.div>
-
-          {/* right — image with layered gold frame */}
-          <motion.div
-            initial={{ opacity: 0, x: 60 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, ease: EASE }}
-            className="relative"
-          >
-            {/* offset gold frame behind */}
-            <div className="absolute -top-4 -right-4 w-full h-full rounded-2xl" style={{ border: `1px solid ${G}40` }} />
-            {/* image */}
-            <div className="relative rounded-2xl overflow-hidden aspect-[4/3]">
-              <Image src="/about.jpeg" alt="About" fill className="object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-br from-flow-surface/40 to-transparent" />
-            </div>
-            {/* floating badge */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4, duration: 0.6, ease: EASE }}
-              className="absolute -bottom-4 sm:-bottom-6 -left-4 sm:-left-6 rounded-2xl px-4 sm:px-6 py-3 sm:py-4 backdrop-blur-md bg-flow-surface border"
-              style={{ borderColor: `${G}35` }}
-            >
-              <div className="text-2xl font-black shimmer-gold">200+</div>
-              <div className="text-xs text-flow-textSoft uppercase tracking-wider mt-0.5">Projects Delivered</div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ════════════════════════════════════════
-          OBJECTIVES — full-width numbered rows
-      ════════════════════════════════════════ */}
-      <section className="relative overflow-hidden py-16 bg-flow-bg">
-        {/* background label */}
-        <div className="absolute inset-0 flex items-center pointer-events-none select-none overflow-hidden">
-          <span className="font-black opacity-[0.025] text-flow-text leading-none" style={{ fontSize: "clamp(80px,15vw,180px)" }}>
-            OBJECTIVES
-          </span>
-        </div>
-
-        <div className="relative z-10 px-6 sm:px-10 lg:px-20 xl:px-28 mb-10">
-          <Tag label="Our Objectives" />
-          <h2 className="font-bold text-flow-text" style={{ fontSize: "clamp(2rem,3.5vw,3.25rem)" }}>
-            What We Set Out <span className="shimmer-gold">To Achieve</span>
-          </h2>
-        </div>
-
-        <div className="relative z-10">
-          {objectives.map(({ n, title, body }, i) => (
-            <motion.div
-              key={n}
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, ease: EASE, delay: i * 0.1 }}
-              className="group relative flex items-start gap-4 sm:gap-8 lg:gap-16 px-6 sm:px-10 lg:px-20 xl:px-28 py-8 sm:py-10 border-t cursor-default transition-colors duration-300 hover:bg-flow-card"
-              style={{ borderColor: `${G}15` }}
+              transition={{ duration: 0.8 }}
+              className="relative lg:col-span-5"
             >
-              {/* animated left accent on hover */}
-              <div className="absolute left-0 top-0 bottom-0 w-0.5 scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-top" style={{ background: `linear-gradient(180deg,${G},transparent)` }} />
-
-              {/* large number */}
-              <motion.span
-                initial={{ opacity: 0, scale: 0.6 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, ease: EASE, delay: i * 0.1 + 0.2 }}
-                className="flex-shrink-0 font-black leading-none select-none"
-                style={{ fontSize: "clamp(2.5rem,7vw,7rem)", color: `${G}22` }}
-              >{n}</motion.span>
-
-              {/* content */}
-              <div className="flex-1 pt-3 lg:flex lg:items-start lg:gap-12">
-                <h3
-                  className="font-bold text-flow-text text-xl lg:text-2xl mb-3 lg:mb-0 lg:w-64 flex-shrink-0 group-hover:text-[#D4A843] transition-colors duration-300"
-                >{title}</h3>
-                <p className="text-flow-textSoft leading-relaxed flex-1">{body}</p>
-              </div>
-
-              {/* arrow on hover */}
-              <ChevronRight
-                className="hidden sm:block flex-shrink-0 mt-3 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1"
-                style={{ color: G }}
-                size={20}
-              />
-            </motion.div>
-          ))}
-          <div className="border-t mx-6 sm:mx-10 lg:mx-20 xl:mx-28" style={{ borderColor: `${G}15` }} />
-        </div>
-      </section>
-
-      {/* ════════════════════════════════════════
-          VISION — full-bleed typographic
-      ════════════════════════════════════════ */}
-      <section className="relative overflow-hidden bg-flow-surface">
-        {/* blob decorations */}
-        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full blur-[120px] pointer-events-none" style={{ background: `${G}10` }} />
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full blur-[120px] pointer-events-none" style={{ background: `${B}10` }} />
-
-        <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-10 lg:px-20 py-14 lg:py-20 text-center">
-          <Tag label="Our Vision" />
-
-          {/* giant quote mark */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: EASE }}
-            className="font-black leading-none mb-4 select-none"
-            style={{ fontSize: "clamp(6rem,15vw,12rem)", color: `${G}15`, lineHeight: 0.8 }}
-          >"</motion.div>
-
-          <motion.blockquote
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, ease: EASE, delay: 0.2 }}
-            className="font-semibold text-flow-text/85 leading-snug mb-10"
-            style={{ fontSize: "clamp(1.5rem,3vw,2.5rem)" }}
-          >
-            To become Bangladesh's most trusted digital gateway for real estate discovery — making property transactions
-            <span className="shimmer-gold"> transparent, accessible, and inspiring</span> for developers and buyers alike.
-          </motion.blockquote>
-
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: EASE, delay: 0.5 }}
-            className="h-[1px] w-24 mx-auto mb-6 origin-center"
-            style={{ background: G }}
-          />
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.7 }}
-            className="text-xs uppercase tracking-[0.3em] font-bold"
-            style={{ color: `${G}80` }}
-          >Creative Surf Real Estate</motion.p>
-        </div>
-
-        {/* mission strip attached below */}
-        <div className="relative z-10 border-t" style={{ borderColor: `${G}15` }}>
-          <div className="grid lg:grid-cols-[280px_1fr] gap-0">
-            {/* left label */}
-            <div className="flex items-center justify-center px-10 py-10 lg:py-12 border-b lg:border-b-0 lg:border-r" style={{ borderColor: `${G}15` }}>
-              <div className="text-center">
-                <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ border: `1px solid ${G}50` }}>
-                  <TrendingUp className="w-7 h-7" style={{ color: G }} />
+              <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl">
+                <Image
+                  src="/about.jpeg"
+                  alt="About"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+                <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-white">
+                  <div>
+                    <div className="text-xs uppercase tracking-widest opacity-80">Portal</div>
+                    <div className="font-serif-re text-2xl">Creative Surf</div>
+                  </div>
+                  <Link
+                    href="/real-estate/projects"
+                    className="grid place-items-center w-12 h-12 rounded-full bg-white/15 backdrop-blur-md hover:bg-white hover:text-zinc-900 transition-colors"
+                    aria-label="View projects"
+                  >
+                    <ArrowRight size={18} />
+                  </Link>
                 </div>
-                <div className="text-xs uppercase tracking-[0.25em] font-bold" style={{ color: G }}>Our Mission</div>
-              </div>
-            </div>
-            {/* right text */}
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: EASE }}
-              className="px-6 sm:px-10 lg:px-12 py-10 lg:py-12 flex items-center"
-            >
-              <p className="text-flow-textSoft text-lg leading-relaxed max-w-3xl">
-                To empower real estate developers across Dhaka with world-class digital marketing tools and a dedicated platform that delivers measurable results — connecting the right properties with the right buyers at exactly the right time, every time.
-              </p>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ════════════════════════════════════════
-          CORE VALUES — bento grid
-      ════════════════════════════════════════ */}
-      <section className="relative overflow-hidden py-14 md:py-20 px-6 sm:px-10 lg:px-20 xl:px-28 bg-flow-bg">
-        <div className="relative z-10 mb-10 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-          <div>
-            <Tag label="Core Values" />
-            <h2 className="font-bold text-flow-text" style={{ fontSize: "clamp(2rem,3.5vw,3.25rem)" }}>
-              The Principles<br /><span className="shimmer-gold">That Define Us</span>
-            </h2>
-          </div>
-          <p className="text-flow-textSoft/70 text-sm max-w-xs lg:text-right leading-relaxed">
-            Every decision, every campaign, every result — anchored to these values.
-          </p>
-        </div>
-
-        {/* bento grid */}
-        <div className="relative z-10 grid grid-cols-2 lg:grid-cols-3 gap-4">
-          {values.map(({ icon: Icon, title, desc, size }, i) => (
-            <motion.div
-              key={title}
-              initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: EASE, delay: i * 0.08 }}
-              whileHover={{ y: -6, transition: { duration: 0.3 } }}
-              className={`group relative rounded-2xl p-7 cursor-default overflow-hidden ${size === "large" ? "lg:col-span-1 lg:row-span-2" : ""}`}
-              style={{
-                background: "var(--flow-surface)",
-                border: `1px solid ${G}18`,
-              }}
-            >
-              {/* hover glow */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none"
-                style={{ boxShadow: `inset 0 0 40px ${G}10`, background: `radial-gradient(circle at 50% 0%,${G}08,transparent 70%)` }} />
-
-              {/* icon */}
-              <motion.div
-                className="w-11 h-11 rounded-xl flex items-center justify-center mb-5"
-                style={{ background: `${G}18`, border: `1px solid ${G}30` }}
-                whileHover={{ rotate: 15, scale: 1.1 }}
-                transition={{ type: "spring", stiffness: 300, damping: 15 }}
-              >
-                <Icon className="w-5 h-5" style={{ color: G }} />
-              </motion.div>
-
-              <h3 className="font-bold text-flow-text text-base mb-3 group-hover:text-[#D4A843] transition-colors duration-300">{title}</h3>
-              <p className="text-flow-textSoft text-sm leading-relaxed">{desc}</p>
-
-              {/* corner decoration on large cards */}
-              {size === "large" && (
-                <div className="absolute bottom-4 right-4 w-16 h-16 rounded-full opacity-20 spin-slow pointer-events-none"
-                  style={{ border: `1px dashed ${G}` }} />
-              )}
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* ════════════════════════════════════════
-          WHY CHOOSE US — alternating feature rows
-      ════════════════════════════════════════ */}
-      <section className="relative overflow-hidden py-16 bg-flow-surface">
-        <div className="px-6 sm:px-10 lg:px-20 xl:px-28 mb-10">
-          <Tag label="Why Choose Us" />
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-            <h2 className="font-bold text-flow-text" style={{ fontSize: "clamp(2rem,3.5vw,3.25rem)" }}>
-              What Sets Us <span className="shimmer-gold">Apart</span>
-            </h2>
-            <p className="text-flow-textSoft/70 text-sm max-w-xs lg:text-right leading-relaxed">
-              Choosing the right digital partner is critical. Here is what Creative Surf delivers.
-            </p>
-          </div>
-        </div>
-
-        <div>
-          {features.map(({ icon: Icon, n, title, desc }, i) => (
-            <motion.div
-              key={title}
-              initial={{ opacity: 0, x: i % 2 === 0 ? -60 : 60 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.8, ease: EASE }}
-              className="group flex items-start gap-4 sm:gap-8 lg:gap-16 px-6 sm:px-10 lg:px-20 xl:px-28 py-8 sm:py-10 border-t transition-colors duration-300 hover:bg-flow-card cursor-default"
-              style={{ borderColor: `${G}12` }}
-            >
-              {/* number */}
-              <span className="flex-shrink-0 font-black text-sm mt-1" style={{ color: `${G}50` }}>{n}</span>
-
-              {/* icon circle */}
-              <motion.div
-                className="flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center"
-                style={{ background: `${G}15`, border: `1px solid ${G}30` }}
-                whileHover={{ scale: 1.15, rotate: 10 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <Icon className="w-5 h-5" style={{ color: G }} />
-              </motion.div>
-
-              {/* text */}
-              <div className="flex-1 lg:flex lg:items-start lg:gap-12">
-                <h3 className="font-bold text-flow-text text-lg lg:text-xl mb-2 lg:mb-0 lg:w-56 flex-shrink-0 group-hover:text-[#D4A843] transition-colors duration-300">{title}</h3>
-                <p className="text-flow-textSoft leading-relaxed flex-1">{desc}</p>
               </div>
 
-              {/* right accent line on hover */}
-              <div className="hidden sm:block flex-shrink-0 w-8 h-[1px] mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: G }} />
             </motion.div>
-          ))}
-          <div className="border-t mx-6 sm:mx-10 lg:mx-20 xl:mx-28" style={{ borderColor: `${G}12` }} />
-        </div>
-      </section>
 
-      {/* ════════════════════════════════════════
-          SERVICES — vertical tab selector
-      ════════════════════════════════════════ */}
-      <section className="relative overflow-hidden py-14 md:py-20 px-4 sm:px-8 lg:px-20 xl:px-28 bg-flow-bg">
-        <div className="mb-10">
-          <Tag label="Our Services" />
-          <h2 className="font-bold text-flow-text" style={{ fontSize: "clamp(2rem,3.5vw,3.25rem)" }}>
-            Everything You Need <span className="shimmer-gold">To Get Found</span>
-          </h2>
-        </div>
-
-        <div className="grid lg:grid-cols-[300px_1fr] gap-4 lg:gap-8 perspective">
-          {/* tab list */}
-          <div className="flex flex-col gap-2">
-            {services.map(({ num, title, accent }, i) => (
-              <button
-                key={num}
-                onClick={() => setActiveService(i)}
-                className={`group relative w-full text-left px-4 py-3.5 sm:px-6 sm:py-5 rounded-xl transition-all duration-300 ${activeService === i ? "text-flow-text bg-flow-surface" : "text-flow-textSoft/70 hover:text-flow-textSoft"}`}
-                style={{
-                  border: activeService === i ? `1px solid ${accent}40` : "1px solid transparent",
-                }}
+            {/* right column — content */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="lg:col-span-7"
+            >
+              <span
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-[0.25em]"
+                style={{ color: G, background: `${G}1a`, boxShadow: `0 0 0 1px ${G}33` }}
               >
-                <div className="font-black text-xs mb-1" style={{ color: activeService === i ? accent : `${accent}60` }}>{num}</div>
-                <div className="font-bold text-sm lg:text-base">{title}</div>
-                {activeService === i && (
-                  <motion.div
-                    layoutId="tabIndicator"
-                    className="absolute left-0 top-3 bottom-3 w-0.5 rounded-full"
-                    style={{ background: accent }}
-                  />
-                )}
-              </button>
-            ))}
-          </div>
+                About us
+              </span>
+              <h2 className="mt-5 font-serif-re text-4xl md:text-5xl text-flow-text leading-[1.05] text-balance">
+                Building the future of <span className="shimmer-gold italic">Dhaka Real Estate</span>.
+              </h2>
 
-          {/* content panel */}
-          <AnimatePresence mode="wait">
-            {services.map(({ num, title, accent, tagline, items }, i) =>
-              activeService === i ? (
-                <motion.div
-                  key={num}
-                  initial={{ opacity: 0, y: 20, rotateX: 8 }}
-                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.5, ease: EASE }}
-                  className="relative rounded-2xl p-5 sm:p-8 lg:p-12 overflow-hidden"
-                  style={{ background: "var(--flow-surface)", border: `1px solid ${accent}30` }}
+              <div className="mt-8 inline-flex bg-flow-bg rounded-full p-1 border" style={{ borderColor: "var(--flow-border)" }}>
+                <button
+                  className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all ${
+                    activeTab === 'background'
+                      ? 'bg-flow-surface text-flow-text shadow-md border'
+                      : 'text-flow-textSoft hover:text-flow-text'
+                  }`}
+                  style={{
+                    borderColor: activeTab === 'background' ? 'var(--flow-border)' : 'transparent',
+                  }}
+                  onClick={() => setActiveTab('background')}
                 >
-                  {/* top accent bar */}
-                  <motion.div
-                    className="absolute top-0 left-0 h-[3px] rounded-t-2xl"
-                    initial={{ width: 0 }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 0.7, ease: EASE }}
-                    style={{ background: `linear-gradient(90deg,${accent},transparent)` }}
-                  />
+                  Background
+                </button>
+                <button
+                  className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all ${
+                    activeTab === 'message'
+                      ? 'bg-flow-surface text-flow-text shadow-md border'
+                      : 'text-flow-textSoft hover:text-flow-text'
+                  }`}
+                  style={{
+                    borderColor: activeTab === 'message' ? 'var(--flow-border)' : 'transparent',
+                  }}
+                  onClick={() => setActiveTab('message')}
+                >
+                  Message
+                </button>
+              </div>
 
-                  {/* bg number watermark */}
-                  <div className="absolute bottom-4 right-8 font-black text-[8rem] leading-none select-none pointer-events-none" style={{ color: `${accent}06` }}>{num}</div>
-
-                  <div className="relative z-10">
-                    <div className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: accent }}>{num} · {title}</div>
-                    <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-flow-text mb-5 lg:mb-8">{tagline}</h3>
-
-                    <div className="grid sm:grid-cols-2 gap-6">
-                      {items.map(({ sub, text }, j) => (
-                        <motion.div
-                          key={sub}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.15 + j * 0.1, ease: EASE }}
-                          className="p-5 rounded-xl"
-                          style={{ background: `${accent}08`, border: `1px solid ${accent}20` }}
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="mt-8 text-flow-textSoft font-light leading-relaxed"
+              >
+                {activeTab === 'background' ? (
+                  <div className="space-y-5">
+                    <p>
+                      <strong className="text-flow-text font-medium">
+                        Creative Surf Real Estate
+                      </strong>{' '}
+                      is a rapidly growing digital platform dedicated to connecting Dhaka's developers with qualified buyers and investors across every property type.
+                    </p>
+                    <p>
+                      Our team merges digital marketing expertise with deep knowledge of Bangladesh's property market — crafting listings, running campaigns, and building the online presence that drives real enquiries. We are committed to quality, transparency, and measurable results.
+                    </p>
+                    <div className="grid sm:grid-cols-3 gap-4 pt-6">
+                      {[
+                        {
+                          name: 'Digital Ecosystem',
+                          desc: 'Build a dedicated platform for Dhaka developers to showcase residential and commercial projects at scale.',
+                        },
+                        {
+                          name: 'Maximum Visibility',
+                          desc: 'Leverage SEO, social media, and performance ads to deliver peak exposure for every listed property.',
+                        },
+                        {
+                          name: 'Qualified Reach',
+                          desc: 'Connect developers with land-share opportunities to the right buyers through intelligent audience targeting.',
+                        },
+                      ].map((g) => (
+                        <div
+                          key={g.name}
+                          className="rounded-2xl border bg-flow-surface p-5"
+                          style={{ borderColor: "var(--flow-border)" }}
                         >
-                          <div className="flex items-center gap-2 mb-3">
-                            <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: accent }} />
-                            <span className="font-semibold text-flow-text text-sm">{sub}</span>
-                          </div>
-                          <p className="text-flow-textSoft text-sm leading-relaxed">{text}</p>
-                        </motion.div>
+                          <h4 className="font-semibold text-flow-text text-sm mb-2">
+                            {g.name}
+                          </h4>
+                          <p className="text-xs leading-relaxed text-flow-textSoft">{g.desc}</p>
+                        </div>
                       ))}
                     </div>
-
-                    <div className="mt-8 pt-6 border-t flex items-center justify-between" style={{ borderColor: `${accent}20` }}>
-                      <span className="text-flow-textSoft/50 text-xs">Service {num} of 03</span>
-                      <Link
-                        href="/contact"
-                        className="inline-flex items-center gap-2 text-sm font-semibold"
-                        style={{ color: accent }}
-                      >
-                        Enquire now <ArrowRight className="w-4 h-4" />
-                      </Link>
+                  </div>
+                ) : (
+                  <div className="rounded-3xl border p-8 md:p-10" style={{ borderColor: `${G}33`, background: `linear-gradient(135deg, ${G}06, ${B}06)` }}>
+                    <p className="font-serif-re italic text-2xl md:text-3xl text-flow-text leading-snug">
+                      &ldquo;To become Bangladesh's most trusted digital gateway for real estate discovery — making property transactions transparent, accessible, and inspiring for developers and buyers alike.&rdquo;
+                    </p>
+                    <div className="mt-6 flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full grid place-items-center text-white font-bold" style={{ background: `linear-gradient(135deg, ${G}, ${GL})` }}>
+                        CS
+                      </div>
+                      <div>
+                        <div className="text-sm font-semibold text-flow-text">
+                          Creative Surf Real Estate
+                        </div>
+                        <div className="text-xs text-flow-textSoft">
+                          Vision & Mission Statement
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </motion.div>
-              ) : null
-            )}
-          </AnimatePresence>
+                )}
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+      {/* ════════════════════════════════════════
+          OBJECTIVES — card grid (exactly like Springfield's Why Springfield)
+      ════════════════════════════════════════ */}
+      <section className="relative py-24 md:py-32 px-6 sm:px-10 lg:px-20 xl:px-28 bg-flow-bg/65 backdrop-blur-md">
+        <div className="container mx-auto max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="text-center mb-16 max-w-2xl mx-auto"
+          >
+            <span
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-[0.25em]"
+              style={{ color: G, background: `${G}1a`, boxShadow: `0 0 0 1px ${G}33` }}
+            >
+              Our Objectives
+            </span>
+            <h2 className="mt-5 font-serif-re text-4xl md:text-5xl text-flow-text leading-tight text-balance">
+              What We Set Out <span className="shimmer-gold italic">To Achieve</span>
+            </h2>
+            <p className="mt-4 text-flow-textSoft text-lg">
+              Four pillars of excellence driving digital results for our developer partners across Bangladesh.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: '-80px' }}
+            variants={{
+              hidden: { opacity: 0 },
+              show: { opacity: 1, transition: { staggerChildren: 0.12 } },
+            }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
+            {objectives.map((w, i) => (
+              <motion.div
+                key={w.title}
+                variants={{
+                  hidden: { opacity: 0, y: 30 },
+                  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
+                }}
+                whileHover={{ y: -4 }}
+                className="group relative rounded-3xl p-8 border shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden"
+                style={{ background: "var(--flow-surface)", borderColor: "var(--flow-border)" }}
+              >
+                <div className="absolute -top-12 -right-12 w-40 h-40 rounded-full blur-2xl group-hover:bg-[#B8892A]/12 transition-colors duration-500" style={{ background: `${G}06` }} />
+                <div className="relative z-10">
+                  <span className="inline-grid place-items-center w-12 h-12 rounded-2xl mb-5" style={{ background: `${G}1a`, color: G }}>
+                    <w.icon size={22} />
+                  </span>
+                  <h3 className="text-lg font-bold text-flow-text mb-2 group-hover:text-[#D4A843] transition-colors duration-300">
+                    {w.title}
+                  </h3>
+                  <p className="text-sm text-flow-textSoft leading-relaxed">
+                    {w.body}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+      {/* ════════════════════════════════════════
+          FEATURED PROJECTS — image showcase grid
+      ════════════════════════════════════════ */}
+      {featured.length > 0 && (
+        <section className="relative overflow-hidden py-14 md:py-20 px-6 sm:px-10 lg:px-20 xl:px-28 bg-flow-surface">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
+            <div>
+              <Tag label="Selected Works" />
+              <h2 className="font-serif-re font-medium text-flow-text" style={{ fontSize: "clamp(2.1rem,3.8vw,3.5rem)" }}>
+                Projects That <span className="shimmer-gold italic">Define Us</span>
+              </h2>
+            </div>
+            <Link
+              href="/real-estate/projects"
+              className="group inline-flex items-center gap-2 text-sm font-semibold shrink-0"
+              style={{ color: G }}
+            >
+              View all projects
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+            {featured.map((p, i) => (
+              <motion.div
+                key={p._id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.6, ease: EASE, delay: (i % 3) * 0.1 }}
+                whileHover={{ y: -6 }}
+              >
+                <Link
+                  href={`/real-estate/projects/${p.slug}`}
+                  className="group relative block overflow-hidden rounded-3xl aspect-[4/5] shadow-xl"
+                  style={{ background: "#0a0a0a" }}
+                >
+                  {p.coverImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={p.coverImage}
+                      alt={p.name}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center" style={{ background: `linear-gradient(135deg,${G}22,${B}22)` }}>
+                      <Building2 className="w-12 h-12" style={{ color: `${G}88` }} />
+                    </div>
+                  )}
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.25) 45%, transparent 75%)" }} />
+                  <div className="relative h-full flex flex-col justify-end p-6 text-white">
+                    <span
+                      className="self-start mb-3 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.18em]"
+                      style={{ background: `${G}cc`, color: "#fff" }}
+                    >
+                      {p.status}
+                    </span>
+                    <h3 className="font-serif-re font-medium text-2xl leading-tight">{p.name}</h3>
+                    {(p.plotNo || p.roadNo || p.sector) && (
+                      <p className="text-sm text-white/65 mt-1 line-clamp-1">
+                        {[p.plotNo && `Plot-${p.plotNo}`, p.roadNo && `Rd-${p.roadNo}`, p.sector && `Sec-${p.sector}`].filter(Boolean).join(", ")}
+                      </p>
+                    )}
+                    <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold opacity-90 group-hover:gap-3 transition-all">
+                      Discover <ArrowRight className="w-4 h-4" />
+                    </span>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      )}
+
+
+      {/* ════════════════════════════════════════
+          THE PROCESS — campaign pipeline
+      ════════════════════════════════════════ */}
+      <section className="relative py-24 md:py-32 px-6 sm:px-10 lg:px-20 xl:px-28 bg-gradient-to-br from-zinc-950 to-[#040b18] text-white overflow-hidden">
+        <div aria-hidden className="absolute inset-0 opacity-55" style={{ backgroundImage: 'radial-gradient(rgba(184, 137, 42, 0.15) 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+        <div aria-hidden className="absolute -top-32 -left-20 w-[36rem] h-[36rem] rounded-full bg-[#B8892A]/10 blur-3xl pointer-events-none" />
+        <div aria-hidden className="absolute bottom-0 right-0 w-[32rem] h-[32rem] rounded-full bg-[#0066A2]/10 blur-3xl pointer-events-none" />
+
+        <div className="relative max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: EASE }}
+            className="max-w-2xl mb-16"
+          >
+            <span
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-[0.25em]"
+              style={{ color: G, background: `${G}1a`, boxShadow: `0 0 0 1px ${G}33` }}
+            >
+              The process
+            </span>
+            <h2 className="font-serif-re mt-5 text-4xl md:text-5xl leading-tight text-balance text-white">
+              From onboarding to sold out, in four considered steps.
+            </h2>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            variants={{
+              hidden: { opacity: 0 },
+              show: { opacity: 1, transition: { staggerChildren: 0.15 } },
+            }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
+            {processSteps.map((s) => (
+              <motion.div
+                key={s.step}
+                variants={{
+                  hidden: { opacity: 0, y: 24 },
+                  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
+                }}
+                className="group relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-7 hover:border-[#B8892A]/40 transition-colors duration-300"
+              >
+                <span className="font-serif-re text-5xl text-white/15 transition-colors duration-300 group-hover:text-[#B8892A]">
+                  {s.step}
+                </span>
+                <h3 className="mt-2 text-xl font-semibold text-white">{s.title}</h3>
+                <p className="mt-3 text-sm text-white/60 leading-relaxed">{s.body}</p>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
 
       {/* ════════════════════════════════════════
-          BUYERS CTA — find your next home
+          TESTIMONIALS — partner voices
       ════════════════════════════════════════ */}
-      <section className="relative py-16 sm:py-20 overflow-hidden bg-flow-surface">
-        <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, var(--flow-surface) 0%, ${G}08 50%, var(--flow-surface) 100%)` }} />
+      <section className="relative overflow-hidden py-14 md:py-20 px-6 sm:px-10 lg:px-20 xl:px-28 bg-flow-bg">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <div className="flex justify-center">
+            <Tag label="Partner Voices" />
+          </div>
+          <h2 className="font-serif-re font-medium text-flow-text" style={{ fontSize: "clamp(2.1rem,3.8vw,3.5rem)" }}>
+            Trusted by Dhaka's <span className="shimmer-gold italic">Best Developers</span>
+          </h2>
+        </div>
 
-        {/* decorative rings */}
-        <div className="absolute top-10 right-10 w-64 h-64 rounded-full pointer-events-none hidden lg:block" style={{ border: `1px solid ${G}20` }} />
-        <div className="absolute bottom-10 right-24 w-36 h-36 rounded-full pointer-events-none hidden lg:block" style={{ border: `1px solid ${G}15` }} />
-
-        <div className="relative z-10 max-w-3xl mx-auto px-6 sm:px-10 text-center">
-          <Tag label="For Home Buyers" />
-
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: EASE }}
-            className="font-black leading-tight mb-6"
-            style={{ fontSize: "clamp(2rem,4.5vw,4rem)", color: "rgb(var(--flow-text))" }}
-          >
-            Find Your Next Home<br />
-            <span className="shimmer-gold">in Dhaka</span>
-          </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: EASE, delay: 0.15 }}
-            className="text-flow-textSoft text-base sm:text-lg leading-relaxed mb-10 max-w-xl mx-auto"
-          >
-            Browse verified residential projects across Dhaka — from luxury apartments to affordable flats — and find the perfect home for you and your family.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: EASE, delay: 0.3 }}
-            className="flex flex-wrap items-center justify-center gap-4"
-          >
-            <Link
-              href="/real-estate/projects"
-              className="group inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-sm text-white"
-              style={{ background: `linear-gradient(135deg,${G},${GL})`, boxShadow: `0 8px 28px ${G}50` }}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 max-w-6xl mx-auto">
+          {testimonials.map((t, i) => (
+            <motion.figure
+              key={t.name}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: EASE, delay: i * 0.12 }}
+              whileHover={{ y: -6 }}
+              className="relative rounded-3xl p-8 overflow-hidden"
+              style={{ background: "var(--flow-surface)", border: `1px solid ${G}1f` }}
             >
-              View Available Flats
-              <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </Link>
-            <Link
-              href="/contact"
-              className="group inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-sm text-flow-text border transition-colors duration-300 hover:bg-flow-card"
-              style={{ borderColor: `${G}45` }}
-            >
-              Schedule a Site Visit
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" style={{ color: G }} />
-            </Link>
-          </motion.div>
+              <span aria-hidden className="font-serif-re absolute top-5 right-7 text-7xl leading-none select-none" style={{ color: `${G}1f` }}>&ldquo;</span>
+              <div className="flex items-center gap-1 mb-4">
+                {[0, 1, 2, 3, 4].map((s) => (
+                  <Star key={s} className="w-4 h-4" style={{ color: GL, fill: GL }} />
+                ))}
+              </div>
+              <blockquote className="relative text-flow-textSoft leading-relaxed text-[0.95rem] italic">
+                {t.quote}
+              </blockquote>
+              <figcaption className="mt-6 pt-6 flex items-center gap-3" style={{ borderTop: `1px solid ${G}1f` }}>
+                <div className="grid place-items-center w-11 h-11 rounded-full text-white font-bold shrink-0" style={{ background: `linear-gradient(135deg,${G},${GL})` }}>
+                  {t.name.charAt(0)}
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-flow-text">{t.name}</div>
+                  <div className="text-xs text-flow-textSoft">{t.role} · {t.project}</div>
+                </div>
+              </figcaption>
+            </motion.figure>
+          ))}
         </div>
       </section>
+
 
 
     </div>
