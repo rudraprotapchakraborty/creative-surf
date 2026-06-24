@@ -1,10 +1,11 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, Save, X, Plus, Trash2, MapPin, ExternalLink } from "lucide-react"
+import { ArrowLeft, Save, X, Plus, Trash2, MapPin, ExternalLink, UploadCloud, Loader2 } from "lucide-react"
+import ImageUpload, { uploadImageFile } from "@/components/ui/ImageUpload"
 
 interface ProjectForm {
   name: string
@@ -109,12 +110,27 @@ function FeatureListEditor({
 }
 
 function ImageListEditor({ label, items, onChange }: { label: string; items: string[]; onChange: (v: string[]) => void }) {
-  const [input, setInput] = useState("")
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState("")
 
-  function add() {
-    const val = input.trim()
-    if (val && !items.includes(val)) onChange([...items, val])
-    setInput("")
+  async function handleFiles(files: FileList | null) {
+    if (!files || files.length === 0) return
+    setError("")
+    setBusy(true)
+    try {
+      const next: string[] = []
+      for (const file of Array.from(files)) {
+        if (!file.type.startsWith("image/")) continue
+        next.push(await uploadImageFile(file))
+      }
+      if (next.length) onChange([...items, ...next])
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not upload one of the images.")
+    } finally {
+      setBusy(false)
+      if (inputRef.current) inputRef.current.value = ""
+    }
   }
 
   return (
@@ -122,30 +138,41 @@ function ImageListEditor({ label, items, onChange }: { label: string; items: str
       <label className="block text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>
         {label}
       </label>
-      <div className="space-y-2 mb-3">
+
+      <input ref={inputRef} type="file" accept="image/*" multiple className="hidden" onChange={e => handleFiles(e.target.files)} />
+
+      <div className="grid grid-cols-3 gap-2 mb-3">
         {items.map((url, i) => (
-          <div key={i} className="flex items-center gap-2">
-            <span className="flex-1 text-xs truncate text-flow-text opacity-70 font-mono">{url}</span>
-            <button onClick={() => onChange(items.filter((_, j) => j !== i))} className="shrink-0 opacity-40 hover:opacity-100 transition-opacity">
+          <div key={i} className="relative group rounded-lg overflow-hidden" style={{ aspectRatio: "1", border: "1px solid var(--flow-border)" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={url} alt={`image ${i + 1}`} className="w-full h-full object-cover" />
+            <button
+              onClick={() => onChange(items.filter((_, j) => j !== i))}
+              className="absolute top-1 right-1 p-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity"
+              style={{ background: "rgba(0,0,0,0.6)", color: "white" }}
+            >
               <Trash2 size={11} />
             </button>
           </div>
         ))}
-      </div>
-      <div className="flex gap-2">
-        <input
-          type="text"
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); add() } }}
-          placeholder="Paste image URL and press Enter…"
-          className="flex-1 bg-transparent outline-none text-xs text-flow-text placeholder:opacity-30 border-b pb-1"
-          style={{ borderColor: "var(--flow-border)" }}
-        />
-        <button onClick={add} className="shrink-0 p-1 rounded-lg" style={{ background: "rgb(var(--accent-1) / 0.1)", color: "rgb(var(--accent-1))" }}>
-          <Plus size={13} />
+
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          className="flex flex-col items-center justify-center gap-1 rounded-lg transition-colors"
+          style={{ aspectRatio: "1", border: "1px dashed var(--flow-border-strong)", color: "rgb(var(--flow-text-soft))" }}
+        >
+          {busy ? (
+            <Loader2 size={16} className="animate-spin" style={{ color: "rgb(var(--accent-1))" }} />
+          ) : (
+            <UploadCloud size={16} style={{ color: "rgb(var(--accent-1))" }} />
+          )}
+          <span className="text-[9px] font-semibold">{busy ? "Adding…" : "Add"}</span>
         </button>
       </div>
+
+      {error && <p className="text-[11px]" style={{ color: "rgb(239 68 68)" }}>{error}</p>}
+      <p className="text-[10px] opacity-40">Upload one or more images — they’re compressed automatically.</p>
     </div>
   )
 }
@@ -353,11 +380,8 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
 
             {/* Cover Image */}
             <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-              <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>Cover Image URL</label>
-              <input type="text" value={form.coverImage} onChange={e => set("coverImage", e.target.value)} placeholder="https://…" className={fieldClass} style={fieldStyle} />
-              {form.coverImage && (
-                <img src={form.coverImage} alt="cover preview" className="mt-3 w-full rounded-lg object-cover" style={{ maxHeight: 140 }} />
-              )}
+              <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>Cover Image</label>
+              <ImageUpload value={form.coverImage} onChange={v => set("coverImage", v)} />
             </div>
 
             <ImageListEditor label="Additional Images" items={form.images} onChange={v => set("images", v)} />

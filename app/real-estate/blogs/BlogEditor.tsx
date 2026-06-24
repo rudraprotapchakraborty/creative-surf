@@ -7,6 +7,7 @@ import Link from "next/link"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { ArrowLeft, Eye, EyeOff, Save, X, Plus } from "lucide-react"
+import ImageUpload from "@/components/ui/ImageUpload"
 
 interface BlogForm {
   title: string
@@ -311,13 +312,12 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
 
               {/* Cover Image */}
               <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-                <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>Cover Image URL</label>
-                <input type="text" value={form.coverImage} onChange={e => set("coverImage", e.target.value)} placeholder="https://…" className="w-full bg-transparent outline-none text-sm text-flow-text placeholder:opacity-30 border-b pb-1" style={{ borderColor: "var(--flow-border)" }} />
-                <div className="mt-3 w-full rounded-lg overflow-hidden" style={{ height: 140 }}>
-                  {form.coverImage ? (
-                    <img src={form.coverImage} alt="cover preview" className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full relative overflow-hidden" style={{ border: "1px dashed rgba(184,137,42,0.3)" }}>
+                <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>Cover Image</label>
+                <ImageUpload
+                  value={form.coverImage}
+                  onChange={v => set("coverImage", v)}
+                  placeholder={
+                    <div className="w-full h-full relative overflow-hidden">
                       <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #0a0e1a 0%, #0d1f35 55%, #12100a 100%)" }} />
                       <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px)", backgroundSize: "12px 12px" }} />
                       <div className="absolute" style={{ width: 90, height: 90, borderRadius: "50%", background: "rgba(184,137,42,0.35)", filter: "blur(22px)", top: -18, right: -8 }} />
@@ -327,23 +327,9 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                       <div className="absolute" style={{ fontSize: "3rem", lineHeight: 1, right: "6%", top: "50%", transform: "translateY(-52%) rotate(8deg)", filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.5))", userSelect: "none" }}>
                         {RE_CATEGORY_EMOJI[form.category] ?? "🏠"}
                       </div>
-                      <div className="absolute inset-0 flex flex-col justify-between p-2.5 z-10">
-                        <span style={{ fontSize: "7px", fontWeight: 800, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(184,137,42,0.9)" }}>{form.category}</span>
-                        <div style={{ maxWidth: "62%" }}>
-                          <span style={{ fontSize: "0.72rem", fontWeight: 900, color: "white", fontFamily: "var(--font-re)", lineHeight: 1.3, textShadow: "0 2px 10px rgba(0,0,0,0.7)", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                            {form.title || "Post title will appear here"}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <div style={{ width: 13, height: 13, borderRadius: 3, background: "linear-gradient(135deg, #B8892A, #0066A2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                            <span style={{ fontSize: 6, fontWeight: 900, color: "white" }}>CS</span>
-                          </div>
-                          <span style={{ fontSize: "9px", fontWeight: 600, color: "rgba(255,255,255,0.5)" }}>Creative Surf</span>
-                        </div>
-                      </div>
                     </div>
-                  )}
-                </div>
+                  }
+                />
               </div>
 
               {/* Tags */}

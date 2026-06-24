@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Plus, Pencil, Trash2, MapPin, Building2, Home, LogOut } from "lucide-react"
+import { Plus, Pencil, Trash2, MapPin, Building2, LogOut } from "lucide-react"
 
 interface Project {
   _id: string
@@ -82,7 +82,9 @@ export default function ProjectsPage() {
   }
 
   const statuses = ["All", ...Array.from(new Set(projects.map(p => p.status)))]
-  const filtered = activeStatus === "All" ? projects : projects.filter(p => p.status === activeStatus)
+  const filtered = (activeStatus === "All" ? projects : projects.filter(p => p.status === activeStatus))
+    .slice()
+    .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }))
 
   return (
     <main className="min-h-screen bg-flow-bg relative">
@@ -271,26 +273,17 @@ export default function ProjectsPage() {
                       <p className="text-[11px] font-semibold uppercase tracking-wider mb-3 opacity-60">{project.subtitle}</p>
                     )}
 
-                    {/* Specs */}
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 mb-4 text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                      {project.plotSize && <span className="flex items-center gap-1.5"><Home size={10} /> {project.plotSize}</span>}
-                      {project.flatSize && <span className="flex items-center gap-1.5"><Building2 size={10} /> {project.flatSize}</span>}
-                      {project.numberOfUnits && <span className="flex items-center gap-1.5 col-span-2">Units: {project.numberOfUnits}</span>}
-                      {(project.sector || project.roadNo) && (
-                        <span className="flex items-center gap-1.5 col-span-2">
+                    {/* Address */}
+                    {(project.plotNo || project.roadNo || project.sector) && (
+                      <div className="mb-4 text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                        <span className="flex items-center gap-1.5">
                           <MapPin size={10} />
-                          {[project.sector && `Sec-${project.sector}`, project.roadNo && `Rd-${project.roadNo}`].filter(Boolean).join(", ")}
+                          {[project.plotNo && `Plot-${project.plotNo}`, project.roadNo && `Rd-${project.roadNo}`, project.sector && `Sec-${project.sector}`].filter(Boolean).join(", ")}
                         </span>
-                      )}
-                    </div>
-
-                    {project.description && (
-                      <p className="text-xs leading-relaxed mb-4 line-clamp-2 flex-1" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                        {project.description}
-                      </p>
+                      </div>
                     )}
 
-                    <div className="pt-3 flex justify-end" style={{ borderTop: "1px solid var(--flow-border)" }}>
+                    <div className="mt-auto pt-3 flex justify-end" style={{ borderTop: "1px solid var(--flow-border)" }}>
                       <Link
                         href={`/real-estate/projects/${project.slug}`}
                         className="text-[11px] font-semibold"
