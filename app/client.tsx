@@ -7,6 +7,7 @@ import { Plus_Jakarta_Sans } from "next/font/google"
 import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import GoogleAnalytics from "@/components/google-analytics"
+import PageLoader from "@/components/PageLoader"
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -34,6 +35,11 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <Suspense fallback={null}>
             <GoogleAnalytics />
+          </Suspense>
+
+          {/* PAGE LOAD WAVE LOADER */}
+          <Suspense fallback={null}>
+            <PageLoader />
           </Suspense>
 
           {/* NAV */}

@@ -7,7 +7,20 @@
       "Bash(rm public/chatgpt.png)",
       "Bash(rm -rf .next)",
       "Bash(npm install *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(command -v python)",
+      "Bash(command -v python3)",
+      "Bash(command -v rsvg-convert)",
+      "Bash(command -v magick)",
+      "Bash(command -v inkscape)",
+      "Bash(cp /tmp/waves.js \"D:/programming/creative-surf-frontend/__waves_tmp.js\")",
+      "Bash(node \"D:/programming/creative-surf-frontend/__waves_tmp.js\")",
+      "Bash(sed -i \"s#/tmp/waves.png#./__waves.png#\" __waves_tmp.js)",
+      "Bash(node __waves_tmp.js)",
+      "Bash(mkdir -p __wv)",
+      "Bash(curl -fsSL \"https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F30A.svg\" -o __wv/openmoji.svg)",
+      "Bash(curl -fsSL \"https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/svg/1f30a.svg\" -o __wv/twemoji.svg)",
+      "Bash(curl -fsSL \"https://raw.githubusercontent.com/googlefonts/noto-emoji/main/svg/emoji_u1f30a.svg\" -o __wv/noto.svg)"
     ]
   }
 }
