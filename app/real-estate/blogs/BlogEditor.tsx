@@ -256,7 +256,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                   value={form.title}
                   onChange={e => handleTitleChange(e.target.value)}
                   placeholder="Post title…"
-                  className="w-full font-bold outline-none bg-transparent text-flow-text placeholder:text-flow-text/20 border-b pb-3 transition-colors"
+                  className="w-full font-bold outline-none bg-transparent text-flow-text placeholder:text-flow-text/45 border-b pb-3 transition-colors"
                   style={{
                     fontSize: "clamp(1.6rem, 3vw, 2.2rem)",
                     fontFamily: "var(--font-re)",
@@ -276,7 +276,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                   onChange={e => set("excerpt", e.target.value)}
                   placeholder="A short summary of the post shown in blog listings…"
                   rows={3}
-                  className="w-full bg-transparent outline-none resize-none text-sm leading-relaxed text-flow-text placeholder:opacity-30"
+                  className="w-full bg-transparent outline-none resize-none text-sm leading-relaxed text-flow-text placeholder:opacity-50"
                 />
               </div>
 
@@ -290,7 +290,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                   onChange={e => { set("content", e.target.value); set("readTime", calcReadTime(e.target.value)) }}
                   placeholder={`# Heading\n\nWrite your blog content here. Markdown is supported.\n\n## Section\n\nParagraph text goes here…`}
                   rows={24}
-                  className="w-full bg-transparent outline-none resize-y text-sm leading-relaxed font-mono text-flow-text placeholder:opacity-20"
+                  className="w-full bg-transparent outline-none resize-y text-sm leading-relaxed font-mono text-flow-text placeholder:opacity-50"
                   style={{ minHeight: 280 }}
                 />
               </div>
@@ -349,7 +349,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                   onChange={e => setTagInput(e.target.value)}
                   onKeyDown={addTag}
                   placeholder="Type tag + Enter"
-                  className="w-full bg-transparent outline-none text-xs text-flow-text placeholder:opacity-30"
+                  className="w-full bg-transparent outline-none text-xs text-flow-text placeholder:opacity-50"
                 />
               </div>
 
