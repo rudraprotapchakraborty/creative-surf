@@ -67,13 +67,13 @@ export function Navbar() {
             <div className="relative">
               <div className="absolute inset-0 bg-aurora-grad rounded-full blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-500" />
               <img
-                src="/logo.png"
+                src={isRE ? "/logo2.png" : "/logo.png"}
                 alt="logo"
                 className="relative w-7 h-7 md:w-8 md:h-8 transition-transform duration-500 group-hover:scale-110"
               />
             </div>
             <span className="font-heading font-extrabold text-lg md:text-xl tracking-tight text-flow-text">
-              Creative <span className="text-aurora">Surf</span>
+              Creative <span className={isRE ? "text-[#B8892A]" : "text-aurora"}>Surf</span>
             </span>
           </Link>
 

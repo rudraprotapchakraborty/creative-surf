@@ -154,7 +154,7 @@ export default function RealEstateFooter() {
         <div className="mt-10 pt-5 border-t border-white/15 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
             <div className="flex items-center gap-2.5">
-              <Image src="/logo.png" alt="Creative Surf" width={22} height={22} className="opacity-90" />
+              <Image src="/logo2.png" alt="Creative Surf" width={22} height={22} className="opacity-90" />
               <p className="text-xs text-white/50 font-medium">
                 © {new Date().getFullYear()} Creative Surf. All rights reserved.
               </p>

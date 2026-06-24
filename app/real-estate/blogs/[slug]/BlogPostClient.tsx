@@ -101,27 +101,9 @@ export default function BlogPostClient({ slug }: { slug: string }) {
             <span className="flex items-center gap-1.5"><Clock size={12} />{blog.readTime}</span>
             <span className="flex items-center gap-1.5"><Calendar size={12} />{formatDate(blog.createdAt)}</span>
           </div>
-        </motion.div>
-      </div>
-
-      {/* Action bar */}
-      <div
-        className="relative z-20 border-b"
-        style={{ background: "var(--flow-card-strong)", borderColor: "var(--flow-border)", backdropFilter: "blur(16px)" }}
-      >
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
-          <Link
-            href="/real-estate/blogs"
-            className="inline-flex items-center gap-1.5 text-sm font-medium transition-opacity hover:opacity-70"
-            style={{ color: "rgb(var(--flow-text))" }}
-          >
-            <ArrowLeft size={14} />
-            <span className="hidden sm:inline">Back to Blogs</span>
-            <span className="sm:hidden">Back</span>
-          </Link>
 
           {isAdmin && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mt-4">
               <Link
                 href={`/real-estate/blogs/edit/${blog._id}`}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
@@ -138,7 +120,7 @@ export default function BlogPostClient({ slug }: { slug: string }) {
               </button>
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
 
       {/* Cover image */}
