@@ -36,6 +36,7 @@ export default function PageLoader() {
   // Real-estate section runs on a dark theme + gold accent; everywhere else is the light wave.
   const realEstate = pathname.startsWith('/real-estate');
 
+  // Icon + brand colour are route-based; backdrop/outline/title follow dark mode (below).
   const theme = realEstate
     ? {
         body: BUILDING_BODY,
@@ -43,12 +44,11 @@ export default function PageLoader() {
         bodyStroke: 1.3,
         detailStroke: 1,
         grad: ['#F5D78E', '#D4A843', '#B8892A'],
-        backdrop: '#03121d',
-        glow: 'radial-gradient(circle at 30% 30%, rgba(212,168,67,0.20), transparent 50%), radial-gradient(circle at 70% 70%, rgba(184,137,42,0.16), transparent 60%)',
-        outline: '#e8eef5',
-        title: '#f4f7fb',
-        accent: '#E8C57A',
-        track: 'rgba(212,168,67,0.18)',
+        glow: 'radial-gradient(circle at 30% 30%, rgba(212,168,67,0.20), transparent 50%), radial-gradient(circle at 70% 70%, rgba(184,137,42,0.14), transparent 60%)',
+        bar: '#D4A843',
+        subtitle: 'Real Estate',
+        subtitleClass: 'text-[#B8892A] dark:text-[#E8C57A]',
+        track: 'rgba(184,137,42,0.18)',
       }
     : {
         body: WAVE_BODY,
@@ -56,11 +56,10 @@ export default function PageLoader() {
         bodyStroke: 1.5,
         detailStroke: 1.3,
         grad: ['#7DD3FC', '#0EA5E9', '#0066A2'],
-        backdrop: '#f3f9fd',
         glow: 'radial-gradient(circle at 30% 30%, rgba(14,165,233,0.18), transparent 50%), radial-gradient(circle at 70% 70%, rgba(0,102,162,0.16), transparent 60%)',
-        outline: '#0b2540',
-        title: '#18181b',
-        accent: '#0EA5E9',
+        bar: '#0EA5E9',
+        subtitle: 'Digital Marketing',
+        subtitleClass: 'text-[#0066A2] dark:text-[#38BDF8]',
         track: 'rgba(2,132,199,0.15)',
       };
 
@@ -73,8 +72,8 @@ export default function PageLoader() {
           transition={{ duration: 0.5, ease: 'easeInOut' }}
           className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none overflow-hidden"
         >
-          {/* Backdrop */}
-          <div className="absolute inset-0" style={{ background: theme.backdrop }} />
+          {/* Backdrop — follows dark mode for both routes */}
+          <div className="absolute inset-0 bg-[#f3f9fd] dark:bg-[#03121d]" />
           <div aria-hidden className="absolute inset-0" style={{ background: theme.glow }} />
 
           <div className="relative flex flex-col items-center gap-6">
@@ -111,9 +110,7 @@ export default function PageLoader() {
               {/* Outline + interior detail on top */}
               <svg
                 viewBox="0 0 36 36"
-                className="absolute inset-0 w-full h-full"
-                fill="none"
-                stroke={theme.outline}
+                className="absolute inset-0 w-full h-full fill-none stroke-[#0b2540] dark:stroke-[#e8eef5]"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
@@ -125,17 +122,13 @@ export default function PageLoader() {
             </div>
 
             <div className="flex flex-col items-center gap-1">
-              <span
-                className="text-2xl font-bold tracking-tight"
-                style={{ color: theme.title }}
-              >
+              <span className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
                 Creative Surf
               </span>
               <span
-                className="text-[10px] uppercase tracking-[0.4em] font-bold"
-                style={{ color: theme.accent }}
+                className={`text-[10px] uppercase tracking-[0.4em] font-bold ${theme.subtitleClass}`}
               >
-                {realEstate ? 'Real Estate' : 'Digital Marketing'}
+                {theme.subtitle}
               </span>
             </div>
 
@@ -149,7 +142,7 @@ export default function PageLoader() {
                 transition={{ repeat: Infinity, duration: 1.2, ease: 'easeInOut' }}
                 className="absolute inset-y-0 left-0 w-1/2 rounded-full"
                 style={{
-                  background: `linear-gradient(to right, transparent, ${theme.accent}, transparent)`,
+                  background: `linear-gradient(to right, transparent, ${theme.bar}, transparent)`,
                 }}
               />
             </div>
