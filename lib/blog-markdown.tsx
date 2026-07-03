@@ -77,25 +77,19 @@ export const blogMarkdownComponents: Components = {
   hr: () => (
     <hr className="my-8" style={{ borderColor: "var(--flow-border-strong)" }} />
   ),
-  img: ({ src, alt }) => {
+  img: ({ src }) => {
     if (!src) return null
-    const caption = alt?.trim()
     return (
       <figure className="my-6 sm:my-8">
         <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid var(--flow-border)" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={src}
-            alt={caption || "Blog image"}
+            alt=""
             className="w-full h-auto block"
             loading="lazy"
           />
         </div>
-        {caption && (
-          <figcaption className="text-center text-xs sm:text-sm mt-2.5" style={{ color: "rgb(var(--flow-text-soft))" }}>
-            {caption}
-          </figcaption>
-        )}
       </figure>
     )
   },

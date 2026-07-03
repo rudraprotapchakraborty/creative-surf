@@ -27,15 +27,8 @@ import { uploadImageFile } from "@/components/ui/ImageUpload"
 const ACCEPT = "image/png,image/jpeg,image/webp,image/gif,image/svg+xml,image/avif"
 const MAX_INPUT_MB = 20
 
-function altFromFilename(name: string) {
-  return name
-    .replace(/\.[^.]+$/, "")
-    .replace(/[-_]+/g, " ")
-    .trim()
-}
-
-function BlogImageView({ node, updateAttributes, selected }: NodeViewProps) {
-  const { src, alt } = node.attrs
+function BlogImageView({ node, selected }: NodeViewProps) {
+  const { src } = node.attrs
 
   return (
     <NodeViewWrapper className="blog-editor-image-block my-6 sm:my-8">
@@ -44,16 +37,8 @@ function BlogImageView({ node, updateAttributes, selected }: NodeViewProps) {
         style={{ border: "1px solid var(--flow-border)" }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={src} alt={alt || "Blog image"} className="w-full h-auto block" draggable={false} />
+        <img src={src} alt="" className="w-full h-auto block" draggable={false} />
       </div>
-      <input
-        type="text"
-        value={alt || ""}
-        onChange={e => updateAttributes({ alt: e.target.value })}
-        placeholder="Add a caption…"
-        className="w-full mt-2.5 text-center text-xs sm:text-sm bg-transparent outline-none border-b pb-1"
-        style={{ color: "rgb(var(--flow-text-soft))", borderColor: "var(--flow-border)" }}
-      />
     </NodeViewWrapper>
   )
 }
@@ -220,8 +205,7 @@ export default function BlogRichTextEditor({
             continue
           }
           const url = await uploadImageFile(file, { maxDim: 1920 })
-          const alt = altFromFilename(file.name) || "Photo"
-          editor.chain().focus().setImage({ src: url, alt }).run()
+          editor.chain().focus().setImage({ src: url }).run()
         }
       } catch (e) {
         setImageError(e instanceof Error ? e.message : "Upload failed. Try another file.")

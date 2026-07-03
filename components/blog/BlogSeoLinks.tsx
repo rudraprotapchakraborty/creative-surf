@@ -14,41 +14,70 @@ function validLinks(links?: BlogSeoLink[]) {
   return (links ?? []).filter(link => link.label.trim() && link.url.trim())
 }
 
-function isInternalUrl(url: string) {
-  return url.startsWith("/") || url.startsWith("#")
+function sameSitePath(url: string): string | null {
+  const trimmed = url.trim()
+  if (trimmed.startsWith("/") || trimmed.startsWith("#")) return trimmed
+  try {
+    const parsed = new URL(trimmed)
+    const host = parsed.hostname.replace(/^www\./, "")
+    if (host === "creativesurf.com" || host === "localhost") {
+      return `${parsed.pathname}${parsed.search}${parsed.hash}`
+    }
+  } catch {
+    return null
+  }
+  return null
 }
 
-function LinkRow({
+function LinkLabel({ label, url }: { label: string; url: string }) {
+  return (
+    <span className="break-words">
+      {label}{" "}
+      <span style={{ color: "rgb(var(--flow-text-soft))", fontWeight: 400 }}>
+        ({url})
+      </span>
+    </span>
+  )
+}
+
+function SeoLinkRow({
   link,
-  external,
   accentColor,
+  external,
 }: {
   link: BlogSeoLink
-  external: boolean
   accentColor: string
+  external: boolean
 }) {
+  const href = link.url.trim()
+  const clientPath = !external ? sameSitePath(href) : null
   const className =
-    "inline-flex items-center gap-2 text-sm font-medium transition-opacity hover:opacity-75 underline-offset-2 hover:underline"
+    "inline-flex items-start gap-2 text-sm font-medium leading-relaxed transition-opacity hover:opacity-75 underline-offset-2 hover:underline"
 
-  if (!external && isInternalUrl(link.url)) {
+  const content = (
+    <>
+      {external ? <ArrowUpRight size={14} className="shrink-0 mt-0.5" /> : <ArrowDownLeft size={14} className="shrink-0 mt-0.5" />}
+      <LinkLabel label={link.label} url={href} />
+    </>
+  )
+
+  if (!external && clientPath) {
     return (
-      <Link href={link.url} className={className} style={{ color: accentColor }}>
-        <ArrowDownLeft size={14} />
-        {link.label}
+      <Link href={clientPath} className={className} style={{ color: accentColor }}>
+        {content}
       </Link>
     )
   }
 
   return (
     <a
-      href={link.url}
+      href={href}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
       className={className}
       style={{ color: accentColor }}
     >
-      {external ? <ArrowUpRight size={14} /> : <ArrowDownLeft size={14} />}
-      {link.label}
+      {content}
     </a>
   )
 }
@@ -72,10 +101,10 @@ export default function BlogSeoLinks({
           <h2 className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>
             {inboundTitle}
           </h2>
-          <ul className="space-y-2">
+          <ul className="space-y-2.5">
             {inbound.map((link, i) => (
               <li key={`in-${i}`}>
-                <LinkRow link={link} external={false} accentColor={accentColor} />
+                <SeoLinkRow link={link} accentColor={accentColor} external={false} />
               </li>
             ))}
           </ul>
@@ -87,10 +116,10 @@ export default function BlogSeoLinks({
           <h2 className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>
             {outboundTitle}
           </h2>
-          <ul className="space-y-2">
+          <ul className="space-y-2.5">
             {outbound.map((link, i) => (
               <li key={`out-${i}`}>
-                <LinkRow link={link} external accentColor={accentColor} />
+                <SeoLinkRow link={link} accentColor={accentColor} external />
               </li>
             ))}
           </ul>

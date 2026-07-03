@@ -401,7 +401,8 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                   setShowSeoValidation(false)
                   setForm(prev => ({ ...prev, ...seo }))
                 }}
-                inboundHint="Internal links to other pages on creativesurf.com/real-estate. Label and URL are both required."
+                inboundUrlPlaceholder="https://www.creativesurf.com/real-estate/projects"
+                inboundHint="Internal links to your site. Use the full URL (https://…). Label and URL are both required."
                 outboundHint="External links to trusted property, finance, or market sources. Label and URL are both required."
               />
 
@@ -411,7 +412,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                 <ul className="space-y-2 text-xs leading-relaxed" style={{ color: "rgb(var(--flow-text-soft))" }}>
                   <li>Use the style dropdown for headings — they appear at full size as you type.</li>
                   <li>Select text, then click <strong>B</strong>, <em>I</em>, or underline to format it.</li>
-                  <li>Click the image icon to upload photos — they show inline with an editable caption.</li>
+                  <li>Click the image icon to upload photos — they appear inline in your post.</li>
                   <li>Use Preview in the header to see the final published layout.</li>
                 </ul>
               </div>

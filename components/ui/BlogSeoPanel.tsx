@@ -8,6 +8,7 @@ interface BlogSeoPanelProps {
   value: BlogSeoFields
   onChange: (patch: Partial<BlogSeoFields>) => void
   showValidation?: boolean
+  inboundUrlPlaceholder?: string
   inboundHint?: string
   outboundHint?: string
 }
@@ -25,6 +26,7 @@ function LinkListEditor({
   onChange,
   labelPlaceholder,
   urlPlaceholder,
+  urlInputType = "url",
   errors,
   showValidation,
 }: {
@@ -36,6 +38,7 @@ function LinkListEditor({
   onChange: (links: BlogSeoLink[]) => void
   labelPlaceholder: string
   urlPlaceholder: string
+  urlInputType?: "text" | "url"
   errors: BlogLinkFieldError[]
   showValidation: boolean
 }) {
@@ -116,13 +119,13 @@ function LinkListEditor({
                   URL <span style={{ color: "rgb(239 68 68)" }}>*</span>
                 </label>
                 <input
-                  type="url"
+                  type={urlInputType}
                   value={link.url}
                   onChange={e => updateLink(index, "url", e.target.value)}
                   placeholder={urlPlaceholder}
                   required
                   aria-invalid={showValidation && Boolean(urlErr)}
-                  className="w-full bg-transparent outline-none text-xs text-flow-text placeholder:opacity-40 border-b pb-1 font-mono"
+                  className="w-full bg-transparent outline-none text-xs text-flow-text placeholder:opacity-40 border-b pb-1 font-mono break-all"
                   style={{ borderColor: showValidation && urlErr ? "rgb(239 68 68)" : "var(--flow-border)" }}
                 />
                 {showValidation && urlErr && (
@@ -150,7 +153,8 @@ export default function BlogSeoPanel({
   value,
   onChange,
   showValidation = false,
-  inboundHint = "Internal links to other pages on your site. Label and URL are both required.",
+  inboundUrlPlaceholder = "https://www.creativesurf.com/seo-lead-generation",
+  inboundHint = "Internal links to your site. Use the full URL (https://…). Label and URL are both required.",
   outboundHint = "External links to trusted sources. Label and URL are both required.",
 }: BlogSeoPanelProps) {
   const linkErrors = getBlogLinkFieldErrors(value.inboundLinks, value.outboundLinks)
@@ -213,7 +217,8 @@ export default function BlogSeoPanel({
         links={value.inboundLinks}
         onChange={inboundLinks => onChange({ inboundLinks })}
         labelPlaceholder="e.g. SEO Services"
-        urlPlaceholder="/seo-lead-generation"
+        urlPlaceholder={inboundUrlPlaceholder}
+        urlInputType="text"
         errors={linkErrors}
         showValidation={showValidation}
       />
