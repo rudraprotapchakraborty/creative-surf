@@ -8,6 +8,15 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { ArrowLeft, Eye, EyeOff, Save, X, Plus } from "lucide-react"
 import ImageUpload from "@/components/ui/ImageUpload"
+import BlogRichTextEditor from "@/components/ui/BlogRichTextEditor"
+import BlogSeoPanel from "@/components/ui/BlogSeoPanel"
+import {
+  DEFAULT_BLOG_SEO,
+  getBlogLinkValidationMessage,
+  pickBlogSeoFields,
+  sanitizeBlogSeoLinks,
+  type BlogSeoFields,
+} from "@/lib/blog-types"
 
 interface BlogForm {
   title: string
@@ -19,6 +28,9 @@ interface BlogForm {
   author: string
   readTime: string
   coverImage: string
+  metaDescription: string
+  inboundLinks: BlogSeoFields["inboundLinks"]
+  outboundLinks: BlogSeoFields["outboundLinks"]
 }
 
 const CATEGORIES = ["Market Insights", "Guides", "Investment", "Developments", "Lifestyle", "General"]
@@ -40,6 +52,7 @@ const DEFAULT_FORM: BlogForm = {
   author: "Creative Surf",
   readTime: "5 min read",
   coverImage: "",
+  ...DEFAULT_BLOG_SEO,
 }
 
 function calcReadTime(content: string): string {
@@ -65,6 +78,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(isEdit)
+  const [showSeoValidation, setShowSeoValidation] = useState(false)
   const router = useRouter()
 
   // Auth guard
@@ -81,6 +95,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
     fetch(`/api/real-estate-blogs/${blogId}`)
       .then(r => r.json())
       .then(data => {
+        const seo = pickBlogSeoFields(data)
         setForm({
           title: data.title ?? "",
           slug: data.slug ?? "",
@@ -91,6 +106,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
           author: data.author ?? "Creative Surf",
           readTime: data.readTime ?? "5 min read",
           coverImage: data.coverImage ?? "",
+          ...seo,
         })
         setLoading(false)
       })
@@ -128,7 +144,18 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
     if (!form.slug.trim()) { setError("Slug is required."); return }
     if (!form.content.trim()) { setError("Content is required."); return }
 
-    const payload = { ...form, published: true }
+    if (getBlogLinkValidationMessage(form.inboundLinks, form.outboundLinks)) {
+      setShowSeoValidation(true)
+      return
+    }
+    setShowSeoValidation(false)
+
+    const payload = {
+      ...form,
+      published: true,
+      inboundLinks: sanitizeBlogSeoLinks(form.inboundLinks),
+      outboundLinks: sanitizeBlogSeoLinks(form.outboundLinks),
+    }
 
     setSaving(true)
     try {
@@ -214,7 +241,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
         </motion.div>
       )}
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 pb-32">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
         {preview ? (
           /* ─── Preview Mode ─── */
           <div className="max-w-4xl mx-auto">
@@ -282,16 +309,14 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
 
               {/* Content */}
               <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-                <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                  Content <span className="normal-case font-normal opacity-60">(Markdown supported)</span>
+                <label className="block text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                  Content
                 </label>
-                <textarea
+                <BlogRichTextEditor
                   value={form.content}
-                  onChange={e => { set("content", e.target.value); set("readTime", calcReadTime(e.target.value)) }}
-                  placeholder={`# Heading\n\nWrite your blog content here. Markdown is supported.\n\n## Section\n\nParagraph text goes here…`}
-                  rows={24}
-                  className="w-full bg-transparent outline-none resize-y text-sm leading-relaxed font-mono text-flow-text placeholder:opacity-50"
-                  style={{ minHeight: 280 }}
+                  onChange={md => { set("content", md); set("readTime", calcReadTime(md)) }}
+                  placeholder="Start writing — use the toolbar for headings, bold, italic, lists, and images…"
+                  minHeight={420}
                 />
               </div>
             </div>
@@ -365,32 +390,40 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                 />
               </div>
 
-              {/* Markdown cheatsheet */}
+              <BlogSeoPanel
+                value={{
+                  metaDescription: form.metaDescription,
+                  inboundLinks: form.inboundLinks,
+                  outboundLinks: form.outboundLinks,
+                }}
+                showValidation={showSeoValidation}
+                onChange={seo => {
+                  setShowSeoValidation(false)
+                  setForm(prev => ({ ...prev, ...seo }))
+                }}
+                inboundHint="Internal links to other pages on creativesurf.com/real-estate. Label and URL are both required."
+                outboundHint="External links to trusted property, finance, or market sources. Label and URL are both required."
+              />
+
+              {/* Formatting tips */}
               <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>Markdown Guide</p>
-                <div className="space-y-1.5 text-xs font-mono" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                  {[
-                    ["# H1", "## H2", "### H3"],
-                    ["**bold**", "*italic*"],
-                    ["- list item"],
-                    ["> blockquote"],
-                    ["`inline code`"],
-                  ].map((row, i) => (
-                    <div key={i} className="flex flex-wrap gap-2">
-                      {row.map(r => <code key={r} className="px-1 rounded" style={{ background: "rgb(var(--flow-text) / 0.06)" }}>{r}</code>)}
-                    </div>
-                  ))}
-                </div>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>Editor Tips</p>
+                <ul className="space-y-2 text-xs leading-relaxed" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                  <li>Use the style dropdown for headings — they appear at full size as you type.</li>
+                  <li>Select text, then click <strong>B</strong>, <em>I</em>, or underline to format it.</li>
+                  <li>Click the image icon to upload photos — they show inline with an editable caption.</li>
+                  <li>Use Preview in the header to see the final published layout.</li>
+                </ul>
               </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* ─── Sticky bottom action bar ─── */}
+      {/* ─── Bottom action bar ─── */}
       <div
-        className="sticky bottom-0 z-30 border-t"
-        style={{ background: "var(--flow-card-strong)", borderColor: "var(--flow-border)", backdropFilter: "blur(16px)" }}
+        className="border-t"
+        style={{ background: "var(--flow-card-strong)", borderColor: "var(--flow-border)" }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-4">
           {error && (

@@ -6,22 +6,9 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
+import BlogSeoLinks from "@/components/blog/BlogSeoLinks"
+import type { BlogRecord } from "@/lib/blog-db"
 import { ArrowLeft, Clock, Calendar, User, Tag, Pencil, Trash2 } from "lucide-react"
-
-interface Blog {
-  _id: string
-  title: string
-  slug: string
-  excerpt: string
-  content: string
-  coverImage: string
-  category: string
-  tags: string[]
-  author: string
-  readTime: string
-  published: boolean
-  createdAt: string
-}
 
 const CATEGORY_COLOR = "#B8892A"
 
@@ -36,27 +23,35 @@ function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
 }
 
-export default function BlogPostClient({ slug }: { slug: string }) {
-  const [blog, setBlog] = useState<Blog | null>(null)
-  const [loading, setLoading] = useState(true)
+export default function BlogPostClient({
+  slug,
+  initialBlog,
+}: {
+  slug: string
+  initialBlog?: BlogRecord
+}) {
+  const [blog, setBlog] = useState<BlogRecord | null>(initialBlog ?? null)
+  const [loading, setLoading] = useState(!initialBlog)
   const [notFound, setNotFound] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
-    fetch(`/api/real-estate-blogs/${slug}`)
-      .then(r => {
-        if (!r.ok) { setNotFound(true); setLoading(false); return null }
-        return r.json()
-      })
-      .then(data => { if (data) setBlog(data); setLoading(false) })
-      .catch(() => { setNotFound(true); setLoading(false) })
+    if (!initialBlog) {
+      fetch(`/api/real-estate-blogs/${slug}`)
+        .then(r => {
+          if (!r.ok) { setNotFound(true); setLoading(false); return null }
+          return r.json()
+        })
+        .then(data => { if (data) setBlog(data); setLoading(false) })
+        .catch(() => { setNotFound(true); setLoading(false) })
+    }
 
     fetch("/api/auth/me")
       .then(r => r.json())
       .then(d => { if (d.authenticated) setIsAdmin(true) })
       .catch(() => {})
-  }, [slug])
+  }, [slug, initialBlog])
 
   async function handleDelete() {
     if (!blog) return
@@ -264,6 +259,14 @@ export default function BlogPostClient({ slug }: { slug: string }) {
             {blog.content}
           </ReactMarkdown>
         </motion.div>
+
+        <BlogSeoLinks
+          inboundLinks={blog.inboundLinks}
+          outboundLinks={blog.outboundLinks}
+          accentColor="#B8892A"
+          inboundTitle="Related on Creative Surf Real Estate"
+          outboundTitle="External Resources"
+        />
 
         {/* Tags */}
         {blog.tags && blog.tags.length > 0 && (

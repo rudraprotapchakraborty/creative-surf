@@ -1,0 +1,42 @@
+---
+pid: 15424
+cwd: "D:\programming\creative-surf-frontend"
+command: "cd \"D:\\programming\\creative-surf-frontend\"; npm.cmd run build 2>&1 | Select-Object -Last 50"
+started_at: 2026-07-03T20:55:19.046Z
+running_for_ms: 1619992  
+---
+
+> my-v0-project@0.1.0 build
+> next build
+
+   ▲ Next.js 15.5.8
+   - Environments: .env.local
+   - Experiments (use with caution):
+     ✓ webpackBuildWorker
+     ✓ parallelServerCompiles
+     ✓ parallelServerBuildTraces
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 15.8snpm.cmd : 
+
+   Skipping validation of types
+   Skipping linting
+   Collecting page data ...
+At line:1 char:45
++ ... :\programming\creative-surf-frontend"; npm.cmd run build 2>&1 | Selec ...
++                                            ~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+warn - The class `duration-[1400ms]` is ambiguous and matches multiple utilities.
+warn - If this is content and not a class, replace it with `duration-&lsqb;1400ms&rsqb;` to silence this warning.
+[Error [PageNotFoundError]: Cannot find module for page: /about/pricing/website-cost] {
+  code: 'ENOENT'
+}
+[Error [PageNotFoundError]: Cannot find module for page: /api/auth/login] {
+  code: 'ENOENT'
+}
+> Build error occurred
+[Error: Failed to collect page data for /about/pricing/website-cost] {
+  type: 'Error'
+}
