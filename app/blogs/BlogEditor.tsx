@@ -11,6 +11,7 @@ import ImageUpload from "@/components/ui/ImageUpload"
 import BlogRichTextEditor from "@/components/ui/BlogRichTextEditor"
 import BlogSeoPanel from "@/components/ui/BlogSeoPanel"
 import { blogMarkdownComponents } from "@/lib/blog-markdown"
+import { normalizeBlogMarkdown } from "@/lib/blog-markdown-normalize"
 import {
   DEFAULT_BLOG_SEO,
   getBlogLinkValidationMessage,
@@ -258,7 +259,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
             )}
             <div className="prose-blog">
               <ReactMarkdown remarkPlugins={[remarkGfm]} components={blogMarkdownComponents}>
-                {form.content || "*No content yet…*"}
+                {normalizeBlogMarkdown(form.content) || "*No content yet…*"}
               </ReactMarkdown>
             </div>
           </div>

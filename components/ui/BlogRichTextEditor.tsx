@@ -23,6 +23,7 @@ import {
   Minus,
 } from "lucide-react"
 import { uploadImageFile } from "@/components/ui/ImageUpload"
+import { normalizeBlogMarkdown } from "@/lib/blog-markdown-normalize"
 
 const ACCEPT = "image/png,image/jpeg,image/webp,image/gif,image/svg+xml,image/avif"
 const MAX_INPUT_MB = 20
@@ -137,7 +138,7 @@ export default function BlogRichTextEditor({
         transformCopiedText: true,
       }),
     ],
-    content: value || "",
+    content: normalizeBlogMarkdown(value || ""),
     editorProps: {
       attributes: {
         class: "blog-rich-editor-content outline-none",
@@ -145,7 +146,7 @@ export default function BlogRichTextEditor({
       },
     },
     onUpdate: ({ editor: ed }) => {
-      const md = getMarkdown(ed)
+      const md = normalizeBlogMarkdown(getMarkdown(ed))
       skipExternalSync.current = true
       lastEmitted.current = md
       onChange(md)
@@ -158,9 +159,10 @@ export default function BlogRichTextEditor({
       skipExternalSync.current = false
       return
     }
-    if (value !== lastEmitted.current && value !== getMarkdown(editor)) {
-      editor.commands.setContent(value || "")
-      lastEmitted.current = value
+    const normalized = normalizeBlogMarkdown(value || "")
+    if (normalized !== lastEmitted.current && normalized !== normalizeBlogMarkdown(getMarkdown(editor))) {
+      editor.commands.setContent(normalized)
+      lastEmitted.current = normalized
     }
   }, [value, editor])
 

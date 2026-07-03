@@ -10,6 +10,7 @@ import { ArrowLeft, Eye, EyeOff, Save, X, Plus } from "lucide-react"
 import ImageUpload from "@/components/ui/ImageUpload"
 import BlogRichTextEditor from "@/components/ui/BlogRichTextEditor"
 import BlogSeoPanel from "@/components/ui/BlogSeoPanel"
+import { normalizeBlogMarkdown } from "@/lib/blog-markdown-normalize"
 import {
   DEFAULT_BLOG_SEO,
   getBlogLinkValidationMessage,
@@ -267,7 +268,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                   code: ({ children }) => <code className="px-1.5 py-0.5 rounded text-sm font-mono" style={{ background: "rgba(184,137,42,0.1)", color: "#B8892A" }}>{children}</code>,
                 }}
               >
-                {form.content || "*No content yet…*"}
+                {normalizeBlogMarkdown(form.content) || "*No content yet…*"}
               </ReactMarkdown>
             </div>
           </div>

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { blogMarkdownComponents } from "@/lib/blog-markdown"
+import { normalizeBlogMarkdown } from "@/lib/blog-markdown-normalize"
 import BlogSeoLinks from "@/components/blog/BlogSeoLinks"
 import type { BlogRecord } from "@/lib/blog-db"
 import { ArrowLeft, Clock, Calendar, User, Tag, Pencil, Trash2 } from "lucide-react"
@@ -215,7 +216,7 @@ export default function BlogPostClient({
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <ReactMarkdown remarkPlugins={[remarkGfm]} components={blogMarkdownComponents}>
-            {blog.content}
+            {normalizeBlogMarkdown(blog.content)}
           </ReactMarkdown>
         </motion.div>
 
