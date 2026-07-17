@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 
 type Logo = {
   name: string;
@@ -8,12 +8,6 @@ type Logo = {
 };
 
 const logos: Logo[] = [
-  { src: "/waffletime.jpg", name: "Waffle Time" },
-  { src: "/zafenity.jpg", name: "Zafenity" },
-  { src: "/ghuddy.jpg", name: "Ghuddy" },
-  { src: "/namimoon.jpg", name: "Nami Moon" },
-  { src: "/kudos.jpg", name: "Kudos" },
-  { src: "/masalaking.jpg", name: "Masala King" },
   { src: "/bridgepoint.jpg", name: "Bridge Point" },
   { src: "/beeteam.jpeg", name: "Bee Team" },
   { src: "/icreation.jpeg", name: "iCreation" },
@@ -25,12 +19,12 @@ const logos: Logo[] = [
   { src: "/apex-footwear-ltd--600.png", name: "Apex Footwear Ltd" },
 ];
 
-const container = {
+const container: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.06 } },
 };
 
-const item = {
+const item: Variants = {
   hidden: { opacity: 0, y: 18, scale: 0.96 },
   show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.45, ease: "easeOut" } },
 };
