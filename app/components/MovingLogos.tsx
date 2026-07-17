@@ -2,19 +2,27 @@
 
 import { motion } from "framer-motion";
 
-const logos = [
-  { src: "/waffletime.jpg",  name: "Waffle Time" },
-  { src: "/zafenity.jpg",    name: "Zafenity" },
-  { src: "/ghuddy.jpg",      name: "Ghuddy" },
-  { src: "/namimoon.jpg",    name: "Nami Moon" },
-  { src: "/kudos.jpg",       name: "Kudos" },
-  { src: "/masalaking.jpg",  name: "Masala King" },
+type Logo = {
+  name: string;
+  src?: string;
+};
+
+const logos: Logo[] = [
+  { src: "/waffletime.jpg", name: "Waffle Time" },
+  { src: "/zafenity.jpg", name: "Zafenity" },
+  { src: "/ghuddy.jpg", name: "Ghuddy" },
+  { src: "/namimoon.jpg", name: "Nami Moon" },
+  { src: "/kudos.jpg", name: "Kudos" },
+  { src: "/masalaking.jpg", name: "Masala King" },
   { src: "/bridgepoint.jpg", name: "Bridge Point" },
-  { src: "/beeteam.jpeg",    name: "Bee Team" },
-  { src: "/icreation.jpeg",  name: "iCreation" },
-  { src: "/hm.jpeg",         name: "HM Production" },
-  { src: "/nextgen.png",     name: "NextGen" },
+  { src: "/beeteam.jpeg", name: "Bee Team" },
+  { src: "/icreation.jpeg", name: "iCreation" },
+  { src: "/hm.jpeg", name: "HM Production" },
+  { src: "/nextgen.png", name: "NextGen Development Properties" },
   { src: "/springfield.png", name: "Springfield" },
+  { src: "/wedvisa.png", name: "Wedvisa" },
+  { src: "/channel_i.png", name: "Channel I" },
+  { src: "/apex-footwear-ltd--600.png", name: "Apex Footwear Ltd" },
 ];
 
 const container = {
@@ -38,15 +46,21 @@ const MovingLogos = () => {
     >
       {logos.map((logo) => (
         <motion.div
-          key={logo.src}
+          key={logo.name}
           variants={item}
           className="group conic-ring relative aspect-square rounded-2xl bg-white border border-flow-border shadow-soft flex items-center justify-center p-5 sm:p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-aurora"
         >
-          <img
-            src={logo.src}
-            alt={`${logo.name} logo`}
-            className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
-          />
+          {logo.src ? (
+            <img
+              src={logo.src}
+              alt={`${logo.name} logo`}
+              className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
+            />
+          ) : (
+            <span className="text-center text-xs sm:text-sm font-semibold text-flow-text leading-snug px-1 transition-transform duration-300 group-hover:scale-105">
+              {logo.name}
+            </span>
+          )}
         </motion.div>
       ))}
     </motion.div>
