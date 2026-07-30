@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Plus, Pencil, Trash2, Clock, User, LogOut, Calendar } from "lucide-react"
+import { useT , useLocale, formatDateForLocale, type Locale } from "@/lib/i18n"
+import { realEstateBlogsMessages } from "@/lib/i18n/messages/realEstateBlogs"
 
 interface Blog {
   _id: string
@@ -30,8 +32,8 @@ const RE_CATEGORY_EMOJI: Record<string, string> = {
   Construction: "🏗️", Commercial: "🏢",
 }
 
-function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+function formatDate(dateStr: string, locale: Locale) {
+  return formatDateForLocale(dateStr, locale, { month: "short", day: "numeric", year: "numeric" })
 }
 
 const stagger = {
@@ -44,6 +46,8 @@ const fadeUp = {
 }
 
 export default function RealEstateBlogsPage() {
+  const t = useT(realEstateBlogsMessages)
+  const locale = useLocale()
   const [blogs, setBlogs] = useState<Blog[]>([])
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
@@ -75,7 +79,7 @@ export default function RealEstateBlogsPage() {
   }
 
   async function handleDelete(id: string, title: string) {
-    if (!confirm(`Delete "${title}"? This cannot be undone.`)) return
+    if (!confirm(t("confirmDelete", { title }))) return
     setDeletingId(id)
     try {
       const res = await fetch(`/api/real-estate-blogs/${id}`, { method: "DELETE" })
@@ -109,17 +113,17 @@ export default function RealEstateBlogsPage() {
               <span className="inline-flex items-center gap-2 mb-4">
                 <span className="w-5 h-[2px]" style={{ background: "#B8892A" }} />
                 <span className="text-[10px] font-bold uppercase tracking-[0.3em]" style={{ color: "#B8892A" }}>
-                  Creative Surf · Real Estate
+                  {t("eyebrow")}
                 </span>
               </span>
               <h1
                 className="font-bold text-flow-text leading-tight mb-3"
                 style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
               >
-                Insights &amp; Ideas
+                {t("title")}
               </h1>
               <p className="max-w-lg text-sm sm:text-base leading-relaxed" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                Market trends, buying guides, and investment insights on Dhaka's real estate — straight from the Creative Surf team.
+                {t("subtitle")}
               </p>
             </div>
 
@@ -140,13 +144,13 @@ export default function RealEstateBlogsPage() {
                   style={{ background: "#B8892A", boxShadow: "0 4px 18px rgba(184,137,42,0.35)" }}
                 >
                   <Plus size={15} />
-                  New Post
+                  {t("newPost")}
                 </Link>
                 <button
                   onClick={handleLogout}
                   className="p-2 rounded-xl transition-colors hover:opacity-70"
                   style={{ background: "rgb(var(--flow-border))", color: "rgb(var(--flow-text))" }}
-                  title="Logout"
+                  title={t("logout")}
                 >
                   <LogOut size={15} />
                 </button>
@@ -174,7 +178,7 @@ export default function RealEstateBlogsPage() {
                     : { background: "var(--flow-card)", color: "rgb(var(--flow-text))", border: "1px solid var(--flow-border-strong)" }
                 }
               >
-                {cat}
+                {cat === "All" ? t("categoryAll") : cat}
               </button>
             ))}
           </motion.div>
@@ -197,13 +201,13 @@ export default function RealEstateBlogsPage() {
             <div className="w-16 h-16 rounded-2xl mb-6 flex items-center justify-center" style={{ background: "rgba(184,137,42,0.1)" }}>
               <span className="text-3xl">✍️</span>
             </div>
-            <h3 className="font-bold text-xl mb-2 text-flow-text">No posts yet</h3>
+            <h3 className="font-bold text-xl mb-2 text-flow-text">{t("emptyTitle")}</h3>
             <p className="text-sm mb-6" style={{ color: "rgb(var(--flow-text-soft))" }}>
-              {isAdmin ? "Create your first blog post to get started." : "Check back soon for insights from the Creative Surf team."}
+              {isAdmin ? t("emptyAdmin") : t("emptyPublic")}
             </p>
             {isAdmin && (
               <Link href="/real-estate/blogs/new" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: "#B8892A", boxShadow: "0 4px 18px rgba(184,137,42,0.35)" }}>
-                <Plus size={15} /> Write First Post
+                <Plus size={15} /> {t("writeFirst")}
               </Link>
             )}
           </motion.div>
@@ -264,7 +268,7 @@ export default function RealEstateBlogsPage() {
                             <div style={{ width: 16, height: 16, borderRadius: 4, background: "linear-gradient(135deg, #B8892A, #0066A2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                               <span style={{ fontSize: 7, fontWeight: 900, color: "white" }}>CS</span>
                             </div>
-                            <span style={{ fontSize: "10px", fontWeight: 600, color: "rgba(255,255,255,0.5)", letterSpacing: "0.04em" }}>Creative Surf</span>
+                            <span style={{ fontSize: "10px", fontWeight: 600, color: "rgba(255,255,255,0.5)", letterSpacing: "0.04em" }}>{t("brand")}</span>
                           </div>
                         </div>
                       </div>
@@ -286,7 +290,7 @@ export default function RealEstateBlogsPage() {
                             href={`/real-estate/blogs/edit/${blog._id}`}
                             className="p-1.5 rounded-lg transition-all"
                             style={{ background: "rgba(184,137,42,0.1)", color: "#B8892A" }}
-                            title="Edit"
+                            title={t("edit")}
                           >
                             <Pencil size={12} />
                           </Link>
@@ -295,7 +299,7 @@ export default function RealEstateBlogsPage() {
                             disabled={deletingId === blog._id}
                             className="p-1.5 rounded-lg transition-all"
                             style={{ background: "rgb(239 68 68 / 0.1)", color: "rgb(239 68 68)" }}
-                            title="Delete"
+                            title={t("delete")}
                           >
                             <Trash2 size={12} />
                           </button>
@@ -317,14 +321,14 @@ export default function RealEstateBlogsPage() {
                       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px]" style={{ color: "rgb(var(--flow-text-soft))" }}>
                         <span className="flex items-center gap-1"><User size={10} />{blog.author}</span>
                         <span className="flex items-center gap-1"><Clock size={10} />{blog.readTime}</span>
-                        <span className="flex items-center gap-1"><Calendar size={10} />{formatDate(blog.createdAt)}</span>
+                        <span className="flex items-center gap-1"><Calendar size={10} />{formatDate_CALL(blog.createdAt)}</span>
                       </div>
                       <Link
                         href={`/real-estate/blogs/${blog.slug}`}
                         className="text-[11px] font-semibold shrink-0"
                         style={{ color: "#0066A2" }}
                       >
-                        Read →
+                        {t("read")}
                       </Link>
                     </div>
                   </div>

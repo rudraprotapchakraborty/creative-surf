@@ -7,6 +7,8 @@ import Link from "next/link"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { ArrowLeft, Eye, EyeOff, Save, X, Plus } from "lucide-react"
+import { useT } from "@/lib/i18n"
+import { editorMessages } from "@/lib/i18n/messages/editor"
 import ImageUpload from "@/components/ui/ImageUpload"
 import BlogRichTextEditor from "@/components/ui/BlogRichTextEditor"
 import BlogSeoPanel from "@/components/ui/BlogSeoPanel"
@@ -74,6 +76,7 @@ function slugify(text: string) {
 }
 
 export default function BlogEditor({ blogId }: { blogId?: string }) {
+  const t = useT(editorMessages)
   const isEdit = !!blogId
   const [form, setForm] = useState<BlogForm>(DEFAULT_FORM)
   const [tagInput, setTagInput] = useState("")
@@ -143,9 +146,9 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
   async function handleSave() {
     setError("")
 
-    if (!form.title.trim()) { setError("Title is required."); return }
-    if (!form.slug.trim()) { setError("Slug is required."); return }
-    if (!form.content.trim()) { setError("Content is required."); return }
+    if (!form.title.trim()) { setError(t("errors.titleRequired")); return }
+    if (!form.slug.trim()) { setError(t("errors.slugRequired")); return }
+    if (!form.content.trim()) { setError(t("errors.contentRequired")); return }
 
     if (getBlogLinkValidationMessage(form.inboundLinks, form.outboundLinks)) {
       setShowSeoValidation(true)
@@ -173,7 +176,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
 
       if (!res.ok) {
         const d = await res.json()
-        setError(d.error || "Failed to save. Please try again.")
+        setError(d.error || t("errors.saveFailed"))
         setSaving(false)
         return
       }
@@ -181,7 +184,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
       const saved = await res.json()
       router.push(`/blogs/${saved.slug}`)
     } catch {
-      setError("Network error. Please try again.")
+      setError(t("errors.network"))
       setSaving(false)
     }
   }
@@ -216,7 +219,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
               <ArrowLeft size={16} />
             </Link>
             <span className="font-semibold text-sm text-flow-text" style={{ fontFamily: "var(--font-heading)" }}>
-              {isEdit ? "Edit Post" : "New Post"}
+              {isEdit ? t("editPost") : t("newPost")}
             </span>
           </div>
 
@@ -226,7 +229,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
             style={{ background: preview ? "rgb(var(--accent-1) / 0.15)" : "var(--flow-card)", color: "rgb(var(--flow-text))", border: "1px solid var(--flow-border-strong)" }}
           >
             {preview ? <EyeOff size={12} /> : <Eye size={12} />}
-            {preview ? "Editor" : "Preview"}
+            {preview ? t("editorMode") : t("preview")}
           </button>
         </div>
       </div>
@@ -250,7 +253,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
           <div className="max-w-4xl mx-auto">
             <span className="text-xs font-bold uppercase tracking-widest" style={{ color: "rgb(var(--accent-1))" }}>{form.category}</span>
             <h1 className="font-bold text-flow-text mt-3 mb-4 leading-tight" style={{ fontSize: "clamp(1.8rem, 3vw, 2.6rem)", fontFamily: "var(--font-heading)" }}>
-              {form.title || "Untitled Post"}
+              {form.title || t("untitled")}
             </h1>
             {form.excerpt && (
               <p className="text-base leading-relaxed mb-8 font-medium" style={{ color: "rgb(var(--flow-text-soft))", borderLeft: "3px solid rgb(var(--accent-1))", paddingLeft: "1rem" }}>
@@ -259,7 +262,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
             )}
             <div className="prose-blog">
               <ReactMarkdown remarkPlugins={[remarkGfm]} components={blogMarkdownComponents}>
-                {normalizeBlogMarkdown(form.content) || "*No content yet…*"}
+                {normalizeBlogMarkdown(form.content) || t("noContent")}
               </ReactMarkdown>
             </div>
           </div>
@@ -274,7 +277,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                   type="text"
                   value={form.title}
                   onChange={e => handleTitleChange(e.target.value)}
-                  placeholder="Post title…"
+                  placeholder={t("titlePlaceholder")}
                   className="w-full font-bold outline-none bg-transparent text-flow-text placeholder:text-flow-text/45 border-b pb-3 transition-colors"
                   style={{
                     fontSize: "clamp(1.6rem, 3vw, 2.2rem)",
@@ -288,12 +291,12 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
               {/* Excerpt */}
               <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
                 <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                  Excerpt / Summary
+                  {t("excerptLabel")}
                 </label>
                 <textarea
                   value={form.excerpt}
                   onChange={e => set("excerpt", e.target.value)}
-                  placeholder="A short summary of the post shown in blog listings…"
+                  placeholder={t("excerptPlaceholder")}
                   rows={3}
                   className="w-full bg-transparent outline-none resize-none text-sm leading-relaxed text-flow-text placeholder:opacity-50"
                 />
@@ -302,12 +305,12 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
               {/* Content */}
               <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
                 <label className="block text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                  Content
+                  {t("contentLabel")}
                 </label>
                 <BlogRichTextEditor
                   value={form.content}
                   onChange={md => { set("content", md); set("readTime", calcReadTime(md)) }}
-                  placeholder="Start writing — use the toolbar for headings, bold, italic, lists, and images…"
+                  placeholder={t("contentPlaceholder")}
                   minHeight={420}
                 />
               </div>
@@ -317,7 +320,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
             <div className="space-y-4">
               {/* Category */}
               <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-                <label className="block text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>Category</label>
+                <label className="block text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>{t("categoryLabel")}</label>
                 <select
                   value={form.category}
                   onChange={e => set("category", e.target.value)}
@@ -329,7 +332,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
 
               {/* Cover Image */}
               <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-                <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>Cover Image</label>
+                <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>{t("coverImageLabel")}</label>
                 <ImageUpload
                   value={form.coverImage}
                   onChange={v => set("coverImage", v)}
@@ -351,7 +354,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
 
               {/* Tags */}
               <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-                <label className="block text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>Tags</label>
+                <label className="block text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>{t("tagsLabel")}</label>
                 <div className="flex flex-wrap gap-1.5 mb-2">
                   {form.tags.map(tag => (
                     <span key={tag} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium" style={{ background: "rgb(var(--accent-1) / 0.1)", color: "rgb(var(--accent-1))" }}>
@@ -365,14 +368,14 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                   value={tagInput}
                   onChange={e => setTagInput(e.target.value)}
                   onKeyDown={addTag}
-                  placeholder="Type tag + Enter"
+                  placeholder={t("tagPlaceholder")}
                   className="w-full bg-transparent outline-none text-xs text-flow-text placeholder:opacity-50"
                 />
               </div>
 
               {/* Author */}
               <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-                <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>Author</label>
+                <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>{t("authorLabel")}</label>
                 <input
                   type="text"
                   value={form.author}
@@ -397,12 +400,11 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
 
               {/* Formatting tips */}
               <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>Editor Tips</p>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>{t("tipsTitle")}</p>
                 <ul className="space-y-2 text-xs leading-relaxed" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                  <li>Use the style dropdown for headings — they appear at full size as you type.</li>
-                  <li>Select text, then click <strong>B</strong>, <em>I</em>, or underline to format it.</li>
-                  <li>Click the image icon to upload photos — they appear inline in your post.</li>
-                  <li>Use Preview in the header to see the final published layout.</li>
+                  {t.list("tips").map((tip) => (
+                    <li key={tip}>{tip}</li>
+                  ))}
                 </ul>
               </div>
             </div>
@@ -435,9 +437,9 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
               style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))", boxShadow: "0 4px 18px rgb(var(--accent-1) / 0.3)" }}
             >
               {saving ? (
-                <><span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />Saving…</>
+                <><span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />{t("saving")}</>
               ) : (
-                <><Save size={14} />{isEdit ? "Update Post" : "Publish Post"}</>
+                <><Save size={14} />{isEdit ? t("updatePost") : t("publishPost")}</>
               )}
             </button>
           </div>

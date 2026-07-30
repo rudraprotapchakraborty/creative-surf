@@ -4,8 +4,11 @@ import { useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { motion } from "framer-motion"
 import { Eye, EyeOff, Lock, User, Waves } from "lucide-react"
+import { useT } from "@/lib/i18n"
+import { loginMessages } from "@/lib/i18n/messages/login"
 
 function LoginForm() {
+  const t = useT(loginMessages)
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -32,10 +35,10 @@ function LoginForm() {
         router.refresh()
       } else {
         const data = await res.json()
-        setError(data.error || "Invalid credentials")
+        setError(data.error || t("invalidCredentials"))
       }
     } catch {
-      setError("Something went wrong. Please try again.")
+      setError(t("genericError"))
     } finally {
       setLoading(false)
     }
@@ -74,7 +77,7 @@ function LoginForm() {
               <Waves size={18} className="text-white" />
             </div>
             <span className="font-bold text-flow-text" style={{ fontFamily: "var(--font-heading)", fontSize: "1.1rem" }}>
-              Creative Surf
+              {t("brand")}
             </span>
           </div>
 
@@ -83,7 +86,7 @@ function LoginForm() {
               className="font-bold text-flow-text mb-2"
               style={{ fontSize: "1.6rem", fontFamily: "var(--font-heading)" }}
             >
-              Admin Access
+              {t("title")}
             </h1>
           </div>
 
@@ -91,7 +94,7 @@ function LoginForm() {
             {/* Username */}
             <div>
               <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                Username
+                {t("username")}
               </label>
               <div className="relative">
                 <User size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 opacity-40" style={{ color: "rgb(var(--flow-text))" }} />
@@ -107,7 +110,7 @@ function LoginForm() {
                     border: "1px solid var(--flow-border-strong)",
                     color: "rgb(var(--flow-text))",
                   }}
-                  placeholder="Enter username"
+                  placeholder={t("usernamePlaceholder")}
                 />
               </div>
             </div>
@@ -115,7 +118,7 @@ function LoginForm() {
             {/* Password */}
             <div>
               <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                Password
+                {t("password")}
               </label>
               <div className="relative">
                 <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 opacity-40" style={{ color: "rgb(var(--flow-text))" }} />
@@ -131,7 +134,7 @@ function LoginForm() {
                     border: "1px solid var(--flow-border-strong)",
                     color: "rgb(var(--flow-text))",
                   }}
-                  placeholder="Enter password"
+                  placeholder={t("passwordPlaceholder")}
                 />
                 <button
                   type="button"
@@ -170,17 +173,17 @@ function LoginForm() {
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
                   <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                  Signing in…
+                  {t("signingIn")}
                 </span>
               ) : (
-                "Sign In"
+                t("submit")
               )}
             </button>
           </form>
         </div>
 
         <p className="text-center text-xs mt-6" style={{ color: "rgb(var(--flow-text-soft))" }}>
-          Creative Surf · Admin Portal
+          {t("footer")}
         </p>
       </motion.div>
     </main>

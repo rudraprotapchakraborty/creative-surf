@@ -24,8 +24,63 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useT } from "@/lib/i18n";
+import { fixFunnelMessages } from "@/lib/i18n/messages/fixFunnel";
+
+/** Industry option values and their benchmark rates are data, not copy. */
+const INDUSTRY_KEYS = [
+  "ecommerce",
+  "saas",
+  "finance",
+  "healthcare",
+  "education",
+  "travel",
+  "realestate",
+  "other",
+] as const;
+
+const INDUSTRY_BENCHMARKS: Record<string, string> = {
+  ecommerce: "3.2%",
+  saas: "5.0%",
+  finance: "4.5%",
+  healthcare: "3.8%",
+  education: "4.0%",
+  travel: "2.8%",
+  realestate: "2.5%",
+};
+
+const HOW_IT_WORKS_ICONS = [BarChart3, LineChart, CheckCircle];
+const USE_CASE_META = [
+  { value: "ecommerce", icon: ShoppingCart },
+  { value: "saas", icon: Users },
+  { value: "services", icon: DollarSign },
+];
+const TESTIMONIAL_NAMES = ["Sarah Johnson", "Michael Chen", "Jessica Williams"];
+
+function StarRow() {
+  return (
+    <div className="flex text-yellow-400">
+      {[...Array(5)].map((_, i) => (
+        <svg
+          key={i}
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className="w-5 h-5"
+        >
+          <path
+            fillRule="evenodd"
+            d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
+            clipRule="evenodd"
+          />
+        </svg>
+      ))}
+    </div>
+  );
+}
 
 export default function FixFunnelPage() {
+  const t = useT(fixFunnelMessages);
   const [currentStep, setCurrentStep] = useState(1);
   const [funnelData, setFunnelData] = useState({
     industry: "",
@@ -67,6 +122,22 @@ export default function FixFunnelPage() {
     setShowResults(false);
   };
 
+  const stepLabels = t.list("tool.stepLabels");
+  const howItWorks = t
+    .raw<{ title: string; body: string }[]>("howItWorks.items", [])
+    .map((item, i) => ({ ...item, icon: HOW_IT_WORKS_ICONS[i] ?? BarChart3 }));
+  const useCaseTabs = t.list("useCases.tabs");
+  const useCases = t
+    .raw<{ title: string; body: string; issuesTitle: string; issues: string[] }[]>(
+      "useCases.items",
+      [],
+    )
+    .map((item, i) => ({ ...item, ...USE_CASE_META[i] }));
+  const testimonials = t
+    .raw<{ role: string; quote: string }[]>("testimonials.items", [])
+    .map((item, i) => ({ ...item, name: TESTIMONIAL_NAMES[i] ?? "" }));
+  const faq = t.raw<{ question: string; answer: string }[]>("faq.items", []);
+
   return (
     <main className="flex flex-col min-h-screen">
       {/* Hero Section */}
@@ -74,13 +145,8 @@ export default function FixFunnelPage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="md:w-1/2 mb-8 md:mb-0">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                Fix Your Funnel
-              </h1>
-              <p className="text-xl md:text-2xl mb-6">
-                Identify conversion bottlenecks and unlock revenue potential
-                with our free funnel analysis tool
-              </p>
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">{t("hero.title")}</h1>
+              <p className="text-xl md:text-2xl mb-6">{t("hero.subtitle")}</p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button
                   size="lg"
@@ -91,7 +157,7 @@ export default function FixFunnelPage() {
                       ?.scrollIntoView({ behavior: "smooth" })
                   }
                 >
-                  Analyze My Funnel <ArrowRight className="ml-2 h-5 w-5" />
+                  {t("hero.cta")} <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </div>
             </div>
@@ -99,7 +165,7 @@ export default function FixFunnelPage() {
               <div className="relative h-[300px] md:h-[400px] w-full">
                 <Image
                   src="/placeholder.svg?height=400&width=600"
-                  alt="Funnel Analysis Dashboard"
+                  alt={t("hero.imageAlt")}
                   fill
                   className="object-contain"
                   priority
@@ -114,14 +180,8 @@ export default function FixFunnelPage() {
       <section id="tool-section" className="py-16 bg-flow-bg">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Analyze Your Conversion Funnel
-            </h2>
-            <p className="text-lg text-flow-textSoft max-w-3xl mx-auto">
-              Enter your website data below to receive a personalized analysis
-              of your conversion funnel with actionable recommendations to
-              improve your results.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("tool.title")}</h2>
+            <p className="text-lg text-flow-textSoft max-w-3xl mx-auto">{t("tool.intro")}</p>
           </div>
 
           <Card className="max-w-4xl mx-auto shadow-lg">
@@ -154,13 +214,7 @@ export default function FixFunnelPage() {
                           )}
                         </div>
                         <span className="text-sm hidden md:block">
-                          {step === 1
-                            ? "Industry"
-                            : step === 2
-                            ? "Traffic"
-                            : step === 3
-                            ? "Conversions"
-                            : "Revenue"}
+                          {stepLabels[step - 1]}
                         </span>
                       </div>
                     ))}
@@ -168,19 +222,14 @@ export default function FixFunnelPage() {
 
                   {currentStep === 1 && (
                     <div className="space-y-6">
-                      <h3 className="text-xl font-semibold">
-                        Select Your Industry
-                      </h3>
-                      <p className="text-flow-textSoft">
-                        We'll benchmark your performance against industry
-                        standards.
-                      </p>
+                      <h3 className="text-xl font-semibold">{t("tool.steps.industry.title")}</h3>
+                      <p className="text-flow-textSoft">{t("tool.steps.industry.body")}</p>
                       <div>
                         <label
                           htmlFor="industry"
                           className="block text-sm font-medium text-flow-textSoft mb-1"
                         >
-                          Industry
+                          {t("tool.steps.industry.label")}
                         </label>
                         <select
                           id="industry"
@@ -191,16 +240,13 @@ export default function FixFunnelPage() {
                           required
                         >
                           <option value="" disabled>
-                            Select your industry
+                            {t("tool.steps.industry.placeholder")}
                           </option>
-                          <option value="ecommerce">E-commerce</option>
-                          <option value="saas">SaaS</option>
-                          <option value="finance">Finance</option>
-                          <option value="healthcare">Healthcare</option>
-                          <option value="education">Education</option>
-                          <option value="travel">Travel & Hospitality</option>
-                          <option value="realestate">Real Estate</option>
-                          <option value="other">Other</option>
+                          {INDUSTRY_KEYS.map((key) => (
+                            <option key={key} value={key}>
+                              {t(`tool.industries.${key}`)}
+                            </option>
+                          ))}
                         </select>
                       </div>
                     </div>
@@ -208,16 +254,14 @@ export default function FixFunnelPage() {
 
                   {currentStep === 2 && (
                     <div className="space-y-6">
-                      <h3 className="text-xl font-semibold">Website Traffic</h3>
-                      <p className="text-flow-textSoft">
-                        Tell us about your monthly website visitors.
-                      </p>
+                      <h3 className="text-xl font-semibold">{t("tool.steps.traffic.title")}</h3>
+                      <p className="text-flow-textSoft">{t("tool.steps.traffic.body")}</p>
                       <div>
                         <label
                           htmlFor="visitors"
                           className="block text-sm font-medium text-flow-textSoft mb-1"
                         >
-                          Monthly Website Visitors
+                          {t("tool.steps.traffic.label")}
                         </label>
                         <input
                           type="number"
@@ -225,7 +269,7 @@ export default function FixFunnelPage() {
                           name="visitors"
                           value={funnelData.visitors}
                           onChange={handleInputChange}
-                          placeholder="e.g., 10000"
+                          placeholder={t("tool.steps.traffic.placeholder")}
                           className="w-full p-3 border border-flow-border rounded-md focus:ring-blue-500 focus:border-blue-500"
                           required
                         />
@@ -235,17 +279,14 @@ export default function FixFunnelPage() {
 
                   {currentStep === 3 && (
                     <div className="space-y-6">
-                      <h3 className="text-xl font-semibold">Conversion Rate</h3>
-                      <p className="text-flow-textSoft">
-                        What percentage of visitors convert to leads or
-                        customers?
-                      </p>
+                      <h3 className="text-xl font-semibold">{t("tool.steps.conversions.title")}</h3>
+                      <p className="text-flow-textSoft">{t("tool.steps.conversions.body")}</p>
                       <div>
                         <label
                           htmlFor="conversions"
                           className="block text-sm font-medium text-flow-textSoft mb-1"
                         >
-                          Conversion Rate (%)
+                          {t("tool.steps.conversions.label")}
                         </label>
                         <input
                           type="number"
@@ -253,7 +294,7 @@ export default function FixFunnelPage() {
                           name="conversions"
                           value={funnelData.conversions}
                           onChange={handleInputChange}
-                          placeholder="e.g., 2.5"
+                          placeholder={t("tool.steps.conversions.placeholder")}
                           className="w-full p-3 border border-flow-border rounded-md focus:ring-blue-500 focus:border-blue-500"
                           required
                           min="0"
@@ -266,16 +307,14 @@ export default function FixFunnelPage() {
 
                   {currentStep === 4 && (
                     <div className="space-y-6">
-                      <h3 className="text-xl font-semibold">Average Revenue</h3>
-                      <p className="text-flow-textSoft">
-                        What is your average revenue per conversion?
-                      </p>
+                      <h3 className="text-xl font-semibold">{t("tool.steps.revenue.title")}</h3>
+                      <p className="text-flow-textSoft">{t("tool.steps.revenue.body")}</p>
                       <div>
                         <label
                           htmlFor="revenue"
                           className="block text-sm font-medium text-flow-textSoft mb-1"
                         >
-                          Average Revenue Per Conversion ($)
+                          {t("tool.steps.revenue.label")}
                         </label>
                         <input
                           type="number"
@@ -283,7 +322,7 @@ export default function FixFunnelPage() {
                           name="revenue"
                           value={funnelData.revenue}
                           onChange={handleInputChange}
-                          placeholder="e.g., 100"
+                          placeholder={t("tool.steps.revenue.placeholder")}
                           className="w-full p-3 border border-flow-border rounded-md focus:ring-blue-500 focus:border-blue-500"
                           required
                           min="0"
@@ -298,7 +337,7 @@ export default function FixFunnelPage() {
                       onClick={handlePrevStep}
                       disabled={currentStep === 1}
                     >
-                      Back
+                      {t("tool.back")}
                     </Button>
                     <Button
                       onClick={handleNextStep}
@@ -309,43 +348,35 @@ export default function FixFunnelPage() {
                         (currentStep === 4 && !funnelData.revenue)
                       }
                     >
-                      {currentStep < 4 ? "Next" : "Analyze My Funnel"}
+                      {currentStep < 4 ? t("tool.next") : t("tool.analyze")}
                     </Button>
                   </div>
                 </div>
               ) : (
                 <div className="space-y-8">
                   <div className="text-center">
-                    <h3 className="text-2xl font-bold text-blue-600 mb-2">
-                      Your Funnel Analysis
-                    </h3>
-                    <p className="text-flow-textSoft">
-                      Based on your inputs, here's how your funnel is performing
-                    </p>
+                    <h3 className="text-2xl font-bold text-blue-600 mb-2">{t("results.title")}</h3>
+                    <p className="text-flow-textSoft">{t("results.subtitle")}</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <Card>
                       <CardContent className="p-6 text-center">
                         <BarChart3 className="h-10 w-10 text-blue-600 mx-auto mb-4" />
-                        <h4 className="text-lg font-semibold mb-1">
-                          Current Performance
-                        </h4>
+                        <h4 className="text-lg font-semibold mb-1">{t("results.currentTitle")}</h4>
                         <p className="text-3xl font-bold text-blue-600">
                           $
                           {Number.parseInt(funnelData.visitors) *
                             (Number.parseFloat(funnelData.conversions) / 100) *
                             Number.parseInt(funnelData.revenue) || 0}
                         </p>
-                        <p className="text-sm text-flow-textSoft">Monthly Revenue</p>
+                        <p className="text-sm text-flow-textSoft">{t("results.currentLabel")}</p>
                       </CardContent>
                     </Card>
                     <Card>
                       <CardContent className="p-6 text-center">
                         <LineChart className="h-10 w-10 text-green-600 mx-auto mb-4" />
-                        <h4 className="text-lg font-semibold mb-1">
-                          Potential Growth
-                        </h4>
+                        <h4 className="text-lg font-semibold mb-1">{t("results.potentialTitle")}</h4>
                         <p className="text-3xl font-bold text-green-600">
                           +$
                           {Number.parseInt(funnelData.visitors) *
@@ -357,90 +388,41 @@ export default function FixFunnelPage() {
                                 100) *
                               Number.parseInt(funnelData.revenue) || 0}
                         </p>
-                        <p className="text-sm text-flow-textSoft">
-                          Additional Revenue Potential
-                        </p>
+                        <p className="text-sm text-flow-textSoft">{t("results.potentialLabel")}</p>
                       </CardContent>
                     </Card>
                     <Card>
                       <CardContent className="p-6 text-center">
                         <AlertCircle className="h-10 w-10 text-amber-600 mx-auto mb-4" />
-                        <h4 className="text-lg font-semibold mb-1">
-                          Industry Benchmark
-                        </h4>
+                        <h4 className="text-lg font-semibold mb-1">{t("results.benchmarkTitle")}</h4>
                         <p className="text-3xl font-bold text-amber-600">
-                          {funnelData.industry === "ecommerce"
-                            ? "3.2%"
-                            : funnelData.industry === "saas"
-                            ? "5.0%"
-                            : funnelData.industry === "finance"
-                            ? "4.5%"
-                            : funnelData.industry === "healthcare"
-                            ? "3.8%"
-                            : funnelData.industry === "education"
-                            ? "4.0%"
-                            : funnelData.industry === "travel"
-                            ? "2.8%"
-                            : funnelData.industry === "realestate"
-                            ? "2.5%"
-                            : "3.5%"}
+                          {INDUSTRY_BENCHMARKS[funnelData.industry] ?? "3.5%"}
                         </p>
-                        <p className="text-sm text-flow-textSoft">
-                          Average Conversion Rate
-                        </p>
+                        <p className="text-sm text-flow-textSoft">{t("results.benchmarkLabel")}</p>
                       </CardContent>
                     </Card>
                   </div>
 
                   <div className="bg-blue-50 p-6 rounded-lg">
                     <h4 className="text-xl font-semibold mb-4">
-                      Recommendations to Improve Your Funnel
+                      {t("results.recommendationsTitle")}
                     </h4>
                     <ul className="space-y-3">
-                      <li className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
-                        <span>
-                          Optimize your landing pages with clearer CTAs and
-                          value propositions
-                        </span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
-                        <span>
-                          Implement A/B testing to identify the most effective
-                          page elements
-                        </span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
-                        <span>
-                          Streamline your checkout or form submission process to
-                          reduce abandonment
-                        </span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
-                        <span>
-                          Set up retargeting campaigns to re-engage visitors who
-                          didn't convert
-                        </span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="h-5 w-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
-                        <span>
-                          Improve page load speed to reduce bounce rates and
-                          improve user experience
-                        </span>
-                      </li>
+                      {t.list("results.recommendations").map((recommendation) => (
+                        <li key={recommendation} className="flex items-start">
+                          <CheckCircle className="h-5 w-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                          <span>{recommendation}</span>
+                        </li>
+                      ))}
                     </ul>
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Button onClick={resetTool} variant="outline">
-                      Start Over
+                      {t("results.startOver")}
                     </Button>
                     <Button asChild>
-                      <Link href="/contact">Get a Custom Funnel Strategy</Link>
+                      <Link href="/contact">{t("results.customStrategy")}</Link>
                     </Button>
                   </div>
                 </div>
@@ -454,56 +436,25 @@ export default function FixFunnelPage() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              How Our Funnel Analysis Works
-            </h2>
-            <p className="text-lg text-flow-textSoft max-w-3xl mx-auto">
-              Our tool uses industry benchmarks and conversion optimization best
-              practices to identify opportunities in your sales funnel.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("howItWorks.title")}</h2>
+            <p className="text-lg text-flow-textSoft max-w-3xl mx-auto">{t("howItWorks.intro")}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card>
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <BarChart3 className="h-8 w-8 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Data Analysis</h3>
-                <p className="text-flow-textSoft">
-                  We analyze your current traffic, conversion rates, and revenue
-                  to establish your baseline performance.
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <LineChart className="h-8 w-8 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">
-                  Benchmark Comparison
-                </h3>
-                <p className="text-flow-textSoft">
-                  Your metrics are compared against industry standards to
-                  identify gaps and opportunities.
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="h-8 w-8 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">
-                  Actionable Recommendations
-                </h3>
-                <p className="text-flow-textSoft">
-                  Receive personalized suggestions to optimize each stage of
-                  your conversion funnel.
-                </p>
-              </CardContent>
-            </Card>
+            {howItWorks.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Card key={item.title}>
+                  <CardContent className="p-6 text-center">
+                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Icon className="h-8 w-8 text-blue-600" />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                    <p className="text-flow-textSoft">{item.body}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -512,149 +463,47 @@ export default function FixFunnelPage() {
       <section className="py-16 bg-flow-bg">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Who Can Benefit
-            </h2>
-            <p className="text-lg text-flow-textSoft max-w-3xl mx-auto">
-              Our funnel analysis tool helps businesses of all sizes identify
-              and fix conversion bottlenecks.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("useCases.title")}</h2>
+            <p className="text-lg text-flow-textSoft max-w-3xl mx-auto">{t("useCases.intro")}</p>
           </div>
 
           <Tabs defaultValue="ecommerce" className="max-w-4xl mx-auto">
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="ecommerce">E-commerce</TabsTrigger>
-              <TabsTrigger value="saas">SaaS</TabsTrigger>
-              <TabsTrigger value="services">Service Businesses</TabsTrigger>
+              {useCases.map((useCase, index) => (
+                <TabsTrigger key={useCase.value} value={useCase.value!}>
+                  {useCaseTabs[index]}
+                </TabsTrigger>
+              ))}
             </TabsList>
-            <TabsContent value="ecommerce" className="mt-6">
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row gap-6">
-                    <div className="md:w-1/3">
-                      <ShoppingCart className="h-12 w-12 text-blue-600 mb-4" />
-                      <h3 className="text-xl font-semibold mb-2">
-                        E-commerce Stores
-                      </h3>
-                      <p className="text-flow-textSoft">
-                        Identify why shoppers abandon carts and optimize your
-                        product pages for higher conversion rates.
-                      </p>
-                    </div>
-                    <div className="md:w-2/3">
-                      <h4 className="font-semibold mb-3">
-                        Common E-commerce Funnel Issues:
-                      </h4>
-                      <ul className="space-y-2">
-                        <li className="flex items-start">
-                          <ChevronRight className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>
-                            High cart abandonment rates (industry average:
-                            69.57%)
-                          </span>
-                        </li>
-                        <li className="flex items-start">
-                          <ChevronRight className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Poor product page conversion rates</span>
-                        </li>
-                        <li className="flex items-start">
-                          <ChevronRight className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>
-                            Checkout friction points causing drop-offs
-                          </span>
-                        </li>
-                        <li className="flex items-start">
-                          <ChevronRight className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Low average order value</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="saas" className="mt-6">
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row gap-6">
-                    <div className="md:w-1/3">
-                      <Users className="h-12 w-12 text-blue-600 mb-4" />
-                      <h3 className="text-xl font-semibold mb-2">
-                        SaaS Companies
-                      </h3>
-                      <p className="text-flow-textSoft">
-                        Optimize your trial-to-paid conversion rates and reduce
-                        churn in your subscription funnel.
-                      </p>
-                    </div>
-                    <div className="md:w-2/3">
-                      <h4 className="font-semibold mb-3">
-                        Common SaaS Funnel Issues:
-                      </h4>
-                      <ul className="space-y-2">
-                        <li className="flex items-start">
-                          <ChevronRight className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Low trial-to-paid conversion rates</span>
-                        </li>
-                        <li className="flex items-start">
-                          <ChevronRight className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>High customer acquisition costs</span>
-                        </li>
-                        <li className="flex items-start">
-                          <ChevronRight className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Poor onboarding completion rates</span>
-                        </li>
-                        <li className="flex items-start">
-                          <ChevronRight className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Early subscription cancellations</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="services" className="mt-6">
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row gap-6">
-                    <div className="md:w-1/3">
-                      <DollarSign className="h-12 w-12 text-blue-600 mb-4" />
-                      <h3 className="text-xl font-semibold mb-2">
-                        Service Businesses
-                      </h3>
-                      <p className="text-flow-textSoft">
-                        Improve lead generation and consultation booking rates
-                        for your service-based business.
-                      </p>
-                    </div>
-                    <div className="md:w-2/3">
-                      <h4 className="font-semibold mb-3">
-                        Common Service Business Funnel Issues:
-                      </h4>
-                      <ul className="space-y-2">
-                        <li className="flex items-start">
-                          <ChevronRight className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Low form completion rates</span>
-                        </li>
-                        <li className="flex items-start">
-                          <ChevronRight className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Poor lead quality</span>
-                        </li>
-                        <li className="flex items-start">
-                          <ChevronRight className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Low consultation booking rates</span>
-                        </li>
-                        <li className="flex items-start">
-                          <ChevronRight className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>High no-show rates for consultations</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
+            {useCases.map((useCase) => {
+              const Icon = useCase.icon ?? ShoppingCart;
+              return (
+                <TabsContent key={useCase.value} value={useCase.value!} className="mt-6">
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="flex flex-col md:flex-row gap-6">
+                        <div className="md:w-1/3">
+                          <Icon className="h-12 w-12 text-blue-600 mb-4" />
+                          <h3 className="text-xl font-semibold mb-2">{useCase.title}</h3>
+                          <p className="text-flow-textSoft">{useCase.body}</p>
+                        </div>
+                        <div className="md:w-2/3">
+                          <h4 className="font-semibold mb-3">{useCase.issuesTitle}</h4>
+                          <ul className="space-y-2">
+                            {useCase.issues.map((issue) => (
+                              <li key={issue} className="flex items-start">
+                                <ChevronRight className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                                <span>{issue}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              );
+            })}
           </Tabs>
         </div>
       </section>
@@ -663,116 +512,26 @@ export default function FixFunnelPage() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Success Stories
-            </h2>
-            <p className="text-lg text-flow-textSoft max-w-3xl mx-auto">
-              See how businesses have improved their conversion rates using our
-              funnel analysis.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("testimonials.title")}</h2>
+            <p className="text-lg text-flow-textSoft max-w-3xl mx-auto">{t("testimonials.intro")}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 rounded-full bg-flow-card mr-4"></div>
-                  <div>
-                    <h4 className="font-semibold">Sarah Johnson</h4>
-                    <p className="text-sm text-flow-textSoft">E-commerce Director</p>
+            {testimonials.map((testimonial) => (
+              <Card key={testimonial.name}>
+                <CardContent className="p-6">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-flow-card mr-4"></div>
+                    <div>
+                      <h4 className="font-semibold">{testimonial.name}</h4>
+                      <p className="text-sm text-flow-textSoft">{testimonial.role}</p>
+                    </div>
                   </div>
-                </div>
-                <p className="text-flow-textSoft mb-4">
-                  "The funnel analysis tool helped us identify a major drop-off
-                  point in our checkout process. After implementing the
-                  recommended changes, our conversion rate increased by 28%."
-                </p>
-                <div className="flex text-yellow-400">
-                  {[...Array(5)].map((_, i) => (
-                    <svg
-                      key={i}
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 rounded-full bg-flow-card mr-4"></div>
-                  <div>
-                    <h4 className="font-semibold">Michael Chen</h4>
-                    <p className="text-sm text-flow-textSoft">Marketing Manager</p>
-                  </div>
-                </div>
-                <p className="text-flow-textSoft mb-4">
-                  "We were struggling with low lead quality. The funnel analysis
-                  helped us restructure our lead capture forms, resulting in 35%
-                  fewer but much higher quality leads that convert better."
-                </p>
-                <div className="flex text-yellow-400">
-                  {[...Array(5)].map((_, i) => (
-                    <svg
-                      key={i}
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 rounded-full bg-flow-card mr-4"></div>
-                  <div>
-                    <h4 className="font-semibold">Jessica Williams</h4>
-                    <p className="text-sm text-flow-textSoft">SaaS Founder</p>
-                  </div>
-                </div>
-                <p className="text-flow-textSoft mb-4">
-                  "Our trial-to-paid conversion rate was stuck at 8%. After
-                  using the funnel analysis tool and implementing the
-                  recommendations, we've increased it to 12.5%, which has been
-                  transformative for our business."
-                </p>
-                <div className="flex text-yellow-400">
-                  {[...Array(5)].map((_, i) => (
-                    <svg
-                      key={i}
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                  <p className="text-flow-textSoft mb-4">"{testimonial.quote}"</p>
+                  <StarRow />
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
@@ -781,97 +540,24 @@ export default function FixFunnelPage() {
       <section className="py-16 bg-flow-bg">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-lg text-flow-textSoft max-w-3xl mx-auto">
-              Get answers to common questions about our funnel analysis tool.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("faq.title")}</h2>
+            <p className="text-lg text-flow-textSoft max-w-3xl mx-auto">{t("faq.intro")}</p>
           </div>
 
           <div className="max-w-3xl mx-auto">
             <Accordion type="single" collapsible className="space-y-4">
-              <AccordionItem
-                value="item-1"
-                className="bg-flow-surface rounded-lg shadow-sm"
-              >
-                <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                  <span className="text-left font-semibold">
-                    How accurate is the funnel analysis?
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4">
-                  Our funnel analysis tool uses industry benchmarks and
-                  conversion optimization best practices to provide accurate
-                  insights. The recommendations are based on data from thousands
-                  of successful websites and campaigns across various
-                  industries.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem
-                value="item-2"
-                className="bg-flow-surface rounded-lg shadow-sm"
-              >
-                <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                  <span className="text-left font-semibold">
-                    Is my data secure?
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4">
-                  Yes, we take data security seriously. The information you
-                  provide is used only for generating your funnel analysis and
-                  is not stored or shared with third parties. We do not require
-                  any sensitive business information to provide our analysis.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem
-                value="item-3"
-                className="bg-flow-surface rounded-lg shadow-sm"
-              >
-                <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                  <span className="text-left font-semibold">
-                    How do I implement the recommendations?
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4">
-                  After receiving your analysis, you can implement the
-                  recommendations yourself or work with our team of experts who
-                  can help you implement the changes. We offer custom funnel
-                  optimization services to help you maximize your results.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem
-                value="item-4"
-                className="bg-flow-surface rounded-lg shadow-sm"
-              >
-                <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                  <span className="text-left font-semibold">
-                    How long does it take to see results?
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4">
-                  Most businesses start seeing improvements within 2-4 weeks of
-                  implementing our recommendations. However, the timeline can
-                  vary depending on your traffic volume, industry, and the
-                  specific changes implemented.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem
-                value="item-5"
-                className="bg-flow-surface rounded-lg shadow-sm"
-              >
-                <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                  <span className="text-left font-semibold">
-                    Can I get a more detailed analysis?
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4">
-                  Yes! Our free tool provides a basic analysis, but we also
-                  offer in-depth custom funnel audits that include detailed
-                  heatmap analysis, user session recordings, and personalized
-                  optimization strategies. Contact us for more information.
-                </AccordionContent>
-              </AccordionItem>
+              {faq.map((item, index) => (
+                <AccordionItem
+                  key={index}
+                  value={`item-${index + 1}`}
+                  className="bg-flow-surface rounded-lg shadow-sm"
+                >
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                    <span className="text-left font-semibold">{item.question}</span>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-4">{item.answer}</AccordionContent>
+                </AccordionItem>
+              ))}
             </Accordion>
           </div>
         </div>
@@ -880,13 +566,8 @@ export default function FixFunnelPage() {
       {/* CTA Section */}
       <section className="py-16 bg-blue-700 text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Optimize Your Conversion Funnel?
-          </h2>
-          <p className="text-xl mb-8 max-w-3xl mx-auto">
-            Get started with our free analysis tool or contact our experts for a
-            comprehensive funnel audit.
-          </p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">{t("cta.title")}</h2>
+          <p className="text-xl mb-8 max-w-3xl mx-auto">{t("cta.body")}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
@@ -897,7 +578,7 @@ export default function FixFunnelPage() {
                   ?.scrollIntoView({ behavior: "smooth" })
               }
             >
-              Analyze My Funnel Now
+              {t("cta.primary")}
             </Button>
             <Button
               size="lg"
@@ -905,7 +586,7 @@ export default function FixFunnelPage() {
               className="border-white text-white hover:bg-white/10"
               asChild
             >
-              <Link href="/contact">Get Expert Help</Link>
+              <Link href="/contact">{t("cta.secondary")}</Link>
             </Button>
           </div>
         </div>

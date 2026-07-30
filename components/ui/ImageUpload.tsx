@@ -1,5 +1,8 @@
 "use client"
 
+import { useT } from "@/lib/i18n"
+import { editorUiMessages } from "@/lib/i18n/messages/editorUi"
+
 import { useRef, useState, useCallback } from "react"
 import { UploadCloud, X, Link2, Loader2 } from "lucide-react"
 
@@ -95,6 +98,7 @@ export default function ImageUpload({
   placeholder,
   maxDim = 1600,
 }: ImageUploadProps) {
+  const t = useT(editorUiMessages)
   const inputRef = useRef<HTMLInputElement>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState("")
@@ -105,7 +109,7 @@ export default function ImageUpload({
     async (file: File | undefined | null) => {
       if (!file) return
       if (!file.type.startsWith("image/")) {
-        setError("Please choose an image file.")
+        setError(t("upload.chooseImage"))
         return
       }
       if (file.size > MAX_INPUT_MB * 1024 * 1024) {
@@ -118,7 +122,7 @@ export default function ImageUpload({
         const url = await uploadImageFile(file, { maxDim })
         onChange(url)
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Upload failed. Try another file.")
+        setError(e instanceof Error ? e.message : t("upload.failed"))
       } finally {
         setBusy(false)
       }
@@ -189,7 +193,7 @@ export default function ImageUpload({
               <UploadCloud size={20} style={{ color: "rgb(var(--accent-1))" }} />
             )}
             <span className="text-[11px] font-semibold leading-tight">
-              {busy ? "Uploading…" : "Click or drop an image to upload"}
+              {busy ? t("upload.uploading") : t("upload.prompt")}
             </span>
           </div>
         </button>

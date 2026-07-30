@@ -5,6 +5,8 @@ import { motion } from "framer-motion"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { ArrowLeft, MapPin, Building2, Home, Users, Layers, Clock, Calendar, User, Pencil, Trash2, ChevronLeft, ChevronRight, X } from "lucide-react"
+import { useT , useLocale, formatDateForLocale, type Locale } from "@/lib/i18n"
+import { realEstateProjectDetailMessages } from "@/lib/i18n/messages/realEstateProjectDetail"
 
 interface Project {
   _id: string
@@ -44,8 +46,8 @@ interface Blog {
   createdAt: string
 }
 
-function formatBlogDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+function formatBlogDate(dateStr: string, locale: Locale) {
+  return formatDateForLocale(dateStr, locale, { month: "short", day: "numeric", year: "numeric" })
 }
 
 const STATUS_COLOR: Record<string, string> = {
@@ -64,17 +66,9 @@ const SPEC_ICONS: Record<string, React.ElementType> = {
   flatSize: Building2,
 }
 
-const SPEC_LABELS: Record<string, string> = {
-  plotNo: "Plot No",
-  roadNo: "Road No",
-  sector: "Sector",
-  plotSize: "Plot Size",
-  numberOfUnits: "Number of Units",
-  buildingDetails: "Building Details",
-  flatSize: "Flat Size",
-}
-
 export default function ProjectDetailPage() {
+  const t = useT(realEstateProjectDetailMessages)
+  const locale = useLocale()
   const { id } = useParams<{ id: string }>()
   const router = useRouter()
   const [project, setProject] = useState<Project | null>(null)
@@ -115,7 +109,7 @@ export default function ProjectDetailPage() {
   }, [lightboxIndex, project])
 
   async function handleDelete() {
-    if (!project || !confirm(`Delete "${project.name}"? This cannot be undone.`)) return
+    if (!project || !confirm(t("confirmDelete", { name: project.name }))) return
     setDeleting(true)
     try {
       const res = await fetch(`/api/real-estate-projects/${project._id}`, { method: "DELETE" })
@@ -135,8 +129,8 @@ export default function ProjectDetailPage() {
   if (!project) {
     return (
       <div className="min-h-screen bg-flow-bg flex flex-col items-center justify-center gap-4">
-        <h2 className="font-bold text-2xl text-flow-text">Project not found</h2>
-        <Link href="/real-estate/projects" className="text-sm font-semibold" style={{ color: "#0066A2" }}>← Back to Projects</Link>
+        <h2 className="font-bold text-2xl text-flow-text">{t("notFound")}</h2>
+        <Link href="/real-estate/projects" className="text-sm font-semibold" style={{ color: "#0066A2" }}>{t("backToProjects")}</Link>
       </div>
     )
   }
@@ -187,7 +181,7 @@ export default function ProjectDetailPage() {
           className="flex items-center justify-between mb-8 sm:mb-12"
         >
           <Link href="/real-estate/projects" className="inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:opacity-70" style={{ color: "#0066A2" }}>
-            <ArrowLeft size={15} /> All Projects
+            <ArrowLeft size={15} /> {t("allProjects")}
           </Link>
 
           {isAdmin && (
@@ -197,7 +191,7 @@ export default function ProjectDetailPage() {
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
                 style={{ background: "rgba(0,102,162,0.1)", color: "#0066A2" }}
               >
-                <Pencil size={12} /> Edit
+                <Pencil size={12} /> {t("edit")}
               </Link>
               <button
                 onClick={handleDelete}
@@ -205,7 +199,7 @@ export default function ProjectDetailPage() {
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
                 style={{ background: "rgb(239 68 68 / 0.1)", color: "rgb(239 68 68)" }}
               >
-                <Trash2 size={12} /> {deleting ? "Deleting…" : "Delete"}
+                <Trash2 size={12} /> {deleting ? t("deleting") : t("delete")}
               </button>
             </div>
           )}
@@ -267,14 +261,14 @@ export default function ProjectDetailPage() {
             style={{ border: "1px solid var(--flow-border-strong)" }}
           >
             <h2 className="font-bold text-base mb-5 uppercase tracking-widest" style={{ color: "#0066A2", fontSize: "0.75rem" }}>
-              Project Details
+              {t("detailsTitle")}
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-y-5 gap-x-6">
               {specs.map(key => {
                 const Icon = SPEC_ICONS[key] ?? Building2
                 return (
                   <div key={key}>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest mb-1 opacity-50">{SPEC_LABELS[key]}</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-widest mb-1 opacity-50">{t(`specs.${key}`)}</p>
                     <p className="flex items-center gap-1.5 text-sm font-semibold text-flow-text">
                       <Icon size={13} style={{ color: "#0066A2", flexShrink: 0 }} />
                       {project[key]}
@@ -303,9 +297,9 @@ export default function ProjectDetailPage() {
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-bold uppercase tracking-widest flex items-center gap-2" style={{ color: "#0066A2", fontSize: "0.75rem" }}>
                   <MapPin size={13} style={{ color: "#0066A2" }} />
-                  Location
+                  {t("location.title")}
                   {!hasCustomUrl && (
-                    <span className="text-[9px] font-normal opacity-40 normal-case tracking-normal">— Dhaka overview</span>
+                    <span className="text-[9px] font-normal opacity-40 normal-case tracking-normal">{t("location.overviewNote")}</span>
                   )}
                 </h2>
                 {hasCustomUrl && (
@@ -321,7 +315,7 @@ export default function ProjectDetailPage() {
                       <polyline points="15 3 21 3 21 9" />
                       <line x1="10" y1="14" x2="21" y2="3" />
                     </svg>
-                    View on Google Maps
+                    {t("location.viewOnMaps")}
                   </a>
                 )}
               </div>
@@ -338,14 +332,14 @@ export default function ProjectDetailPage() {
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title={hasCustomUrl ? `${project.name} location` : "Dhaka, Bangladesh"}
+                  title={hasCustomUrl ? t("location.mapTitle", { name: project.name }) : t("location.mapTitleFallback")}
                 />
                 {hasCustomUrl && !isEmbed && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-3" style={{ background: "var(--flow-surface)" }}>
                     <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ background: "rgba(0,102,162,0.12)", border: "1px solid rgba(0,102,162,0.25)" }}>
                       <MapPin size={26} style={{ color: "#0066A2" }} />
                     </div>
-                    <span className="text-sm font-semibold" style={{ color: "#0066A2" }}>Tap to open on Google Maps</span>
+                    <span className="text-sm font-semibold" style={{ color: "#0066A2" }}>{t("location.tapToOpen")}</span>
                     <a
                       href={project.googleMapUrl}
                       target="_blank"
@@ -353,7 +347,7 @@ export default function ProjectDetailPage() {
                       className="text-xs font-medium px-4 py-2 rounded-full transition-opacity hover:opacity-80"
                       style={{ background: "rgba(0,102,162,0.12)", color: "#0066A2", border: "1px solid rgba(0,102,162,0.25)" }}
                     >
-                      Open in Maps →
+                      {t("location.openInMaps")}
                     </a>
                   </div>
                 )}
@@ -376,7 +370,7 @@ export default function ProjectDetailPage() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: "#16a34a" }} />
                 <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: "#16a34a" }} />
               </span>
-              Available Flats
+              {t("availableFlats")}
             </h2>
             <div className="flex flex-wrap gap-2.5">
               {project.availableFlats.map((flat, i) => (
@@ -404,7 +398,7 @@ export default function ProjectDetailPage() {
               style={{ border: "1px solid var(--flow-border-strong)" }}
             >
               <h2 className="font-bold mb-4 uppercase tracking-widest" style={{ color: "#B8892A", fontSize: "0.7rem" }}>
-                Rooftop Features
+                {t("rooftopFeatures")}
               </h2>
               <ul className="space-y-2.5">
                 {project.rooftopFeatures.map((f, i) => (
@@ -426,7 +420,7 @@ export default function ProjectDetailPage() {
               style={{ border: "1px solid var(--flow-border-strong)" }}
             >
               <h2 className="font-bold mb-4 uppercase tracking-widest" style={{ color: "#0066A2", fontSize: "0.7rem" }}>
-                Ground Floor Features
+                {t("groundFloorFeatures")}
               </h2>
               <ul className="space-y-2.5">
                 {project.groundFloorFeatures.map((f, i) => (
@@ -449,7 +443,7 @@ export default function ProjectDetailPage() {
             className="mb-10"
           >
             <h2 className="font-bold mb-5 uppercase tracking-widest" style={{ color: "rgb(var(--flow-text-soft))", fontSize: "0.7rem" }}>
-              Gallery
+              {t("gallery")}
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {allImages.map((url, i) => (
@@ -481,15 +475,15 @@ export default function ProjectDetailPage() {
                 <span className="inline-flex items-center gap-2 mb-3">
                   <span className="w-4 h-[2px]" style={{ background: "#B8892A" }} />
                   <span className="text-[9px] font-bold uppercase tracking-[0.25em]" style={{ color: "#B8892A" }}>
-                    Real Estate Insights
+                    {t("blogs.eyebrow")}
                   </span>
                 </span>
                 <h2 className="font-bold text-flow-text text-xl sm:text-2xl" style={{ fontFamily: "var(--font-heading)" }}>
-                  Latest Articles &amp; Advice
+                  {t("blogs.title")}
                 </h2>
               </div>
               <Link href="/real-estate/blogs" className="text-xs font-semibold hover:opacity-75 transition-opacity" style={{ color: "#0066A2" }}>
-                View All Articles →
+                {t("blogs.viewAll")}
               </Link>
             </div>
 
@@ -536,7 +530,7 @@ export default function ProjectDetailPage() {
                         <span className="flex items-center gap-1"><Clock size={9} />{blog.readTime}</span>
                       </div>
                       <Link href={`/real-estate/blogs/${blog.slug}`} className="text-[10px] font-semibold shrink-0" style={{ color: "#0066A2" }}>
-                        Read →
+                        {t("blogs.read")}
                       </Link>
                     </div>
                   </div>
@@ -559,7 +553,7 @@ export default function ProjectDetailPage() {
             onClick={() => setLightboxIndex(null)}
             className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center text-white"
             style={{ background: "rgba(255,255,255,0.12)" }}
-            aria-label="Close"
+            aria-label={t("lightbox.close")}
           >
             <X size={20} />
           </button>
@@ -571,7 +565,7 @@ export default function ProjectDetailPage() {
                 onClick={e => { e.stopPropagation(); setLightboxIndex(i => i === null ? i : (i - 1 + allImages.length) % allImages.length) }}
                 className="absolute left-3 sm:left-5 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white transition-colors hover:bg-white/25"
                 style={{ background: "rgba(255,255,255,0.12)" }}
-                aria-label="Previous image"
+                aria-label={t("lightbox.previous")}
               >
                 <ChevronLeft size={24} />
               </button>
@@ -579,7 +573,7 @@ export default function ProjectDetailPage() {
                 onClick={e => { e.stopPropagation(); setLightboxIndex(i => i === null ? i : (i + 1) % allImages.length) }}
                 className="absolute right-3 sm:right-5 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white transition-colors hover:bg-white/25"
                 style={{ background: "rgba(255,255,255,0.12)" }}
-                aria-label="Next image"
+                aria-label={t("lightbox.next")}
               >
                 <ChevronRight size={24} />
               </button>

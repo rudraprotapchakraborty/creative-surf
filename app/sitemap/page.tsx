@@ -1,13 +1,19 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import type { Metadata } from "next";
-import { generateMetadata } from "@/lib/metadata";
+import { generateMetadata as buildMetadata } from "@/lib/metadata";
+import { getTranslator } from "@/lib/i18n/server";
+import { sitemapMessages } from "@/lib/i18n/messages/sitemap";
+import { commonMessages } from "@/lib/i18n/messages/common";
 
-export const metadata: Metadata = generateMetadata({
-  title: "Sitemap",
-  description: "Browse all pages on the Creative Surf website.",
-  path: "/sitemap",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslator(sitemapMessages);
+  return buildMetadata({
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    path: "/sitemap",
+  });
+}
 
 // Navigation structure based on the navbar component
 const navigationStructure = [
@@ -450,26 +456,31 @@ const mainPages = [
   { name: "Sitemap", href: "/sitemap" },
 ];
 
-export default function SitemapPage() {
+export default async function SitemapPage() {
+  const t = await getTranslator(sitemapMessages);
+  const c = await getTranslator(commonMessages);
+  const labels = t.raw<Record<string, string>>("labels", {});
+  const label = (name: string) => labels[name] ?? name;
+
   return (
     <div className="bg-flow-bg min-h-screen py-16">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
         <div className="flex items-center text-sm text-flow-textSoft mb-8">
           <Link href="/" className="hover:text-blue-600">
-            Home
+            {c("breadcrumb.home")}
           </Link>
           <ChevronRight className="h-4 w-4 mx-2" />
-          <span className="text-flow-textSoft font-medium">Sitemap</span>
+          <span className="text-flow-textSoft font-medium">{t("breadcrumbCurrent")}</span>
         </div>
 
-        <h1 className="text-4xl font-bold mb-12 text-center">Sitemap</h1>
+        <h1 className="text-4xl font-bold mb-12 text-center">{t("title")}</h1>
 
         <div className="bg-flow-surface rounded-xl shadow-md p-8 mb-16">
           {/* Main Pages */}
           <div className="mb-12">
             <h2 className="text-2xl font-bold mb-6 text-blue-600 border-b pb-2">
-              Main Pages
+              {t("mainPages")}
             </h2>
             <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-2">
               {mainPages.map((page) => (
@@ -478,7 +489,7 @@ export default function SitemapPage() {
                     href={page.href}
                     className="text-flow-textSoft hover:text-blue-600"
                   >
-                    {page.name}
+                    {label(page.name)}
                   </Link>
                 </li>
               ))}
@@ -489,7 +500,7 @@ export default function SitemapPage() {
           {navigationStructure.map((section) => (
             <div key={section.href} className="mb-12">
               <h2 className="text-2xl font-bold mb-6 text-blue-600 border-b pb-2">
-                {section.title}
+                {label(section.title)}
               </h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {section.sections.map((subsection) => (
@@ -499,7 +510,7 @@ export default function SitemapPage() {
                         href={subsection.href}
                         className="text-flow-text hover:text-blue-600"
                       >
-                        {subsection.title}
+                        {label(subsection.title)}
                       </Link>
                     </h3>
                     <ul className="space-y-2 ml-4">
@@ -509,7 +520,7 @@ export default function SitemapPage() {
                             href={item.href}
                             className="text-flow-textSoft hover:text-blue-600"
                           >
-                            {item.name}
+                            {label(item.name)}
                           </Link>
                         </li>
                       ))}

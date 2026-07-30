@@ -1,5 +1,8 @@
 "use client"
 
+import { useT } from "@/lib/i18n"
+import { editorUiMessages } from "@/lib/i18n/messages/editorUi"
+
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useEditor, EditorContent, NodeViewWrapper, ReactNodeViewRenderer, type NodeViewProps } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
@@ -103,9 +106,10 @@ interface BlogRichTextEditorProps {
 export default function BlogRichTextEditor({
   value,
   onChange,
-  placeholder = "Start writing your blog post…",
+  placeholder,
   minHeight = 400,
 }: BlogRichTextEditorProps) {
+  const t = useT(editorUiMessages)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [imageBusy, setImageBusy] = useState(false)
   const [imageError, setImageError] = useState("")
@@ -129,7 +133,7 @@ export default function BlogRichTextEditor({
         },
       }),
       BlogImage.configure({ inline: false, allowBase64: false }),
-      Placeholder.configure({ placeholder }),
+      Placeholder.configure({ placeholder: placeholder ?? t("toolbar.placeholder") }),
       Markdown.configure({
         html: false,
         tightLists: true,
@@ -181,7 +185,7 @@ export default function BlogRichTextEditor({
   const setLink = useCallback(() => {
     if (!editor) return
     const prev = editor.getAttributes("link").href as string | undefined
-    const url = window.prompt("Link URL", prev || "https://")
+    const url = window.prompt(t("toolbar.linkPrompt"), prev || "https://")
     if (url === null) return
     if (url === "") {
       editor.chain().focus().extendMarkRange("link").unsetLink().run()
@@ -199,7 +203,7 @@ export default function BlogRichTextEditor({
       try {
         for (const file of Array.from(files)) {
           if (!file.type.startsWith("image/")) {
-            setImageError("Please choose image files only.")
+            setImageError(t("upload.chooseImagesOnly"))
             continue
           }
           if (file.size > MAX_INPUT_MB * 1024 * 1024) {
@@ -210,7 +214,7 @@ export default function BlogRichTextEditor({
           editor.chain().focus().setImage({ src: url }).run()
         }
       } catch (e) {
-        setImageError(e instanceof Error ? e.message : "Upload failed. Try another file.")
+        setImageError(e instanceof Error ? e.message : t("upload.failed"))
       } finally {
         setImageBusy(false)
         if (fileInputRef.current) fileInputRef.current.value = ""
@@ -251,7 +255,7 @@ export default function BlogRichTextEditor({
             fontFamily: "var(--font-heading)",
           }}
         >
-          <option value="p">Normal text</option>
+          <option value="p">{t("toolbar.normalText")}</option>
           <option value="h1">Heading 1</option>
           <option value="h2">Heading 2</option>
           <option value="h3">Heading 3</option>
@@ -260,21 +264,21 @@ export default function BlogRichTextEditor({
         <ToolbarDivider />
 
         <ToolbarButton
-          title="Bold"
+          title={t("toolbar.bold")}
           active={editor?.isActive("bold")}
           onClick={() => editor?.chain().focus().toggleBold().run()}
         >
           <Bold size={15} />
         </ToolbarButton>
         <ToolbarButton
-          title="Italic"
+          title={t("toolbar.italic")}
           active={editor?.isActive("italic")}
           onClick={() => editor?.chain().focus().toggleItalic().run()}
         >
           <Italic size={15} />
         </ToolbarButton>
         <ToolbarButton
-          title="Underline"
+          title={t("toolbar.underline")}
           active={editor?.isActive("underline")}
           onClick={() => editor?.chain().focus().toggleUnderline().run()}
         >
@@ -284,21 +288,21 @@ export default function BlogRichTextEditor({
         <ToolbarDivider />
 
         <ToolbarButton
-          title="Bullet list"
+          title={t("toolbar.bulletList")}
           active={editor?.isActive("bulletList")}
           onClick={() => editor?.chain().focus().toggleBulletList().run()}
         >
           <List size={15} />
         </ToolbarButton>
         <ToolbarButton
-          title="Numbered list"
+          title={t("toolbar.numberedList")}
           active={editor?.isActive("orderedList")}
           onClick={() => editor?.chain().focus().toggleOrderedList().run()}
         >
           <ListOrdered size={15} />
         </ToolbarButton>
         <ToolbarButton
-          title="Quote"
+          title={t("toolbar.quote")}
           active={editor?.isActive("blockquote")}
           onClick={() => editor?.chain().focus().toggleBlockquote().run()}
         >
@@ -307,7 +311,7 @@ export default function BlogRichTextEditor({
 
         <ToolbarDivider />
 
-        <ToolbarButton title="Insert link" active={editor?.isActive("link")} onClick={setLink}>
+        <ToolbarButton title={t("toolbar.insertLink")} active={editor?.isActive("link")} onClick={setLink}>
           <Link2 size={15} />
         </ToolbarButton>
 
@@ -320,7 +324,7 @@ export default function BlogRichTextEditor({
           onChange={e => handleImageFiles(e.target.files)}
         />
         <ToolbarButton
-          title="Insert image"
+          title={t("toolbar.insertImage")}
           disabled={imageBusy}
           onClick={() => fileInputRef.current?.click()}
         >
@@ -328,7 +332,7 @@ export default function BlogRichTextEditor({
         </ToolbarButton>
 
         <ToolbarButton
-          title="Divider"
+          title={t("toolbar.divider")}
           onClick={() => editor?.chain().focus().setHorizontalRule().run()}
         >
           <Minus size={15} />
@@ -336,10 +340,10 @@ export default function BlogRichTextEditor({
 
         <div className="flex-1" />
 
-        <ToolbarButton title="Undo" onClick={() => editor?.chain().focus().undo().run()}>
+        <ToolbarButton title={t("toolbar.undo")} onClick={() => editor?.chain().focus().undo().run()}>
           <Undo2 size={15} />
         </ToolbarButton>
-        <ToolbarButton title="Redo" onClick={() => editor?.chain().focus().redo().run()}>
+        <ToolbarButton title={t("toolbar.redo")} onClick={() => editor?.chain().focus().redo().run()}>
           <Redo2 size={15} />
         </ToolbarButton>
       </div>

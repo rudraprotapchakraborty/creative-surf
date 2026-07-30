@@ -1,5 +1,8 @@
 "use client"
 
+import { useT } from "@/lib/i18n"
+import { editorUiMessages } from "@/lib/i18n/messages/editorUi"
+
 import { Plus, X, Link2, ArrowDownLeft, ArrowUpRight } from "lucide-react"
 import type { BlogLinkFieldError, BlogSeoFields, BlogSeoLink } from "@/lib/blog-types"
 import { getBlogLinkFieldErrors } from "@/lib/blog-types"
@@ -42,6 +45,9 @@ function LinkListEditor({
   errors: BlogLinkFieldError[]
   showValidation: boolean
 }) {
+  const t = useT(editorUiMessages)
+  const removeLabel = t("seo.removeLink")
+
   function fieldError(index: number, field: "label" | "url") {
     return errors.find(err => err.list === list && err.index === index && err.field === field)
   }
@@ -89,7 +95,7 @@ function LinkListEditor({
                   onClick={() => removeLink(index)}
                   className="p-1 rounded opacity-50 hover:opacity-100 transition-opacity"
                   style={{ color: "rgb(var(--flow-text))" }}
-                  aria-label="Remove link"
+                  aria-label={removeLabel}
                 >
                   <X size={12} />
                 </button>
@@ -154,9 +160,10 @@ export default function BlogSeoPanel({
   onChange,
   showValidation = false,
   inboundUrlPlaceholder = "https://www.creativesurf.com/seo-lead-generation",
-  inboundHint = "Internal links to your site. Use the full URL (https://…). Label and URL are both required.",
-  outboundHint = "External links to trusted sources. Label and URL are both required.",
+  inboundHint,
+  outboundHint,
 }: BlogSeoPanelProps) {
+  const t = useT(editorUiMessages)
   const linkErrors = getBlogLinkFieldErrors(value.inboundLinks, value.outboundLinks)
   const metaLength = value.metaDescription.trim().length
   const metaStatus =
@@ -178,12 +185,12 @@ export default function BlogSeoPanel({
 
       <div>
         <label className="block text-xs font-semibold mb-2" style={{ color: "rgb(var(--flow-text))" }}>
-          Meta Description
+          {t("seo.metaDescriptionLabel")}
         </label>
         <textarea
           value={value.metaDescription}
           onChange={e => onChange({ metaDescription: e.target.value })}
-          placeholder="A concise summary for Google search results (150–160 characters recommended)…"
+          placeholder={t("seo.metaPlaceholder")}
           rows={4}
           maxLength={320}
           className="w-full bg-transparent outline-none resize-none text-xs leading-relaxed text-flow-text placeholder:opacity-40 rounded-lg p-2.5"
@@ -191,7 +198,7 @@ export default function BlogSeoPanel({
         />
         <div className="flex items-center justify-between mt-1.5">
           <span className="text-[10px]" style={{ color: "rgb(var(--flow-text-soft))" }}>
-            {metaLength === 0 ? "Falls back to excerpt if empty" : `${metaLength} characters`}
+            {metaLength === 0 ? t("seo.fallbackHint") : t("seo.characters", { count: metaLength })}
           </span>
           <span
             className="text-[10px] font-semibold"
@@ -204,14 +211,14 @@ export default function BlogSeoPanel({
                     : "rgb(var(--flow-text-soft))",
             }}
           >
-            {metaStatus === "good" ? "Ideal length" : metaStatus === "long" ? "Consider shortening" : ""}
+            {metaStatus === "good" ? t("seo.idealLength") : metaStatus === "long" ? t("seo.considerShortening") : ""}
           </span>
         </div>
       </div>
 
       <LinkListEditor
-        title="Inbound Links"
-        hint={inboundHint}
+        title={t("seo.inboundTitle")}
+        hint={inboundHint ?? t("seo.inboundHint")}
         icon={<ArrowDownLeft size={13} />}
         list="inbound"
         links={value.inboundLinks}
@@ -224,8 +231,8 @@ export default function BlogSeoPanel({
       />
 
       <LinkListEditor
-        title="Outbound Links"
-        hint={outboundHint}
+        title={t("seo.outboundTitle")}
+        hint={outboundHint ?? t("seo.outboundHint")}
         icon={<ArrowUpRight size={13} />}
         list="outbound"
         links={value.outboundLinks}

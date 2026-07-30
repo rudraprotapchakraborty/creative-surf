@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Plus, Pencil, Trash2, MapPin, Building2, LogOut } from "lucide-react"
+import { useT } from "@/lib/i18n"
+import { realEstateProjectsMessages } from "@/lib/i18n/messages/realEstateProjects"
 
 interface Project {
   _id: string
@@ -41,6 +43,7 @@ const fadeUp = {
 }
 
 export default function ProjectsPage() {
+  const t = useT(realEstateProjectsMessages)
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
@@ -72,7 +75,7 @@ export default function ProjectsPage() {
   }
 
   async function handleDelete(id: string, name: string) {
-    if (!confirm(`Delete "${name}"? This cannot be undone.`)) return
+    if (!confirm(t("list.confirmDelete", { name }))) return
     setDeletingId(id)
     try {
       const res = await fetch(`/api/real-estate-projects/${id}`, { method: "DELETE" })
@@ -107,14 +110,14 @@ export default function ProjectsPage() {
               <span className="inline-flex items-center gap-2 mb-4">
                 <span className="w-5 h-[2px]" style={{ background: "#B8892A" }} />
                 <span className="text-[10px] font-bold uppercase tracking-[0.3em]" style={{ color: "#B8892A" }}>
-                  Creative Surf · Real Estate
+                  {t("list.eyebrow")}
                 </span>
               </span>
               <h1 className="font-bold text-flow-text leading-tight mb-3" style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}>
-                Our Projects
+                {t("list.title")}
               </h1>
               <p className="max-w-lg text-sm sm:text-base leading-relaxed" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                Premium residential developments in Dhaka — built with quality, designed for life.
+                {t("list.subtitle")}
               </p>
             </div>
 
@@ -134,13 +137,13 @@ export default function ProjectsPage() {
                   style={{ background: "#B8892A", boxShadow: "0 4px 18px rgba(184,137,42,0.35)" }}
                 >
                   <Plus size={15} />
-                  New Project
+                  {t("list.newProject")}
                 </Link>
                 <button
                   onClick={handleLogout}
                   className="p-2 rounded-xl transition-colors hover:opacity-70"
                   style={{ background: "rgb(var(--flow-border))", color: "rgb(var(--flow-text))" }}
-                  title="Logout"
+                  title={t("list.logout")}
                 >
                   <LogOut size={15} />
                 </button>
@@ -168,7 +171,7 @@ export default function ProjectsPage() {
                     : { background: "var(--flow-card)", color: "rgb(var(--flow-text))", border: "1px solid var(--flow-border-strong)" }
                 }
               >
-                {s}
+                {s === "All" ? t("list.statusAll") : s}
               </button>
             ))}
           </motion.div>
@@ -191,13 +194,13 @@ export default function ProjectsPage() {
             <div className="w-16 h-16 rounded-2xl mb-6 flex items-center justify-center" style={{ background: "rgba(184,137,42,0.1)" }}>
               <Building2 size={28} style={{ color: "#B8892A" }} />
             </div>
-            <h3 className="font-bold text-xl mb-2 text-flow-text">No projects yet</h3>
+            <h3 className="font-bold text-xl mb-2 text-flow-text">{t("list.emptyTitle")}</h3>
             <p className="text-sm mb-6" style={{ color: "rgb(var(--flow-text-soft))" }}>
-              {isAdmin ? "Add your first real estate project to get started." : "Projects will appear here soon."}
+              {isAdmin ? t("list.emptyAdmin") : t("list.emptyPublic")}
             </p>
             {isAdmin && (
               <Link href="/real-estate/projects/new" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: "#B8892A", boxShadow: "0 4px 18px rgba(184,137,42,0.35)" }}>
-                <Plus size={15} /> Add First Project
+                <Plus size={15} /> {t("list.addFirst")}
               </Link>
             )}
           </motion.div>
@@ -247,7 +250,7 @@ export default function ProjectsPage() {
                             href={`/real-estate/projects/edit/${project._id}`}
                             className="p-1.5 rounded-lg transition-all"
                             style={{ background: "rgba(184,137,42,0.1)", color: "#B8892A" }}
-                            title="Edit"
+                            title={t("list.edit")}
                           >
                             <Pencil size={12} />
                           </Link>
@@ -256,7 +259,7 @@ export default function ProjectsPage() {
                             disabled={deletingId === project._id}
                             className="p-1.5 rounded-lg transition-all"
                             style={{ background: "rgb(239 68 68 / 0.1)", color: "rgb(239 68 68)" }}
-                            title="Delete"
+                            title={t("list.delete")}
                           >
                             <Trash2 size={12} />
                           </button>

@@ -5,6 +5,8 @@ import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft, Save, X, Plus, Trash2, MapPin, ExternalLink, UploadCloud, Loader2 } from "lucide-react"
+import { useT } from "@/lib/i18n"
+import { projectEditorMessages } from "@/lib/i18n/messages/projectEditor"
 import ImageUpload, { uploadImageFile } from "@/components/ui/ImageUpload"
 
 interface ProjectForm {
@@ -58,6 +60,7 @@ function slugify(text: string) {
 function FeatureListEditor({
   label, items, onChange,
 }: { label: string; items: string[]; onChange: (v: string[]) => void }) {
+  const t = useT(projectEditorMessages)
   const [input, setInput] = useState("")
 
   function add() {
@@ -95,7 +98,7 @@ function FeatureListEditor({
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={onKey}
-          placeholder="Add feature and press Enter…"
+          placeholder={t("featurePlaceholder")}
           className="flex-1 bg-transparent outline-none text-xs text-flow-text placeholder:opacity-30 border-b pb-1"
           style={{ borderColor: "var(--flow-border)" }}
         />
@@ -180,6 +183,7 @@ function ImageListEditor({ label, items, onChange }: { label: string; items: str
 }
 
 export default function ProjectEditor({ projectId }: { projectId?: string }) {
+  const t = useT(projectEditorMessages)
   const isEdit = !!projectId
   const [form, setForm] = useState<ProjectForm>(DEFAULT_FORM)
   const [saving, setSaving] = useState(false)
@@ -221,7 +225,7 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
         })
         setLoading(false)
       })
-      .catch(() => { setError("Failed to load project."); setLoading(false) })
+      .catch(() => { setError(t("errors.loadFailed")); setLoading(false) })
   }, [isEdit, projectId])
 
   const set = useCallback(<K extends keyof ProjectForm>(key: K, value: ProjectForm[K]) => {
@@ -235,7 +239,7 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
 
   async function handleSave() {
     setError("")
-    if (!form.name.trim()) { setError("Project name is required."); return }
+    if (!form.name.trim()) { setError(t("errors.nameRequired")); return }
 
     setSaving(true)
     try {
@@ -258,7 +262,7 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
       const saved = await res.json()
       router.push(`/real-estate/projects/${saved.slug}`)
     } catch {
-      setError("Network error. Please try again.")
+      setError(t("errors.network"))
       setSaving(false)
     }
   }
@@ -288,7 +292,7 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
               <ArrowLeft size={16} />
             </Link>
             <span className="font-semibold text-sm text-flow-text" style={{ fontFamily: "var(--font-heading)" }}>
-              {isEdit ? "Edit Project" : "New Project"}
+              {isEdit ? t("editProject") : t("newProject")}
             </span>
           </div>
         </div>
@@ -315,7 +319,7 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
                 type="text"
                 value={form.name}
                 onChange={e => handleNameChange(e.target.value)}
-                placeholder="Project name…"
+                placeholder={t("namePlaceholder")}
                 className="w-full font-bold outline-none bg-transparent text-flow-text placeholder:text-flow-text/20 border-b pb-3 transition-colors"
                 style={{ fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontFamily: "var(--font-heading)", borderColor: "var(--flow-border-strong)" }}
               />
@@ -323,25 +327,25 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
 
             {/* Subtitle */}
             <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-              <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>Subtitle / Society</label>
-              <input type="text" value={form.subtitle} onChange={e => set("subtitle", e.target.value)} placeholder="e.g. JOLSHIRI ABASHON" className={fieldClass} style={fieldStyle} />
+              <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>{t("subtitleLabel")}</label>
+              <input type="text" value={form.subtitle} onChange={e => set("subtitle", e.target.value)} placeholder={t("subtitlePlaceholder")} className={fieldClass} style={fieldStyle} />
             </div>
 
             {/* Plot details grid */}
             <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-              <label className="block text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "rgb(var(--flow-text-soft))" }}>Plot Details</label>
+              <label className="block text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "rgb(var(--flow-text-soft))" }}>{t("plotDetailsLabel")}</label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {([
-                  ["plotNo", "Plot No"],
-                  ["roadNo", "Road No"],
-                  ["sector", "Sector"],
-                  ["plotSize", "Plot Size"],
-                  ["numberOfUnits", "Number of Units"],
-                  ["buildingDetails", "Building Details"],
-                  ["flatSize", "Flat Size"],
-                ] as [keyof ProjectForm, string][]).map(([key, lbl]) => (
+                  "plotNo",
+                  "roadNo",
+                  "sector",
+                  "plotSize",
+                  "numberOfUnits",
+                  "buildingDetails",
+                  "flatSize",
+                ] as (keyof ProjectForm)[]).map((key) => (
                   <div key={key}>
-                    <label className="block text-[10px] font-semibold uppercase tracking-widest mb-1.5 opacity-60">{lbl}</label>
+                    <label className="block text-[10px] font-semibold uppercase tracking-widest mb-1.5 opacity-60">{t(`specs.${key}`)}</label>
                     <input
                       type="text"
                       value={form[key] as string}
@@ -357,26 +361,26 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
 
             {/* Description */}
             <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-              <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>Features Description</label>
+              <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>{t("featuresDescriptionLabel")}</label>
               <textarea
                 value={form.description}
                 onChange={e => set("description", e.target.value)}
-                placeholder="Describe the project's key features…"
+                placeholder={t("featuresDescriptionPlaceholder")}
                 rows={4}
                 className="w-full bg-transparent outline-none resize-none text-sm leading-relaxed text-flow-text placeholder:opacity-30"
               />
             </div>
 
-            <FeatureListEditor label="Rooftop Features" items={form.rooftopFeatures} onChange={v => set("rooftopFeatures", v)} />
-            <FeatureListEditor label="Ground Floor Features" items={form.groundFloorFeatures} onChange={v => set("groundFloorFeatures", v)} />
-            <FeatureListEditor label="Available Flats" items={form.availableFlats} onChange={v => set("availableFlats", v)} />
+            <FeatureListEditor label={t("rooftopFeatures")} items={form.rooftopFeatures} onChange={v => set("rooftopFeatures", v)} />
+            <FeatureListEditor label={t("groundFloorFeatures")} items={form.groundFloorFeatures} onChange={v => set("groundFloorFeatures", v)} />
+            <FeatureListEditor label={t("availableFlats")} items={form.availableFlats} onChange={v => set("availableFlats", v)} />
           </div>
 
           {/* ─── Right: meta sidebar ─── */}
           <div className="space-y-4">
             {/* Status */}
             <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-              <label className="block text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>Status</label>
+              <label className="block text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>{t("statusLabel")}</label>
               <select value={form.status} onChange={e => set("status", e.target.value)} className="w-full bg-transparent outline-none text-sm text-flow-text">
                 {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
@@ -384,30 +388,30 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
 
             {/* Cover Image */}
             <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-              <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>Cover Image</label>
+              <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>{t("coverImageLabel")}</label>
               <ImageUpload value={form.coverImage} onChange={v => set("coverImage", v)} />
             </div>
 
-            <ImageListEditor label="Additional Images" items={form.images} onChange={v => set("images", v)} />
+            <ImageListEditor label={t("additionalImages")} items={form.images} onChange={v => set("images", v)} />
 
             {/* Google Map URL */}
             <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
               <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>
                 <span className="flex items-center gap-1.5">
                   <MapPin size={11} style={{ color: "rgb(var(--accent-1))" }} />
-                  Google Map Location
+                  {t("mapLabel")}
                 </span>
               </label>
               <input
                 type="text"
                 value={form.googleMapUrl}
                 onChange={e => set("googleMapUrl", e.target.value)}
-                placeholder="Paste Google Maps embed URL or share link…"
+                placeholder={t("mapPlaceholder")}
                 className={fieldClass}
                 style={fieldStyle}
               />
               <p className="text-[10px] mt-2 opacity-40 leading-relaxed">
-                Paste the Google Maps <strong>embed URL</strong> (from Share → Embed a map → copy the src URL) or a regular Google Maps link.
+                {t("mapHintStart")}<strong>{t("mapHintStrong")}</strong> {t("mapHintEnd")}
               </p>
               {form.googleMapUrl && (
                 <a
@@ -442,9 +446,9 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
               style={{ background: "#B8892A", boxShadow: "0 4px 18px rgba(184,137,42,0.35)" }}
             >
               {saving ? (
-                <><span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />Saving…</>
+                <><span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />{t("saving")}</>
               ) : (
-                <><Save size={14} />{isEdit ? "Update Project" : "Add Project"}</>
+                <><Save size={14} />{isEdit ? t("updateProject") : t("addProject")}</>
               )}
             </button>
           </div>

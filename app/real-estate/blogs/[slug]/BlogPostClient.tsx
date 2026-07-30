@@ -10,6 +10,8 @@ import BlogSeoLinks from "@/components/blog/BlogSeoLinks"
 import { normalizeBlogMarkdown } from "@/lib/blog-markdown-normalize"
 import type { BlogRecord } from "@/lib/blog-db"
 import { ArrowLeft, Clock, Calendar, User, Tag, Pencil, Trash2 } from "lucide-react"
+import { useT , useLocale, formatDateForLocale, type Locale } from "@/lib/i18n"
+import { blogPostMessages } from "@/lib/i18n/messages/blogPost"
 
 const CATEGORY_COLOR = "#B8892A"
 
@@ -20,8 +22,8 @@ const RE_CATEGORY_EMOJI: Record<string, string> = {
   Construction: "🏗️", Commercial: "🏢",
 }
 
-function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
+function formatDate(dateStr: string, locale: Locale) {
+  return formatDateForLocale(dateStr, locale, { month: "long", day: "numeric", year: "numeric" })
 }
 
 export default function BlogPostClient({
@@ -31,6 +33,8 @@ export default function BlogPostClient({
   slug: string
   initialBlog?: BlogRecord
 }) {
+  const t = useT(blogPostMessages)
+  const locale = useLocale()
   const [blog, setBlog] = useState<BlogRecord | null>(initialBlog ?? null)
   const [loading, setLoading] = useState(!initialBlog)
   const [notFound, setNotFound] = useState(false)
@@ -72,8 +76,8 @@ export default function BlogPostClient({
   if (notFound || !blog) {
     return (
       <div className="min-h-screen bg-flow-bg flex flex-col items-center justify-center gap-4 px-4 text-center">
-        <h1 className="font-bold text-2xl sm:text-3xl text-flow-text">Post not found</h1>
-        <Link href="/real-estate/blogs" className="text-sm font-semibold" style={{ color: "#0066A2" }}>← Back to Blogs</Link>
+        <h1 className="font-bold text-2xl sm:text-3xl text-flow-text">{t("notFound")}</h1>
+        <Link href="/real-estate/blogs" className="text-sm font-semibold" style={{ color: "#0066A2" }}>{t("backToBlogs")}</Link>
       </div>
     )
   }
@@ -102,7 +106,7 @@ export default function BlogPostClient({
           <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm" style={{ color: "rgb(var(--flow-text-soft))" }}>
             <span className="flex items-center gap-1.5"><User size={12} />{blog.author}</span>
             <span className="flex items-center gap-1.5"><Clock size={12} />{blog.readTime}</span>
-            <span className="flex items-center gap-1.5"><Calendar size={12} />{formatDate(blog.createdAt)}</span>
+            <span className="flex items-center gap-1.5"><Calendar size={12} />{formatDate_CALL(blog.createdAt)}</span>
           </div>
 
           {isAdmin && (
@@ -112,14 +116,14 @@ export default function BlogPostClient({
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
                 style={{ background: "rgba(184,137,42,0.1)", color: "#B8892A" }}
               >
-                <Pencil size={12} /> Edit
+                <Pencil size={12} /> {t("edit")}
               </Link>
               <button
                 onClick={handleDelete}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
                 style={{ background: "rgb(239 68 68 / 0.1)", color: "rgb(239 68 68)" }}
               >
-                <Trash2 size={12} /> Delete
+                <Trash2 size={12} /> {t("delete")}
               </button>
             </div>
           )}
@@ -265,8 +269,8 @@ export default function BlogPostClient({
           inboundLinks={blog.inboundLinks}
           outboundLinks={blog.outboundLinks}
           accentColor="#B8892A"
-          inboundTitle="Related on Creative Surf Real Estate"
-          outboundTitle="External Resources"
+          inboundTitle={t("seo.inboundReal")}
+          outboundTitle={t("seo.outbound")}
         />
 
         {/* Tags */}
@@ -299,7 +303,7 @@ export default function BlogPostClient({
             style={{ color: "#0066A2" }}
           >
             <ArrowLeft size={14} />
-            Back to all articles
+            {t("backToAll")}
           </Link>
         </div>
       </div>

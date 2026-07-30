@@ -17,11 +17,26 @@ export const LOCALE_COOKIE = "cs_locale";
 /** One year — the preference should outlive a session. */
 export const LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
-export const LOCALE_META: Record<Locale, { label: string; short: string; native: string; flag: string }> = {
-  en: { label: "English", short: "EN", native: "English", flag: "🇬🇧" },
-  fr: { label: "French", short: "FR", native: "Français", flag: "🇫🇷" },
-  de: { label: "German", short: "DE", native: "Deutsch", flag: "🇩🇪" },
+export const LOCALE_META: Record<
+  Locale,
+  { label: string; short: string; native: string; flag: string; intl: string }
+> = {
+  en: { label: "English", short: "EN", native: "English", flag: "🇬🇧", intl: "en-US" },
+  fr: { label: "French", short: "FR", native: "Français", flag: "🇫🇷", intl: "fr-FR" },
+  de: { label: "German", short: "DE", native: "Deutsch", flag: "🇩🇪", intl: "de-DE" },
 };
+
+/** Formats a date string in the visitor's locale. */
+export function formatDateForLocale(
+  dateStr: string,
+  locale: Locale,
+  options: Intl.DateTimeFormatOptions = { month: "long", day: "numeric", year: "numeric" },
+): string {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleDateString(LOCALE_META[locale].intl, options);
+}
 
 export function isLocale(value: unknown): value is Locale {
   return typeof value === "string" && (LOCALES as readonly string[]).includes(value);

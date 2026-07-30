@@ -1,0 +1,55 @@
+import { defineMessages } from "../types";
+
+export const realEstateProjectsMessages = defineMessages({
+  en: {
+    list: {
+      eyebrow: "Creative Surf · Real Estate",
+      title: "Our Projects",
+      subtitle: "Premium residential developments in Dhaka — built with quality, designed for life.",
+      statusAll: "All",
+      newProject: "New Project",
+      logout: "Logout",
+      emptyTitle: "No projects yet",
+      emptyAdmin: "Add your first real estate project to get started.",
+      emptyPublic: "Projects will appear here soon.",
+      addFirst: "Add First Project",
+      edit: "Edit",
+      delete: "Delete",
+      confirmDelete: 'Delete "{name}"? This cannot be undone.',
+    },
+  },
+  fr: {
+    list: {
+      eyebrow: "Creative Surf · Immobilier",
+      title: "Nos projets",
+      subtitle: "Des résidences haut de gamme à Dhaka — construites avec exigence, pensées pour la vie.",
+      statusAll: "Tous",
+      newProject: "Nouveau projet",
+      logout: "Déconnexion",
+      emptyTitle: "Aucun projet pour l'instant",
+      emptyAdmin: "Ajoutez votre premier projet immobilier pour commencer.",
+      emptyPublic: "Les projets apparaîtront bientôt ici.",
+      addFirst: "Ajouter le premier projet",
+      edit: "Modifier",
+      delete: "Supprimer",
+      confirmDelete: 'Supprimer « {name} » ? Cette action est irréversible.',
+    },
+  },
+  de: {
+    list: {
+      eyebrow: "Creative Surf · Immobilien",
+      title: "Unsere Projekte",
+      subtitle: "Hochwertige Wohnprojekte in Dhaka — mit Qualität gebaut, fürs Leben gestaltet.",
+      statusAll: "Alle",
+      newProject: "Neues Projekt",
+      logout: "Abmelden",
+      emptyTitle: "Noch keine Projekte",
+      emptyAdmin: "Legen Sie Ihr erstes Immobilienprojekt an, um zu starten.",
+      emptyPublic: "Projekte erscheinen hier in Kürze.",
+      addFirst: "Erstes Projekt anlegen",
+      edit: "Bearbeiten",
+      delete: "Löschen",
+      confirmDelete: '„{name}“ löschen? Das kann nicht rückgängig gemacht werden.',
+    },
+  },
+});

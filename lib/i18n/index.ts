@@ -6,6 +6,7 @@ export {
   LOCALE_META,
   isLocale,
   resolveLocale,
+  formatDateForLocale,
   type Locale,
 } from "./config";
 

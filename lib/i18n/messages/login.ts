@@ -1,0 +1,43 @@
+import { defineMessages } from "../types";
+
+export const loginMessages = defineMessages({
+  en: {
+    brand: "Creative Surf",
+    title: "Admin Access",
+    username: "Username",
+    usernamePlaceholder: "Enter username",
+    password: "Password",
+    passwordPlaceholder: "Enter password",
+    submit: "Sign In",
+    signingIn: "Signing in…",
+    invalidCredentials: "Invalid credentials",
+    genericError: "Something went wrong. Please try again.",
+    footer: "Creative Surf · Admin Portal",
+  },
+  fr: {
+    brand: "Creative Surf",
+    title: "Accès administrateur",
+    username: "Identifiant",
+    usernamePlaceholder: "Saisissez votre identifiant",
+    password: "Mot de passe",
+    passwordPlaceholder: "Saisissez votre mot de passe",
+    submit: "Se connecter",
+    signingIn: "Connexion…",
+    invalidCredentials: "Identifiants invalides",
+    genericError: "Une erreur est survenue. Veuillez réessayer.",
+    footer: "Creative Surf · Portail administrateur",
+  },
+  de: {
+    brand: "Creative Surf",
+    title: "Administrator-Zugang",
+    username: "Benutzername",
+    usernamePlaceholder: "Benutzernamen eingeben",
+    password: "Passwort",
+    passwordPlaceholder: "Passwort eingeben",
+    submit: "Anmelden",
+    signingIn: "Anmeldung läuft…",
+    invalidCredentials: "Ungültige Zugangsdaten",
+    genericError: "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+    footer: "Creative Surf · Admin-Portal",
+  },
+});

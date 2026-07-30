@@ -1,5 +1,8 @@
 "use client"
 
+import { useT } from "@/lib/i18n"
+import { editorUiMessages } from "@/lib/i18n/messages/editorUi"
+
 import { useRef, useState, useCallback } from "react"
 import { ImagePlus, Loader2 } from "lucide-react"
 import { uploadImageFile } from "@/components/ui/ImageUpload"
@@ -30,6 +33,7 @@ export default function MarkdownImageInsert({
   maxDim = 1920,
   className = "",
 }: MarkdownImageInsertProps) {
+  const t = useT(editorUiMessages)
   const inputRef = useRef<HTMLInputElement>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState("")
@@ -90,9 +94,9 @@ export default function MarkdownImageInsert({
         }}
       >
         {busy ? (
-          <><Loader2 size={13} className="animate-spin" /> Uploading…</>
+          <><Loader2 size={13} className="animate-spin" /> {t("upload.uploading")}</>
         ) : (
-          <><ImagePlus size={13} /> Add Photo</>
+          <><ImagePlus size={13} /> {t("upload.addPhoto")}</>
         )}
       </button>
       {error && (

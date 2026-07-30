@@ -12,6 +12,8 @@ import {
   Award, Shield, Lightbulb, Leaf, Star, CheckCircle,
   BarChart3, Headphones, Zap, Globe, TrendingUp,
 } from "lucide-react"
+import { useT } from "@/lib/i18n"
+import { realEstateMessages } from "@/lib/i18n/messages/realEstate"
 
 /* ── palette ──────────────────────────────────────── */
 const G  = "#B8892A"   // gold
@@ -23,41 +25,24 @@ const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
 /* ── data ─────────────────────────────────────────── */
 
-
-const objectives = [
-  { icon: Building2, n: "01", title: "Digital Ecosystem",   body: "Build a dedicated platform for Dhaka developers to showcase residential and commercial projects at scale." },
-  { icon: Lightbulb, n: "02", title: "Maximum Visibility",  body: "Leverage SEO, social media, and performance ads to deliver peak exposure for every listed property." },
-  { icon: Users, n: "03", title: "Qualified Reach",     body: "Connect developers with land-share opportunities to the right buyers through intelligent audience targeting." },
-  { icon: Award, n: "04", title: "Measurable ROI",      body: "Maintain the highest standard of creativity, transparency, and results for every partner." },
+/** Icons, numbering, partner names and projects are fixed; the copy is translated. */
+const OBJECTIVE_META = [
+  { icon: Building2, n: "01" },
+  { icon: Lightbulb, n: "02" },
+  { icon: Users, n: "03" },
+  { icon: Award, n: "04" },
 ]
 
-const testimonials = [
-  {
-    quote: "Creative Surf turned our listings into a steady pipeline of qualified buyers. The campaigns paid for themselves within the first month.",
-    name: "Tanvir Ahmed",
-    role: "Managing Director",
-    project: "Skyline Developments",
-  },
-  {
-    quote: "Professional photography, a dedicated microsite, and real analytics — finally a partner that understands both marketing and property.",
-    name: "Nusrat Jahan",
-    role: "Head of Sales",
-    project: "Bashundhara Heights",
-  },
-  {
-    quote: "Our project was live in 48 hours and fully booked ahead of schedule. The transparency and reporting are unmatched in Dhaka.",
-    name: "Rafiqul Islam",
-    role: "Chairman",
-    project: "Green Meadows",
-  },
+const TESTIMONIAL_META = [
+  { name: "Tanvir Ahmed", project: "Skyline Developments" },
+  { name: "Nusrat Jahan", project: "Bashundhara Heights" },
+  { name: "Rafiqul Islam", project: "Green Meadows" },
 ]
 
-const processSteps = [
-  { step: "01", title: "Discover", body: "Share your project details — location, inventory, target audience. We analyze market demand and define your property's unique digital positioning." },
-  { step: "02", title: "Design", body: "We build dedicated, SEO-optimized project microsites and craft premium ad campaigns tailored to your development." },
-  { step: "03", title: "Deploy", body: "We launch targeted, high-performance campaigns across search and social channels to capture qualified buyer inquiries." },
-  { step: "04", title: "Deliver", body: "We pass pre-qualified leads directly to your sales team, tracking conversions and optimizing until your inventory is fully booked." },
-]
+const PROCESS_NUMBERS = ["01", "02", "03", "04"]
+
+const HERO_PILL_ICONS = [Building2, Users, Handshake]
+const GOAL_ICONS = [Globe, TrendingUp, Users]
 
 /* ── micro components ─────────────────────────────── */
 
@@ -80,6 +65,7 @@ function Tag({ label }: { label: string }) {
 
 /* ── page ─────────────────────────────────────────── */
 export default function RealEstatePage() {
+  const t = useT(realEstateMessages)
   const heroRef = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] })
   const imgY    = useTransform(scrollYProgress, [0, 1], ["0%", "30%"])
@@ -93,6 +79,18 @@ export default function RealEstatePage() {
     status: string; coverImage?: string
     plotNo?: string; roadNo?: string; sector?: string
   }
+  const objectives = t
+    .raw<{ title: string; body: string }[]>("objectives.items", [])
+    .map((item, i) => ({ ...item, ...OBJECTIVE_META[i] }))
+
+  const testimonials = t
+    .raw<{ quote: string; role: string }[]>("testimonials.items", [])
+    .map((item, i) => ({ ...item, ...TESTIMONIAL_META[i] }))
+
+  const processSteps = t
+    .raw<{ title: string; body: string }[]>("process.steps", [])
+    .map((item, i) => ({ ...item, step: PROCESS_NUMBERS[i] ?? "" }))
+
   const [featured, setFeatured] = useState<FeaturedProject[]>([])
   useEffect(() => {
     fetch("/api/real-estate-projects")
@@ -158,11 +156,11 @@ export default function RealEstatePage() {
           style={{ y: textY, opacity: fade }}
         >
 
-          <Tag label="Creative Surf · Real Estate" />
+          <Tag label={t("hero.tag")} />
 
           {/* headline */}
           <div className="mb-5">
-            {["Build the project.", "Let us help it", "get discovered."].map((line, li) => (
+            {t.list("hero.headline").map((line, li) => (
               <motion.h1
                 key={li}
                 initial={{ opacity: 0, y: 30 }}
@@ -182,8 +180,7 @@ export default function RealEstatePage() {
             transition={{ duration: 0.8, delay: 0.7, ease: EASE }}
             className="text-white/65 text-base leading-relaxed max-w-md mb-7"
           >
-            Dhaka's dedicated digital platform connecting real estate developers
-            with qualified buyers, investors, and land-share partners.
+            {t("hero.subtitle")}
           </motion.p>
 
           {/* feature row */}
@@ -193,11 +190,7 @@ export default function RealEstatePage() {
             transition={{ delay: 0.9, duration: 0.6 }}
             className="flex flex-wrap gap-3 mb-8"
           >
-            {[
-              { icon: Building2,  lbl: "List your project" },
-              { icon: Users,      lbl: "Reach buyers" },
-              { icon: Handshake,  lbl: "Close deals" },
-            ].map(({ icon: Icon, lbl }, i) => (
+            {t.list("hero.pills").map((lbl, i) => ({ icon: HERO_PILL_ICONS[i] ?? Building2, lbl })).map(({ icon: Icon, lbl }, i) => (
               <motion.div
                 key={lbl}
                 initial={{ opacity: 0, x: -20 }}
@@ -223,14 +216,14 @@ export default function RealEstatePage() {
               className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm text-white"
               style={{ background: `linear-gradient(135deg,${G},${GL})` }}
             >
-              Get Listed Today
+              {t("hero.ctaPrimary")}
               <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </Link>
             <Link href="#about"
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm text-white/70 border"
               style={{ borderColor: `${G}40` }}
             >
-              Learn More
+              {t("hero.ctaSecondary")}
             </Link>
           </motion.div>
         </motion.div>
@@ -275,7 +268,7 @@ export default function RealEstatePage() {
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl">
                 <Image
                   src="/about.jpeg"
-                  alt="About"
+                  alt={t("about.imageAlt")}
                   fill
                   className="object-cover"
                 />
@@ -288,7 +281,7 @@ export default function RealEstatePage() {
                   <Link
                     href="/real-estate/projects"
                     className="grid place-items-center w-12 h-12 rounded-full bg-white/15 backdrop-blur-md hover:bg-white hover:text-zinc-900 transition-colors"
-                    aria-label="View projects"
+                    aria-label={t("about.viewProjects")}
                   >
                     <ArrowRight size={18} />
                   </Link>
@@ -309,10 +302,10 @@ export default function RealEstatePage() {
                 className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-[0.25em]"
                 style={{ color: G, background: `${G}1a`, boxShadow: `0 0 0 1px ${G}33` }}
               >
-                About us
+                {t("about.badge")}
               </span>
               <h2 className="mt-5 font-serif-re text-4xl md:text-5xl text-flow-text leading-[1.05] text-balance">
-                Building the future of <span className="shimmer-gold italic">Dhaka Real Estate</span>.
+                {t("about.headingStart")} <span className="shimmer-gold italic">{t("about.headingAccent")}</span>{t("about.headingEnd")}
               </h2>
 
               <div className="mt-8 inline-flex bg-flow-bg rounded-full p-1 border" style={{ borderColor: "var(--flow-border)" }}>
@@ -327,7 +320,7 @@ export default function RealEstatePage() {
                   }}
                   onClick={() => setActiveTab('background')}
                 >
-                  Background
+                  {t("about.tabBackground")}
                 </button>
                 <button
                   className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all ${
@@ -340,7 +333,7 @@ export default function RealEstatePage() {
                   }}
                   onClick={() => setActiveTab('message')}
                 >
-                  Message
+                  {t("about.tabMessage")}
                 </button>
               </div>
 
@@ -355,28 +348,15 @@ export default function RealEstatePage() {
                   <div className="space-y-5">
                     <p>
                       <strong className="text-flow-text font-medium">
-                        Creative Surf Real Estate
+                        {t("about.brandName")}
                       </strong>{' '}
-                      is a rapidly growing digital platform dedicated to connecting Dhaka's developers with qualified buyers and investors across every property type.
+                      {t("about.introRest")}
                     </p>
                     <p>
-                      Our team merges digital marketing expertise with deep knowledge of Bangladesh's property market — crafting listings, running campaigns, and building the online presence that drives real enquiries. We are committed to quality, transparency, and measurable results.
+                      {t("about.body")}
                     </p>
                     <div className="grid sm:grid-cols-3 gap-4 pt-6">
-                      {[
-                        {
-                          name: 'Digital Ecosystem',
-                          desc: 'Build a dedicated platform for Dhaka developers to showcase residential and commercial projects at scale.',
-                        },
-                        {
-                          name: 'Maximum Visibility',
-                          desc: 'Leverage SEO, social media, and performance ads to deliver peak exposure for every listed property.',
-                        },
-                        {
-                          name: 'Qualified Reach',
-                          desc: 'Connect developers with land-share opportunities to the right buyers through intelligent audience targeting.',
-                        },
-                      ].map((g) => (
+                      {t.raw<{ name: string; desc: string }[]>("about.goals", []).map((g) => (
                         <div
                           key={g.name}
                           className="rounded-2xl border bg-flow-surface p-5"
@@ -393,7 +373,7 @@ export default function RealEstatePage() {
                 ) : (
                   <div className="rounded-3xl border p-8 md:p-10" style={{ borderColor: `${G}33`, background: `linear-gradient(135deg, ${G}06, ${B}06)` }}>
                     <p className="font-serif-re italic text-2xl md:text-3xl text-flow-text leading-snug">
-                      &ldquo;To become Bangladesh's most trusted digital gateway for real estate discovery — making property transactions transparent, accessible, and inspiring for developers and buyers alike.&rdquo;
+                      &ldquo;{t("about.visionQuote")}&rdquo;
                     </p>
                     <div className="mt-6 flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full grid place-items-center text-white font-bold" style={{ background: `linear-gradient(135deg, ${G}, ${GL})` }}>
@@ -401,10 +381,10 @@ export default function RealEstatePage() {
                       </div>
                       <div>
                         <div className="text-sm font-semibold text-flow-text">
-                          Creative Surf Real Estate
+                          {t("about.brandName")}
                         </div>
                         <div className="text-xs text-flow-textSoft">
-                          Vision & Mission Statement
+                          {t("about.visionLabel")}
                         </div>
                       </div>
                     </div>
@@ -431,13 +411,13 @@ export default function RealEstatePage() {
               className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-[0.25em]"
               style={{ color: G, background: `${G}1a`, boxShadow: `0 0 0 1px ${G}33` }}
             >
-              Our Objectives
+              {t("objectives.badge")}
             </span>
             <h2 className="mt-5 font-serif-re text-4xl md:text-5xl text-flow-text leading-tight text-balance">
-              What We Set Out <span className="shimmer-gold italic">To Achieve</span>
+              {t("objectives.headingStart")} <span className="shimmer-gold italic">{t("objectives.headingAccent")}</span>
             </h2>
             <p className="mt-4 text-flow-textSoft text-lg">
-              Four pillars of excellence driving digital results for our developer partners across Bangladesh.
+              {t("objectives.intro")}
             </p>
           </motion.div>
 
@@ -486,9 +466,9 @@ export default function RealEstatePage() {
         <section className="relative overflow-hidden py-14 md:py-20 px-6 sm:px-10 lg:px-20 xl:px-28 bg-flow-surface">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
             <div>
-              <Tag label="Selected Works" />
+              <Tag label={t("featured.tag")} />
               <h2 className="font-serif-re font-medium text-flow-text" style={{ fontSize: "clamp(2.1rem,3.8vw,3.5rem)" }}>
-                Projects That <span className="shimmer-gold italic">Define Us</span>
+                {t("featured.headingStart")} <span className="shimmer-gold italic">{t("featured.headingAccent")}</span>
               </h2>
             </div>
             <Link
@@ -496,7 +476,7 @@ export default function RealEstatePage() {
               className="group inline-flex items-center gap-2 text-sm font-semibold shrink-0"
               style={{ color: G }}
             >
-              View all projects
+              {t("featured.viewAll")}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
@@ -574,10 +554,10 @@ export default function RealEstatePage() {
               className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-[0.25em]"
               style={{ color: G, background: `${G}1a`, boxShadow: `0 0 0 1px ${G}33` }}
             >
-              The process
+              {t("process.badge")}
             </span>
             <h2 className="font-serif-re mt-5 text-4xl md:text-5xl leading-tight text-balance text-white">
-              From onboarding to sold out, in four considered steps.
+              {t("process.intro")}
             </h2>
           </motion.div>
 
@@ -618,10 +598,10 @@ export default function RealEstatePage() {
       <section className="relative overflow-hidden py-14 md:py-20 px-6 sm:px-10 lg:px-20 xl:px-28 bg-flow-bg">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <div className="flex justify-center">
-            <Tag label="Partner Voices" />
+            <Tag label={t("testimonials.tag")} />
           </div>
           <h2 className="font-serif-re font-medium text-flow-text" style={{ fontSize: "clamp(2.1rem,3.8vw,3.5rem)" }}>
-            Trusted by Dhaka's <span className="shimmer-gold italic">Best Developers</span>
+            {t("testimonials.headingStart")} <span className="shimmer-gold italic">{t("testimonials.headingAccent")}</span>
           </h2>
         </div>
 

@@ -33,6 +33,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { trackEvent } from "@/lib/analytics";
+import { useT } from "@/lib/i18n";
+import { keywordToolMessages } from "@/lib/i18n/messages/keywordTool";
 
 // Sample keyword data - in a real implementation, this would come from an API
 const sampleKeywords = {
@@ -179,6 +181,7 @@ const popularSearches = [
 ];
 
 export default function KeywordSuggestionTool() {
+  const t = useT(keywordToolMessages);
   const [keyword, setKeyword] = useState("");
   const [results, setResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -242,7 +245,7 @@ export default function KeywordSuggestionTool() {
   };
 
   const handleDownloadCSV = () => {
-    const headers = ["Keyword", "Search Volume", "Difficulty", "CPC ($)"];
+    const headers = t.list("results.csvHeaders");
     const csvContent = [
       headers.join(","),
       ...results.map((item) =>
@@ -276,18 +279,14 @@ export default function KeywordSuggestionTool() {
       <section className="bg-gradient-to-r from-blue-700 to-blue-900 text-white py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Free Keyword Suggestion Tool
-            </h1>
-            <p className="text-xl mb-8">
-              Discover high-value keywords for your SEO and content strategy
-            </p>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">{t("hero.title")}</h1>
+            <p className="text-xl mb-8">{t("hero.subtitle")}</p>
 
             <div className="bg-flow-surface p-6 rounded-lg shadow-lg">
               <div className="relative">
                 <Input
                   type="text"
-                  placeholder="Enter a keyword or topic..."
+                  placeholder={t("hero.placeholder")}
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
                   className="pr-12 text-flow-text text-lg"
@@ -300,12 +299,12 @@ export default function KeywordSuggestionTool() {
                   onClick={() => handleSearch()}
                   disabled={isLoading || !keyword}
                 >
-                  {isLoading ? "Searching..." : <Search className="h-5 w-5" />}
+                  {isLoading ? t("hero.searching") : <Search className="h-5 w-5" />}
                 </Button>
               </div>
 
               <div className="mt-4 flex flex-wrap gap-2">
-                <span className="text-flow-textSoft mr-1">Popular searches:</span>
+                <span className="text-flow-textSoft mr-1">{t("hero.popularSearches")}</span>
                 {popularSearches.slice(0, 4).map((term) => (
                   <Badge
                     key={term}
@@ -328,11 +327,10 @@ export default function KeywordSuggestionTool() {
           {searchPerformed && (
             <div className="mb-8">
               <h2 className="text-2xl font-bold mb-2">
-                Keyword Suggestions for "{keyword}"
+                {t("results.heading", { keyword })}
               </h2>
               <p className="text-flow-textSoft">
-                Found {results.length} keyword suggestions. Use these keywords
-                to improve your SEO strategy.
+                {t("results.found", { count: results.length })}
               </p>
             </div>
           )}
@@ -346,10 +344,10 @@ export default function KeywordSuggestionTool() {
                   onValueChange={setActiveTab}
                 >
                   <TabsList>
-                    <TabsTrigger value="all">All Keywords</TabsTrigger>
-                    <TabsTrigger value="low">Low Difficulty</TabsTrigger>
-                    <TabsTrigger value="medium">Medium Difficulty</TabsTrigger>
-                    <TabsTrigger value="high">High Difficulty</TabsTrigger>
+                    <TabsTrigger value="all">{t("results.tabs.all")}</TabsTrigger>
+                    <TabsTrigger value="low">{t("results.tabs.low")}</TabsTrigger>
+                    <TabsTrigger value="medium">{t("results.tabs.medium")}</TabsTrigger>
+                    <TabsTrigger value="high">{t("results.tabs.high")}</TabsTrigger>
                   </TabsList>
                 </Tabs>
 
@@ -364,14 +362,14 @@ export default function KeywordSuggestionTool() {
                     ) : (
                       <Copy className="h-4 w-4 mr-1" />
                     )}
-                    {copied ? "Copied!" : "Copy"}
+                    {copied ? t("results.copied") : t("results.copy")}
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={handleDownloadCSV}
                   >
-                    <Download className="h-4 w-4 mr-1" /> CSV
+                    <Download className="h-4 w-4 mr-1" /> {t("results.csv")}
                   </Button>
                 </div>
               </div>
@@ -381,50 +379,43 @@ export default function KeywordSuggestionTool() {
                   <thead>
                     <tr className="bg-flow-bg">
                       <th className="px-4 py-3 text-left text-sm font-medium text-flow-textSoft uppercase tracking-wider">
-                        Keyword
+                        {t("results.columns.keyword")}
                       </th>
                       <th className="px-4 py-3 text-left text-sm font-medium text-flow-textSoft uppercase tracking-wider">
-                        Search Volume
+                        {t("results.columns.volume")}
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Info className="h-4 w-4 inline-block ml-1 text-flow-textSoft" />
                             </TooltipTrigger>
                             <TooltipContent>
-                              <p className="w-64">
-                                Monthly search volume based on Google data
-                              </p>
+                              <p className="w-64">{t("results.tooltips.volume")}</p>
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
                       </th>
                       <th className="px-4 py-3 text-left text-sm font-medium text-flow-textSoft uppercase tracking-wider">
-                        Difficulty
+                        {t("results.columns.difficulty")}
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Info className="h-4 w-4 inline-block ml-1 text-flow-textSoft" />
                             </TooltipTrigger>
                             <TooltipContent>
-                              <p className="w-64">
-                                SEO difficulty score from 1-100. Higher means
-                                more competitive.
-                              </p>
+                              <p className="w-64">{t("results.tooltips.difficulty")}</p>
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
                       </th>
                       <th className="px-4 py-3 text-left text-sm font-medium text-flow-textSoft uppercase tracking-wider">
-                        CPC
+                        {t("results.columns.cpc")}
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Info className="h-4 w-4 inline-block ml-1 text-flow-textSoft" />
                             </TooltipTrigger>
                             <TooltipContent>
-                              <p className="w-64">
-                                Average cost per click in USD for Google Ads
-                              </p>
+                              <p className="w-64">{t("results.tooltips.cpc")}</p>
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
@@ -458,10 +449,7 @@ export default function KeywordSuggestionTool() {
 
               {filteredResults.length === 0 && (
                 <div className="p-8 text-center">
-                  <p className="text-flow-textSoft">
-                    No keywords match the selected filter. Try another
-                    difficulty level.
-                  </p>
+                  <p className="text-flow-textSoft">{t("results.empty")}</p>
                 </div>
               )}
             </div>
@@ -471,52 +459,24 @@ export default function KeywordSuggestionTool() {
             <div className="max-w-3xl mx-auto">
               <Card>
                 <CardHeader>
-                  <CardTitle>How to Use This Tool</CardTitle>
-                  <CardDescription>
-                    Get started with our free keyword suggestion tool in 3
-                    simple steps
-                  </CardDescription>
+                  <CardTitle>{t("howTo.title")}</CardTitle>
+                  <CardDescription>{t("howTo.description")}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-6">
-                    <div className="flex items-start gap-4">
-                      <div className="bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
-                        1
-                      </div>
-                      <div>
-                        <h3 className="font-medium">Enter a seed keyword</h3>
-                        <p className="text-flow-textSoft">
-                          Type in a keyword related to your business or content
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-4">
-                      <div className="bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
-                        2
-                      </div>
-                      <div>
-                        <h3 className="font-medium">
-                          Review keyword suggestions
-                        </h3>
-                        <p className="text-flow-textSoft">
-                          Analyze search volume, difficulty, and CPC data
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-4">
-                      <div className="bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
-                        3
-                      </div>
-                      <div>
-                        <h3 className="font-medium">Export your keywords</h3>
-                        <p className="text-flow-textSoft">
-                          Download as CSV or copy to clipboard for your SEO
-                          strategy
-                        </p>
-                      </div>
-                    </div>
+                    {t
+                      .raw<{ title: string; body: string }[]>("howTo.steps", [])
+                      .map((step, index) => (
+                        <div key={step.title} className="flex items-start gap-4">
+                          <div className="bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
+                            {index + 1}
+                          </div>
+                          <div>
+                            <h3 className="font-medium">{step.title}</h3>
+                            <p className="text-flow-textSoft">{step.body}</p>
+                          </div>
+                        </div>
+                      ))}
                   </div>
                 </CardContent>
               </Card>
@@ -528,47 +488,21 @@ export default function KeywordSuggestionTool() {
       {/* Features Section */}
       <section className="py-12 bg-flow-surface">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            Why Use Our Keyword Suggestion Tool?
-          </h2>
+          <h2 className="text-3xl font-bold text-center mb-12">{t("features.title")}</h2>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>Discover Untapped Opportunities</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-flow-textSoft">
-                  Find valuable keywords your competitors might have missed. Our
-                  tool helps you identify low-competition, high-volume keywords.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Optimize Your Content Strategy</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-flow-textSoft">
-                  Create content that ranks by targeting the right keywords.
-                  Understand search intent and difficulty to prioritize your
-                  efforts.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Improve Your PPC Campaigns</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-flow-textSoft">
-                  Get CPC data to optimize your ad spend. Find more affordable
-                  keywords with good search volume to maximize ROI.
-                </p>
-              </CardContent>
-            </Card>
+            {t
+              .raw<{ title: string; body: string }[]>("features.items", [])
+              .map((feature) => (
+                <Card key={feature.title}>
+                  <CardHeader>
+                    <CardTitle>{feature.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-flow-textSoft">{feature.body}</p>
+                  </CardContent>
+                </Card>
+              ))}
           </div>
         </div>
       </section>
@@ -576,9 +510,7 @@ export default function KeywordSuggestionTool() {
       {/* FAQ Section */}
       <section className="py-12 bg-flow-bg">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">
-            Frequently Asked Questions
-          </h2>
+          <h2 className="text-3xl font-bold text-center mb-8">{t("faq.title")}</h2>
 
           <div className="max-w-3xl mx-auto">
             <Accordion
@@ -586,68 +518,14 @@ export default function KeywordSuggestionTool() {
               collapsible
               className="bg-flow-surface rounded-lg shadow-md"
             >
-              <AccordionItem value="item-1">
-                <AccordionTrigger className="px-6 py-4">
-                  How accurate is the keyword data?
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4">
-                  Our keyword data is sourced from multiple reliable providers
-                  and updated regularly. While we strive for accuracy, search
-                  volumes and competition metrics can fluctuate over time. We
-                  recommend using this tool as a starting point for your keyword
-                  research.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-2">
-                <AccordionTrigger className="px-6 py-4">
-                  How many keywords can I research?
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4">
-                  Our free tool allows unlimited searches with up to 10 keyword
-                  suggestions per search. For more comprehensive keyword
-                  research with hundreds of suggestions, consider our premium
-                  SEO services.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-3">
-                <AccordionTrigger className="px-6 py-4">
-                  What does the difficulty score mean?
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4">
-                  The difficulty score ranges from 1-100 and indicates how
-                  challenging it would be to rank for a particular keyword.
-                  Factors include competition, domain authority of ranking
-                  sites, and content quality. Lower scores (under 45) represent
-                  easier ranking opportunities.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-4">
-                <AccordionTrigger className="px-6 py-4">
-                  How should I use these keywords in my content?
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4">
-                  For best results, focus on creating high-quality content that
-                  naturally incorporates your target keywords. Include keywords
-                  in your title, headings, meta description, and throughout your
-                  content where relevant. Avoid keyword stuffing, as this can
-                  harm your rankings.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-5">
-                <AccordionTrigger className="px-6 py-4">
-                  Do you offer more advanced keyword research?
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4">
-                  Yes! Our SEO experts can provide in-depth keyword research
-                  tailored to your specific industry and goals. We analyze
-                  competitors, identify content gaps, and create a comprehensive
-                  keyword strategy. Contact us for a custom proposal.
-                </AccordionContent>
-              </AccordionItem>
+              {t
+                .raw<{ question: string; answer: string }[]>("faq.items", [])
+                .map((item, index) => (
+                  <AccordionItem key={index} value={`item-${index + 1}`}>
+                    <AccordionTrigger className="px-6 py-4">{item.question}</AccordionTrigger>
+                    <AccordionContent className="px-6 pb-4">{item.answer}</AccordionContent>
+                  </AccordionItem>
+                ))}
             </Accordion>
           </div>
         </div>
@@ -656,20 +534,15 @@ export default function KeywordSuggestionTool() {
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-blue-700 to-blue-900 text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">
-            Need More Advanced SEO Tools?
-          </h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Our team of SEO experts can help you develop a comprehensive keyword
-            strategy and improve your search rankings.
-          </p>
+          <h2 className="text-3xl font-bold mb-4">{t("cta.title")}</h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto">{t("cta.body")}</p>
           <Button
             size="lg"
             className="bg-white text-blue-800 hover:bg-flow-card"
             asChild
           >
             <a href="/contact">
-              Get a Custom SEO Proposal <ArrowRight className="ml-2 h-5 w-5" />
+              {t("cta.button")} <ArrowRight className="ml-2 h-5 w-5" />
             </a>
           </Button>
         </div>

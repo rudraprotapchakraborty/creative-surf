@@ -1,0 +1,58 @@
+import { defineMessages } from "../types";
+
+export const blogsMessages = defineMessages({
+  en: {
+    eyebrow: "Creative Surf · Blogs",
+    title: "Insights & Ideas",
+    subtitle:
+      "Expert takes on digital marketing, UX design, SEO, and brand strategy — straight from the Creative Surf team.",
+    categoryAll: "All",
+    newPost: "New Post",
+    logout: "Logout",
+    emptyTitle: "No posts yet",
+    emptyAdmin: "Create your first blog post to get started.",
+    emptyPublic: "Check back soon for insights from the Creative Surf team.",
+    writeFirst: "Write First Post",
+    edit: "Edit",
+    delete: "Delete",
+    confirmDelete: 'Delete "{title}"? This cannot be undone.',
+    read: "Read →",
+    brand: "Creative Surf",
+  },
+  fr: {
+    eyebrow: "Creative Surf · Blog",
+    title: "Analyses & idées",
+    subtitle:
+      "Le regard de nos experts sur le marketing digital, l'UX design, le SEO et la stratégie de marque — directement par l'équipe Creative Surf.",
+    categoryAll: "Tous",
+    newPost: "Nouvel article",
+    logout: "Déconnexion",
+    emptyTitle: "Aucun article pour l'instant",
+    emptyAdmin: "Créez votre premier article pour commencer.",
+    emptyPublic: "Revenez bientôt pour les analyses de l'équipe Creative Surf.",
+    writeFirst: "Écrire le premier article",
+    edit: "Modifier",
+    delete: "Supprimer",
+    confirmDelete: 'Supprimer « {title} » ? Cette action est irréversible.',
+    read: "Lire →",
+    brand: "Creative Surf",
+  },
+  de: {
+    eyebrow: "Creative Surf · Blog",
+    title: "Einblicke & Ideen",
+    subtitle:
+      "Expertenwissen zu Digitalmarketing, UX-Design, SEO und Markenstrategie — direkt vom Creative-Surf-Team.",
+    categoryAll: "Alle",
+    newPost: "Neuer Beitrag",
+    logout: "Abmelden",
+    emptyTitle: "Noch keine Beiträge",
+    emptyAdmin: "Erstellen Sie Ihren ersten Blogbeitrag, um zu starten.",
+    emptyPublic: "Schauen Sie bald wieder vorbei — für Einblicke vom Creative-Surf-Team.",
+    writeFirst: "Ersten Beitrag schreiben",
+    edit: "Bearbeiten",
+    delete: "Löschen",
+    confirmDelete: '„{title}“ löschen? Das kann nicht rückgängig gemacht werden.',
+    read: "Lesen →",
+    brand: "Creative Surf",
+  },
+});
