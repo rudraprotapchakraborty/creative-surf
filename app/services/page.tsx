@@ -1,48 +1,33 @@
 import type { Metadata } from "next"
 import Image from "next/image"
+import { getTranslator } from "@/lib/i18n/server"
+import { servicesMessages } from "@/lib/i18n/messages/services"
 
-export const metadata: Metadata = {
-  title: "Our Services | Creative Surf",
-  description:
-    "Explore our comprehensive range of creative and digital marketing services designed to elevate your brand.",
+const SERVICE_ICONS = [
+  "/icons/strategy.svg",
+  "/icons/web-design.svg",
+  "/icons/digital-marketing.svg",
+  "/icons/content.svg",
+  "/icons/social-media.svg",
+  "/icons/seo.svg",
+]
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslator(servicesMessages)
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+  }
 }
 
-export default function ServicesPage() {
-  const services = [
-    {
-      title: "Brand Strategy",
-      description:
-        "We develop comprehensive brand strategies that define your unique position in the market and connect with your target audience.",
-      icon: "/icons/strategy.svg",
-    },
-    {
-      title: "Web Design & Development",
-      description:
-        "Custom websites that combine stunning visuals with seamless functionality to create memorable digital experiences.",
-      icon: "/icons/web-design.svg",
-    },
-    {
-      title: "Digital Marketing",
-      description:
-        "Data-driven marketing campaigns across multiple channels to increase your visibility and drive conversions.",
-      icon: "/icons/digital-marketing.svg",
-    },
-    {
-      title: "Content Creation",
-      description: "Engaging content that tells your story and resonates with your audience across all platforms.",
-      icon: "/icons/content.svg",
-    },
-    {
-      title: "Social Media Management",
-      description: "Strategic social media presence that builds community and strengthens your brand voice.",
-      icon: "/icons/social-media.svg",
-    },
-    {
-      title: "SEO Optimization",
-      description: "Technical and content optimization to improve your search rankings and drive organic traffic.",
-      icon: "/icons/seo.svg",
-    },
-  ]
+export default async function ServicesPage() {
+  const t = await getTranslator(servicesMessages)
+
+  const services = t
+    .raw<{ title: string; description: string }[]>("items", [])
+    .map((service, i) => ({ ...service, icon: SERVICE_ICONS[i] }))
+
+  const process = t.raw<{ step: string; description: string }[]>("process", [])
 
   return (
     <main className="flex flex-col min-h-screen">
@@ -59,10 +44,8 @@ export default function ServicesPage() {
         </div>
         <div className="container mx-auto px-4 py-12 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">Our Services</h1>
-            <p className="text-xl text-blue-100 mb-8">
-              Comprehensive creative solutions tailored to elevate your brand and achieve your business goals
-            </p>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">{t("hero.title")}</h1>
+            <p className="text-xl text-blue-100 mb-8">{t("hero.subtitle")}</p>
           </div>
         </div>
       </section>
@@ -70,7 +53,7 @@ export default function ServicesPage() {
       {/* Services Grid */}
       <section className="py-16 bg-flow-surface">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">What We Offer</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">{t("offerTitle")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => (
               <div
@@ -97,38 +80,14 @@ export default function ServicesPage() {
       {/* Process Section */}
       <section className="py-16 bg-flow-bg">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Our Process</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">{t("processTitle")}</h2>
           <div className="max-w-4xl mx-auto">
             <div className="relative">
               {/* Timeline line */}
               <div className="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 bg-blue-200"></div>
 
               {/* Timeline items */}
-              {[
-                {
-                  step: "Discovery",
-                  description:
-                    "We begin by understanding your business, goals, and target audience to create a strategic foundation.",
-                },
-                {
-                  step: "Strategy",
-                  description:
-                    "Based on our findings, we develop a tailored strategy that aligns with your objectives and market position.",
-                },
-                {
-                  step: "Creation",
-                  description: "Our creative team brings the strategy to life through compelling design and content.",
-                },
-                {
-                  step: "Implementation",
-                  description: "We execute the plan across all relevant channels and platforms with precision.",
-                },
-                {
-                  step: "Optimization",
-                  description:
-                    "Through continuous monitoring and analysis, we refine our approach to maximize results.",
-                },
-              ].map((item, index) => (
+              {process.map((item, index) => (
                 <div key={index} className="relative mb-12">
                   <div className="flex flex-col md:flex-row items-center">
                     <div className={`md:w-1/2 ${index % 2 === 0 ? "md:pr-12 md:text-right" : "md:pl-12 md:order-1"}`}>
@@ -151,16 +110,13 @@ export default function ServicesPage() {
       {/* CTA Section */}
       <section className="py-16 bg-blue-900 text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Brand?</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Let's collaborate to create something extraordinary that drives real results for your business.
-          </p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">{t("cta.title")}</h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto">{t("cta.body")}</p>
           <button className="bg-white text-blue-900 hover:bg-blue-100 transition-colors duration-300 font-bold py-3 px-8 rounded-full text-lg">
-            Get in Touch
+            {t("cta.button")}
           </button>
         </div>
       </section>
     </main>
   )
 }
-

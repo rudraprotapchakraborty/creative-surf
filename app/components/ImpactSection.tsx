@@ -10,17 +10,30 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+import { useT } from "@/lib/i18n";
+import { homeMessages } from "@/lib/i18n/messages/home";
+
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-const accordionItems = [
-  { value: "actionable-analytics", icon: BarChart2, title: "Actionable Analytics",  content: "Gain deep insights to refine campaigns and boost ROI with precision targeting at every stage." },
-  { value: "data-empowerment",     icon: LineChart,  title: "Data Empowerment",      content: "Empower your teams with accessible, real-time data so every decision is backed by evidence." },
-  { value: "content-marketing",    icon: PenTool,    title: "Content Marketing",     content: "Targeted content strategies that attract the right audience, convert leads, and build loyalty." },
-  { value: "sales-enablement",     icon: DollarSign, title: "Sales Enablement",      content: "Align sales and marketing into one seamless engine that accelerates deal closures." },
+/** Stable accordion identities + icons; titles and bodies come from the dictionary. */
+const ACCORDION_META = [
+  { value: "actionable-analytics", icon: BarChart2 },
+  { value: "data-empowerment", icon: LineChart },
+  { value: "content-marketing", icon: PenTool },
+  { value: "sales-enablement", icon: DollarSign },
 ];
 
+const PILL_COLORS = ["rgb(var(--accent-1))", "rgb(var(--accent-2))", "rgb(var(--accent-3))"];
+
 export default function ImpactSection() {
+  const t = useT(homeMessages);
   const [activeItem, setActiveItem] = useState("actionable-analytics");
+
+  const accordionItems = ACCORDION_META.map((meta, i) => ({
+    ...meta,
+    title: t(`impact.accordion.${i}.title`),
+    content: t(`impact.accordion.${i}.content`),
+  }));
 
   return (
     <section className="relative overflow-hidden border-t border-flow-border">
@@ -38,26 +51,21 @@ export default function ImpactSection() {
             >
               <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border border-flow-border text-xs font-bold uppercase tracking-[0.2em] text-aurora-1 mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-aurora-1" />
-                Measurable Outcomes
+                {t("impact.badge")}
               </span>
               <h2
                 className="font-bold text-flow-text leading-tight mb-5"
                 style={{ fontSize: "clamp(2rem,3.5vw,3.25rem)" }}
               >
-                Data that drives<br />
-                <span className="text-aurora-shimmer">results.</span>
+                {t("impact.headingLine1")}<br />
+                <span className="text-aurora-shimmer">{t("impact.headingAccent")}</span>
               </h2>
               <p className="text-flow-textSoft text-base leading-relaxed max-w-lg mb-8">
-                We engineer success through observable metrics. Our strategies align with your
-                business objectives to deliver undeniable, measurable impact — every single time.
+                {t("impact.body")}
               </p>
 
               <div className="flex flex-wrap gap-x-6 gap-y-3">
-                {[
-                  { label: "Higher Retention",      color: "rgb(var(--accent-1))" },
-                  { label: "Faster Time-to-Market", color: "rgb(var(--accent-2))" },
-                  { label: "Better ROAS",            color: "rgb(var(--accent-3))" },
-                ].map(({ label, color }) => (
+                {t.list("impact.pills").map((label, i) => ({ label, color: PILL_COLORS[i] })).map(({ label, color }) => (
                   <div key={label} className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: color }} />
                     <span className="text-sm text-flow-textSoft font-medium">{label}</span>

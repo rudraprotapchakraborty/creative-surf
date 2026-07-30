@@ -1,149 +1,88 @@
 import type { Metadata } from "next"
-import { generateMetadata } from "@/lib/metadata"
+import { generateMetadata as buildMetadata } from "@/lib/metadata"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ChevronRight, Trophy, Award, Star, Medal } from "lucide-react"
+import { getTranslator } from "@/lib/i18n/server"
+import { aboutAwardsMessages } from "@/lib/i18n/messages/aboutAwards"
+import { commonMessages } from "@/lib/i18n/messages/common"
 
-export const metadata: Metadata = generateMetadata({
-  title: "Awards & Recognition",
-  description:
-    "Explore the awards and industry recognition Creative Surf has received for excellence in digital marketing, web design, and client satisfaction.",
-  path: "/about/awards",
-})
-
-// Sample awards data - in a real application, this would come from a database or API
-const awards = [
-  {
-    year: "2024",
-    awards: [
-      {
-        name: "Digital Marketing Excellence Award",
-        organization: "Digital Innovation Awards",
-        description: "Recognized for outstanding performance and innovation in digital marketing campaigns.",
-        icon: Trophy,
-      },
-      {
-        name: "Best SEO Agency",
-        organization: "Marketing Excellence Awards",
-        description: "Awarded for exceptional results and innovative strategies in search engine optimization.",
-        icon: Award,
-      },
-      {
-        name: "Top 10 Web Design Firms",
-        organization: "Design Industry Association",
-        description: "Named one of the top web design firms for creative excellence and client satisfaction.",
-        icon: Star,
-      },
-    ],
-  },
-  {
-    year: "2023",
-    awards: [
-      {
-        name: "Best Place to Work",
-        organization: "Employer Excellence Awards",
-        description: "Recognized for outstanding workplace culture, employee satisfaction, and growth opportunities.",
-        icon: Medal,
-      },
-      {
-        name: "Innovation in Social Media Marketing",
-        organization: "Social Media Marketing Association",
-        description:
-          "Awarded for groundbreaking social media campaigns that delivered exceptional results for clients.",
-        icon: Trophy,
-      },
-      {
-        name: "Rising Star Agency",
-        organization: "Marketing Industry Network",
-        description: "Recognized as one of the fastest-growing and most promising agencies in the industry.",
-        icon: Star,
-      },
-    ],
-  },
-  {
-    year: "2022",
-    awards: [
-      {
-        name: "Client Satisfaction Excellence",
-        organization: "Customer Experience Awards",
-        description: "Awarded for maintaining the highest standards of client satisfaction and service excellence.",
-        icon: Award,
-      },
-      {
-        name: "Best Content Marketing Campaign",
-        organization: "Content Marketing Institute",
-        description:
-          "Recognized for an innovative content strategy that significantly increased client engagement and conversions.",
-        icon: Trophy,
-      },
-    ],
-  },
-  {
-    year: "2021",
-    awards: [
-      {
-        name: "Emerging Digital Agency of the Year",
-        organization: "Digital Business Awards",
-        description: "Recognized as the most promising new agency demonstrating exceptional growth and client results.",
-        icon: Trophy,
-      },
-    ],
-  },
+/** Years and per-award icons stay in code; names and copy are translated. */
+const YEAR_META = [
+  { year: "2024", icons: [Trophy, Award, Star] },
+  { year: "2023", icons: [Medal, Trophy, Star] },
+  { year: "2022", icons: [Award, Trophy] },
+  { year: "2021", icons: [Trophy] },
 ]
 
-// Industry certifications
-const certifications = [
-  {
-    name: "Google Partner",
-    logo: "/placeholder.svg?height=100&width=200&text=Google+Partner",
-    description: "Certified Google Partner with specializations in Search, Display, and Video advertising.",
-  },
-  {
-    name: "Meta Business Partner",
-    logo: "/placeholder.svg?height=100&width=200&text=Meta+Business+Partner",
-    description: "Certified Meta Business Partner with expertise in Facebook and Instagram advertising.",
-  },
-  {
-    name: "HubSpot Solutions Partner",
-    logo: "/placeholder.svg?height=100&width=200&text=HubSpot+Partner",
-    description: "Certified HubSpot Solutions Partner with expertise in inbound marketing and CRM implementation.",
-  },
-  {
-    name: "Shopify Partner",
-    logo: "/placeholder.svg?height=100&width=200&text=Shopify+Partner",
-    description: "Certified Shopify Partner specializing in e-commerce website development and optimization.",
-  },
+const CERTIFICATION_LOGOS = [
+  "/placeholder.svg?height=100&width=200&text=Google+Partner",
+  "/placeholder.svg?height=100&width=200&text=Meta+Business+Partner",
+  "/placeholder.svg?height=100&width=200&text=HubSpot+Partner",
+  "/placeholder.svg?height=100&width=200&text=Shopify+Partner",
 ]
 
-export default function AwardsPage() {
+const STORY_META = [
+  { image: "/placeholder.svg?height=400&width=600&text=E-commerce+Success", href: "/case-studies/stylehouse-boutique" },
+  { image: "/placeholder.svg?height=400&width=600&text=SEO+Success", href: "/case-studies/techvision-seo" },
+  { image: "/placeholder.svg?height=400&width=600&text=Social+Media+Success", href: "/case-studies/innovate-social" },
+]
+
+type AwardCopy = { name: string; organization: string; description: string }
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslator(aboutAwardsMessages)
+  return buildMetadata({
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    path: "/about/awards",
+  })
+}
+
+export default async function AwardsPage() {
+  const t = await getTranslator(aboutAwardsMessages)
+  const c = await getTranslator(commonMessages)
+
+  const awards = t
+    .raw<{ awards: AwardCopy[] }[]>("years", [])
+    .map((group, i) => ({
+      year: YEAR_META[i]?.year ?? "",
+      awards: group.awards.map((award, j) => ({ ...award, icon: YEAR_META[i]?.icons[j] ?? Trophy })),
+    }))
+
+  const certifications = t
+    .raw<{ name: string; description: string }[]>("certifications", [])
+    .map((cert, i) => ({ ...cert, logo: CERTIFICATION_LOGOS[i] }))
+
+  const stories = t
+    .raw<{ badge: string; client: string; body: string; imageAlt: string }[]>("stories.items", [])
+    .map((story, i) => ({ ...story, ...STORY_META[i] }))
+
   return (
     <div className="bg-flow-bg min-h-screen py-16">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
         <div className="flex items-center text-sm text-flow-textSoft mb-8">
           <Link href="/" className="hover:text-blue-600">
-            Home
+            {c("breadcrumb.home")}
           </Link>
           <ChevronRight className="h-4 w-4 mx-2" />
           <Link href="/about" className="hover:text-blue-600">
-            About
+            {c("breadcrumb.about")}
           </Link>
           <ChevronRight className="h-4 w-4 mx-2" />
-          <span className="text-flow-textSoft font-medium">Awards</span>
+          <span className="text-flow-textSoft font-medium">{t("breadcrumbCurrent")}</span>
         </div>
 
         {/* Hero Section */}
         <div className="mb-16 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">Awards & Recognition</h1>
-          <p className="text-xl text-flow-textSoft mb-8 max-w-3xl mx-auto">
-            We're proud to be recognized for our commitment to excellence, innovation, and client success in the digital
-            marketing industry.
-          </p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">{t("hero.title")}</h1>
+          <p className="text-xl text-flow-textSoft mb-8 max-w-3xl mx-auto">{t("hero.subtitle")}</p>
           <div className="relative h-[300px] rounded-xl overflow-hidden shadow-xl max-w-4xl mx-auto">
             <Image
               src="/placeholder.svg?height=600&width=1200&text=Awards+and+Recognition"
-              alt="Creative Surf Awards and Recognition"
+              alt={t("hero.imageAlt")}
               fill
               className="object-cover"
             />
@@ -152,7 +91,7 @@ export default function AwardsPage() {
 
         {/* Awards Timeline */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold mb-10 text-center">Our Awards Timeline</h2>
+          <h2 className="text-3xl font-bold mb-10 text-center">{t("timelineTitle")}</h2>
 
           <div className="space-y-16">
             {awards.map((yearGroup) => (
@@ -182,7 +121,7 @@ export default function AwardsPage() {
 
         {/* Industry Certifications */}
         <div className="bg-flow-surface rounded-xl shadow-md p-8 mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-center">Industry Certifications</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">{t("certificationsTitle")}</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {certifications.map((cert, index) => (
               <div key={index} className="text-center p-4">
@@ -200,21 +139,17 @@ export default function AwardsPage() {
         <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-xl p-8 mb-16">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
-              <h2 className="text-3xl font-bold mb-4">Digital Agency of the Year Finalist</h2>
-              <p className="text-lg mb-6">
-                We're proud to have been named a finalist for the prestigious Digital Agency of the Year award at the
-                2024 Digital Excellence Awards. This recognition highlights our team's dedication to delivering
-                exceptional results for our clients and pushing the boundaries of digital marketing innovation.
-              </p>
+              <h2 className="text-3xl font-bold mb-4">{t("featured.title")}</h2>
+              <p className="text-lg mb-6">{t("featured.body")}</p>
               <div className="flex items-center">
                 <Trophy className="h-8 w-8 mr-3" />
-                <span className="text-xl font-semibold">2024 Digital Excellence Awards</span>
+                <span className="text-xl font-semibold">{t("featured.event")}</span>
               </div>
             </div>
             <div className="relative h-[300px] rounded-xl overflow-hidden">
               <Image
                 src="/placeholder.svg?height=600&width=800&text=Award+Ceremony"
-                alt="Digital Agency of the Year Award Ceremony"
+                alt={t("featured.imageAlt")}
                 fill
                 className="object-cover"
               />
@@ -224,98 +159,38 @@ export default function AwardsPage() {
 
         {/* Client Success Stories */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-center">Award-Winning Client Success Stories</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">{t("stories.title")}</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-flow-surface rounded-xl shadow-md overflow-hidden">
-              <div className="relative h-48">
-                <Image
-                  src="/placeholder.svg?height=400&width=600&text=E-commerce+Success"
-                  alt="E-commerce Success Story"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-6">
-                <div className="flex items-center mb-3">
-                  <Award className="h-5 w-5 text-blue-600 mr-2" />
-                  <span className="text-sm text-blue-600 font-medium">Best E-commerce Campaign</span>
+            {stories.map((story, index) => (
+              <div key={index} className="bg-flow-surface rounded-xl shadow-md overflow-hidden">
+                <div className="relative h-48">
+                  <Image src={story.image!} alt={story.imageAlt} fill className="object-cover" />
                 </div>
-                <h3 className="text-xl font-bold mb-2">StyleHouse Boutique</h3>
-                <p className="text-flow-textSoft mb-4">
-                  Our award-winning e-commerce strategy increased online sales by 78% and expanded their customer base
-                  across three new markets.
-                </p>
-                <Button asChild variant="outline" className="w-full">
-                  <Link href="/case-studies/stylehouse-boutique">View Case Study</Link>
-                </Button>
-              </div>
-            </div>
-
-            <div className="bg-flow-surface rounded-xl shadow-md overflow-hidden">
-              <div className="relative h-48">
-                <Image
-                  src="/placeholder.svg?height=400&width=600&text=SEO+Success"
-                  alt="SEO Success Story"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-6">
-                <div className="flex items-center mb-3">
-                  <Award className="h-5 w-5 text-blue-600 mr-2" />
-                  <span className="text-sm text-blue-600 font-medium">Best SEO Campaign</span>
+                <div className="p-6">
+                  <div className="flex items-center mb-3">
+                    <Award className="h-5 w-5 text-blue-600 mr-2" />
+                    <span className="text-sm text-blue-600 font-medium">{story.badge}</span>
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">{story.client}</h3>
+                  <p className="text-flow-textSoft mb-4">{story.body}</p>
+                  <Button asChild variant="outline" className="w-full">
+                    <Link href={story.href!}>{t("stories.viewCaseStudy")}</Link>
+                  </Button>
                 </div>
-                <h3 className="text-xl font-bold mb-2">TechVision Inc.</h3>
-                <p className="text-flow-textSoft mb-4">
-                  Our SEO strategy helped TechVision achieve a 150% increase in organic traffic and a 200% increase in
-                  qualified leads.
-                </p>
-                <Button asChild variant="outline" className="w-full">
-                  <Link href="/case-studies/techvision-seo">View Case Study</Link>
-                </Button>
               </div>
-            </div>
-
-            <div className="bg-flow-surface rounded-xl shadow-md overflow-hidden">
-              <div className="relative h-48">
-                <Image
-                  src="/placeholder.svg?height=400&width=600&text=Social+Media+Success"
-                  alt="Social Media Success Story"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-6">
-                <div className="flex items-center mb-3">
-                  <Award className="h-5 w-5 text-blue-600 mr-2" />
-                  <span className="text-sm text-blue-600 font-medium">Best Social Media Campaign</span>
-                </div>
-                <h3 className="text-xl font-bold mb-2">Innovate Solutions</h3>
-                <p className="text-flow-textSoft mb-4">
-                  Our innovative social media campaign helped this startup achieve 120% growth in followers and secure
-                  Series A funding.
-                </p>
-                <Button asChild variant="outline" className="w-full">
-                  <Link href="/case-studies/innovate-social">View Case Study</Link>
-                </Button>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 
         {/* CTA Section */}
         <div className="bg-blue-600 text-white rounded-xl p-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Work with an Award-Winning Agency?</h2>
-          <p className="text-xl mb-6 max-w-2xl mx-auto">
-            Partner with Creative Surf and experience the difference that award-winning digital marketing can make for
-            your business.
-          </p>
+          <h2 className="text-3xl font-bold mb-4">{t("cta.title")}</h2>
+          <p className="text-xl mb-6 max-w-2xl mx-auto">{t("cta.body")}</p>
           <Button asChild variant="outline" size="lg" className="bg-white text-blue-600 hover:bg-flow-card">
-            <Link href="/contact">Contact Us Today</Link>
+            <Link href="/contact">{t("cta.button")}</Link>
           </Button>
         </div>
       </div>
     </div>
   )
 }
-

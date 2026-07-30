@@ -1,0 +1,103 @@
+import { defineMessages } from "../types";
+
+export const realEstateFooterMessages = defineMessages({
+  en: {
+    cta: {
+      badge: "For Home Buyers",
+      heading: "Find your next home in Dhaka.",
+      body: "Browse verified residential projects across Dhaka — from luxury apartments to affordable flats — and find the perfect home for you and your family.",
+      primary: "View available flats",
+      secondary: "Schedule a site visit",
+    },
+    brand: {
+      line1: "Real Estate.",
+      line2: "Reimagined.",
+      blurb:
+        "We craft standout digital experiences for property developers — from immersive project showcases to marketing that moves the market.",
+      cta: "Start a Project",
+    },
+    exploreTitle: "Explore",
+    contactTitle: "Get in touch",
+    whatsapp: "Chat on WhatsApp",
+    links: {
+      home: "Home",
+      projects: "Projects",
+      blogs: "Blogs",
+      contact: "Contact",
+    },
+    location: "Dhaka, Bangladesh",
+    skylineAlt: "Dhaka skyline",
+    rights: "© {year} Creative Surf. All rights reserved.",
+    terms: "Terms of Service",
+    privacy: "Privacy Policy",
+    craftedPre: "Crafted with",
+    craftedAccent: "aurora",
+    craftedPost: "energy",
+  },
+  fr: {
+    cta: {
+      badge: "Pour les acheteurs",
+      heading: "Trouvez votre prochain logement à Dhaka.",
+      body: "Parcourez des projets résidentiels vérifiés partout à Dhaka — des appartements de luxe aux logements abordables — et trouvez la maison idéale pour vous et votre famille.",
+      primary: "Voir les logements disponibles",
+      secondary: "Planifier une visite",
+    },
+    brand: {
+      line1: "L'immobilier.",
+      line2: "Réinventé.",
+      blurb:
+        "Nous concevons des expériences digitales remarquables pour les promoteurs immobiliers — des présentations de projets immersives au marketing qui fait bouger le marché.",
+      cta: "Démarrer un projet",
+    },
+    exploreTitle: "Explorer",
+    contactTitle: "Nous joindre",
+    whatsapp: "Discuter sur WhatsApp",
+    links: {
+      home: "Accueil",
+      projects: "Projets",
+      blogs: "Blog",
+      contact: "Contact",
+    },
+    location: "Dhaka, Bangladesh",
+    skylineAlt: "Panorama de Dhaka",
+    rights: "© {year} Creative Surf. Tous droits réservés.",
+    terms: "Conditions d'utilisation",
+    privacy: "Politique de confidentialité",
+    craftedPre: "Conçu avec une énergie",
+    craftedAccent: "aurore",
+    craftedPost: "",
+  },
+  de: {
+    cta: {
+      badge: "Für Immobilienkäufer",
+      heading: "Finden Sie Ihr neues Zuhause in Dhaka.",
+      body: "Entdecken Sie geprüfte Wohnprojekte in ganz Dhaka — von Luxuswohnungen bis zu günstigen Apartments — und finden Sie das perfekte Zuhause für sich und Ihre Familie.",
+      primary: "Verfügbare Wohnungen ansehen",
+      secondary: "Besichtigung vereinbaren",
+    },
+    brand: {
+      line1: "Immobilien.",
+      line2: "Neu gedacht.",
+      blurb:
+        "Wir gestalten herausragende digitale Erlebnisse für Projektentwickler — von immersiven Projektpräsentationen bis zu Marketing, das den Markt bewegt.",
+      cta: "Projekt starten",
+    },
+    exploreTitle: "Entdecken",
+    contactTitle: "Kontakt",
+    whatsapp: "Auf WhatsApp chatten",
+    links: {
+      home: "Startseite",
+      projects: "Projekte",
+      blogs: "Blog",
+      contact: "Kontakt",
+    },
+    location: "Dhaka, Bangladesch",
+    skylineAlt: "Skyline von Dhaka",
+    rights: "© {year} Creative Surf. Alle Rechte vorbehalten.",
+    terms: "Nutzungsbedingungen",
+    privacy: "Datenschutzerklärung",
+    craftedPre: "Gestaltet mit",
+    craftedAccent: "Aurora",
+    craftedPost: "Energie",
+  },
+});

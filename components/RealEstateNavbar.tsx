@@ -5,13 +5,18 @@ import { Menu, X, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "@/components/theme-toggle";
-
-const navLinks = [
-  { label: "Home",     href: "/" },
-  { label: "Projects", href: "/real-estate/projects" },
-];
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useT } from "@/lib/i18n";
+import { navMessages } from "@/lib/i18n/messages/nav";
+import { commonMessages } from "@/lib/i18n/messages/common";
 
 export function RealEstateNavbar() {
+  const t = useT(navMessages);
+  const c = useT(commonMessages);
+  const navLinks = [
+    { label: t("links.home"),     href: "/" },
+    { label: t("links.projects"), href: "/real-estate/projects" },
+  ];
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -44,7 +49,7 @@ export function RealEstateNavbar() {
               <div className="absolute inset-0 bg-aurora-grad rounded-full blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-500" />
               <img
                 src="/logo.png"
-                alt="logo"
+                alt={t("logoAlt")}
                 className="relative w-6 h-6 md:w-7 md:h-7 transition-transform duration-500 group-hover:scale-110"
               />
             </div>
@@ -67,23 +72,25 @@ export function RealEstateNavbar() {
           </div>
 
           {/* DESKTOP CTA */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2">
+            <LanguageSwitcher />
             <ThemeToggle />
             <Link
               href="/contact"
               className="shine relative group inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold text-white bg-aurora-grad shadow-aurora overflow-hidden"
             >
-              <span className="relative">Get Started</span>
+              <span className="relative">{t("cta")}</span>
               <ArrowRight className="relative w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </div>
 
           {/* MOBILE MENU BUTTON */}
-          <div className="md:hidden flex items-center gap-2">
+          <div className="md:hidden flex items-center gap-1">
+            <LanguageSwitcher />
             <ThemeToggle />
             <button
               onClick={() => setMobileOpen(true)}
-              aria-label="Open menu"
+              aria-label={c("labels.toggleMenu")}
               className="p-2 rounded-full text-flow-text hover:bg-flow-card transition-colors"
             >
               <Menu size={22} />
@@ -114,7 +121,7 @@ export function RealEstateNavbar() {
               className="absolute top-0 right-0 h-full w-[88%] max-w-[380px] glass-strong border-l border-flow-border p-8 flex flex-col"
             >
               <div className="flex justify-between items-center mb-12">
-                <span className="text-flow-text font-heading font-extrabold text-xl">Menu</span>
+                <span className="text-flow-text font-heading font-extrabold text-xl">{c("labels.menu")}</span>
                 <button
                   onClick={() => setMobileOpen(false)}
                   className="text-flow-text p-2 rounded-full hover:bg-flow-card transition-colors"
@@ -142,13 +149,14 @@ export function RealEstateNavbar() {
                 ))}
               </div>
 
-              <div className="mt-auto pt-8 border-t border-flow-border">
+              <div className="mt-auto pt-8 border-t border-flow-border space-y-4">
+                <LanguageSwitcher variant="inline" onSelect={() => setMobileOpen(false)} />
                 <Link
                   href="/contact"
                   onClick={() => setMobileOpen(false)}
                   className="shine relative group w-full flex items-center justify-center gap-2 py-4 rounded-full text-lg font-semibold bg-aurora-grad text-white shadow-aurora overflow-hidden"
                 >
-                  <span className="relative">Get Started</span>
+                  <span className="relative">{t("cta")}</span>
                   <ArrowRight className="relative w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
               </div>

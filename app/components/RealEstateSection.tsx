@@ -6,21 +6,28 @@ import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Building2, Users, TrendingUp, ArrowRight, MapPin } from "lucide-react";
 
+import { useT } from "@/lib/i18n";
+import { homeMessages } from "@/lib/i18n/messages/home";
+
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-const stats = [
-  { icon: Building2, label: "Projects Marketed", value: "50+" },
-  { icon: Users,     label: "Verified Leads",    value: "2,400+" },
-  { icon: TrendingUp,label: "Avg. Lead Quality", value: "94%" },
-];
-
-const images = [
-  { src: "/1.png", alt: "Springfield – Bashundhara R/A", caption: "Bashundhara R/A" },
-  { src: "/2.png", alt: "Spacious Living, Perfectly Designed", caption: "2200 SqFt · 18 Katha" },
-  { src: "/3.png", alt: "Ongoing Project – Springfield",     caption: "Ongoing Project" },
-];
+const PILL_ICONS = [MapPin, Building2, Users];
 
 export default function RealEstateSection() {
+  const t = useT(homeMessages);
+
+  const stats = [
+    { icon: Building2,  label: t("realEstate.stats.projects"), value: "50+" },
+    { icon: Users,      label: t("realEstate.stats.leads"),    value: "2,400+" },
+    { icon: TrendingUp, label: t("realEstate.stats.quality"),  value: "94%" },
+  ];
+
+  const images = [
+    { src: "/1.png", alt: t("realEstate.images.alt1"), caption: t("realEstate.images.caption1") },
+    { src: "/2.png", alt: t("realEstate.images.alt2"), caption: t("realEstate.images.caption2") },
+    { src: "/3.png", alt: t("realEstate.images.alt3"), caption: t("realEstate.images.caption3") },
+  ];
+
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] });
   const y1 = useTransform(scrollYProgress, [0, 1], [40, -40]);
@@ -69,7 +76,7 @@ export default function RealEstateSection() {
             {/* Niche badge */}
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border border-flow-border text-xs font-bold uppercase tracking-[0.2em] text-aurora-1 mb-6 w-fit">
               <span className="w-1.5 h-1.5 rounded-full bg-aurora-1 animate-pulse" />
-              Real Estate Marketing
+              {t("realEstate.badge")}
             </span>
 
             {/* Headline */}
@@ -77,30 +84,26 @@ export default function RealEstateSection() {
               className="font-bold text-flow-text leading-tight mb-3"
               style={{ fontSize: "clamp(2rem,3.5vw,3.25rem)" }}
             >
-              Your project deserves
+              {t("realEstate.headingLine1")}
               <br />
-              <span className="text-aurora-shimmer">the right audience.</span>
+              <span className="text-aurora-shimmer">{t("realEstate.headingAccent")}</span>
             </h2>
 
             {/* Niche sub-line */}
             <p className="text-flow-textSoft text-sm font-medium uppercase tracking-widest mb-5">
-              Let us help it reach its niche.
+              {t("realEstate.subline")}
             </p>
 
             {/* Body */}
             <p className="text-flow-textSoft text-base leading-relaxed max-w-lg mb-8">
-              Connect with verified buyers, investors, and land share partners.{" "}
-              <span className="text-flow-text font-semibold">No time wasters</span> — only
-              high-intent leads who are ready to move.
+              {t("realEstate.bodyStart")}{" "}
+              <span className="text-flow-text font-semibold">{t("realEstate.bodyStrong")}</span>{" "}
+              {t("realEstate.bodyEnd")}
             </p>
 
             {/* Proof pills */}
             <div className="flex flex-wrap gap-2 mb-10">
-              {[
-                { icon: MapPin, label: "Bashundhara R/A" },
-                { icon: Building2, label: "Apartment Projects" },
-                { icon: Users, label: "Land Share Partners" },
-              ].map(({ icon: Icon, label }) => (
+              {t.list("realEstate.pills").map((label, i) => ({ icon: PILL_ICONS[i] ?? MapPin, label })).map(({ icon: Icon, label }) => (
                 <div
                   key={label}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
@@ -145,7 +148,7 @@ export default function RealEstateSection() {
                 boxShadow: "0 0 24px rgb(var(--accent-1)/0.3)",
               }}
             >
-              Explore Real Estate Marketing
+              {t("realEstate.cta")}
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </motion.div>
@@ -230,8 +233,8 @@ export default function RealEstateSection() {
                 <Building2 className="w-4 h-4 text-white" />
               </div>
               <div>
-                <div className="text-xs font-bold text-flow-text">Niche Audience</div>
-                <div className="text-[0.65rem] text-flow-textSoft">Real-estate buyers &amp; investors</div>
+                <div className="text-xs font-bold text-flow-text">{t("realEstate.floatingTitle")}</div>
+                <div className="text-[0.65rem] text-flow-textSoft">{t("realEstate.floatingSub")}</div>
               </div>
             </motion.div>
           </motion.div>

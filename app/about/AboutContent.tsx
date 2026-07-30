@@ -1,43 +1,27 @@
 "use client"
 import Image from "next/image"
 import { motion } from "framer-motion"
+import { useT } from "@/lib/i18n"
+import { aboutMessages } from "@/lib/i18n/messages/about"
+
+/** Names and photos are fixed; roles and bios come from the dictionary. */
+const TEAM_META = [
+  { name: "Alex Johnson", image: "/placeholder.svg?height=300&width=300" },
+  { name: "Sarah Chen", image: "/placeholder.svg?height=300&width=300" },
+  { name: "Marcus Williams", image: "/placeholder.svg?height=300&width=300" },
+  { name: "Priya Patel", image: "/placeholder.svg?height=300&width=300" },
+]
 
 export default function AboutPage() {
-  const teamMembers = [
-    {
-      name: "Alex Johnson",
-      role: "Founder & Creative Director",
-      bio: "With over 15 years of experience in design and branding, Alex founded Creative Surf with a vision to help brands make meaningful connections.",
-      image: "/placeholder.svg?height=300&width=300",
-    },
-    {
-      name: "Sarah Chen",
-      role: "Head of Digital Strategy",
-      bio: "Sarah brings her expertise in digital marketing and analytics to develop data-driven strategies that deliver measurable results.",
-      image: "/placeholder.svg?height=300&width=300",
-    },
-    {
-      name: "Marcus Williams",
-      role: "Lead Web Developer",
-      bio: "Marcus combines technical expertise with creative problem-solving to build websites that are both beautiful and functional.",
-      image: "/placeholder.svg?height=300&width=300",
-    },
-    {
-      name: "Priya Patel",
-      role: "Content Strategist",
-      bio: "Priya crafts compelling narratives that resonate with audiences and strengthen brand identities across all platforms.",
-      image: "/placeholder.svg?height=300&width=300",
-    },
-  ]
+  const t = useT(aboutMessages)
 
-  const values = [
-    { title: "Creativity", description: "We approach every challenge with fresh thinking and innovative solutions." },
-    { title: "Collaboration", description: "We believe the best work happens when diverse perspectives come together." },
-    { title: "Excellence", description: "We hold ourselves to the highest standards in everything we do." },
-    { title: "Authenticity", description: "We value honesty and transparency in all our relationships." },
-    { title: "Growth", description: "We're committed to continuous learning and improvement." },
-    { title: "Impact", description: "We measure our success by the results we deliver for our clients." },
-  ]
+  const teamMembers = TEAM_META.map((member, i) => ({
+    ...member,
+    role: t(`team.members.${i}.role`),
+    bio: t(`team.members.${i}.bio`),
+  }))
+
+  const values = t.raw<{ title: string; description: string }[]>("values.items", [])
 
   return (
     <main className="flex flex-col min-h-screen">
@@ -59,9 +43,9 @@ export default function AboutPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-6">About Creative Surf</h1>
+          <h1 className="text-5xl md:text-6xl font-extrabold mb-6">{t("hero.title")}</h1>
           <p className="text-xl text-blue-200 max-w-2xl mx-auto">
-            We're a team of passionate creatives dedicated to helping brands make waves in their industries
+            {t("hero.subtitle")}
           </p>
         </motion.div>
       </section>
@@ -75,20 +59,10 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl font-bold mb-6">Our Story</h2>
-            <p className="text-flow-textSoft mb-4">
-              Founded in 2015, Creative Surf began with a simple mission: to create authentic brand experiences that
-              resonate with audiences and drive meaningful results.
-            </p>
-            <p className="text-flow-textSoft mb-4">
-              What started as a small team of three has grown into a diverse collective of strategists, designers,
-              developers, and content creators united by our passion for creative excellence.
-            </p>
-            <p className="text-flow-textSoft">
-              Today, we're proud to partner with brands across industries, from emerging startups to established
-              enterprises, helping them navigate the ever-changing digital landscape and connect with their audiences
-              in authentic ways.
-            </p>
+            <h2 className="text-4xl font-bold mb-6">{t("story.title")}</h2>
+            <p className="text-flow-textSoft mb-4">{t("story.p1")}</p>
+            <p className="text-flow-textSoft mb-4">{t("story.p2")}</p>
+            <p className="text-flow-textSoft">{t("story.p3")}</p>
           </motion.div>
           <motion.div
             className="relative h-[400px] w-full rounded-2xl overflow-hidden shadow-2xl"
@@ -99,7 +73,7 @@ export default function AboutPage() {
           >
             <Image
               src="/placeholder.svg?height=800&width=600"
-              alt="Creative Surf team"
+              alt={t("story.imageAlt")}
               fill
               className="object-cover"
             />
@@ -117,7 +91,7 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            Our Values
+            {t("values.title")}
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {values.map((value, index) => (
@@ -147,7 +121,7 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            Meet Our Team
+            {t("team.title")}
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
             {teamMembers.map((member, index) => (
@@ -180,16 +154,16 @@ export default function AboutPage() {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">Let's Create Something Amazing Together</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">{t("cta.title")}</h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto text-blue-200">
-            Ready to take your brand to the next level? We'd love to hear about your project.
+            {t("cta.body")}
           </p>
           <motion.button
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
             className="bg-white text-blue-900 font-bold py-4 px-10 rounded-full text-lg shadow-lg hover:bg-blue-100 transition-colors"
           >
-            Get in Touch
+            {t("cta.button")}
           </motion.button>
         </motion.div>
       </section>

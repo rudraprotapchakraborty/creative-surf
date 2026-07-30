@@ -5,13 +5,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { Facebook, Linkedin, Instagram, ArrowUpRight, Mail, Phone, MapPin } from "lucide-react";
 import MouseParticles from "./MouseParticles";
+import { useT } from "@/lib/i18n";
+import { footerMessages } from "@/lib/i18n/messages/footer";
 
 const NAV = [
-  { label: "Home",     href: "/" },
-  { label: "Services", href: "/services" },
-  { label: "Blogs",    href: "/blogs" },
-  { label: "About",    href: "/about" },
-  { label: "Contact",  href: "/contact" },
+  { key: "home",     href: "/" },
+  { key: "services", href: "/services" },
+  { key: "blogs",    href: "/blogs" },
+  { key: "about",    href: "/about" },
+  { key: "contact",  href: "/contact" },
 ];
 
 const SOCIALS = [
@@ -27,6 +29,8 @@ const fadeUp = {
 };
 
 export function Footer() {
+  const t = useT(footerMessages);
+
   return (
     <footer
       id="contact"
@@ -52,31 +56,31 @@ export function Footer() {
           <div>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border border-flow-border text-xs font-bold uppercase tracking-[0.2em] text-aurora-1 mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-aurora-1" />
-              Let's Talk
+              {t("badge")}
             </span>
             <h2
               className="font-bold leading-tight text-flow-text"
               style={{ fontSize: "clamp(1.9rem,3.2vw,3rem)" }}
             >
-              Let's build something
+              {t("headlineLine1")}
               <br />
-              <span className="text-aurora-shimmer">unreal.</span>
+              <span className="text-aurora-shimmer">{t("headlineAccent")}</span>
             </h2>
             <p className="mt-4 text-flow-textSoft text-base leading-relaxed max-w-md">
-              Combining creativity, strategy, and technology to shape the future of your brand.
+              {t("blurb")}
             </p>
             <Link
               href="/contact"
               className="shine group relative mt-7 inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold text-white bg-aurora-grad shadow-aurora overflow-hidden"
             >
-              <span className="relative">Start a Project</span>
+              <span className="relative">{t("cta")}</span>
               <ArrowUpRight className="relative w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </Link>
           </div>
 
           {/* Explore */}
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-flow-textSoft/60 mb-5">Explore</h3>
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-flow-textSoft/60 mb-5">{t("exploreTitle")}</h3>
             <ul className="flex flex-col gap-3">
               {NAV.map((item) => (
                 <li key={item.href}>
@@ -85,7 +89,7 @@ export function Footer() {
                     className="group inline-flex items-center gap-2 text-base font-medium text-flow-textSoft hover:text-flow-text transition-colors"
                   >
                     <span className="h-px w-0 group-hover:w-5 bg-aurora-1 transition-all duration-300" />
-                    {item.label}
+                    {t(`links.${item.key}`)}
                   </Link>
                 </li>
               ))}
@@ -94,7 +98,7 @@ export function Footer() {
 
           {/* Contact card */}
           <div className="glass-strong rounded-3xl border border-flow-border p-5 sm:p-6">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-flow-textSoft/60 mb-4">Get in touch</h3>
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-flow-textSoft/60 mb-4">{t("contactTitle")}</h3>
 
             <div className="flex flex-col gap-3 text-flow-text">
               <a href="mailto:contact@creativesurf.agency" className="group flex items-center gap-3 hover:text-aurora-1 transition-colors">
@@ -115,7 +119,7 @@ export function Footer() {
                 <span className="flex-shrink-0 grid place-items-center w-10 h-10 rounded-xl glass border border-flow-border">
                   <MapPin className="w-4 h-4 text-aurora-1" />
                 </span>
-                <span className="text-sm sm:text-base">Dhaka, Bangladesh</span>
+                <span className="text-sm sm:text-base">{t("location")}</span>
               </div>
             </div>
 
@@ -127,7 +131,7 @@ export function Footer() {
               style={{ background: "#25D366", boxShadow: "0 4px 16px #25D36645" }}
             >
               <Phone className="w-4 h-4" />
-              Chat on WhatsApp
+              {t("whatsapp")}
             </a>
 
             {/* Socials */}
@@ -152,23 +156,23 @@ export function Footer() {
         <div className="mt-12 pt-6 border-t border-flow-border flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
             <div className="flex items-center gap-2.5">
-              <Image src="/logo.png" alt="Creative Surf" width={22} height={22} className="opacity-90" />
+              <Image src="/logo.png" alt={t("logoAlt")} width={22} height={22} className="opacity-90" />
               <p className="text-xs text-flow-textSoft font-medium">
-                © {new Date().getFullYear()} Creative Surf. All rights reserved.
+                {t("rights", { year: new Date().getFullYear() })}
               </p>
             </div>
             <div className="flex items-center gap-3 text-xs text-flow-textSoft">
               <Link href="/terms" className="hover:text-flow-text transition-colors">
-                Terms of Service
+                {t("terms")}
               </Link>
               <span className="w-1 h-1 rounded-full bg-flow-border" />
               <Link href="/privacy-policy" className="hover:text-flow-text transition-colors">
-                Privacy Policy
+                {t("privacy")}
               </Link>
             </div>
           </div>
           <p className="text-xs text-flow-textSoft tracking-widest uppercase font-semibold">
-            Crafted with <span className="text-aurora">aurora</span> energy
+            {t("craftedPre")} <span className="text-aurora">{t("craftedAccent")}</span> {t("craftedPost")}
           </p>
         </div>
       </div>

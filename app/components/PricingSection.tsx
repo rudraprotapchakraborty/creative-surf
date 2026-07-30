@@ -4,60 +4,34 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, Sparkles } from "lucide-react";
 
+import { useT } from "@/lib/i18n";
+import { homeMessages } from "@/lib/i18n/messages/home";
+
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-const plans = {
-  monthly: [
-    {
-      title: "Basic",
-      price: 1000,
-      description: "Perfect for small businesses ready to grow their digital presence.",
-      features: [
-        "Business Development",
-        "Campaign Marketing",
-        "Creative Visual Content (Up to 7)",
-        "Series Content",
-        "Animated Motion Video",
-        "Social Media Management",
-        "Media Buying on Demand",
-      ],
-    },
-    {
-      title: "Standard",
-      price: 1500,
-      description: "The complete package — our most popular choice for scaling brands.",
-      highlight: true,
-      features: [
-        "Product Photography",
-        "Creative Visual Content (Up to 10)",
-        "Copyright Content with SEO",
-        "Media Buying on Demand ($50 free)",
-        "Everything in Basic",
-      ],
-    },
-    {
-      title: "Premium",
-      price: 1800,
-      description: "Full-service digital marketing for enterprise businesses.",
-      features: [
-        "Website Development",
-        "Creative Visual Content (Up to 15)",
-        "Media Buying on Demand ($100 free)",
-        "Content Writing (Up to 5)",
-        "Everything in Standard",
-      ],
-    },
-  ],
-} as const;
+/** Prices and which tier is highlighted stay in code; all copy is translated. */
+const PLAN_META = [
+  { price: 1000, highlight: false },
+  { price: 1500, highlight: true },
+  { price: 1800, highlight: false },
+];
 
 type Billing = "monthly" | "yearly";
+type PlanCopy = { title: string; description: string; features: string[] };
 
 export default function PricingSection() {
+  const t = useT(homeMessages);
   const [billing, setBilling] = useState<Billing>("monthly");
 
+  const monthlyPlans = t.raw<PlanCopy[]>("pricing.plans", []).map((plan, i) => ({
+    ...plan,
+    price: PLAN_META[i]?.price ?? 0,
+    highlight: PLAN_META[i]?.highlight ?? false,
+  }));
+
   const activePlans = billing === "monthly"
-    ? plans.monthly
-    : plans.monthly.map((p) => ({ ...p, price: Math.floor(p.price * 6 * 0.8) }));
+    ? monthlyPlans
+    : monthlyPlans.map((p) => ({ ...p, price: Math.floor(p.price * 6 * 0.8) }));
 
   return (
     <section
@@ -79,18 +53,18 @@ export default function PricingSection() {
         >
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border border-flow-border text-xs font-bold uppercase tracking-[0.2em] text-aurora-1 mb-6">
             <span className="w-1.5 h-1.5 rounded-full bg-aurora-1" />
-            Pricing
+            {t("pricing.badge")}
           </span>
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 w-full">
             <h2
               className="font-bold text-flow-text leading-tight"
               style={{ fontSize: "clamp(2rem,3.5vw,3.25rem)" }}
             >
-              Clear, transparent<br />
-              <span className="text-aurora">pricing.</span>
+              {t("pricing.headingLine1")}<br />
+              <span className="text-aurora">{t("pricing.headingAccent")}</span>
             </h2>
             <p className="text-flow-textSoft text-base max-w-sm lg:text-right leading-relaxed">
-              No hidden fees. No surprises. Pick the package that matches where you are — and where you're going.
+              {t("pricing.intro")}
             </p>
           </div>
 
@@ -113,8 +87,8 @@ export default function PricingSection() {
                 )}
                 <span className="relative">
                   {mode === "monthly"
-                    ? "Monthly"
-                    : <><span className="sm:hidden">6-Month · 20% off</span><span className="hidden sm:inline">Half-Yearly · 20% off</span></>}
+                    ? t("pricing.billingMonthly")
+                    : <><span className="sm:hidden">{t("pricing.billingHalfShort")}</span><span className="hidden sm:inline">{t("pricing.billingHalfLong")}</span></>}
                 </span>
               </button>
             ))}
@@ -159,7 +133,7 @@ export default function PricingSection() {
                     <div className="relative z-10 flex justify-center pt-5">
                       <span className="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold tracking-[0.15em] uppercase rounded-full bg-aurora-grad text-white shadow-aurora">
                         <Sparkles className="w-3 h-3" />
-                        Most Popular
+                        {t("pricing.mostPopular")}
                       </span>
                     </div>
                   )}
@@ -197,7 +171,7 @@ export default function PricingSection() {
                           isHighlight ? "text-flow-bg/50" : "text-flow-textSoft"
                         }`}
                       >
-                        /{billing === "monthly" ? "mo" : "half-yr"}
+                        /{billing === "monthly" ? t("pricing.perMonth") : t("pricing.perHalfYear")}
                       </span>
                     </div>
 
@@ -241,7 +215,7 @@ export default function PricingSection() {
                           : "bg-aurora-grad text-white shadow-aurora hover:opacity-90"
                       }`}
                     >
-                      Get Started
+                      {t("pricing.cta")}
                     </button>
                   </div>
                 </motion.div>
@@ -258,7 +232,7 @@ export default function PricingSection() {
           transition={{ delay: 0.4 }}
           className="text-center text-xs text-flow-textSoft/60 mt-10"
         >
-          All plans include a dedicated account manager. Cancel anytime.
+          {t("pricing.footnote")}
         </motion.p>
       </div>
     </section>

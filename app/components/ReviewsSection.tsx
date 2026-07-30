@@ -4,35 +4,19 @@ import { motion } from "framer-motion";
 import { Star, User, Quote } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/i18n";
+import { homeMessages } from "@/lib/i18n/messages/home";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-const reviews = [
-  {
-    name: "Sarah Johnson",
-    position: "Marketing Director",
-    company: "TechVision Inc.",
-    avatar: "/placeholder.svg?height=100&width=100",
-    text: "Working with Creative Surf transformed our digital presence completely. Our conversion rates increased by 45% in just three months.",
-    rating: 5,
-  },
-  {
-    name: "Michael Chen",
-    position: "CEO",
-    company: "Innovate Solutions",
-    avatar: "/placeholder.svg?height=100&width=100",
-    text: "They developed our brand identity, built our website, and executed a campaign that got us featured in major publications.",
-    rating: 5,
-  },
-  {
-    name: "Emily Rodriguez",
-    position: "E-commerce Manager",
-    company: "StyleHouse Boutique",
-    avatar: "/placeholder.svg?height=100&width=100",
-    text: "Our online sales have increased by 78% since working with them. Their seasonal launch campaign was absolutely stunning.",
-    rating: 5,
-  },
+/** Names, companies and ratings are facts, not copy — only the quote and role translate. */
+const REVIEW_META = [
+  { name: "Sarah Johnson", company: "TechVision Inc.", avatar: "/placeholder.svg?height=100&width=100", rating: 5 },
+  { name: "Michael Chen", company: "Innovate Solutions", avatar: "/placeholder.svg?height=100&width=100", rating: 5 },
+  { name: "Emily Rodriguez", company: "StyleHouse Boutique", avatar: "/placeholder.svg?height=100&width=100", rating: 5 },
 ];
+
+type Review = (typeof REVIEW_META)[number] & { position: string; text: string };
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -47,7 +31,7 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
-const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => (
+const ReviewCard = ({ review }: { review: Review }) => (
   <div className="relative w-[280px] sm:w-[320px] md:w-[420px] shrink-0 p-5 sm:p-7 md:p-9 rounded-2xl glass border border-flow-border flex flex-col justify-between overflow-hidden hover:border-aurora-1/40 transition-colors duration-300">
     <div className="absolute -top-3 -right-3 opacity-[0.07]">
       <Quote className="w-24 h-24 text-aurora-1" strokeWidth={1.5} />
@@ -77,6 +61,14 @@ const ReviewCard = ({ review }: { review: (typeof reviews)[0] }) => (
 );
 
 export default function ReviewsSection() {
+  const t = useT(homeMessages);
+
+  const reviews: Review[] = REVIEW_META.map((meta, i) => ({
+    ...meta,
+    position: t(`reviews.items.${i}.position`),
+    text: t(`reviews.items.${i}.text`),
+  }));
+
   const marqueeItems = [...reviews, ...reviews, ...reviews, ...reviews];
   const featured = reviews[2];
 
@@ -95,14 +87,14 @@ export default function ReviewsSection() {
         >
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border border-flow-border text-xs font-bold uppercase tracking-[0.2em] text-aurora-1 mb-6">
             <span className="w-1.5 h-1.5 rounded-full bg-aurora-1" />
-            Client Testimonials
+            {t("reviews.badge")}
           </span>
           <h2
             className="font-bold text-flow-text leading-tight"
             style={{ fontSize: "clamp(2rem,3.5vw,3.25rem)" }}
           >
-            Don't just take<br />
-            <span className="text-aurora">our word for it.</span>
+            {t("reviews.headingLine1")}<br />
+            <span className="text-aurora">{t("reviews.headingAccent")}</span>
           </h2>
         </motion.div>
       </div>

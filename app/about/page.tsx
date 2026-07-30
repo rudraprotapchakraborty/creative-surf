@@ -1,11 +1,16 @@
 import type { Metadata } from "next"
 import AboutContent from "./AboutContent"
+import { getTranslator } from "@/lib/i18n/server"
+import { aboutMessages } from "@/lib/i18n/messages/about"
 
-export const metadata: Metadata = {
-  title: "About Us | Creative Surf",
-  description: "Learn about Creative Surf, our mission, values, and the talented team behind our creative agency.",
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslator(aboutMessages)
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+  }
 }
 
-export default function ContactPage() {
+export default function AboutPage() {
   return <AboutContent />
 }

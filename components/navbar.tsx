@@ -6,9 +6,13 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useT } from "@/lib/i18n";
+import { navMessages } from "@/lib/i18n/messages/nav";
 
 export function Navbar() {
   const pathname = usePathname();
+  const t = useT(navMessages);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -16,18 +20,18 @@ export function Navbar() {
 
   const navLinks = isRE
     ? [
-        { label: "Home",     href: "/real-estate" },
-        { label: "Projects", href: "/real-estate/projects" },
-        { label: "Blogs",    href: "/real-estate/blogs" },
+        { label: t("links.home"),     href: "/real-estate" },
+        { label: t("links.projects"), href: "/real-estate/projects" },
+        { label: t("links.blogs"),    href: "/real-estate/blogs" },
       ]
     : [
-        { label: "Home",  href: "/" },
-        { label: "Blogs", href: "/blogs" },
+        { label: t("links.home"),  href: "/" },
+        { label: t("links.blogs"), href: "/blogs" },
       ];
 
   const sections = [
-    { label: "Marketing",   href: "/",            active: !isRE },
-    { label: "Real Estate", href: "/real-estate", active: isRE  },
+    { label: t("sections.marketing"),  href: "/",            active: !isRE },
+    { label: t("sections.realEstate"), href: "/real-estate", active: isRE  },
   ];
   // Active index drives the sliding indicator (transform-based, so it never
   // depends on scroll position — avoids the layoutId "fly from bottom" jump).
@@ -68,7 +72,7 @@ export function Navbar() {
               <div className="absolute inset-0 bg-aurora-grad rounded-full blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-500" />
               <img
                 src={isRE ? "/logo2.png" : "/logo.png"}
-                alt="logo"
+                alt={t("logoAlt")}
                 className="relative w-7 h-7 md:w-8 md:h-8 transition-transform duration-500 group-hover:scale-110"
               />
             </div>
@@ -115,25 +119,27 @@ export function Navbar() {
             ))}
           </div>
 
-          {/* DESKTOP — theme + CTA */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* DESKTOP — language + theme + CTA */}
+          <div className="hidden md:flex items-center gap-2">
+            <LanguageSwitcher />
             <ThemeToggle />
             <Link
               href="/contact"
               className={`shine relative group inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold text-white overflow-hidden ${isRE ? "" : "bg-aurora-grad shadow-aurora"}`}
               style={isRE ? { background: "linear-gradient(135deg,#B8892A,#D4A843)" } : undefined}
             >
-              <span className="relative">Get Started</span>
+              <span className="relative">{t("cta")}</span>
               <ArrowRight className="relative w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </div>
 
           {/* MOBILE — toggle */}
-          <div className="md:hidden flex items-center gap-2">
+          <div className="md:hidden flex items-center gap-1">
+            <LanguageSwitcher />
             <ThemeToggle />
             <button
               onClick={() => setMobileOpen(v => !v)}
-              aria-label="Toggle menu"
+              aria-label={t("toggleMenu")}
               className="p-2 rounded-full text-flow-text hover:bg-flow-card transition-colors"
             >
               {mobileOpen ? <X size={22} /> : <Menu size={22} />}
@@ -198,6 +204,11 @@ export function Navbar() {
               </div>
             </div>
 
+            {/* Language */}
+            <div className="border-t border-flow-border p-2">
+              <LanguageSwitcher variant="inline" onSelect={() => setMobileOpen(false)} />
+            </div>
+
             {/* Divider + CTA */}
             <div className="border-t border-flow-border p-2">
               <Link
@@ -206,7 +217,7 @@ export function Navbar() {
                 className="group flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-semibold text-white"
                 style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
               >
-                Get Started
+                {t("cta")}
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>

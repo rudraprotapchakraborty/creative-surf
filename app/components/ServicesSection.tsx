@@ -7,60 +7,23 @@ import {
   Search, Target, Users, ChevronRight,
 } from "lucide-react";
 
+import { useT } from "@/lib/i18n";
+import { homeMessages } from "@/lib/i18n/messages/home";
+
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-const services = [
-  {
-    title: "Graphics Design",
-    description: "High-impact visuals blending art direction with precision — brand identity, campaign assets, and everything in between.",
-    icon: PenTool,
-    tags: ["Brand Identity", "Print", "Digital"],
-  },
-  {
-    title: "Content Marketing",
-    description: "Strategic storytelling that builds authority, drives organic traffic, and converts browsers into loyal buyers.",
-    icon: FileText,
-    tags: ["Strategy", "Copywriting", "Distribution"],
-  },
-  {
-    title: "Video Editing",
-    description: "Cinematic edits with seamless motion and narrative clarity — from short-form reels to full brand films.",
-    icon: Video,
-    tags: ["Reels", "Ad Films", "Brand Videos"],
-  },
-  {
-    title: "Website Development",
-    description: "High-performance web experiences engineered for conversion and built to scale as your business grows.",
-    icon: Globe,
-    tags: ["Next.js", "React", "E-commerce"],
-  },
-  {
-    title: "OVC / TVC",
-    description: "Premium television and online video commercials that communicate your brand's value with maximum impact.",
-    icon: Tv,
-    tags: ["Commercials", "Broadcast", "Online"],
-  },
-  {
-    title: "SEO & Social Media",
-    description: "Precision SEO and social campaigns that compound your visibility and bring high-intent audiences directly to you.",
-    icon: Search,
-    tags: ["SEO", "Paid Social", "Analytics"],
-  },
-  {
-    title: "Media Buying",
-    description: "Optimised ad spend across every channel — making every dollar work harder so your ROI compounds over time.",
-    icon: Target,
-    tags: ["Google Ads", "Meta", "Programmatic"],
-  },
-  {
-    title: "Digital Branding",
-    description: "Cohesive digital identities for lasting impressions — visual systems, brand voice, and positioning that stick.",
-    icon: Users,
-    tags: ["Strategy", "Visual Identity", "Voice"],
-  },
-];
+/** Icons stay in code; the copy for each row comes from the dictionary. */
+const SERVICE_ICONS = [PenTool, FileText, Video, Globe, Tv, Search, Target, Users];
+
+type ServiceCopy = { title: string; description: string; tags: string[] };
 
 export default function ServicesSection() {
+  const t = useT(homeMessages);
+
+  const services = t
+    .raw<ServiceCopy[]>("services.items", [])
+    .map((service, i) => ({ ...service, icon: SERVICE_ICONS[i] ?? PenTool }));
+
   return (
     <section
       id="services"
@@ -78,18 +41,18 @@ export default function ServicesSection() {
           <div>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border border-flow-border text-xs font-bold uppercase tracking-[0.2em] text-aurora-1 mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-aurora-1" />
-              Our Expertise
+              {t("services.badge")}
             </span>
             <h2
               className="font-bold text-flow-text leading-tight"
               style={{ fontSize: "clamp(2rem,3.5vw,3.25rem)" }}
             >
-              What we do<br />
-              <span className="text-aurora">exceptionally well.</span>
+              {t("services.headingLine1")}<br />
+              <span className="text-aurora">{t("services.headingAccent")}</span>
             </h2>
           </div>
           <p className="text-flow-textSoft text-base max-w-xs leading-relaxed md:text-right">
-            Eight disciplines. One integrated team. Every service built to compound your growth.
+            {t("services.intro")}
           </p>
         </motion.div>
       </div>

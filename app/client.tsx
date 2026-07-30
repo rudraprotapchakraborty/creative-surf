@@ -8,6 +8,8 @@ import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import GoogleAnalytics from "@/components/google-analytics"
 import PageLoader from "@/components/PageLoader"
+import { LanguageProvider } from "@/lib/i18n"
+import { getServerLocale } from "@/lib/i18n/server"
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -24,35 +26,39 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const locale = await getServerLocale()
+
   return (
-    <html lang="en" className={`${jakarta.variable} font-sans`} suppressHydrationWarning>
+    <html lang={locale} className={`${jakarta.variable} font-sans`} suppressHydrationWarning>
       <body suppressHydrationWarning>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          <Suspense fallback={null}>
-            <GoogleAnalytics />
-          </Suspense>
+        <LanguageProvider initialLocale={locale}>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+            <Suspense fallback={null}>
+              <GoogleAnalytics />
+            </Suspense>
 
-          {/* PAGE LOAD WAVE LOADER */}
-          <Suspense fallback={null}>
-            <PageLoader />
-          </Suspense>
+            {/* PAGE LOAD WAVE LOADER */}
+            <Suspense fallback={null}>
+              <PageLoader />
+            </Suspense>
 
-          {/* NAV */}
-          <Navbar />
+            {/* NAV */}
+            <Navbar />
 
-          {/* PAGE CONTENT */}
-          <LoadingBarProvider>
-            <main className="min-h-screen">{children}</main>
-          </LoadingBarProvider>
+            {/* PAGE CONTENT */}
+            <LoadingBarProvider>
+              <main className="min-h-screen">{children}</main>
+            </LoadingBarProvider>
 
-          {/* FOOTER */}
-          <ConditionalFooter />
-        </ThemeProvider>
+            {/* FOOTER */}
+            <ConditionalFooter />
+          </ThemeProvider>
+        </LanguageProvider>
       </body>
     </html>
   )

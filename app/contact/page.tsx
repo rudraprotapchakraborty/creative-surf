@@ -1,10 +1,14 @@
 import type { Metadata } from "next"
 import ContactContent from "./ContactContent"
+import { getTranslator } from "@/lib/i18n/server"
+import { contactMessages } from "@/lib/i18n/messages/contact"
 
-export const metadata: Metadata = {
-  title: "Contact Us | Creative Surf",
-  description:
-    "Get in touch with Creative Surf for your next project. We're here to help bring your vision to life.",
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslator(contactMessages)
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+  }
 }
 
 export default function ContactPage() {

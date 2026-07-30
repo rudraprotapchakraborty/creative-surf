@@ -1,85 +1,63 @@
 import type { Metadata } from "next"
-import { generateMetadata } from "@/lib/metadata"
+import { generateMetadata as buildMetadata } from "@/lib/metadata"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
+import { getTranslator } from "@/lib/i18n/server"
+import { serviceHubsMessages } from "@/lib/i18n/messages/serviceHubs"
 
-export const metadata: Metadata = generateMetadata({
-  title: "Digital Marketing Services",
-  description:
-    "Explore our comprehensive digital marketing services designed to drive growth and revenue for your business.",
-  path: "/digital-marketing",
-})
+const CARD_HREFS = [
+  "/digital-marketing/digital-intelligence",
+  "/digital-marketing/conversion",
+  "/digital-marketing/marketing-automation",
+  "/digital-marketing/commerce-platforms",
+]
 
-export default function DigitalMarketingPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslator(serviceHubsMessages)
+  return buildMetadata({
+    title: t("digitalMarketing.metaTitle"),
+    description: t("digitalMarketing.metaDescription"),
+    path: "/digital-marketing",
+  })
+}
+
+export default async function DigitalMarketingPage() {
+  const t = await getTranslator(serviceHubsMessages)
+
+  const cards = t
+    .raw<{ title: string; body: string }[]>("digitalMarketing.cards", [])
+    .map((card, i) => ({ ...card, href: CARD_HREFS[i] ?? "#" }))
+
   return (
     <div className="bg-flow-bg min-h-screen py-16">
       <div className="container mx-auto px-4">
-        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-center">Digital Marketing Services</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-center">{t("digitalMarketing.title")}</h1>
         <p className="text-xl text-flow-textSoft mb-12 text-center max-w-3xl mx-auto">
-          Comprehensive digital marketing solutions designed to drive growth and revenue for your business.
+          {t("digitalMarketing.subtitle")}
         </p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          <Link href="/digital-marketing/digital-intelligence" className="group">
-            <div className="bg-flow-surface rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-              <h2 className="text-2xl font-bold mb-4 group-hover:text-blue-600">Digital Intelligence</h2>
-              <p className="text-flow-textSoft mb-4">
-                Data-driven insights to inform your marketing strategy and maximize ROI.
-              </p>
-              <Button variant="link" className="p-0 group-hover:text-blue-600">
-                Learn More <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          </Link>
-
-          <Link href="/digital-marketing/conversion" className="group">
-            <div className="bg-flow-surface rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-              <h2 className="text-2xl font-bold mb-4 group-hover:text-blue-600">Conversion</h2>
-              <p className="text-flow-textSoft mb-4">
-                Optimize your website and marketing funnels to convert more visitors into customers.
-              </p>
-              <Button variant="link" className="p-0 group-hover:text-blue-600">
-                Learn More <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          </Link>
-
-          <Link href="/digital-marketing/marketing-automation" className="group">
-            <div className="bg-flow-surface rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-              <h2 className="text-2xl font-bold mb-4 group-hover:text-blue-600">Marketing Automation</h2>
-              <p className="text-flow-textSoft mb-4">
-                Streamline your marketing processes and nurture leads with automated workflows.
-              </p>
-              <Button variant="link" className="p-0 group-hover:text-blue-600">
-                Learn More <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          </Link>
-
-          <Link href="/digital-marketing/commerce-platforms" className="group">
-            <div className="bg-flow-surface rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-              <h2 className="text-2xl font-bold mb-4 group-hover:text-blue-600">Commerce Platforms</h2>
-              <p className="text-flow-textSoft mb-4">
-                Optimize your presence on major commerce platforms to drive sales and growth.
-              </p>
-              <Button variant="link" className="p-0 group-hover:text-blue-600">
-                Learn More <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          </Link>
+          {cards.map((card) => (
+            <Link key={card.href} href={card.href} className="group">
+              <div className="bg-flow-surface rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+                <h2 className="text-2xl font-bold mb-4 group-hover:text-blue-600">{card.title}</h2>
+                <p className="text-flow-textSoft mb-4">{card.body}</p>
+                <Button variant="link" className="p-0 group-hover:text-blue-600">
+                  {t("learnMore")} <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </Link>
+          ))}
         </div>
 
         <div className="text-center">
-          <p className="text-flow-textSoft mb-6">
-            Ready to take your digital marketing to the next level? Contact us for a personalized strategy.
-          </p>
+          <p className="text-flow-textSoft mb-6">{t("digitalMarketing.closing")}</p>
           <Button asChild className="bg-blue-600 hover:bg-blue-700">
-            <Link href="/contact">Get in Touch</Link>
+            <Link href="/contact">{t("digitalMarketing.ctaButton")}</Link>
           </Button>
         </div>
       </div>
     </div>
   )
 }
-

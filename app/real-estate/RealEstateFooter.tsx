@@ -5,6 +5,8 @@ import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Mail, Phone, Linkedin, Instagram, Facebook, ArrowUpRight, MapPin } from "lucide-react"
+import { useT } from "@/lib/i18n"
+import { realEstateFooterMessages } from "@/lib/i18n/messages/realEstateFooter"
 
 const G  = "#B8892A"
 const GL = "#D4A843"
@@ -12,10 +14,10 @@ const B  = "#0066A2"
 const EASE = [0.16, 1, 0.3, 1] as const
 
 const NAV = [
-  { label: "Home",     href: "/" },
-  { label: "Projects", href: "/real-estate/projects" },
-  { label: "Blogs",    href: "/real-estate/blogs" },
-  { label: "Contact",  href: "/contact" },
+  { key: "home",     href: "/" },
+  { key: "projects", href: "/real-estate/projects" },
+  { key: "blogs",    href: "/real-estate/blogs" },
+  { key: "contact",  href: "/contact" },
 ]
 
 const SOCIALS = [
@@ -42,6 +44,7 @@ export default function RealEstateFooter() {
   // The home page ends with an overlapping CTA card; give the footer extra
   // top room there so the card lands over the skyline (Spring Field style).
   const pathname = usePathname()
+  const t = useT(realEstateFooterMessages)
   const hasOverlapCard = pathname === "/real-estate"
 
   return (
@@ -67,15 +70,15 @@ export default function RealEstateFooter() {
 
             <div className="relative z-10 px-8 sm:px-12 lg:px-16 py-12 sm:py-16 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
               <div className="md:col-span-2">
-                <span className="text-[11px] tracking-[0.3em] font-bold uppercase text-white/70">For Home Buyers</span>
+                <span className="text-[11px] tracking-[0.3em] font-bold uppercase text-white/70">{t("cta.badge")}</span>
                 <h2
                   className="font-medium leading-[1.05] mt-3 text-white"
                   style={{ fontSize: "clamp(2.1rem,4.4vw,3.6rem)", fontFamily: "var(--font-re-display)", letterSpacing: "-0.02em" }}
                 >
-                  Find your next home in Dhaka.
+                  {t("cta.heading")}
                 </h2>
                 <p className="text-white/85 mt-3 max-w-2xl leading-relaxed">
-                  Browse verified residential projects across Dhaka — from luxury apartments to affordable flats — and find the perfect home for you and your family.
+                  {t("cta.body")}
                 </p>
               </div>
               <div className="flex flex-col gap-3 md:items-end">
@@ -83,14 +86,14 @@ export default function RealEstateFooter() {
                   href="/real-estate/projects"
                   className="inline-flex items-center gap-2 bg-white text-[#8a6418] px-6 py-3.5 rounded-full font-semibold shadow-lg hover:scale-[1.03] transition-transform"
                 >
-                  View available flats
+                  {t("cta.primary")}
                   <ArrowUpRight className="w-[18px] h-[18px]" />
                 </Link>
                 <Link
                   href="/contact"
                   className="inline-flex items-center gap-2 bg-transparent border border-white/40 text-white px-6 py-3.5 rounded-full font-semibold hover:bg-white/10 transition-colors"
                 >
-                  Schedule a site visit
+                  {t("cta.secondary")}
                 </Link>
               </div>
             </div>
@@ -102,7 +105,7 @@ export default function RealEstateFooter() {
       <div className="relative overflow-hidden">
         {/* Background skyline */}
         <div className="absolute inset-0">
-          <Image src="/real-estate-reimagined.png" alt="Dhaka skyline" fill className="object-cover" priority />
+          <Image src="/real-estate-reimagined.png" alt={t("skylineAlt")} fill className="object-cover" priority />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/75 to-black/40" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
         </div>
@@ -120,27 +123,26 @@ export default function RealEstateFooter() {
                 className="font-black leading-[1.05] uppercase tracking-tight"
                 style={{ fontFamily: "var(--font-re)", fontSize: "clamp(2rem, 4.5vw, 3.25rem)" }}
               >
-                <span style={{ color: B }}>Real Estate.</span>
+                <span style={{ color: B }}>{t("brand.line1")}</span>
                 <br />
-                <span style={{ color: G }}>Reimagined.</span>
+                <span style={{ color: G }}>{t("brand.line2")}</span>
               </p>
               <p className="mt-4 text-sm text-white/70 leading-relaxed max-w-md">
-                We craft standout digital experiences for property developers — from immersive project
-                showcases to marketing that moves the market.
+                {t("brand.blurb")}
               </p>
               <Link
                 href="/contact"
                 className="group mt-6 inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold text-white hover:-translate-y-0.5 hover:brightness-110 transition-all duration-300"
                 style={{ background: G, boxShadow: `0 8px 30px ${G}75` }}
               >
-                Start a Project
+                {t("brand.cta")}
                 <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </Link>
             </div>
 
             {/* Explore */}
             <div>
-              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/40 mb-6">Explore</h3>
+              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/40 mb-6">{t("exploreTitle")}</h3>
               <ul className="flex flex-col gap-4">
                 {NAV.map((item) => (
                   <li key={item.href}>
@@ -149,7 +151,7 @@ export default function RealEstateFooter() {
                       className="group inline-flex items-center gap-2 text-base font-medium text-white/75 hover:text-white transition-colors"
                     >
                       <span className="h-px w-0 group-hover:w-5 transition-all duration-300" style={{ background: G }} />
-                      {item.label}
+                      {t(`links.${item.key}`)}
                     </Link>
                   </li>
                 ))}
@@ -158,7 +160,7 @@ export default function RealEstateFooter() {
 
             {/* Contact card */}
             <div className="rounded-3xl border border-white/10 bg-white/[0.07] backdrop-blur-xl p-6 sm:p-7">
-              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/40 mb-5">Get in touch</h3>
+              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-white/40 mb-5">{t("contactTitle")}</h3>
 
               <div className="flex flex-col gap-4 text-white">
                 <a href="mailto:contact@creativesurf.agency" className="group flex items-center gap-3 hover:text-white transition-colors">
@@ -179,7 +181,7 @@ export default function RealEstateFooter() {
                   <span className="flex-shrink-0 grid place-items-center w-10 h-10 rounded-full bg-white/[0.08] border border-white/10">
                     <MapPin className="w-4 h-4" style={{ color: G }} />
                   </span>
-                  <span className="text-sm sm:text-base text-white/85">Dhaka, Bangladesh</span>
+                  <span className="text-sm sm:text-base text-white/85">{t("location")}</span>
                 </div>
               </div>
 
@@ -191,7 +193,7 @@ export default function RealEstateFooter() {
                 style={{ background: "#25D366", boxShadow: "0 6px 20px rgba(37, 211, 102, 0.45)" }}
               >
                 <WhatsAppIcon className="w-4 h-4" />
-                Chat on WhatsApp
+                {t("whatsapp")}
               </a>
 
               {/* Socials */}
@@ -217,21 +219,21 @@ export default function RealEstateFooter() {
             <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left">
               <div className="flex items-center gap-2.5">
                 <Image src="/logo2.png" alt="Creative Surf" width={20} height={20} className="opacity-90" />
-                <span>© {new Date().getFullYear()} Creative Surf. All rights reserved.</span>
+                <span>{t("rights", { year: new Date().getFullYear() })}</span>
               </div>
               <div className="hidden sm:block text-white/20">•</div>
               <div className="flex items-center gap-4">
                 <Link href="/terms" className="hover:text-white transition-colors">
-                  Terms of Service
+                  {t("terms")}
                 </Link>
                 <span className="text-white/20">•</span>
                 <Link href="/privacy-policy" className="hover:text-white transition-colors">
-                  Privacy Policy
+                  {t("privacy")}
                 </Link>
               </div>
             </div>
             <div className="text-[10px] sm:text-xs text-white/45 tracking-[0.2em] uppercase font-bold">
-              Crafted with <span style={{ color: GL }}>aurora</span> energy
+              {t("craftedPre")} <span style={{ color: GL }}>{t("craftedAccent")}</span> {t("craftedPost")}
             </div>
           </div>
         </div>

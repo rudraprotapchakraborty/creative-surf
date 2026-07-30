@@ -4,20 +4,24 @@ import { motion } from "framer-motion";
 import { ArrowRight, TrendingUp, Sparkles, Star } from "lucide-react";
 import Link from "next/link";
 import WaveBackdrop from "./WaveBackdrop";
+import { useT } from "@/lib/i18n";
+import { homeMessages } from "@/lib/i18n/messages/home";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-const lines = [
-  { text: "Transform Your", accent: false },
-  { text: "Digital Presence.", accent: true },
-];
-
-const stats = [
-  { value: "150+", label: "Projects Delivered" },
-  { value: "98%", label: "Client Retention" },
-];
-
 export default function HeroSection() {
+  const t = useT(homeMessages);
+
+  const lines = [
+    { text: t("hero.headlineLine1"), accent: false },
+    { text: t("hero.headlineLine2"), accent: true },
+  ];
+
+  const stats = [
+    { value: "150+", label: t("hero.stats.projects") },
+    { value: "98%", label: t("hero.stats.retention") },
+  ];
+
   return (
     <section
       id="home"
@@ -57,7 +61,7 @@ export default function HeroSection() {
           >
             <span className="w-1.5 h-1.5 rounded-full bg-aurora-1" />
             <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.28em] text-aurora-1">
-              Creative Surf · Digital Agency
+              {t("hero.eyebrow")}
             </span>
           </motion.div>
 
@@ -84,8 +88,7 @@ export default function HeroSection() {
             transition={{ duration: 0.8, ease: EASE, delay: 0.5 }}
             className="text-flow-textSoft text-base sm:text-lg leading-relaxed max-w-lg mb-9"
           >
-            We help businesses build meaningful digital brands through strategic
-            design, performance marketing, and measurable results.
+            {t("hero.subtitle")}
           </motion.p>
 
           {/* CTAs */}
@@ -99,7 +102,7 @@ export default function HeroSection() {
               href="/contact"
               className="focus-ring group inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm text-white shadow-aurora bg-aurora-grad hover:opacity-95 transition-opacity"
             >
-              Start a Project
+              {t("hero.ctaPrimary")}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
 
@@ -107,7 +110,7 @@ export default function HeroSection() {
               href="#services"
               className="focus-ring group inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold text-flow-text glass border border-flow-borderStrong hover:border-aurora-1/40 transition-colors"
             >
-              See our services
+              {t("hero.ctaSecondary")}
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </motion.div>
@@ -156,8 +159,8 @@ export default function HeroSection() {
                   <TrendingUp className="w-4 h-4" />
                 </span>
                 <div>
-                  <p className="text-xs font-semibold text-flow-text">Campaign Performance</p>
-                  <p className="text-[10px] text-flow-textSoft uppercase tracking-wider">Last 6 months</p>
+                  <p className="text-xs font-semibold text-flow-text">{t("hero.panel.title")}</p>
+                  <p className="text-[10px] text-flow-textSoft uppercase tracking-wider">{t("hero.panel.subtitle")}</p>
                 </div>
               </div>
               <span className="text-xs font-bold text-aurora-1 bg-aurora-1/10 px-2.5 py-1 rounded-full">
@@ -194,9 +197,9 @@ export default function HeroSection() {
             {/* Mini stats */}
             <div className="grid grid-cols-3 gap-3 pt-4 border-t border-flow-border">
               {[
-                { k: "ROAS", v: "6.2x" },
-                { k: "Leads", v: "12.4k" },
-                { k: "CTR", v: "8.9%" },
+                { k: t("hero.panel.roas"), v: "6.2x" },
+                { k: t("hero.panel.leads"), v: "12.4k" },
+                { k: t("hero.panel.ctr"), v: "8.9%" },
               ].map((m) => (
                 <div key={m.k}>
                   <p className="text-lg font-extrabold text-flow-text tabular-nums leading-none">{m.v}</p>
@@ -217,7 +220,7 @@ export default function HeroSection() {
             </span>
             <div>
               <p className="text-sm font-bold text-flow-text leading-none">4.9/5</p>
-              <p className="text-[10px] text-flow-textSoft mt-1">Client rating</p>
+              <p className="text-[10px] text-flow-textSoft mt-1">{t("hero.chipRating")}</p>
             </div>
           </motion.div>
 
@@ -231,8 +234,8 @@ export default function HeroSection() {
               <Sparkles className="w-4 h-4" />
             </span>
             <div>
-              <p className="text-sm font-bold text-flow-text leading-none">Award-winning</p>
-              <p className="text-[10px] text-flow-textSoft mt-1">Creative team</p>
+              <p className="text-sm font-bold text-flow-text leading-none">{t("hero.chipAwardTitle")}</p>
+              <p className="text-[10px] text-flow-textSoft mt-1">{t("hero.chipAwardSub")}</p>
             </div>
           </motion.div>
         </motion.div>

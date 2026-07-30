@@ -20,7 +20,13 @@
       "Bash(mkdir -p __wv)",
       "Bash(curl -fsSL \"https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F30A.svg\" -o __wv/openmoji.svg)",
       "Bash(curl -fsSL \"https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/svg/1f30a.svg\" -o __wv/twemoji.svg)",
-      "Bash(curl -fsSL \"https://raw.githubusercontent.com/googlefonts/noto-emoji/main/svg/emoji_u1f30a.svg\" -o __wv/noto.svg)"
+      "Bash(curl -fsSL \"https://raw.githubusercontent.com/googlefonts/noto-emoji/main/svg/emoji_u1f30a.svg\" -o __wv/noto.svg)",
+      "Bash(python -)",
+      "Bash(curl -s -H \"Cookie: cs_locale=de\" http://localhost:3007/about/careers)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" -H \"Cookie: cs_locale=fr\" http://localhost:3007/seo-lead-generation/organic-search/seo-services)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" -H \"Cookie: cs_locale=fr\" http://localhost:3007/digital-marketing/digital-intelligence/seo-reporting)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" -H \"Cookie: cs_locale=de\" http://localhost:3007/seo-lead-generation/organic-search/local-seo)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" -H \"Cookie: cs_locale=de\" http://localhost:3007/seo-lead-generation/ecommerce/ecommerce-seo)"
     ]
   }
 }
