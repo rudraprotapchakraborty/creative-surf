@@ -106,7 +106,7 @@ export default function BlogPostClient({
           <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm" style={{ color: "rgb(var(--flow-text-soft))" }}>
             <span className="flex items-center gap-1.5"><User size={12} />{blog.author}</span>
             <span className="flex items-center gap-1.5"><Clock size={12} />{blog.readTime}</span>
-            <span className="flex items-center gap-1.5"><Calendar size={12} />{formatDate_CALL(blog.createdAt)}</span>
+            <span className="flex items-center gap-1.5"><Calendar size={12} />{formatDate(blog.createdAt, locale)}</span>
           </div>
 
           {isAdmin && (

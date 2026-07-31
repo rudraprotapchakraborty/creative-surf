@@ -321,7 +321,7 @@ export default function RealEstateBlogsPage() {
                       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px]" style={{ color: "rgb(var(--flow-text-soft))" }}>
                         <span className="flex items-center gap-1"><User size={10} />{blog.author}</span>
                         <span className="flex items-center gap-1"><Clock size={10} />{blog.readTime}</span>
-                        <span className="flex items-center gap-1"><Calendar size={10} />{formatDate_CALL(blog.createdAt)}</span>
+                        <span className="flex items-center gap-1"><Calendar size={10} />{formatDate(blog.createdAt, locale)}</span>
                       </div>
                       <Link
                         href={`/real-estate/blogs/${blog.slug}`}
