@@ -100,4 +100,38 @@ export const realEstateFooterMessages = defineMessages({
     craftedAccent: "Aurora",
     craftedPost: "Energie",
   },
+  ar: {
+    cta: {
+      badge: "Li-Mushtari Al-Manazil",
+      heading: "Ijad manzilik Al-Qadim fi Dhaka.",
+      body:
+        "Tasaffah mashari sakaniyya muwaththaqa fi jami anha Dhaka — min Al-Shuqaq Al-Fakhira ila Al-Wahdat Al-Iqtisadiyya — wa jid Al-Manzil Al-Amthal lak wa li-usratik.",
+      primary: "Ard Al-Shuqaq Al-Mutaha",
+      secondary: "Ihjiz Ziyara Maydaniyya",
+    },
+    brand: {
+      line1: "Al-Aqarat.",
+      line2: "Bi-Ru'ya Jadida.",
+      blurb:
+        "Nasna tajarib raqmiyya mumayyaza li-mutawwiri Al-Aqarat — min ard Al-Mashari bi-shakl ghamir ila taswiq yuharrik Al-Suq.",
+      cta: "Ibda Mashrou",
+    },
+    exploreTitle: "Istakshif",
+    contactTitle: "Tawasal Maana",
+    whatsapp: "Dardish ala WhatsApp",
+    links: {
+      home: "Al-Raisiyya",
+      projects: "Al-Mashari",
+      blogs: "Al-Mudawwana",
+      contact: "Ittasil Bina",
+    },
+    location: "Dhaka, Bangladesh",
+    skylineAlt: "Ufuq madinat Dhaka",
+    rights: "© {year} Creative Surf. Jami Al-Huquq Mahfuza.",
+    terms: "Shurut Al-Istikhdam",
+    privacy: "Siyasat Al-Khusousiyya",
+    craftedPre: "Suniat bi-taqat",
+    craftedAccent: "al-shafaq",
+    craftedPost: "",
+  },
 });

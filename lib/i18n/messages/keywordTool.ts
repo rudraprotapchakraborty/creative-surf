@@ -330,4 +330,71 @@ export const keywordToolMessages = defineMessages({
       button: "Individuelles SEO-Angebot anfordern",
     },
   },
+  ar: {
+    hero: {
+      title: "Adat majjaniyya li-iqtirah Al-Kalimat Al-Miftahiyya",
+      subtitle: "Iktashif kalimat miftahiyya aliyat Al-Qima li-istratijiyyat Al-SEO wal-muhtawa ladayk",
+      placeholder: "Adkhil kalima miftahiyya aw mawduan…",
+      searching: "Jari Al-Bahth…",
+      popularSearches: "Abhath shaia:",
+    },
+    results: {
+      heading: "Iqtirahat kalimat miftahiyya li-{keyword}",
+      found: "Tamma Al-Uthur ala {count} iqtirah. Istakhdim hadhihi Al-Kalimat li-tahsin istratijiyyat Al-SEO ladayk.",
+      tabs: {
+        all: "Jami Al-Kalimat",
+        low: "Suuba munkhafida",
+        medium: "Suuba mutawassita",
+        high: "Suuba aliya",
+      },
+      copy: "Nasakh",
+      copied: "Tamma Al-Nasakh!",
+      csv: "CSV",
+      columns: {
+        keyword: "Al-Kalima Al-Miftahiyya",
+        volume: "Hajm Al-Bahth",
+        difficulty: "Al-Suuba",
+        cpc: "CPC",
+      },
+      tooltips: {
+        volume: "Hajm Al-Bahth Al-Shahri bina ala bayanat Google",
+        difficulty: "Darajat suubat Al-SEO min 1 ila 100. Kullama irtafaat zadat Al-Munafasa.",
+        cpc: "Mutawassit taklifat Al-Naqra bil-dular fi Google Ads",
+      },
+      empty: "La tujad kalimat tutabiq Al-Murashshih Al-Mukhtar. Jarrib mustawa suuba akhar.",
+      csvHeaders: ["Al-Kalima Al-Miftahiyya", "Hajm Al-Bahth", "Al-Suuba", "CPC ($)"],
+    },
+    howTo: {
+      title: "Kayfa tastakhdim hadhihi Al-Adat",
+      description: "Ibda ma adatina Al-Majjaniyya li-iqtirah Al-Kalimat Al-Miftahiyya fi thalath khatawat basita",
+      steps: [
+        { title: "Adkhil kalima miftahiyya asasiyya", body: "Aktub kalima miftahiyya dhat sila bi-amalak aw muhtawak" },
+        { title: "Rajii Al-Iqtirahat", body: "Hallil hajm Al-Bahth wal-suuba wa bayanat CPC" },
+        { title: "Saddir kalimatik", body: "Hammil bi-sighat CSV aw insakh ila Al-Hafiza li-istratijiyyat Al-SEO ladayk" },
+      ],
+    },
+    features: {
+      title: "Limadha tastakhdim adatana li-iqtirah Al-Kalimat Al-Miftahiyya?",
+      items: [
+        { title: "Iktashif furasan ghayr mustaghalla", body: "Jid kalimat miftahiyya qayyima rubbama fatat munafisik. Tusaiduk adatuna ala tahdid kalimat qalilat Al-Munafasa wa aliyat Al-Hajm." },
+        { title: "Hassin istratijiyyat muhtawak", body: "Anshi muhtawa yatasaddar bi-istihdaf Al-Kalimat Al-Sahiha. Ifham niyyat Al-Bahth wal-suuba li-tartib awlawiyyat juhudik." },
+        { title: "Hassin hamalatik fil-PPC", body: "Ihsal ala bayanat CPC li-tahsin infaqik Al-Ilani. Jid kalimat miftahiyya ahsan sian bi-hajm bahth jayyid li-tadif Al-Aid." },
+      ],
+    },
+    faq: {
+      title: "Al-Asila Al-Shaia",
+      items: [
+        { question: "Ma mada diqqat bayanat Al-Kalimat Al-Miftahiyya?", answer: "Tati bayanat Al-Kalimat Al-Miftahiyya ladayna min iddat muzawwidin mawthuqin wa tuhaddath bi-intizam. Wa raghma sayina lil-diqqa, qad tataqallab ahjam Al-Bahth wa muashirat Al-Munafasa ma murur Al-Waqt. Nansah bi-istikhdam hadhihi Al-Adat ka-nuqtat bidaya li-bahthik." },
+        { question: "Kam kalima miftahiyya yumkinuni Al-Bahth anha?", answer: "Tutih adatuna Al-Majjaniyya abhathan ghayr mahduda ma hatta 10 iqtirahat li-kull bahth. Lil-bahth Al-Akthar shumulan bi-miat Al-Iqtirahat, ittali ala khadamatina Al-Mumayyaza fil-SEO." },
+        { question: "Madha tani darajat Al-Suuba?", answer: "Tatarawah darajat Al-Suuba bayn 1 wa 100 wa tushir ila mada sauba Al-Tasaddur li-kalima miftahiyya muayyana. Tashmal Al-Awamil Al-Munafasa wa sultat nutuq Al-Mawaqi Al-Mutasaddira wa jawdat Al-Muhtawa. Al-Darajat Al-Munkhafida (aqall min 45) tumaththil furas tasaddur ashal." },
+        { question: "Kayfa astakhdim hadhihi Al-Kalimat fi muhtawaya?", answer: "Li-afdal Al-Natai'j, rakkiz ala insha muhtawa aliy Al-Jawda yudammin kalimatik Al-Mustahdafa bi-shakl tabii. Adrij Al-Kalimat fil-unwan wal-anawin Al-Farriyya wal-wasf Al-Taarifi wa fi jami anha muhtawak hayth yakun dhalika munasiban. Tajannab hashw Al-Kalimat li-annahu qad yadurr bi-tartibik." },
+        { question: "Hal tuqaddimun bahth kalimat miftahiyya akthar tataqquman?", answer: "Naam! Yumkin li-khubara Al-SEO ladayna taqdim bahth kalimat miftahiyya muammaq mukhassas li-qitaik wa ahdafik. Nuhallil Al-Munafisin wa nuhaddid fajawat Al-Muhtawa wa nunshi istratijiyyat kalimat miftahiyya shamila. Ittasil bina lil-husul ala ard mukhassas." },
+      ],
+    },
+    cta: {
+      title: "Tahtaj adawat SEO akthar tataqquman?",
+      body: "Yumkin li-fariqina min khubara Al-SEO musaadatak ala tatwir istratijiyyat kalimat miftahiyya shamila wa tahsin tartibik fil-bahth.",
+      button: "Uhsul ala Ard SEO Mukhassas",
+    },
+  },
 });

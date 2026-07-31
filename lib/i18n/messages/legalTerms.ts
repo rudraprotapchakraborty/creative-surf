@@ -517,4 +517,115 @@ export const legalTermsMessages = defineMessages({
       },
     ],
   },
+  ar: {
+    metaTitle: "Shurut Al-Istikhdam",
+    metaDescription: "Shurut istikhdam mawqi wa khadamat Creative Surf.",
+    breadcrumbCurrent: "Shurut Al-Istikhdam",
+    title: "Shurut Al-Istikhdam",
+    lastUpdated: "Akhir tahdith: Yunyu 2026",
+    sections: [
+      {
+        heading: "1. Al-Ittifaqiyya",
+        blocks: [
+          { type: "p", text: "Tunazzim hadhihi Al-Shurut (Al-Shurut) wusulak ila mawqi wa khadamat Creative Surf wa istikhdamak laha." },
+          { type: "p", text: "Bi-wusulik ila mawqiina aw istianatik bi-khadamatina, fa-innaka tuwafiq ala Al-Iltizam bi-hadhihi Al-Shurut." },
+        ],
+      },
+      {
+        heading: "2. Al-Khadamat",
+        blocks: [
+          { type: "p", text: "Tuqaddim Creative Surf khadamat Al-Taswiq Al-Raqmi wal-istishara, wa tashmal ala sabil Al-Mithal la Al-Hasr:" },
+          { type: "ul", items: ["Ilanat Meta", "Ilanat Google", "Ilanat TikTok", "Jalb Al-Umala", "Khadamat SEO", "Idarat wasail Al-Tawasul", "Al-Istishara Al-Taswiqiyya", "Tahsin Al-Tahwil"] },
+          { type: "p", text: "Yajuz taadil Al-Khadamat aw tawsiuha aw waqfuha wafqan li-taqdirina." },
+        ],
+      },
+      {
+        heading: "3. Masuliyyat Al-Amil",
+        blocks: [
+          { type: "p", text: "Yuwafiq Al-Umala ala:" },
+          { type: "ul", items: ["Taqdim maalumat daqiqa", "Tawfir Al-Wusul Al-Lazim lil-hisabat", "Al-Radd ala Al-Talabat fi Al-Waqt Al-Munasib", "Al-Ihtifaz bi-milkiyyat Al-Hisabat Al-Ilaniyya ma lam yuttafaq ala khilaf dhalik", "Al-Iltizam bi-siyasat Al-Manassat wal-qawanin Al-Sariya"] },
+        ],
+      },
+      {
+        heading: "4. Al-Rusum wal-Madfuat",
+        blocks: [
+          { type: "p", text: "Jami Al-Rusum muhaddada fi ittifaqiyyat Al-Khidma aw Al-Uruud aw Al-Fawatir." },
+          { type: "strong", text: "Al-Madfuat:" },
+          { type: "ul", items: ["Mustahaqqa wafqan lil-jadwal Al-Muttafaq alayh", "Qad takun ghayr qabila lil-istirdad ma lam yudhkar khilaf dhalik", "La tashmal Al-Infaq Al-Ilani ma lam yudhkar dhalika sarahatan"] },
+          { type: "p", text: "Qad yuaddi Al-Taakhkhur fil-daf ila taliq Al-Khadamat." },
+        ],
+      },
+      {
+        heading: "5. Al-Manassat Al-Ilaniyya",
+        blocks: [
+          { type: "p", text: "Yatawaqqaf ada Al-Hamalat ala awamil adida kharija an saytaratina, minha:" },
+          { type: "ul", items: ["Zuruf Al-Suq", "Al-Munafasa", "Khawarizmiyyat Al-Manassat", "Mulaamat Al-Muntaj lil-suq", "Jawdat ard Al-Amil"] },
+          { type: "p", text: "La nadman natai'j muhaddada min hayth Al-Iradat aw Al-Umala aw Al-Mabiat aw ROAS aw Al-Tartib aw Al-Natai'j Al-Ilaniyya." },
+        ],
+      },
+      {
+        heading: "6. Al-Milkiyya Al-Fikriyya",
+        blocks: [
+          { type: "p", text: "Jami Al-Muhtawa wal-hawiyya wal-shiarat wa mawadd Al-Mawqi wal-utur wal-manhajiyyat Al-Khassa tabqa milkan li-Creative Surf ma lam yuttafaq kitabatan ala khilaf dhalik." },
+          { type: "p", text: "Yahtafiz Al-Umala bi-milkiyyat alamatihim Al-Tijariyya wa muhtawahum wa usulihim Al-Tijariyya." },
+        ],
+      },
+      {
+        heading: "7. Al-Sirriyya",
+        blocks: [
+          { type: "p", text: "Yuwafiq Al-Tarafan ala Al-Hifaz ala sirriyyat Al-Maalumat wa adam Al-Ifsah anha li-atraf thalitha dun muwafaqa, illa hayth yaqtadi Al-Qanun dhalik." },
+        ],
+      },
+      {
+        heading: "8. Hudud Al-Masuliyya",
+        blocks: [
+          { type: "p", text: "Ila aqsa hadd yasmah bihi Al-Qanun:" },
+          { type: "p", text: "La tatahammal Creative Surf Al-Masuliyya an Al-Adrar ghayr Al-Mubashira aw Al-Aradiyya aw Al-Khassa aw Al-Tabaiyya aw Al-Iqabiyya, bi-ma fi dhalika fuqdan Al-Arbah aw Al-Iradat aw tawaqquf Al-Amal aw fuqdan Al-Bayanat." },
+          { type: "p", text: "La tatajawaz masuliyyatuna Al-Ijmaliyya Al-Mablagh Al-Madfu min Al-Amil khilal Al-Thalathat ashhur Al-Sabiqa lil-mutalaba." },
+        ],
+      },
+      {
+        heading: "9. Adam Wujud Damanat",
+        blocks: [
+          { type: "p", text: "Yanwi Al-Taswiq wal-ilan ala mukhatara." },
+          { type: "p", text: "Wa raghma sayina li-tahsin Al-Ada wa tahqiq natai'j ijabiyya, fa-innana la nadman:" },
+          { type: "ul", items: ["Ahjam muhaddada min Al-Umala", "Ahdaf iradat", "Tartib fi natai'j Al-Bahth", "Muaddalat tahwil", "Muwafaqat ala Al-Ilanat", "Istiqrar Al-Hisabat ala Al-Manassat"] },
+        ],
+      },
+      {
+        heading: "10. Al-Inha",
+        blocks: [
+          { type: "p", text: "Yajuz li-ayy min Al-Tarafayn inha Al-Khadamat wafqan li-shurut ittifaqiyyat Al-Khidma Al-Sariya." },
+          { type: "strong", text: "Ind Al-Inha:" },
+          { type: "ul", items: ["Tabqa Al-Rusum Al-Mustahaqqa wajibat Al-Daf", "Qad yulgha Al-Wusul ila Al-Mawarid Al-Khassa", "Tatawaqqaf khadamat idarat Al-Hamalat"] },
+        ],
+      },
+      {
+        heading: "11. Manassat Al-Atraf Al-Thalitha",
+        blocks: [
+          { type: "p", text: "Yuqirr Al-Umala bi-anna Al-Khadamat qad tashmal manassat atraf thalitha mithl Meta wa Google wa TikTok wa LinkedIn wa ghayriha min Al-Muzawwidin." },
+          { type: "strong", text: "Creative Surf ghayr masula an:" },
+          { type: "ul", items: ["Inqita Al-Manassat", "Taliq Al-Hisabat", "Taghyirat Al-Siyasat", "Al-Quyud Al-Mafruda min Al-Manassat"] },
+        ],
+      },
+      {
+        heading: "12. Al-Taawid",
+        blocks: [
+          { type: "p", text: "Yuwafiq Al-Umala ala taawid Creative Surf wa ibqaiha bi-manan an Al-Mutalabat wal-adrar wal-masuliyyat wal-nafaqat Al-Nashia an muntajatihim aw khadamatihim aw muhtawahum Al-Ilani aw mukhalafatihim lil-qanun." },
+        ],
+      },
+      {
+        heading: "13. Al-Qanun Al-Hakim",
+        blocks: [
+          { type: "p", text: "Takhda hadhihi Al-Shurut li-qawanin Injiltra wa Wilz wa tufassar wafqan laha." },
+        ],
+      },
+      {
+        heading: "14. Taghyirat ala Al-Shurut",
+        blocks: [
+          { type: "p", text: "Nahtafiz bi-haqq taadil hadhihi Al-Shurut fi ayy waqt. Yuadd istimrar istikhdamik li-mawqiina aw khadamatina qubulan lil-shurut Al-Muhaddatha." },
+        ],
+      },
+    ],
+  },
 });

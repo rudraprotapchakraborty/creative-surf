@@ -174,4 +174,60 @@ export const aboutMessages = defineMessages({
       button: "Kontakt aufnehmen",
     },
   },
+  ar: {
+    metaTitle: "Man Nahnu | Creative Surf",
+    metaDescription:
+      "Tarraf ala Creative Surf wa risalatina wa qiyamina wal-fariq Al-Mawhub khalf wakalatina Al-Ibdaiyya.",
+    hero: {
+      title: "An Creative Surf",
+      subtitle: "Nahnu fariq min Al-Mubdiin Al-Shaghufin naltazim bi-musaadat Al-Alamat ala ihdath athar fi qitaatiha",
+    },
+    story: {
+      title: "Qissatuna",
+      p1:
+        "Tassasat Creative Surf am 2015 bi-risala basita: khalq tajarib alama asila tulamis Al-Jumhur wa tuhaqqiq nataij haqiqiyya.",
+      p2:
+        "Ma bada bi-fariq min thalathat ashkhas asbaha tajammuan mutanawwian min Al-Istratijiyyin wal-musammimin wal-mutawwirin wa suna Al-Muhtawa, yajmauhum shaghaf wahid bil-tamayyuz Al-Ibdai.",
+      p3:
+        "Al-Yawm, nafkhar bil-amal ma alamat min mukhtalaf Al-Qitaat, min Al-Sharikat Al-Nashia ila Al-Muassasat Al-Kabira, li-nusaidaha ala Al-Tanaqqul fi mashhad raqmi daim Al-Taghayyur wal-tawasul ma jumhuriha bi-turuq asila.",
+      imageAlt: "Fariq Creative Surf",
+    },
+    values: {
+      title: "Qiyamuna",
+      items: [
+        { title: "Al-Ibda", description: "Nataamal ma kull tahaddin bi-tafkir jadid wa hulul mubtakara." },
+        { title: "Al-Taawun", description: "Nu'min bi-anna afdal Al-Amal yansha indama tajtami wijhat nazar mutanawwia." },
+        { title: "Al-Tamayyuz", description: "Nulzim anfusana bi-aala Al-Mayair fi kull ma naqum bihi." },
+        { title: "Al-Asala", description: "Nuqaddir Al-Sidq wal-shafafiyya fi jami alaqatina." },
+        { title: "Al-Numuww", description: "Naltazim bil-taallum wal-tahsin Al-Mustamirr." },
+        { title: "Al-Athar", description: "Naqis najahana bil-nataij allati nuqaddimuha li-umalaina." },
+      ],
+    },
+    team: {
+      title: "Tarraf ala Fariqina",
+      members: [
+        {
+          role: "Al-Muassis wal-Mudir Al-Ibdai",
+          bio: "Bi-khibra tafuq 15 aman fil-tasmim wa bina Al-Alamat, assasa Alex sharikat Creative Surf bi-ru'ya li-musaadat Al-Alamat ala bina silat haqiqiyya.",
+        },
+        {
+          role: "Ra'isat Al-Istratijiyya Al-Raqmiyya",
+          bio: "Tuwazzif Sarah khibrataha fil-taswiq Al-Raqmi wal-tahlilat li-tatwir istratijiyyat mabniyya ala Al-Bayanat tuhaqqiq nataij qabila lil-qiyas.",
+        },
+        {
+          role: "Kabir Mutawwiri Al-Wib",
+          bio: "Yajma Marcus bayn Al-Khibra Al-Tiqniyya wal-hall Al-Ibdai lil-mushkilat li-bina mawaqi jamila wa amaliyya fi an wahid.",
+        },
+        {
+          role: "Istratijiyyat Al-Muhtawa",
+          bio: "Tasugh Priya sardiyyat jadhdhaba tulamis Al-Jumhur wa tuazzir hawiyyat Al-Alamat abr jami Al-Manassat.",
+        },
+      ],
+    },
+    cta: {
+      title: "Falnabni maan shayan raian",
+      body: "Mustaidd li-naql alamatik ila Al-Mustawa Al-Tali? Yusidduna an nasma an mashrouak.",
+      button: "Tawasal Maana",
+    },
+  },
 });

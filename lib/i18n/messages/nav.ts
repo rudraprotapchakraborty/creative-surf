@@ -52,4 +52,21 @@ export const navMessages = defineMessages({
     logoAlt: "Creative Surf Logo",
     toggleMenu: "Menü umschalten",
   },
+  ar: {
+    links: {
+      home: "Al-Raisiyya",
+      projects: "Al-Mashari",
+      blogs: "Al-Mudawwana",
+      services: "Al-Khadamat",
+      about: "Man Nahnu",
+      contact: "Ittasil Bina",
+    },
+    sections: {
+      marketing: "Al-Taswiq",
+      realEstate: "Al-Aqarat",
+    },
+    cta: "Ibda Al-An",
+    logoAlt: "Shiar Creative Surf",
+    toggleMenu: "Fath Al-Qaima",
+  },
 });

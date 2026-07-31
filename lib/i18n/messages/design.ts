@@ -635,4 +635,108 @@ export const designMessages = defineMessages({
       },
     },
   },
+  ar: {
+    websiteDesign: {
+      metaTitle: "Khadamat Tasmim Al-Mawaqi",
+      metaDescription:
+        "Khadamat tasmim mawaqi ihtirafiyya tunshi mawaqi jamila wa amaliyya wa murakkaza ala Al-Tahwil.",
+      breadcrumbCurrent: "Tasmim Al-Mawaqi",
+      title: "Khadamat Tasmim Al-Mawaqi",
+      intro:
+        "Khadamat tasmim mawaqi ihtirafiyya tunshi mawaqi jamila wa amaliyya wa murakkaza ala Al-Tahwil.",
+      imageAlt: "Khadamat tasmim Al-Mawaqi",
+      cta: "Utlub Istisharat Tasmim",
+      highlights: [
+        "Tasamim mukhassasa tunasib alamatik wa ahdafik Al-Tijariyya",
+        "Takhtitat mutajawiba tamal ala jami Al-Ajhiza",
+        "Tahsin tajribat Al-Mustakhdim li-tafaul afdal",
+        "Bunya sadiqa lil-SEO madmuna fi kull tasmim",
+      ],
+    },
+    ecommerceDesign: {
+      metaTitle: "Tasmim Mawaqi Al-Tijara Al-Iliktruniyya",
+      metaDescription:
+        "Tasmim mawaqi tijara iliktruniyya mukhassas yuhaqqiq Al-Mabiat wa yuhassin tajribat Al-Mustakhdim wa yabni Al-Wala lil-alama.",
+      hero: {
+        title: "Tasmim tijara iliktruniyya yuhaqqiq Al-Tahwil",
+        subtitle:
+          "Hawwil matjarak Al-Iliktruni bi-tasmim mukhassas yuhaqqiq Al-Mabiat wa yuhassin tajribat Al-Mustakhdim wa yabni Al-Wala lil-alama.",
+        primary: "Uhsul ala Ard Majjani",
+        secondary: "Ard Amalina",
+        imageAlt: "Tasmim mawqi tijara iliktruniyya",
+      },
+      stats: [
+        { value: "35%", label: "Mutawassit Al-Ziyada fi muaddal Al-Tahwil" },
+        { value: "500+", label: "Mawqi tijara iliktruniyya tamma itlaquh" },
+        { value: "42%", label: "Taqlil fi tark Al-Salla" },
+        { value: "98%", label: "Muaddal ridha Al-Umala" },
+      ],
+      features: {
+        title: "Ma yumayyiz tasmimana lil-tijara Al-Iliktruniyya",
+        items: [
+          { title: "Tasmim murakkaz ala Al-Tahwil", body: "Nusammim wa nahnu nada arbahak fil-ihtibar, muhassinin kull unsur li-tawjih Al-Zuwwar nahwa Al-Shira." },
+          { title: "Tajribat alama mukhassasa", body: "Sa-yatamayyaz mawqiak bi-tasmim farid yaakis hawiyyat alamatik wa qiyamaha." },
+          { title: "Tamayyuz tiqni", body: "Mabni bi-kud nazif wa afdal Al-Mumarasat lil-sura wal-aman wal-ada Al-Salis." },
+          { title: "Qararat mabniyya ala Al-Bayanat", body: "Nastakhdim Al-Tahlilat wa ruan suluk Al-Mustakhdim li-tawjih qararat Al-Tasmim allati tudif Al-Nataij." },
+          { title: "Masar shira muhassan", body: "Amaliyyat itmam shira mubassata masmuma li-taqlil Al-Tark wa ziyadat Al-Mushtarayat Al-Muktamila." },
+          { title: "Manhaj murakkaz ala Al-Mustakhdim", body: "Kull qarar tasmim yuttakhadh ma murааt ihtiyajat umalaik wa tafdilatihim." },
+        ],
+      },
+      process: {
+        title: "Amaliyyat tasmimina lil-tijara Al-Iliktruniyya",
+        steps: [
+          { title: "Al-Iktishaf wal-Istratijiyya", body: "Nuhallil ahdafak Al-Tijariyya wa jumhurak Al-Mustahdaf wa munafisik li-wad kharitat tariq istratijiyya li-mawqiak." },
+          { title: "Tasmim Al-Tajriba wal-Mukhattatat", body: "Nunshi mukhattat mawqiak bi-masarat Al-Mustakhdim wa bunyat Al-Maalumat wal-mukhattatat Al-Murakkaza ala Al-Tahwil." },
+          { title: "Al-Tasmim Al-Basari", body: "Yasugh musammimuna hawiyya basariyya khallaba tatawaam ma alamatik wa tajdhib umalaak Al-Mustahdafin." },
+          { title: "Al-Tatwir wal-Itlaq", body: "Nabni mawqiak bi-kud nazif wa nudmij bawwabat Al-Daf wa hulul Al-Shahn wa nutliq bad ikhtibar shamil." },
+        ],
+      },
+      platforms: {
+        title: "Khibratuna fi manassat Al-Tijara Al-Iliktruniyya",
+        items: [
+          { title: "Khibrat Shopify", body: "Yatakhassas fariquna fi insha matajir Shopify mukhassasa tatamayyaz an Al-Qawalib ma Al-Istifada min imkanat Al-Mansa Al-Qawiyya.", imageAlt: "Khibrat Shopify", points: ["Tatwir qawalib mukhassasa", "Dam wa takhsis Al-Tatbiqat", "Al-Tarhil min manassat ukhra", "Hulul Shopify Plus lil-muassasat"] },
+          { title: "Khibrat WooCommerce", body: "Nabni matajir WooCommerce marina wa qabila lil-tawassu ala WordPress tamnahuk Al-Tahakkum Al-Kamil fi tijaratik.", imageAlt: "Khibrat WooCommerce", points: ["Tatwir WordPress + WooCommerce mukhassas", "Tatwir wa dam Al-Idafat", "Tahsin Al-Ada", "Dam bawwabat daf mukhassasa"] },
+          { title: "Khibrat Magento", body: "Yafham mutakhassisuna taaqid Magento wa Adobe Commerce, wa yuhassinun mawaqi Al-Tijara Al-Kabira li-aqsa zuhur fil-bahth.", imageAlt: "Khibrat Magento", points: ["Tanfidh wa tarhil Magento 2", "Tatwir wahdat mukhassasa", "Hulul tijara iliktruniyya B2B", "Iadad muta'addid Al-Matajir wa duwali"] },
+          { title: "Khibrat BigCommerce", body: "Nunshi matajir BigCommerce mukhassasa tajma bayn mawthuqiyyat Al-Mansa wa tasamim farida tuhaqqiq Al-Mabiat.", imageAlt: "Khibrat BigCommerce", points: ["Tatwir qawalib mukhassasa", "Takhsis itar Stencil", "Tanfidh tijara bi-la ras", "Takamulat ma jihat kharijiyya"] },
+        ],
+      },
+      portfolio: {
+        title: "Amaluna fil-tijara Al-Iliktruniyya",
+        intro: "Ittali ala badd mashariina Al-Hadith fi tasmim mawaqi Al-Tijara Al-Iliktruniyya wal-nataij allati haqqaqatha.",
+        clientLabel: "Amil {index}",
+        viewCaseStudy: "Ard Dirasat Al-Hala",
+        viewFull: "Ard Jami Al-Amal",
+        results: [
+          "Haqqaqa tajir azya ziyada 45% fil-tahwilat ala Al-Mahmul",
+          "Daafa matjar mustalzamat manziliyya iradatih thalath marrat",
+          "Bassata mawwarid B2B amaliyyat Al-Talab ladayh",
+        ],
+      },
+      testimonials: {
+        title: "Ma yaquluh umalauna",
+        items: [
+          { company: "Sahibat butik azya", quote: "Hawwalat Creative Surf matjarana Al-Iliktruni ila mawqi jamil wa aliy Al-Tahwil yumaththil alamatana bi-shakl mithali. Irtafaat Al-Mabiat bi-nisbat 40% fi awwal thalathat ashhur!" },
+          { company: "Tajir iliktruniyyat", quote: "Fahima fariq Creative Surf katalug muntajatina Al-Muaqqad wa ansha tajribat tasawwuq sahla yuhibbuha umalauna. Inkhafada muaddal tark Al-Salla ladayna bi-shakl malhuz." },
+          { company: "Suq lil-hiraf Al-Yadawiyya", quote: "Kana Al-Amal ma Creative Surf afdal qarar ittakhadhnah li-amalina. Anshau suqan mukhassasan yubriz amal hirafiyyina bi-shakl rai wa yajal Al-Shira basitan." },
+        ],
+      },
+      faq: {
+        title: "Al-Asila Al-Shaia",
+        items: [
+          { question: "Kam min Al-Waqt yastaghriq tasmim wa bina mawqi tijara iliktruniyya?", answer: "Yakhtalif Al-Jadwal Al-Zamani hasab Al-Taaqid, lakin muzam mashari Al-Tijara Al-Iliktruniyya tastaghriq 8-12 usbuan min Al-Iktishaf hatta Al-Itlaq. Al-Matajir Al-Basita qad tantahi asra, bayna Al-Hulul Al-Muaqqada lil-muassasat qad tastaghriq waqtan atwal." },
+          { question: "Kam yukallif tasmim mawqi tijara iliktruniyya?", answer: "Tabda khadamat tasmim Al-Tijara Al-Iliktruniyya ladayna min 15,000$, ma iamad Al-Istithmar Al-Nihai ala mutatallabatik wa ikhtiyar Al-Mansa wal-wazaif Al-Mukhassasa. Nuqaddim urudan tafsiliyya bi-asaar shaffafa." },
+          { question: "Hal tuqaddimun dam mustamirr bad Al-Itlaq?", answer: "Naam, nuqaddim baqat dam wa siyana mukhtalifa li-ibqa matjarak yaamal bi-salasa. Tashmal Al-Dam Al-Tiqni wa tahdithat Al-Aman wa tahsin Al-Ada wa tahsinat Al-Mizat." },
+          { question: "Hal yumkinukum tarhil matjari Al-Hali ila mansa jadida?", answer: "Bil-tabi. Ladayna khibra wasia fi tarhil Al-Matajir bayn Al-Manassat ma Al-Hifaz ala qimat Al-SEO wa hisabat Al-Umala wa sijill Al-Talabat wa bayanat Al-Muntajat. Nadman intiqalan salisan bi-aqall taattul." },
+          { question: "Hal tudmijun khadamat wa tatbiqat min jihat kharijiyya?", answer: "Naam, nudmij bawwabat Al-Daf wa muzawwidi Al-Shahn wa anzimat ERP wa manassat CRM wa adawat Al-Taswiq wa ghayriha min anzimat Al-Amal li-khalq manzuma tijara iliktruniyya mutamasika." },
+          { question: "Hal sa-yakun mawqii mutawafiqan ma Al-Mahmul?", answer: "Qatan. Jami tasamimina lil-tijara Al-Iliktruniyya mutajawiba bil-kamil wa muhassana li-jami Al-Ajhiza. Nuli ihtimaman khassan li-tajribat Al-Tasawwuq ala Al-Mahmul, li-annaha tumaththil nisba mutanamiya min mabiat Al-Tijara Al-Iliktruniyya." },
+        ],
+      },
+      cta: {
+        title: "Mustaidd li-tahwil matjarak Al-Iliktruni?",
+        body: "Falnakhluq tajribat tijara iliktruniyya tuhaqqiq Al-Mabiat wa tusid umalaak wa tunammi amalak.",
+        primary: "Uhsul ala Ard Majjani",
+        secondary: "Ittasil bi-Fariqina",
+      },
+    },
+  },
 });

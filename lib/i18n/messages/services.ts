@@ -225,4 +225,35 @@ export const servicesMessages = defineMessages({
       button: "Kontakt aufnehmen",
     },
   },
+  ar: {
+    metaTitle: "Khadamatuna | Creative Surf",
+    metaDescription:
+      "Istakshif majmuatana Al-Shamila min khadamat Al-Ibda wal-taswiq Al-Raqmi Al-Masmuma li-tazi alamatik.",
+    hero: {
+      title: "Khadamatuna",
+      subtitle: "Hulul ibdaiyya shamila masmuma li-tazi alamatik wa tahqiq ahdafik Al-Tijariyya",
+    },
+    offerTitle: "Ma Nuqaddimuh",
+    items: [
+      { title: "Istratijiyyat Al-Alama", description: "Natur istratijiyyat alama shamila tuhaddid mawqiak Al-Farid fil-suq wa tarbutak bi-jumhurik Al-Mustahdaf." },
+      { title: "Tasmim wa Tatwir Al-Wib", description: "Mawaqi mukhassasa tajma bayn Al-Masahid Al-Khallaba wal-ada Al-Salis li-khalq tajarib raqmiyya la tunsa." },
+      { title: "Al-Taswiq Al-Raqmi", description: "Hamalat taswiq mabniyya ala Al-Bayanat abr qanawat mutaaddida li-ziyadat zuhurik wa tahqiq Al-Tahwilat." },
+      { title: "Insha Al-Muhtawa", description: "Muhtawa jadhdhab yarwi qissatak wa yulamis jumhurak abr jami Al-Manassat." },
+      { title: "Idarat Wasail Al-Tawasul", description: "Hudur ijtimai istratiji yabni mujtamaan wa yuazziz sawt alamatik." },
+      { title: "Tahsin Muharrikat Al-Bahth", description: "Tahsin tiqni wa muhtawi li-tahsin tartibik fi natai'j Al-Bahth wa jalb zayarat tabiiyya." },
+    ],
+    processTitle: "Amaliyyatuna",
+    process: [
+      { step: "Al-Iktishaf", description: "Nabda bi-fahm amalak wa ahdafak wa jumhurak Al-Mustahdaf li-bina asas istratiji matin." },
+      { step: "Al-Istratijiyya", description: "Bina ala natajina, natur istratijiyya mukhassasa tatawaam ma ahdafik wa mawqiik fil-suq." },
+      { step: "Al-Ibda", description: "Yuhyi fariquna Al-Ibdai Al-Istratijiyya min khilal tasmim wa muhtawa muqni." },
+      { step: "Al-Tanfidh", description: "Nunaffidh Al-Khitta bi-diqqa abr jami Al-Qanawat wal-manassat dhat Al-Sila." },
+      { step: "Al-Tahsin", description: "Abr Al-Muraqaba wal-tahlil Al-Mustamirr, nusaqqil manhajana li-tadif Al-Nataij." },
+    ],
+    cta: {
+      title: "Mustaidd li-tahwil alamatik?",
+      body: "Falnataawan li-khalq shay istithnai yuhaqqiq nataij haqiqiyya li-amalik.",
+      button: "Tawasal Maana",
+    },
+  },
 });

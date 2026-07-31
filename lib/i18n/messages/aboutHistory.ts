@@ -231,4 +231,70 @@ export const aboutHistoryMessages = defineMessages({
       join: "Team beitreten",
     },
   },
+  ar: {
+    metaTitle: "Tarikh CreativeSurf",
+    metaDescription:
+      "Tarraf ala masirat CreativeSurf wa mahattatiha min Al-Tasis hatta an asbahat wakalat taswiq raqmi raida.",
+    breadcrumbCurrent: "Tarikh CreativeSurf",
+    hero: {
+      title: "Masiratuna",
+      subtitle:
+        "Min fariq saghir min Al-Musawwiqin Al-Shaghufin ila wakalat taswiq raqmi raida — iktashif qissat CreativeSurf.",
+      imageAlt: "Tarikh CreativeSurf",
+    },
+    timelineTitle: "Khatt Zamanina",
+    timeline: [
+      {
+        title: "Al-Bidaya",
+        body: "Tassasat CreativeSurf ala yad fariq saghir min khubara Al-Taswiq Al-Raqmi bi-ruya li-musaadat Al-Sharikat ala Al-Tanaqqul fil-mashhad Al-Raqmi Al-Muaqqad. Bi-khamsat afrad faqat fi maktab saghir, badana bi-taqdim khadamat Al-SEO wa taswiq Al-Muhtawa lil-sharikat Al-Mahalliyya.",
+        imageAlt: "Fariq tasis CreativeSurf",
+      },
+      {
+        title: "Tawassu wa Ibtikar",
+        body: "Raghma Al-Tahaddiyat Al-Alamiyya, kana am 2020 am numuww li-CreativeSurf. Wassana khadamatina li-tashmal tasmim Al-Wib wa taswiq wasail Al-Tawasul. Tadaafa fariquna wa intaqalna ila maktab akbar.",
+        imageAlt: "Numuww CreativeSurf",
+      },
+      {
+        title: "Taqdir Al-Qita",
+        body: "Huziya iltizamuna bil-tamayyuz bil-taqdir indama fuzna bi-awwal jawaizina fil-qita an hamalat taswiq raqmi mutamayyiza. Atlaqna mansat Al-Tahlilat Al-Khassa bina, mimma saada umalaana ala fahm adaihim Al-Taswiqi bi-umq akbar.",
+        imageAlt: "Jawaiz CreativeSurf",
+      },
+      {
+        title: "Tawassu Watani",
+        body: "Wassaat CreativeSurf nitaqaha ala Al-Mustawa Al-Watani bi-fath makatib fi thalath mudun kubra. Atlaqna akadimiyyat Al-Taswiq Al-Raqmi li-tawfir tadrib wa mawarid tusaid Al-Sharikat wal-mihaniyyin.",
+        imageAlt: "Al-Tawassu Al-Watani li-CreativeSurf",
+      },
+      {
+        title: "Numuww Duwali",
+        body: "Khatawna khutawatina Al-Ula nahwa Al-Aswaq Al-Duwaliyya bi-iqamat sharakat ma wakalat fi Uruba wa Asiya. Nama fariquna li-yatajawaz 100 khabir, wa qaddamna hulul taswiq mutaqaddima taamal bil-dhaka Al-Istinai.",
+        imageAlt: "Al-Numuww Al-Duwali li-CreativeSurf",
+      },
+      {
+        title: "Ibtikar wa Ruya Mustaqbaliyya",
+        body: "Al-Yawm, tawasil CreativeSurf Al-Ibtikar wal-riyada fi majal Al-Taswiq Al-Raqmi. Atlaqna mubadaratana lil-istidama, multazimin bi-taqlil atharina Al-Biii wa musaadat umalaina ala tabanni mumarasat taswiq mustadama. Ma Al-Tarkiz ala Al-Tiknulujiyat Al-Nashia ka-l-dhaka Al-Istinai wal-mitafirs, nuhayyi umalaana li-mustaqbal Al-Taswiq Al-Raqmi.",
+        imageAlt: "CreativeSurf Al-Yawm",
+      },
+    ],
+    valuesTitle: "Qiyamuna Al-Rasikha",
+    values: [
+      {
+        title: "Al-Ibtikar",
+        body: "Mundhu Al-Yawm Al-Awwal, naltazim bil-baqa fi Al-Muqaddima min ittijahat wa tiknulujiyat Al-Taswiq Al-Raqmi. Wa la yazal ruh Al-Ibtikar hadha yadfauna lil-amam.",
+      },
+      {
+        title: "Najah Al-Umala",
+        body: "Zalla najah umalaina daiman miyarana Al-Awwal lil-injaz. Nafkhar bi-annana saadna miat Al-Sharikat ala Al-Numuww wal-izdihar fil-alam Al-Raqmi.",
+      },
+      {
+        title: "Al-Mujtama",
+        body: "Numin bi-rad Al-Jamil lil-mujtamaat allati nakhdimuha. Ala madar tarikhina, hafazna ala iltizam bil-musharaka Al-Mujtamaiyya wal-masuliyya Al-Ijtimaiyya.",
+      },
+    ],
+    cta: {
+      title: "Kun Juzan min Mustaqbalina",
+      body: "Indamm ilayna wa nahnu naktub Al-Fusul Al-Qadima min qissat CreativeSurf. Sawa ka-amil aw sharik aw udw fil-fariq, hunaka makan lak fi masiratina.",
+      contact: "Ittasil Bina",
+      join: "Indamm ila Fariqina",
+    },
+  },
 });

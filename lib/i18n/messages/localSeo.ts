@@ -732,4 +732,96 @@ export const localSeoMessages = defineMessages({
       secondary: "Beratungstermin vereinbaren",
     },
   },
+  ar: {
+    metaTitle: "Khadamat Al-SEO Al-Mahalli",
+    metaDescription:
+      "Haymin ala natai'j Al-Bahth Al-Mahalliyya wa ijdhib Al-Umala Al-Qaribin wa nammi amalak abr istratijiyyatina lil-SEO Al-Mahalli.",
+    hero: {
+      title: "SEO mahalli yajlib Al-Zuwwar wal-iradat",
+      subtitle:
+        "Haymin ala natai'j Al-Bahth Al-Mahalliyya wa ijdhib Al-Umala Al-Qaribin wa nammi amalak abr istratijiyyatina lil-SEO Al-Mahalli Al-Mabniyya ala Al-Bayanat.",
+      ctaPrimary: "Uhsul ala Istishara Majjaniyya",
+      ctaSecondary: "Ard Al-Asaar",
+      imageAlt: "Rasm tawdihi lil-SEO Al-Mahalli yubayyin kharita bi-mawaqi Al-Sharikat",
+    },
+    stats: [
+      { value: "46%", label: "min jami abhath Google tabhath an maalumat mahalliyya" },
+      { value: "88%", label: "min Al-Mustahlikin alladhina yabhathun mahalliyyan ala Al-Mahmul yazurun matjaran khilal 24 saa" },
+      { value: "78%", label: "min Al-Abhath Al-Mahalliyya ala Al-Mahmul tantahi bi-shira dakhil Al-Matjar" },
+    ],
+    what: {
+      title: "Ma huwa Al-SEO Al-Mahalli?",
+      body:
+        "Al-SEO Al-Mahalli huwa amaliyyat tahsin hudurik ala Al-Intirnit li-jadhb Al-Mazid min Al-Amal min Al-Abhath Al-Mahalliyya dhat Al-Sila, allati tatimm ala Google wa ghayrih min muharrikat Al-Bahth.",
+      whyTitle: "Limadha yuhimm Al-SEO Al-Mahalli",
+      imageAlt: "Natai'j bahth mahalli ala Google tubayyin kharita wa qawaim sharikat",
+      reasons: [
+        { title: "Zuhur akbar fil-abhath Al-Mahalliyya", body: "Izhar fil-Local Pack wa Google Maps wal-natai'j Al-Tabiiyya Al-Mahalliyya." },
+        { title: "Muaddalat tahwil aala", body: "Al-Bahithun mahalliyyan ladayhim niyya sharai qawiyya wa akthar ihtimalan lil-tahwil." },
+        { title: "Haymanat Al-Bahth ala Al-Mahmul", body: "Iltaqit Al-Adad Al-Mutanami min abhath quribi minni ala Al-Ajhiza Al-Mahmula." },
+        { title: "Mizat tanafusiyya", body: "Tamayyaz an Al-Munafisin Al-Mahalliyyin alladhina la yuhassinun lil-bahth Al-Mahalli." },
+      ],
+    },
+    services: {
+      title: "Khadamatuna fil-SEO Al-Mahalli",
+      intro: "Nuqaddim hulul SEO mahalli shamila tunasib ihtiyajat amalak wa ahdafah.",
+      items: [
+        { title: "Tahsin Milaff Google Al-Tijari", body: "Nuhassin milaffak ala Google li-tahsin Al-Zuhur fi natai'j Al-Bahth Al-Mahalliyya wa Google Maps.", points: ["Tahaqquq wa iadad Al-Milaff", "Tahsin Al-Fiat", "Idarat Al-Suwar wal-fidyu", "Muraqabat wa idarat Al-Asila wal-ajwiba"] },
+        { title: "Idarat Al-Ara", body: "Nusaiduk ala jam wa muraqabat wal-radd ala ara Al-Umala abr jami Al-Manassat.", points: ["Istratijiyyat jam Al-Ara", "Adawat muraqabat Al-Ara", "Qawalib radd wa tawjihat", "Idarat Al-Sumaa"] },
+        { title: "Bahth Al-Kalimat Al-Miftahiyya Al-Mahalliyya", body: "Nuhaddid akthar Al-Kalimat Al-Miftahiyya Al-Mahalliyya qimatan li-amalak wa mawqiak.", points: ["Bahth kalimat miftahiyya jughrafi", "Tahlil kalimat Al-Munafisin", "Tahsin abhath quribi minni", "Kharitat Al-Niyya Al-Mahalliyya"] },
+        { title: "Bina Rawabit Mahalliyya", body: "Nabni rawabit khalfiyya mahalliyya aliyat Al-Jawda li-taziz sultat mawqiak fi manatiq khidmatik.", points: ["Adillat Al-Amal Al-Mahalliyya", "Qawaim Al-Ghuraf Al-Tijariyya", "Furas rieaya mahalliyya", "Al-Musharaka Al-Mujtamaiyya"] },
+        { title: "Istratijiyyat Al-Muhtawa Al-Mahalli", body: "Nunshi muhtawa khass bil-mawqi yulamis jumhurak Al-Mahalli wa muharrikat Al-Bahth.", points: ["Tatwir safahat Al-Mawaqi", "Muhtawa mudawwana mahalli", "Safahat khadamat hasab Al-Mintaqa", "Taghtiyat Al-Faaliyyat Al-Mahalliyya"] },
+        { title: "Bina wa Idarat Al-Iqtibasat", body: "Nadman ittisaq maalumat amalak abr jami Al-Adilla wal-manassat ala Al-Intirnit.", points: ["Tadqiq ittisaq NAP", "Tanzif Al-Iqtibasat", "Bina iqtibasat jadida", "Muraqaba mustamirra lil-iqtibasat"] },
+      ],
+    },
+    process: {
+      title: "Amaliyyatuna fil-SEO Al-Mahalli",
+      intro: "Nattabi manhajan mujarraban mabniyyan ala Al-Bayanat li-taziz hudurik fil-bahth Al-Mahalli.",
+      steps: [
+        { title: "Tadqiq Al-SEO Al-Mahalli", body: "Nuhallil hudurak Al-Mahalli Al-Hali wa nuhaddid Al-Furas wa natur istratijiyya mukhassasa." },
+        { title: "Al-Tahsin Al-Dakhili", body: "Nuhassin mawqiak bi-kalimat miftahiyya mahalliyya wa balaghat schema wa muhtawa khass bil-mawqi." },
+        { title: "Tahsin Milaff Google Al-Tijari", body: "Nuhassin milaffak bil-kamil bi-maalumat daqiqa wa suwar wa manshurat wa idarat Al-Asila wal-ajwiba." },
+        { title: "Bina Al-Iqtibasat", body: "Nunshi wa nudir qawaim amal muttasiqa abr jami Al-Adilla wal-manassat dhat Al-Sila." },
+        { title: "Al-Tahsin wal-Taqarir Al-Mustamirra", body: "Nuraqib Al-Ada bi-istimrar wa nujri Al-Taadilat wa nuqaddim taqarir shahriyya tafsiliyya." },
+      ],
+    },
+    pricing: {
+      title: "Asaar Al-SEO Al-Mahalli",
+      intro: "Asaar shaffafa li-khadamatina fil-SEO Al-Mahalli. Ikhtar Al-Khitta allati tunasib ihtiyajat amalak.",
+      perMonth: "/shahr",
+      mostPopular: "AL-AKTHAR SHUHRA",
+      getStarted: "Ibda Al-An",
+      tiers: [
+        { name: "Basic", price: "499$", audience: "Lil-sharikat Al-Mahalliyya Al-Saghira", features: ["Tahsin milaff Google Al-Tijari", "Bahth kalimat miftahiyya mahalliyya", "20 iqtibasan mahalliyyan", "Idarat ara asasiyya", "Taqrir shahri"] },
+        { name: "Professional", price: "899$", audience: "Lil-sharikat Al-Mahalliyya Al-Namiya", features: ["Kull ma fi Basic", "50 iqtibasan mahalliyyan", "Idarat ara mutaqaddima", "Insha muhtawa mahalli (qitatan fil-shahr)", "Bina rawabit mahalliyya (5 rawabit fil-shahr)", "Taqrir kull usbuayn"] },
+        { name: "Enterprise", price: "1,499$", audience: "Lil-sharikat muta'addidat Al-Mawaqi", features: ["Kull ma fi Professional", "Akthar min 100 iqtibas mahalli", "Idarat muta'addidat Al-Mawaqi", "Insha muhtawa mahalli (4 qita fil-shahr)", "Bina rawabit mahalliyya (10 rawabit fil-shahr)", "Taqrir usbui wa mukalamat istratijiyya"] },
+      ],
+    },
+    caseStudies: {
+      title: "Qisas najah fil-SEO Al-Mahalli",
+      intro: "Shahid kayfa saadna sharikat mahalliyya ala Al-Haymana ala aswaqiha.",
+      readMore: "Iqra Dirasat Al-Hala",
+      items: [
+        { category: "Mataim", title: "Ziyada 147% fil-zuhur bil-bahth Al-Mahalli", body: "Saadna silsilat mataim mahalliyya ala ziyadat mushahadat milaffiha ala Google bi-nisbat 147% wa ziyadat talabat Al-Ittijahat bi-nisbat 63%.", imageAlt: "Dirasat hala matam" },
+        { category: "Iyadat Asnan", title: "83% Al-Mazid min Al-Marda Al-Judud min Al-Bahth Al-Mahalli", body: "Saadat istratijiyyatuna lil-SEO Al-Mahalli iyadat asnan ala Al-Tasnif dimn afdal 3 natai'j li-jami Al-Kalimat Al-Miftahiyya Al-Mahalliyya Al-Raisiyya, mimma adda ila 83% Al-Mazid min Al-Marda Al-Judud.", imageAlt: "Dirasat hala iyadat asnan" },
+        { category: "Khadamat Manziliyya", title: "Aid 215% min hamlat SEO mahalli", body: "Saadna sharikat sibaka ala Al-Haymana ala Al-Bahth Al-Mahalli fi 5 mudun, mimma haqqaqa aidan bi-nisbat 215% ala istithmariha fil-SEO Al-Mahalli.", imageAlt: "Dirasat hala khadamat manziliyya" },
+      ],
+    },
+    faq: {
+      title: "Al-Asila Al-Shaia",
+      intro: "Ihsal ala ijabat lil-asila Al-Shaia hawl khadamatina fil-SEO Al-Mahalli.",
+      items: [
+        { question: "Kam min Al-Waqt yastaghriq zuhur natai'j Al-SEO Al-Mahalli?", answer: "Yabda muzam Al-Umala fi mulahazat tahsinat fil-tartib Al-Mahalli khilal 30-60 yawman, ma zuhur natai'j malmusa adatan khilal 3-6 ashhur. Yatawaqqaf Al-Jadwal Al-Zamani ala nuqtat Al-Bidaya wa mustawa Al-Munafasa wa quwwat istratijiyyatik." },
+        { question: "Hal ahtaj ila istratijiyyat SEO mahalli munfasila li-kull mawqi?", answer: "Naam, yatatallab kull mawqi istratijiyyat tahsin khassa bih. Yashmal dhalika milaffat Google tijariyya farida wa muhtawa khass bil-mawqi wa bina iqtibasat mustahdafa li-kull mintaqat khidma. Baqatuna muta'addidat Al-Mawaqi masmuma li-idarat hadhihi Al-Amaliyya bi-kafaa." },
+        { question: "Kayfa taqisun najah hamalat Al-SEO Al-Mahalli?", answer: "Natatabba mu'ashirat mutaaddida tashmal tartib Al-Local Pack wal-tartib Al-Tabii lil-kalimat Al-Mahalliyya wa mu'ashirat milaff Google Al-Tijari (Al-Mushahadat wal-naqarat wal-mukalamat wa talabat Al-Ittijahat) wa zayarat Al-Mawqi min Al-Abhath Al-Mahalliyya wal-aham, Al-Tahwilat." },
+        { question: "Ma alladhi yumayyiz khadamatikum fil-SEO Al-Mahalli?", answer: "Yajma manhajuna bayn istratijiyyat mabniyya ala Al-Bayanat wa insha muhtawa mahalli daqiq wa tahsin tiqni mutaqaddim. Kama nurakkiz ala tahsin muaddal Al-Tahwil li-safahat Al-Hubut Al-Mahalliyya li-daman husulik la ala zuhur akbar fahasb bal ala umala akthar." },
+      ],
+    },
+    cta: {
+      title: "Mustaidd lil-haymana ala Al-Bahth Al-Mahalli?",
+      body: "Uhsul ala tadqiq SEO mahalli majjani wa iktashif kayfa yumkinuna musaadat amalak ala jadhb Al-Mazid min Al-Umala Al-Mahalliyyin.",
+      primary: "Uhsul ala Tadqiqak Al-Majjani",
+      secondary: "Ihjiz Istishara",
+    },
+  },
 });

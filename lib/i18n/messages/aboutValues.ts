@@ -264,4 +264,52 @@ export const aboutValuesMessages = defineMessages({
       join: "Team beitreten",
     },
   },
+  ar: {
+    metaTitle: "Qiyamuna Al-Asasiyya",
+    metaDescription: "Iktashif Al-Qiyam Al-Asasiyya allati tuwajjih thaqafat Creative Surf wa qararatiha wa alaqatiha bil-umala.",
+    breadcrumbCurrent: "Qiyamuna",
+    hero: {
+      title: "Qiyamuna Al-Asasiyya",
+      p1:
+        "Fi Creative Surf, qiyamuna akthar min mujarrad kalimat ala Al-Hait. Innaha tuwajjih qararatina wa tasugh thaqafatana wa tuhaddid kayfa namal ma umalaina wa ma badina Al-Bad.",
+      p2: "Kanat hadhihi Al-Mabadi fi qalb sharikatina mundhu Al-Yawm Al-Awwal wa la tazal tudfa najahana wa numuwwana.",
+      imageAlt: "Al-Qiyam Al-Asasiyya li-Creative Surf",
+    },
+    principlesTitle: "Al-Mabadi allati Tuwajjihuna",
+    values: [
+      { title: "Najah Al-Umala", description: "Naqis najahana bil-nataij allati nuhaqqiquha li-umalaina. Numuwwuk huwa hadafuna Al-Awwal wa asas kull ma naqum bihi." },
+      { title: "Al-Taawun", description: "Nu'min bi-quwwat Al-Amal Al-Jamai, dakhiliyyan wa ma umalaina. Bil-amal maan nuhaqqiq nataij akbar mimma yumkin li-ayy minna wahdah." },
+      { title: "Al-Ibtikar", description: "Nabqa fi Al-Muqaddima min ittijahat wa tiknulujiyat Al-Taswiq Al-Raqmi li-nuqaddim hulul mutaqaddima tamnah umalaana mizat tanafusiyya." },
+      { title: "Al-Tamayyuz", description: "Naltazim bi-taqdim jawda istithnaiyya fi kull ma naqum bihi, min wad Al-Istratijiyya ila Al-Tanfidh wal-taqarir." },
+      { title: "Al-Nazaha", description: "Namal bi-sidq wa shafafiyya wa akhlaqiyyat mihaniyya. Naf al Al-Sawab li-umalaina hatta law lam yakun Al-Tariq Al-Ashal." },
+      { title: "Al-Masuliyya", description: "Nudrik masuliyyatana tijaha mujtamaina wal-bia. Nasa li-ihdath athar ijabi abr mumarasat mustadama wa musharaka mujtamaiyya." },
+    ],
+    inAction: {
+      title: "Qiyamuna ala Ard Al-Waqi",
+      imageAlt: "Qiyam Creative Surf ala ard Al-Waqi",
+      subtitle: "Kayfa naish qiyamana kull yawm",
+      body:
+        "Qiyamuna laysat mujarrad tasrihat tumuh — bal tanakis fi amalina wa qararatina Al-Yawmiyya. Min tariqat tanzim furaqina ila kayfiyyat tanawulina li-tahaddiyat Al-Umala, qiyamuna mutajassida fi kull ma nafaluh.",
+      points: [
+        "Nahtafil bi-intisarat umalaina ka-annaha najahatuna",
+        "Nastathmir fil-taallum wal-tatwir Al-Mustamirr",
+        "Nuqaddim taqarir shaffafa wa mulahazat sadiqa",
+        "Nadam Al-Mubadarat Al-Mujtamaiyya wal-mumarasat Al-Mustadama",
+      ],
+    },
+    community: {
+      title: "Mubadaratuna Al-Mujtamaiyya",
+      items: [
+        { title: "Mubadarat Talimiyya", description: "Nataawan ma Al-Madaris wal-jamiat Al-Mahalliyya li-tawfir talim fil-taswiq Al-Raqmi wa furas tadrib lil-tullab." },
+        { title: "Juhud Biiyya", description: "Tashmal mubadaratuna lil-istidama taqlil basmatina Al-Karbuniyya wa tatbiq amaliyyat bi-la waraq wa tanzim hamalat tanzif mujtamaiyya." },
+        { title: "Dam Al-Munazzamat Ghayr Al-Ribhiyya", description: "Nuqaddim khadamat taswiq raqmi majjaniyya li-munazzamat ghayr ribhiyya mukhtara kull am li-musaadatiha ala tadif atharaha." },
+      ],
+    },
+    cta: {
+      title: "Tusharikuna Qiyamana?",
+      body: "Idha kanat qiyamuna tulamisuk, yusidduna an nastakshif kayfa yumkinuna Al-Amal maan — ka-amil aw sharik aw udw fil-fariq.",
+      contact: "Ittasil Bina",
+      join: "Indamm ila Fariqina",
+    },
+  },
 });

@@ -527,4 +527,100 @@ export const legalPrivacyTermsMessages = defineMessages({
       },
     ],
   },
+  ar: {
+    metaTitle: "Al-Khusousiyya wa Shurut Al-Istikhdam",
+    metaDescription: "Siyasat Al-Khusousiyya wa shurut Al-Istikhdam li-khadamat wakalat Creative Surf lil-taswiq.",
+    breadcrumbCurrent: "Al-Khusousiyya wa Shurut Al-Istikhdam",
+    title: "Siyasat Al-Khusousiyya wa Shurut Al-Istikhdam",
+    lastUpdated: "Akhir tahdith: 12 Maris 2025",
+    sections: [
+      {
+        heading: "1. Muqaddima",
+        blocks: [
+          { type: "p", text: "Marhaban bik fi Creative Surf (nahnu). Naltazim bi-himayat khusousiyyatik wa tawfir tajriba amina ala Al-Intirnit. Tashrah hadhihi Al-Siyasa kayfa najma wa nastakhdim wa nufsih wa nahmi maalumatik ind ziyaratik li-mawqiina aw istikhdamik li-khadamatina." },
+          { type: "p", text: "Bi-wusulik ila khadamatina aw istikhdamiha, fa-innaka tuwafiq ala hadhihi Al-Siyasa wa ala shurut Al-Istikhdam. Idha lam tuwafiq ala siyasatina wa mumarasatina, fal-la tastakhdim khadamatina." },
+        ],
+      },
+      {
+        heading: "2. Al-Maalumat allati Najmauha",
+        blocks: [
+          { type: "h3", text: "2.1 Al-Maalumat Al-Shakhsiyya" },
+          { type: "p", text: "Qad najma Al-Maalumat Al-Shakhsiyya allati tuqaddimuha lana tawan indama:" },
+          { type: "ul", items: ["Tusajjil hisaban", "Tashtarik fi nasharatina Al-Ikhbariyya", "Tatlub ardan aw istishara", "Tamla namudhaj ittisal", "Tusharik fi istitlaat aw musabaqat", "Tatawasal maana ala wasail Al-Tawasul"] },
+          { type: "p", text: "Qad tashmal hadhihi Al-Maalumat ismak wa baridak Al-Iliktruni wa raqm hatifak wa ism sharikatik wa musammak Al-Wazifi wa ayy maalumat ukhra takhtar taqdimaha." },
+          { type: "h3", text: "2.2 Al-Maalumat Al-Mujmaa Tilqaiyyan" },
+          { type: "p", text: "Ind ziyaratik li-mawqiina, qad najma tilqaiyyan maalumat muayyana an jihazik wa anmat istikhdamik, wa tashmal:" },
+          { type: "ul", items: ["Unwan IP", "Naw wa isdar Al-Mutasaffih", "Nizam Al-Tashghil", "Al-Mawqi Al-Muhil", "Al-Safahat allati tushahiduha", "Waqt wa tarikh ziyaratik", "Al-Waqt Al-Munfaq ala Al-Safahat", "Ihsaiyyat ukhra"] },
+        ],
+      },
+      {
+        heading: "3. Kayfa Nastakhdim Maalumatik",
+        blocks: [
+          { type: "p", text: "Qad nastakhdim Al-Maalumat allati najmauha li-aghrad mutaaddida, minha:" },
+          { type: "ul", items: ["Taqdim khadamatina wa siyanatiha wa tahsiniha", "Muaalajat Al-Muamalat wa irsal Al-Maalumat Al-Muttasila biha", "Irsal maalumat idariyya mithl Al-Tahdithat wa tanbihat Al-Aman wa rasail Al-Dam", "Al-Radd ala taliqatik wa asilatik wa talabatik", "Taqdim muhtawa wa tawsiyat mukhassasa", "Muraqabat wa tahlil Al-Ittijahat wal-istikhdam wal-anshita", "Iktishaf Al-Mushkilat Al-Tiqniyya wa maniha wa muaalajatiha", "Al-Himaya min Al-Anshita Al-Darra aw ghayr Al-Qanuniyya"] },
+        ],
+      },
+      {
+        heading: "4. Milaffat Tarif Al-Irtibat wal-Tiknulujiyat Al-Mumathila",
+        blocks: [
+          { type: "p", text: "Nastakhdim milaffat tarif Al-Irtibat wa tiknulujiyat tatabbu mumathila li-tatabbu Al-Nashat ala mawqiina wal-ihtifaz bi-maalumat muayyana. Milaffat tarif Al-Irtibat hiya milaffat tahtawi ala qadr saghir min Al-Bayanat qad tashmal muarrifan farid maghfulan." },
+          { type: "p", text: "Yumkinuk tawjih mutasaffihik li-rafd jami milaffat tarif Al-Irtibat aw lil-tanbih ind irsaliha. Ma dhalika, idha lam taqbal milaffat tarif Al-Irtibat, fa-qad la tatamakkan min istikhdam badd ajza khidmatina." },
+          { type: "p", text: "Nastakhdim Al-Anwa Al-Taliya min milaffat tarif Al-Irtibat:" },
+          { type: "ul", items: ["Milaffat asasiyya: lazima li-tashghil mawqiina", "Milaffat tahliliyya / ada: tutih lana Al-Taarruf ala Al-Zuwwar wa addihim wa marifat kayfiyyat tanaqqulihim fi mawqiina", "Milaffat wazifiyya: tutih lana takhsis Al-Muhtawa", "Milaffat istihdaf: tusajjil ziyaratak li-mawqiina wal-safahat allati tazuruha wal-rawabit allati tattabiuha"] },
+        ],
+      },
+      {
+        heading: "5. Musharakat Al-Bayanat wal-Ifsah anha",
+        blocks: [
+          { type: "p", text: "Qad nusharik maalumatik fil-halat Al-Taliya:" },
+          { type: "ul", items: ["Ma muzawwidi Al-Khadamat: qad nusharik maalumatik ma bai wa muzawwidi khadamat wa muqawilin aw wukala min atraf thalitha yuaddun khadamat lana.", "Al-Tahwilat Al-Tijariyya: qad nusharik aw nunqil maalumatik fi siyaq aw athna mufawadat ayy indimaj aw bay li-usul Al-Sharika aw tamwil aw istihwadh.", "Bi-muwafaqatik: qad nufsih an maalumatik li-ayy gharad akhar bi-muwafaqatik.", "Al-Mutatallabat Al-Qanuniyya: qad nufsih an maalumatik idha kana Al-Qanun yaqtadi dhalika aw istijabatan li-talabat mashrua min Al-Sultat Al-Amma."] },
+        ],
+      },
+      {
+        heading: "6. Aman Al-Bayanat",
+        blocks: [
+          { type: "p", text: "Nunaffidh tadabir tiqniyya wa tanzimiyya munasiba li-himayat aman maalumatik Al-Shakhsiyya. Ma dhalika, yurja Al-Ilm bi-anna la tariqat naql abr Al-Intirnit aw takhzin iliktruni amina bi-nisbat 100%, wa la yumkinuna daman Al-Aman Al-Mutlaq." },
+        ],
+      },
+      {
+        heading: "7. Huquqak fi Himayat Al-Bayanat",
+        blocks: [
+          { type: "p", text: "Hasab makan iqamatik, qad tatamatta bi-huquq muayyana fima yataallaq bi-maalumatik Al-Shakhsiyya, mithl:" },
+          { type: "ul", items: ["Haqq Al-Wusul ila maalumatik Al-Shakhsiyya", "Haqq tashih Al-Maalumat ghayr Al-Daqiqa", "Haqq talab hadhf maalumatik", "Haqq taqyid muaalajat maalumatik", "Haqq naql Al-Bayanat", "Haqq Al-Itirad ala Al-Muaalaja"] },
+          { type: "p", text: "Li-mumarasat hadhihi Al-Huquq, yurja Al-Ittisal bina bi-istikhdam Al-Maalumat Al-Waridatt fi qism Ittasil Bina." },
+        ],
+      },
+      {
+        heading: "Shurut Al-Istikhdam",
+        blocks: [
+          { type: "h3", text: "1. Qubul Al-Shurut" },
+          { type: "p", text: "Bi-wusulik ila mawqiina wa khadamatina aw istikhdamiha, fa-innaka tuwafiq ala Al-Iltizam bi-shurut Al-Istikhdam hadhihi wa jami Al-Qawanin wal-lawaih Al-Sariya. Idha lam tuwafiq ala ayy min hadhihi Al-Shurut, fa-yuhzar alayk istikhdam khadamatina aw Al-Wusul ilayha." },
+          { type: "h3", text: "2. Rukhsat Al-Istikhdam" },
+          { type: "p", text: "Yusmah laka bi-tahmil nuskha wahida muaqqata min mawadd mawqi Creative Surf lil-mushahada Al-Shakhsiyya ghayr Al-Tijariyya Al-Muaqqata faqat. Hadhihi rukhsa wa laysat naql milkiyya, wa bi-mujibiha la yajuz laka:" },
+          { type: "ul", items: ["Taadil Al-Mawadd aw nuskhuha", "Istikhdam Al-Mawadd li-ayy gharad tijari aw li-ayy ard amm", "Muhawalat fakk aw hindasat aks ayy barmajiyyat mawjuda ala mawqi Creative Surf", "Izalat ayy ishaarat huquq nashr aw milkiyya min Al-Mawadd", "Naql Al-Mawadd ila shakhs akhar aw naskhuha ala ayy khadim akhar"] },
+          { type: "p", text: "Tantahi hadhihi Al-Rukhsa tilqaiyyan idha khalafta ayyan min hadhihi Al-Quyud, wa yajuz li-Creative Surf inhauha fi ayy waqt." },
+          { type: "h3", text: "3. Ikhla Al-Masuliyya" },
+          { type: "p", text: "Tuqaddam mawadd mawqi Creative Surf ka-ma hiya. La tuqaddim Creative Surf ayy damanat, sarihatan kanat am dimniyya, wa tukhli masuliyyataha wa tanfi jami Al-Damanat Al-Ukhra bi-ma fi dhalika, dun hasr, Al-Damanat Al-Dimniyya lil-qabiliyya lil-tasawuq aw Al-Mulaama li-gharad muayyan aw adam intihak Al-Milkiyya Al-Fikriyya aw ghayriha min Al-Huquq." },
+          { type: "p", text: "Alawatan ala dhalik, la tadman Creative Surf wa la tuqaddim ayy iqrarat bi-shan diqqat aw natai'j aw mawthuqiyyat istikhdam Al-Mawadd Al-Mawjuda ala mawqiiha aw ayy mawaqi murtabita bih." },
+          { type: "h3", text: "4. Al-Quyud" },
+          { type: "p", text: "La tatahammal Creative Surf aw muzawwiduha bi-ayy hal Al-Masuliyya an ayy adrar (bi-ma fi dhalika, dun hasr, adrar fuqdan Al-Bayanat aw Al-Arbah aw bi-sabab tawaqquf Al-Amal) nashia an istikhdam aw adam Al-Qudra ala istikhdam mawadd mawqi Creative Surf, hatta law tamma ikhtar Creative Surf aw mumaththil muakhkhal min qibaliha shafahiyyan aw kitabatan bi-ihtimaliyyat wuqu mithl hadha Al-Darar." },
+          { type: "h3", text: "5. Diqqat Al-Mawadd" },
+          { type: "p", text: "Qad tahtawi Al-Mawadd Al-Zahira ala mawqi Creative Surf ala akhta tiqniyya aw matbaiyya aw futughrafiyya. La tadman Creative Surf anna ayyan min Al-Mawadd ala mawqiiha daqiqa aw kamila aw muhaddatha. Wa yajuz li-Creative Surf ijra taghyirat ala Al-Mawadd fi ayy waqt dun ishar." },
+          { type: "h3", text: "6. Al-Rawabit" },
+          { type: "p", text: "Lam turaji Creative Surf jami Al-Mawaqi Al-Murtabita bi-mawqiiha wa hiya ghayr masula an muhtawa ayy mawqi murtabit. La yani idraj ayy rabt taid Creative Surf lil-mawqi. Wa yakun istikhdam ayy mawqi murtabit ala masuliyyat Al-Mustakhdim Al-Khassa." },
+          { type: "h3", text: "7. Al-Taadilat" },
+          { type: "p", text: "Yajuz li-Creative Surf muraajaat shurut Al-Istikhdam hadhihi li-mawqiiha fi ayy waqt dun ishar. Bi-istikhdamik li-hadha Al-Mawqi, fa-innaka tuwafiq ala Al-Iltizam bil-isdar Al-Sari an-dhak min shurut Al-Istikhdam." },
+          { type: "h3", text: "8. Al-Qanun Al-Hakim" },
+          { type: "p", text: "Takhda hadhihi Al-Shurut wal-ahkam li-qawanin Al-Wilayat Al-Muttahida wa tufassar wafqan laha, wa anta takhda bi-shakl niha'i lil-ikhtisas Al-Qada'i Al-Hasri lil-mahakim fi dhalika Al-Makan." },
+        ],
+      },
+      {
+        heading: "Ittasil Bina",
+        blocks: [
+          { type: "p", text: "Idha kanat ladayk ayy asila hawl siyasat Al-Khusousiyya hadhihi aw shurut Al-Istikhdam, yurja Al-Ittisal bina ala:" },
+          { type: "ul", items: ["Creative Surf", "123 Marketing Avenue", "San Francisco, CA 94105", "Al-Barid Al-Iliktruni: privacy@creativesurf.com", "Al-Hatif: (888) 256-9448"] },
+        ],
+      },
+    ],
+  },
 });

@@ -40,4 +40,17 @@ export const loginMessages = defineMessages({
     genericError: "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
     footer: "Creative Surf · Admin-Portal",
   },
+  ar: {
+    brand: "Creative Surf",
+    title: "Dukhul Al-Mudir",
+    username: "Ism Al-Mustakhdim",
+    usernamePlaceholder: "Adkhil ism Al-Mustakhdim",
+    password: "Kalimat Al-Murur",
+    passwordPlaceholder: "Adkhil kalimat Al-Murur",
+    submit: "Tasjil Al-Dukhul",
+    signingIn: "Jari Tasjil Al-Dukhul…",
+    invalidCredentials: "Bayanat dukhul ghayr sahiha",
+    genericError: "Hadatha khata ma. Hawil marra ukhra.",
+    footer: "Creative Surf · Bawwabat Al-Idara",
+  },
 });

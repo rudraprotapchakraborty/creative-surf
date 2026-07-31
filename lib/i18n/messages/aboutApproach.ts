@@ -408,4 +408,112 @@ export const aboutApproachMessages = defineMessages({
       proposal: "Angebot anfordern",
     },
   },
+  ar: {
+    metaTitle: "Manhajuna | Creative Surf",
+    metaDescription:
+      "Iktashif Al-Manhajiyya Al-Mujarraba allati tastakhdimuha Creative Surf li-taqdim nataij qabila lil-qiyas: Al-Iktishaf wal-istratijiyya wal-tanfidh wal-tahsin Al-Mustamirr.",
+    hero: {
+      title: "Manhajuna",
+      subtitle: "Kayfa nuhaqqiq nataij istithnaiyya abr manhajiyyatina Al-Mujarraba",
+    },
+    philosophy: {
+      title: "Falsafatuna",
+      intro:
+        "Fi Creative Surf, numin bi-manhaj mabni ala Al-Bayanat wa murakkaz ala Al-Amil yuhaqqiq nataij qabila lil-qiyas. Tajma manhajiyyatuna bayn Al-Tafkir Al-Istratiji wal-tamayyuz Al-Ibdai wal-khibra Al-Tiqniyya.",
+      cards: [
+        {
+          title: "Tarkiz Istratiji",
+          body: "Nabda bi-fahm ahdafik Al-Tijariyya wa jumhurik Al-Mustahdaf li-bina istratijiyyat tatawaam ma tumuhatik.",
+        },
+        {
+          title: "Qararat Mabniyya ala Al-Bayanat",
+          body: "Nuwazzif Al-Tahlilat wa abhath Al-Suq li-tawjih istratijiyyatina wa tahsin Al-Ada bi-shakl mustamirr.",
+        },
+        {
+          title: "Ibtikar Ibdai",
+          body: "Najma bayn Al-Ibda wal-tiknulujiya li-tatwir hulul mubtakara tusaid alamatik ala Al-Tamayyuz fi suq muzdahim.",
+        },
+      ],
+    },
+    process: {
+      title: "Amaliyyatuna",
+      intro: "Manhaj manhaji yadman jawda wa nataij thabita",
+      expectLabel: "Ma yumkinuk tawaqquuh:",
+      steps: [
+        {
+          title: "Al-Iktishaf wal-Tahlil",
+          body: "Nabda bi-fahm amalik wa ahdafik wa jumhurik wa biatik Al-Tanafusiyya. Yujri fariquna abhathan wa tahlilat muammaqa li-tahdid Al-Furas wal-tahaddiyat.",
+          points: ["Tahlil shamil lil-amal", "Taqyim Al-Mashhad Al-Tanafusi", "Bahth Al-Jumhur Al-Mustahdaf"],
+        },
+        {
+          title: "Wad Al-Istratijiyya",
+          body: "Bina ala natajina, natur istratijiyya mukhassasa tatawaam ma ahdafik Al-Tijariyya. Nuhaddid muashirat ada wadiha wa nada kharitat tariq lil-tanfidh.",
+          points: ["Khitta istratijiyya mukhassasa", "Muashirat ada wa mayair najah wadiha", "Tawzi Al-Mawarid wal-jadwal Al-Zamani"],
+        },
+        {
+          title: "Al-Tanfidh",
+          body: "Yunaffidh fariquna Al-Khabir Al-Istratijiyya bi-diqqa wa ihtimam bil-tafasil, mustakhdiman ahdath Al-Adawat wal-tiknulujiyat li-taqdim nataij aliyat Al-Jawda.",
+          points: ["Tanfidh ala yad mutakhassisin", "Tahdithat dawriyya an Al-Taqaddum", "Daman Al-Jawda fi kull khatwa"],
+        },
+        {
+          title: "Al-Qiyas wal-Tahsin",
+          body: "Nuraqib Al-Ada bi-istimrar wa nuhallil Al-Nataij wa nujri tahsinat mabniyya ala Al-Bayanat li-tahsin Al-Makhrajat wa tadif Al-Aid.",
+          points: ["Taqarir ada shamila", "Tawsiyat tahsin mabniyya ala Al-Bayanat", "Dawrat tahsin mustamirra"],
+        },
+      ],
+    },
+    methodology: {
+      title: "Manhajiyyatuna",
+      intro: "Al-Mabadi Al-Asasiyya allati tuwajjih amalana wa tadman nataij istithnaiyya",
+      cards: [
+        {
+          title: "Sharaka ma Al-Amil",
+          body: "Nara anfusana imtidadan li-fariqik, namal maan li-tahqiq ahdafik. Tawasuluna Al-Shaffaf wa tahdithatuna Al-Dawriyya tadman baqaak ala ittila wa musharaka daiman.",
+        },
+        {
+          title: "Tanfidh Muren",
+          body: "Yutih lana manhajuna Al-Muren Al-Takayyuf Al-Sari ma taghayyurat Al-Suq wa ihtiyajat Al-Amal. Nukarrir bi-sura, wa nakhtabir bi-istimrar, wa nuhassin li-aqsa athar.",
+        },
+        {
+          title: "Murakkaz ala Al-Nataij",
+          body: "Nahnu mahwusun bi-taqdim nataij qabila lil-qiyas tuathir ala arbahik. Kull istratijiyya wa kull taktik masmum bi-ahdaf wa muashirat ada wadiha.",
+        },
+        {
+          title: "Ibtikar Mustamirr",
+          body: "Nabqa fi Al-Muqaddima min ittijahat Al-Qita wa tiknulujiyatih li-nuqaddim hulul mubtakara tamnah amalak mizat tanafusiyya fil-suq.",
+        },
+      ],
+    },
+    caseStudies: {
+      title: "Manhajuna ala Ard Al-Waqi",
+      intro: "Shahid Al-Nataij Al-Istithnaiyya allati haqqaqatha manhajiyyatuna li-umalaina",
+      readMore: "Iqra Dirasat Al-Hala",
+      items: [
+        {
+          category: "Al-Tijara Al-Iliktruniyya",
+          title: "Numuww 300% fil-iradat",
+          body: "Kayfa saadna alamat tijara iliktruniyya ala mudaafat iradatiha thalath marrat abr Al-Taswiq Al-Raqmi Al-Istratiji.",
+          imageAlt: "Dirasat hala: numuww Al-Tijara Al-Iliktruniyya",
+        },
+        {
+          category: "B2B",
+          title: "Mudaafat Al-Umala 10 marrat",
+          body: "Kayfa saada manhajuna sharikat B2B ala mudaafat umalaiha Al-Muahhalin 10 marrat fi 6 ashhur.",
+          imageAlt: "Dirasat hala: jalb umala B2B",
+        },
+        {
+          category: "Tahwil Al-Alama",
+          title: "Iadat Itlaq Alama Najiha",
+          body: "Kayfa saadna alama ariqa ala Al-Tahawwul Al-Raqmi wal-istihwadh ala shariha suqiyya jadida.",
+          imageAlt: "Dirasat hala: tahwil Al-Alama",
+        },
+      ],
+    },
+    cta: {
+      title: "Mustaidd li-tajribat manhajina?",
+      body: "Falnatahaddath an kayfiyyat musaadat manhajiyyatina Al-Mujarraba li-amalik ala tahqiq nataij istithnaiyya.",
+      contact: "Ittasil Bina",
+      proposal: "Uhsul ala Ard",
+    },
+  },
 });

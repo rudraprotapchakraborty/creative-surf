@@ -501,4 +501,105 @@ export const legalPrivacyMessages = defineMessages({
       },
     ],
   },
+  ar: {
+    metaTitle: "Siyasat Al-Khusousiyya",
+    metaDescription: "Siyasat Al-Khusousiyya Al-Khassa bi-mawqi wa khadamat Creative Surf.",
+    breadcrumbCurrent: "Siyasat Al-Khusousiyya",
+    title: "Siyasat Al-Khusousiyya",
+    lastUpdated: "Akhir tahdith: Yunyu 2026",
+    sections: [
+      {
+        heading: "1. Muqaddima",
+        blocks: [
+          { type: "p", text: "Tahtarim Creative Surf (Al-Sharika aw nahnu) khusousiyyatak wa taltazim bi-himayat maalumatik Al-Shakhsiyya. Tashrah hadhihi Al-Siyasa kayfa najma wa nastakhdim wa nufsih wa nahmi Al-Maalumat inda ziyaratik li-mawqiina aw istikhdamik li-khadamatina aw tawasulik maana." },
+          { type: "p", text: "Bi-istikhdamik li-mawqiina wa khadamatina, fa-innaka tuwafiq ala jam wa istikhdam Al-Maalumat wafqan li-hadhihi Al-Siyasa." },
+        ],
+      },
+      {
+        heading: "2. Al-Maalumat allati Najmauha",
+        blocks: [
+          { type: "strong", text: "Al-Maalumat Al-Shakhsiyya" },
+          { type: "p", text: "Qad najma Al-Maalumat allati tuqaddimuha tawan, wa tashmal:" },
+          { type: "ul", items: ["Al-Ism Al-Kamil", "Al-Barid Al-Iliktruni", "Raqm Al-Hatif", "Ism Al-Sharika", "Mawqi Al-Amal", "Al-Ahdaf Al-Taswiqiyya wa mutatallabat Al-Mashrou", "Maalumat Al-Fawtara"] },
+          { type: "strong", text: "Al-Maalumat Al-Mujmaa Tilqaiyyan" },
+          { type: "p", text: "Ind ziyaratik li-mawqiina, qad najma tilqaiyyan:" },
+          { type: "ul", items: ["Unwan IP", "Naw Al-Mutasaffih", "Maalumat Al-Jihaz", "Al-Safahat Al-Mazura", "Al-Mawqi Al-Muhil", "Muddat Al-Jalsa", "Bayanat Al-Tahlilat"] },
+        ],
+      },
+      {
+        heading: "3. Kayfa Nastakhdim Maalumatik",
+        blocks: [
+          { type: "p", text: "Nastakhdim Al-Maalumat Al-Mujmaa li:" },
+          { type: "ul", items: ["Taqdim Al-Khadamat Al-Taswiqiyya", "Al-Radd ala Al-Istifsarat", "Jadwalat Al-Istisharat", "Muaalajat Al-Madfuat", "Tahsin mawqiina wa khadamatina", "Irsal tahdithat Al-Khadama", "Taqdim Al-Taqarir wa ruan Al-Hamalat", "Al-Iltizam bil-mutatallabat Al-Qanuniyya", "Man Al-Ihtiyal wa isaat Al-Istikhdam"] },
+        ],
+      },
+      {
+        heading: "4. Al-Murasalat Al-Taswiqiyya",
+        blocks: [
+          { type: "p", text: "Qad nursil rasail tarwijiyya wa nasharat ikhbariyya wa tahdithat khadamat. Yumkinuka ilgha Al-Ishtirak fi ayy waqt bi-istikhdam rabt ilgha Al-Ishtirak Al-Mawjud fi rasailina." },
+        ],
+      },
+      {
+        heading: "5. Khadamat Al-Atraf Al-Thalitha",
+        blocks: [
+          { type: "p", text: "Qad nastakhdim muzawwidi khadamat min atraf thalitha, minhum:" },
+          { type: "ul", items: ["Meta (Facebook wa Instagram)", "Google", "TikTok", "LinkedIn", "Manassat Al-Tahlilat", "Anzimat CRM", "Muaalij Al-Madfuat", "Muzawwidu Al-Taswiq bil-barid Al-Iliktruni"] },
+          { type: "p", text: "Ladayy hadhihi Al-Jihat siyasat wa mumarasat khusousiyya khassa biha." },
+        ],
+      },
+      {
+        heading: "6. Musharakat Al-Bayanat",
+        blocks: [
+          { type: "p", text: "Nahnu la nabi Al-Maalumat Al-Shakhsiyya." },
+          { type: "p", text: "Qad nusharik Al-Maalumat ma:" },
+          { type: "ul", items: ["Muzawwidi Al-Khadamat alladhina yusaidun fi amaliyyatina", "Al-Manassat Al-Ilaniyya ind idarat Al-Hamalat", "Al-Sultat Al-Qanuniyya ind iqtida Al-Qanun", "Al-Khulafa fi halat Al-Indimaj aw Al-Istihwadh aw Al-Bay"] },
+        ],
+      },
+      {
+        heading: "7. Aman Al-Bayanat",
+        blocks: [
+          { type: "p", text: "Nunaffidh dawabit idariyya wa tiqniyya wa tanzimiyya maqula masmuma li-himayat Al-Maalumat Al-Shakhsiyya. Ma dhalika, la yumkin daman anna ayy nizam naql aw takhzin abr Al-Intirnit amin bi-nisbat 100%." },
+        ],
+      },
+      {
+        heading: "8. Muddat Al-Ihtifaz bil-Bayanat",
+        blocks: [
+          { type: "p", text: "Nahtafiz bil-maalumat faqat lil-mudda Al-Lazima li-taqdim Al-Khadamat wal-iltizam bil-mutatallabat Al-Qanuniyya wa hall Al-Nizaat wa infadh Al-Ittifaqiyyat." },
+        ],
+      },
+      {
+        heading: "9. Huquqak",
+        blocks: [
+          { type: "p", text: "Hasab makan iqamatik, qad tatamatta bi-huquq fi:" },
+          { type: "ul", items: ["Al-Wusul ila bayanatik Al-Shakhsiyya", "Tashih Al-Maalumat ghayr Al-Daqiqa", "Talab hadhf Al-Bayanat", "Taqyid Al-Muaalaja", "Al-Itirad ala Al-Muaalaja", "Talab naql Al-Bayanat"] },
+          { type: "p", text: "Li-mumarasat hadhihi Al-Huquq, ittasil bina bi-istikhdam Al-Maalumat Al-Mawjuda adnah." },
+        ],
+      },
+      {
+        heading: "10. Milaffat Tarif Al-Irtibat",
+        blocks: [
+          { type: "p", text: "Qad yastakhdim mawqiina milaffat tarif Al-Irtibat wa tiknulujiyat mumathila li-tahsin tajribat Al-Mustakhdim wa tahlil Al-Zayarat wa dam Al-Juhud Al-Ilaniyya." },
+          { type: "p", text: "Yumkinuk Al-Tahakkum fi milaffat tarif Al-Irtibat min khilal idadat mutasaffihik." },
+        ],
+      },
+      {
+        heading: "11. Khusousiyyat Al-Atfal",
+        blocks: [
+          { type: "p", text: "Khadamatuna ghayr muwajjaha lil-afrad dun sinn 18 aman. Nahnu la najma an ilm maalumat shakhsiyya min Al-Qasirin." },
+        ],
+      },
+      {
+        heading: "12. Naql Al-Bayanat Duwaliyyan",
+        blocks: [
+          { type: "p", text: "Qad tunqal maalumatik wa tuaalaj fi buldan ghayr baladik. Bi-istikhdamik li-khadamatina, fa-innaka tuwafiq ala hadhihi Al-Tahwilat." },
+        ],
+      },
+      {
+        heading: "13. Taghyirat ala hadhihi Al-Siyasa",
+        blocks: [
+          { type: "p", text: "Qad nuhaddith siyasat Al-Khusousiyya hadhihi bi-shakl dawri. Tusbih Al-Tahdithat sariyat Al-Mafual fawr nashriha ala hadhihi Al-Safha." },
+        ],
+      },
+    ],
+  },
 });

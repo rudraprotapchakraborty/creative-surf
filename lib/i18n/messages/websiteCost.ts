@@ -89,4 +89,32 @@ export const websiteCostMessages = defineMessages({
       button: "Kostenloses Angebot erhalten",
     },
   },
+  ar: {
+    metaTitle: "Kam yajib an yukallif Al-Mawqi Al-Iliktruni?",
+    metaDescription:
+      "Tarraf ala takalif tatwir Al-Mawaqi wal-awamil allati tuathir ala Al-Tasir hasab naw Al-Mawqi.",
+    breadcrumb: {
+      pricingGuides: "Adillat Al-Asaar",
+      current: "Taklifat Al-Mawqi",
+    },
+    title: "Kam yajib an yukallif Al-Mawqi Al-Iliktruni?",
+    subtitle:
+      "Fahm takalif tatwir Al-Mawaqi wal-awamil allati tuathir ala Al-Tasir hasab naw Al-Mawqi.",
+    factorsTitle: "Awamil taklifat Al-Mawqi",
+    factorsBody:
+      "Takhtalif taklifat Al-Mawqi bi-shakl kabir hasab iddat awamil. Fahmuha yusaiduk ala wad mizaniyya waqiiyya li-mashrouk.",
+    typeTitle: "Naw Al-Mawqi",
+    typeIntro: "Li-anwa Al-Mawaqi Al-Mukhtalifa mustawayat taqid mukhtalifa wa bil-tali takalif mukhtalifa:",
+    tiers: [
+      { label: "Mawqi tarifi basit:", range: "5,000$ - 10,000$" },
+      { label: "Mawqi sharika saghira:", range: "10,000$ - 25,000$" },
+      { label: "Mawqi tijara iliktruniyya:", range: "25,000$ - 50,000$ wa akthar" },
+      { label: "Tatbiq wib mukhassas:", range: "50,000$ - 250,000$ wa akthar" },
+    ],
+    cta: {
+      title: "Mustaidd lil-bidaya?",
+      body: "Ittasil bina Al-Yawm lil-husul ala ard sir mukhassas li-mashrou mawqiik.",
+      button: "Uhsul ala Tasir Majjani",
+    },
+  },
 });

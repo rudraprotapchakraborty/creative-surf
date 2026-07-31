@@ -55,4 +55,22 @@ export const realEstateBlogsMessages = defineMessages({
     read: "Lesen →",
     brand: "Creative Surf",
   },
+  ar: {
+    eyebrow: "Creative Surf · Al-Aqarat",
+    title: "Ruan wa Afkar",
+    subtitle:
+      "Ittijahat Al-Suq wa adillat Al-Shira wa ruan istithmariyya hawl aqarat Dhaka — mubasharatan min fariq Creative Surf.",
+    categoryAll: "Al-Kull",
+    newPost: "Maqal Jadid",
+    logout: "Tasjil Al-Khuruj",
+    emptyTitle: "La tujad maqalat baad",
+    emptyAdmin: "Anshi awwal maqal lak lil-bidaya.",
+    emptyPublic: "Ud qariban li-ruan min fariq Creative Surf.",
+    writeFirst: "Uktub Awwal Maqal",
+    edit: "Tahrir",
+    delete: "Hadhf",
+    confirmDelete: 'Hadhf \"{title}\"? La yumkin Al-Tarajju an dhalik.',
+    read: "Iqra →",
+    brand: "Creative Surf",
+  },
 });

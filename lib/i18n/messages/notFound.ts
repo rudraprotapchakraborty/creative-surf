@@ -22,4 +22,11 @@ export const notFoundMessages = defineMessages({
     body: "Hoppla! Die gesuchte Seite existiert nicht oder wurde verschoben.",
     cta: "Zurück zur Startseite",
   },
+  ar: {
+    metaTitle: "404 - Al-Safha ghayr mawjuda",
+    metaDescription: "Al-Safha allati tabhath anha ghayr mawjuda aw tamma naqluha.",
+    heading: "Al-Safha ghayr mawjuda",
+    body: "Ups! Al-Safha allati tabhath anha ghayr mawjuda aw tamma naqluha.",
+    cta: "Al-Awda lil-Raisiyya",
+  },
 });

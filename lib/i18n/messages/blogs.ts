@@ -55,4 +55,22 @@ export const blogsMessages = defineMessages({
     read: "Lesen →",
     brand: "Creative Surf",
   },
+  ar: {
+    eyebrow: "Creative Surf · Al-Mudawwana",
+    title: "Ruan wa Afkar",
+    subtitle:
+      "Ara khubara hawl Al-Taswiq Al-Raqmi wa tasmim tajribat Al-Mustakhdim wal-SEO wa istratijiyyat Al-Alama — mubasharatan min fariq Creative Surf.",
+    categoryAll: "Al-Kull",
+    newPost: "Maqal Jadid",
+    logout: "Tasjil Al-Khuruj",
+    emptyTitle: "La tujad maqalat baad",
+    emptyAdmin: "Anshi awwal maqal lak lil-bidaya.",
+    emptyPublic: "Ud qariban li-ruan min fariq Creative Surf.",
+    writeFirst: "Uktub Awwal Maqal",
+    edit: "Tahrir",
+    delete: "Hadhf",
+    confirmDelete: 'Hadhf \"{title}\"? La yumkin Al-Tarajju an dhalik.',
+    read: "Iqra →",
+    brand: "Creative Surf",
+  },
 });

@@ -52,4 +52,21 @@ export const realEstateProjectsMessages = defineMessages({
       confirmDelete: '„{name}“ löschen? Das kann nicht rückgängig gemacht werden.',
     },
   },
+  ar: {
+    list: {
+      eyebrow: "Creative Surf · Al-Aqarat",
+      title: "Mashariuna",
+      subtitle: "Mashari sakaniyya mumayyaza fi Dhaka — mabniyya bi-jawda wa masmuma lil-haya.",
+      statusAll: "Al-Kull",
+      newProject: "Mashrou Jadid",
+      logout: "Tasjil Al-Khuruj",
+      emptyTitle: "La tujad mashari baad",
+      emptyAdmin: "Adif awwal mashrou aqari lak lil-bidaya.",
+      emptyPublic: "Sa-tazhar Al-Mashari huna qariban.",
+      addFirst: "Adif Awwal Mashrou",
+      edit: "Tahrir",
+      delete: "Hadhf",
+      confirmDelete: 'Hadhf \"{name}\"? La yumkin Al-Tarajju an dhalik.',
+    },
+  },
 });

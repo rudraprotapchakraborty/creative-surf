@@ -578,4 +578,153 @@ export const fixFunnelMessages = defineMessages({
       secondary: "Expertenhilfe anfordern",
     },
   },
+  ar: {
+    hero: {
+      title: "Aslih Masar Tahwilik",
+      subtitle: "Haddid ikhtinaqat Al-Tahwil wa hurrir imkanat Al-Iradat ma adatina Al-Majjaniyya li-tahlil Al-Masar",
+      cta: "Hallil Masari",
+      imageAlt: "Lawhat maalumat tahlil Al-Masar",
+    },
+    tool: {
+      title: "Hallil masar tahwilik",
+      intro:
+        "Adkhil bayanat mawqiak adnah li-tahsul ala tahlil mukhassas li-masar tahwilik ma tawsiyat qabila lil-tanfidh li-tahsin nataijik.",
+      stepLabels: ["Al-Qita", "Al-Zayarat", "Al-Tahwilat", "Al-Iradat"],
+      back: "Ruju",
+      next: "Al-Tali",
+      analyze: "Hallil Masari",
+      steps: {
+        industry: {
+          title: "Ikhtar qitaak",
+          body: "Sa-nuqarin adaak bi-mayair Al-Qita.",
+          label: "Al-Qita",
+          placeholder: "Ikhtar qitaak",
+        },
+        traffic: {
+          title: "Zayarat Al-Mawqi",
+          body: "Hadithna an zuwwar mawqiak Al-Shahriyyin.",
+          label: "Zuwwar Al-Mawqi Al-Shahriyyun",
+          placeholder: "mathalan 10000",
+        },
+        conversions: {
+          title: "Muaddal Al-Tahwil",
+          body: "Ma nisbat Al-Zuwwar alladhina yatahawwalun ila umala muhtamalin aw mushtarin?",
+          label: "Muaddal Al-Tahwil (%)",
+          placeholder: "mathalan 2.5",
+        },
+        revenue: {
+          title: "Mutawassit Al-Iradat",
+          body: "Ma mutawassit iradik li-kull tahwil?",
+          label: "Mutawassit Al-Iradat li-kull tahwil ($)",
+          placeholder: "mathalan 100",
+        },
+      },
+      industries: {
+        ecommerce: "Tijara Iliktruniyya",
+        saas: "SaaS",
+        finance: "Tamwil",
+        healthcare: "Riaya Sihhiyya",
+        education: "Talim",
+        travel: "Safar wa Diyafa",
+        realestate: "Aqarat",
+        other: "Ghayr dhalika",
+      },
+    },
+    results: {
+      title: "Tahlil masarik",
+      subtitle: "Bina ala madkhalatik, hakadha yabdu ada masarik",
+      currentTitle: "Al-Ada Al-Hali",
+      currentLabel: "Al-Irad Al-Shahri",
+      potentialTitle: "Imkanat Al-Numuww",
+      potentialLabel: "Imkanat irad idafi",
+      benchmarkTitle: "Miyar Al-Qita",
+      benchmarkLabel: "Mutawassit muaddal Al-Tahwil",
+      recommendationsTitle: "Tawsiyat li-tahsin masarik",
+      recommendations: [
+        "Hassin safahat hubutik bi-dawaat li-ittikhadh ijra wa uruud qima awdah",
+        "Tabbiq ikhtibar A/B li-tahdid anasir Al-Safha Al-Akthar faaliyya",
+        "Bassit amaliyyat itmam Al-Shira aw irsal Al-Namudhaj li-taqlil Al-Tark",
+        "Aidd istihdaf Al-Zuwwar alladhina lam yatahawwalu abr hamalat Al-Tatabbu",
+        "Hassin surat tahmil Al-Safha li-taqlil Al-Irtidad wa tahsin tajribat Al-Mustakhdim",
+      ],
+      startOver: "Ibda min Jadid",
+      customStrategy: "Uhsul ala Istratijiyyat Masar Mukhassasa",
+    },
+    howItWorks: {
+      title: "Kayfa yamal tahliluna lil-masar",
+      intro:
+        "Tastakhdim adatuna mayair Al-Qita wa afdal mumarasat tahsin Al-Tahwil li-tahdid Al-Furas fi masar mabiatik.",
+      items: [
+        { title: "Tahlil Al-Bayanat", body: "Nuhallil zayaratik Al-Haliyya wa muaddalat tahwilik wa iradatik li-tahdid khatt asas adaik." },
+        { title: "Muqaranat Al-Mayair", body: "Tuqaran muashiratik bi-mayair Al-Qita li-tahdid Al-Fajawat wal-furas." },
+        { title: "Tawsiyat Qabila lil-Tanfidh", body: "Ihsal ala iqtirahat mukhassasa li-tahsin kull marhala min masar tahwilik." },
+      ],
+    },
+    useCases: {
+      title: "Man yastafid",
+      intro: "Tusaid adatuna li-tahlil Al-Masar Al-Sharikat min jami Al-Ahjam ala tahdid wa islah ikhtinaqat Al-Tahwil.",
+      tabs: ["Tijara Iliktruniyya", "SaaS", "Sharikat Al-Khadamat"],
+      items: [
+        {
+          title: "Matajir Al-Tijara Al-Iliktruniyya",
+          body: "Haddid limadha yatruk Al-Mutasawwiqun Al-Salla wa hassin safahat muntajatik li-muaddalat tahwil aala.",
+          issuesTitle: "Mushkilat masar shaia fil-tijara Al-Iliktruniyya:",
+          issues: [
+            "Muaddalat tark salla aliya (mutawassit Al-Qita: 69.57%)",
+            "Muaddalat tahwil daifa li-safahat Al-Muntajat",
+            "Nuqat ihtikak fi itmam Al-Shira tusabbib Al-Tark",
+            "Mutawassit qimat talab munkhafid",
+          ],
+        },
+        {
+          title: "Sharikat SaaS",
+          body: "Hassin muaddalat tahwil Al-Tajriba ila ishtirak madfu wa qallil Al-Insihab min masar ishtirakatik.",
+          issuesTitle: "Mushkilat masar shaia fil-SaaS:",
+          issues: [
+            "Muaddalat tahwil munkhafida min Al-Tajriba ila Al-Daf",
+            "Taklifat istihwadh ala Al-Umala aliya",
+            "Muaddalat ikmal daifa lil-tahyia",
+            "Ilgha ishtirakat mubakkir",
+          ],
+        },
+        {
+          title: "Sharikat Al-Khadamat",
+          body: "Hassin jalb Al-Umala wa muaddalat hajz Al-Istisharat li-amalik Al-Qaim ala Al-Khadamat.",
+          issuesTitle: "Mushkilat masar shaia fi sharikat Al-Khadamat:",
+          issues: [
+            "Muaddalat ikmal namadhij munkhafida",
+            "Jawdat umala muhtamalin daifa",
+            "Muaddalat hajz istisharat munkhafida",
+            "Muaddalat adam hudur aliya lil-istisharat",
+          ],
+        },
+      ],
+    },
+    testimonials: {
+      title: "Qisas Najah",
+      intro: "Shahid kayfa hassanat Al-Sharikat muaddalat tahwiliha bi-istikhdam tahlilina lil-masar.",
+      items: [
+        { role: "Mudirat Al-Tijara Al-Iliktruniyya", quote: "Saadatna adat tahlil Al-Masar ala tahdid nuqtat insihab kabira fi amaliyyat itmam Al-Shira ladayna. Bad tatbiq Al-Taghyirat Al-Musa biha, irtafaa muaddal tahwilina bi-nisbat 28%." },
+        { role: "Mudir Al-Taswiq", quote: "Kunna nuani min daf jawdat Al-Umala Al-Muhtamalin. Saadana tahlil Al-Masar ala iadat hikalat namadhij iltiqat Al-Umala, mimma adda ila 35% aqall min Al-Umala lakin bi-jawda aala bi-kathir wa tahwil afdal." },
+        { role: "Muassisat SaaS", quote: "Kana muaddal tahwilina min Al-Tajriba ila Al-Daf aliqan ind 8%. Bad istikhdam adat tahlil Al-Masar wa tatbiq Al-Tawsiyat, rafanah ila 12.5%, wa kana dhalika nuqtat tahawwul li-amalina." },
+      ],
+    },
+    faq: {
+      title: "Al-Asila Al-Shaia",
+      intro: "Ihsal ala ijabat lil-asila Al-Shaia hawl adatina li-tahlil Al-Masar.",
+      items: [
+        { question: "Ma mada diqqat tahlil Al-Masar?", answer: "Tastakhdim adatuna li-tahlil Al-Masar mayair Al-Qita wa afdal mumarasat tahsin Al-Tahwil li-taqdim ruan daqiqa. Al-Tawsiyat mabniyya ala bayanat min alaf Al-Mawaqi wal-hamalat Al-Najiha fi mukhtalaf Al-Qitaat." },
+        { question: "Hal bayanati amina?", answer: "Naam, naakhudh aman Al-Bayanat ala mahmal Al-Jidd. Al-Maalumat allati tuqaddimuha tustakhdam faqat li-insha tahlil masarik wa la tukhzan aw tusharak ma jihat kharijiyya. La natlub ayy maalumat amal hassasa li-taqdim tahlilina." },
+        { question: "Kayfa unaffidh Al-Tawsiyat?", answer: "Bad talaqqi tahlilak, yumkinuk tanfidh Al-Tawsiyat bi-nafsik aw Al-Amal ma fariqina min Al-Khubara alladhina yumkinuhum musaadatak ala tanfidh Al-Taghyirat. Nuqaddim khadamat tahsin masar mukhassasa li-musaadatak ala tadif nataijik." },
+        { question: "Kam min Al-Waqt yastaghriq zuhur Al-Nataij?", answer: "Tabda muzam Al-Sharikat fi mulahazat tahsinat khilal 2-4 asabi min tanfidh tawsiyatina. Ma dhalika, qad yakhtalif Al-Jadwal Al-Zamani hasab hajm zayaratik wa qitaik wal-taghyirat Al-Muhaddada Al-Munaffadha." },
+        { question: "Hal yumkinuni Al-Husul ala tahlil akthar tafsilan?", answer: "Naam! Tuqaddim adatuna Al-Majjaniyya tahlilan asasiyyan, lakinnana nuqaddim aydan tadqiqat masar mukhassasa muammaqa tashmal tahlil kharitat Al-Harara wa tasjilat jalasat Al-Mustakhdimin wa istratijiyyat tahsin mukhassasa. Ittasil bina li-mazid min Al-Maalumat." },
+      ],
+    },
+    cta: {
+      title: "Mustaidd li-tahsin masar tahwilik?",
+      body: "Ibda ma adatina Al-Majjaniyya lil-tahlil aw ittasil bi-khubaraina li-tadqiq masar shamil.",
+      primary: "Hallil Masari Al-An",
+      secondary: "Uhsul ala Musaadat Khabir",
+    },
+  },
 });

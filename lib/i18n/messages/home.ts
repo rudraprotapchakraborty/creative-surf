@@ -676,4 +676,228 @@ export const homeMessages = defineMessages({
       subtitle: "Marken, die Creative Surf für ihr Wachstum gewählt haben",
     },
   },
+
+  ar: {
+    hero: {
+      eyebrow: "Creative Surf · Wakala Raqmiyya",
+      headlineLine1: "Hawwil",
+      headlineLine2: "hudurak Al-Raqmi.",
+      subtitle:
+        "Nusaid Al-Sharikat ala bina alamat raqmiyya qawiyya min khilal Al-Tasmim Al-Istratiji wa taswiq Al-Ada wa nataij qabila lil-qiyas.",
+      ctaPrimary: "Ibda Mashrou",
+      ctaSecondary: "Shahid Khadamatina",
+      stats: {
+        projects: "Mashari Munjaza",
+        retention: "Wafa Al-Umala",
+      },
+      panel: {
+        title: "Ada Al-Hamalat",
+        subtitle: "Akhir 6 shuhur",
+        roas: "ROAS",
+        leads: "Umala Muhtamalun",
+        ctr: "CTR",
+      },
+      chipRating: "Taqyim Al-Umala",
+      chipAwardTitle: "Hasila ala Jawaiz",
+      chipAwardSub: "Fariq Ibdai",
+    },
+
+    services: {
+      badge: "Khibratuna",
+      headingLine1: "Ma naqum bihi",
+      headingAccent: "bi-shakl istithnai.",
+      intro: "Thaman takhassusat. Fariq wahid mutakamil. Kull khidma masmuma li-mudaafat numuwwik.",
+      items: [
+        {
+          title: "Tasmim Jirafik",
+          description:
+            "Masahid basariyya qawiyyat Al-Athar tajma bayn Al-Ikhraj Al-Fanni wal-diqqa — hawiyyat Al-Alama wa mawadd Al-Hamalat wa kull ma baynahuma.",
+          tags: ["Hawiyyat Al-Alama", "Tibaa", "Raqmi"],
+        },
+        {
+          title: "Taswiq Al-Muhtawa",
+          description:
+            "Sard istratiji yabni Al-Marjaiyya wa yajlib zayaran tabiiyyin wa yuhawwil Al-Zuwwar ila umala awfiya.",
+          tags: ["Istratijiyya", "Kitaba Ilaniyya", "Tawzi"],
+        },
+        {
+          title: "Muntaj Al-Fidyu",
+          description:
+            "Muntaja sinimaiyya bi-haraka salisa wa sard wadih — min Al-Riilz Al-Qasira ila aflam Al-Alama Al-Kamila.",
+          tags: ["Riilz", "Aflam Ilaniyya", "Fidyuhat Al-Alama"],
+        },
+        {
+          title: "Tatwir Al-Mawaqi",
+          description:
+            "Tajarib wib aliyat Al-Ada masmuma lil-tahwil wa mabniyya lil-tawassu ma numuww amalik.",
+          tags: ["Next.js", "React", "Tijara Iliktruniyya"],
+        },
+        {
+          title: "OVC / TVC",
+          description:
+            "Ilanat fidyu mumayyaza lil-tilfizyun wal-intirnit tunqil qimat alamatik bi-aqsa athar mumkin.",
+          tags: ["Ilanat", "Bath Tilfizyuni", "Ala Al-Intirnit"],
+        },
+        {
+          title: "SEO wa Wasail Al-Tawasul",
+          description:
+            "Hamalat SEO wa ijtimaiyya daqiqa tudaif zuhurak wa tajlib jumhuran shadid Al-Ihtimam mubasharatan ilayk.",
+          tags: ["SEO", "Ilanat Ijtimaiyya", "Tahlilat"],
+        },
+        {
+          title: "Shira Al-Masahat Al-Ilaniyya",
+          description:
+            "Infaq ilani muhassan abr jami Al-Qanawat — kull dular yamal bi-jidd akbar li-yatadaaf aidak.",
+          tags: ["Google Ads", "Meta", "Barmaji"],
+        },
+        {
+          title: "Bina Al-Alama Al-Raqmiyya",
+          description:
+            "Hawiyyat raqmiyya mutanasiqa tatruk athran daiman — anzima basariyya wa sawt alama wa tamawdu rasikh.",
+          tags: ["Istratijiyya", "Hawiyya Basariyya", "Sawt Al-Alama"],
+        },
+      ],
+    },
+
+    impact: {
+      badge: "Nataij Qabila lil-Qiyas",
+      headingLine1: "Bayanat tuhaqqiq",
+      headingAccent: "al-nataij.",
+      body:
+        "Nabni Al-Najah ala muashirat mulahaza. Tatawaam istratijiyyatuna ma ahdafik Al-Tijariyya li-tuqaddim athran malmusan wa qabilan lil-qiyas — fi kull marra.",
+      pills: ["Wafa Aala", "Wusul Asra lil-Suq", "ROAS Afdal"],
+      accordion: [
+        {
+          title: "Tahlilat Qabila lil-Tanfidh",
+          content:
+            "Ihsal ala ruan amiqa li-tahsin Al-Hamalat wa rafi Al-Aid bi-istihdaf daqiq fi kull marhala.",
+        },
+        {
+          title: "Tamkin bil-Bayanat",
+          content:
+            "Imnah furaqak bayanat fawriyya wa muyassara li-yakun kull qarar mabniyyan ala dalil.",
+        },
+        {
+          title: "Taswiq Al-Muhtawa",
+          content:
+            "Istratijiyyat muhtawa mustahdafa tajdhib Al-Jumhur Al-Munasib wa tuhawwil Al-Umala wa tabni Al-Wala.",
+        },
+        {
+          title: "Tamkin Al-Mabiat",
+          content: "Wahhid Al-Mabiat wal-taswiq fi muharrik wahid salis yusarri ibram Al-Safaqat.",
+        },
+      ],
+    },
+
+    realEstate: {
+      badge: "Taswiq Aqari",
+      headingLine1: "Mashrouk yastahiqq",
+      headingAccent: "al-jumhur Al-Sahih.",
+      subline: "Daana nusaiduhu ala Al-Wusul ila fiatih.",
+      bodyStart: "Tawasal ma mushtarin wa mustathmirin wa shuraka aradin muwaththaqin.",
+      bodyStrong: "La mudiat lil-waqt",
+      bodyEnd: "— faqat umala jaddun mustaiddun lil-tanfidh.",
+      pills: ["Bashundhara R/A", "Mashari Sakaniyya", "Shuraka Aradi"],
+      stats: {
+        projects: "Mashari Tumawwiqat",
+        leads: "Umala Muwaththaqun",
+        quality: "Mutawassit Jawdat Al-Umala",
+      },
+      cta: "Istakshif Al-Taswiq Al-Aqari",
+      images: {
+        alt1: "Springfield – Bashundhara R/A",
+        caption1: "Bashundhara R/A",
+        alt2: "Masahat rahba masmuma bi-itqan",
+        caption2: "2200 qadam murabba · 18 Katha",
+        alt3: "Mashrou Qaim – Springfield",
+        caption3: "Mashrou Qaim",
+      },
+      floatingTitle: "Jumhur Mutakhassis",
+      floatingSub: "Mushtaru wa mustathmiru Al-Aqarat",
+    },
+
+    pricing: {
+      badge: "Al-Asaar",
+      headingLine1: "Asaar wadiha",
+      headingAccent: "wa shaffafa.",
+      intro:
+        "La rusum khafiyya. La mufajaat. Ikhtar Al-Baqa Al-Munasiba li-mawqiik Al-Hali — wa li-wijhatik.",
+      billingMonthly: "Shahri",
+      billingHalfShort: "6 shuhur · khasm 20%",
+      billingHalfLong: "Nisf Sanawi · khasm 20%",
+      perMonth: "shahr",
+      perHalfYear: "nisf sana",
+      mostPopular: "Al-Akthar Shuhra",
+      cta: "Ibda Al-An",
+      footnote: "Jami Al-Baqat tashmal mudir hisab makhsus. Yumkinuka Al-Ilgha fi ayy waqt.",
+      plans: [
+        {
+          title: "Basic",
+          description: "Munasiba lil-sharikat Al-Saghira Al-Mustaidda li-tanmiyat hudurha Al-Raqmi.",
+          features: [
+            "Tatwir Al-Aamal",
+            "Taswiq Al-Hamalat",
+            "Muhtawa basari ibdai (hatta 7)",
+            "Muhtawa mutasalsil",
+            "Fidyu mutaharrik",
+            "Idarat wasail Al-Tawasul",
+            "Shira masahat ilaniyya hasab Al-Talab",
+          ],
+        },
+        {
+          title: "Standard",
+          description: "Al-Baqa Al-Kamila — ikhtiyaruna Al-Akthar shuhra lil-alamat Al-Namiya.",
+          features: [
+            "Taswir Al-Muntajat",
+            "Muhtawa basari ibdai (hatta 10)",
+            "Muhtawa mahmi ma SEO",
+            "Shira masahat ilaniyya (50$ majjanan)",
+            "Kull ma fi Basic",
+          ],
+        },
+        {
+          title: "Premium",
+          description: "Taswiq raqmi mutakamil lil-sharikat Al-Kabira.",
+          features: [
+            "Tatwir Al-Mawqi Al-Iliktruni",
+            "Muhtawa basari ibdai (hatta 15)",
+            "Shira masahat ilaniyya (100$ majjanan)",
+            "Kitabat muhtawa (hatta 5)",
+            "Kull ma fi Standard",
+          ],
+        },
+      ],
+    },
+
+    reviews: {
+      badge: "Shahadat Al-Umala",
+      headingLine1: "La tathiq bi-kalamina",
+      headingAccent: "wahdahu.",
+      items: [
+        {
+          position: "Mudirat Al-Taswiq",
+          text:
+            "Al-Amal ma Creative Surf ghayyara huduruna Al-Raqmi tamaman. Irtafaat muaddalat Al-Tahwil ladayna bi-nisbat 45% fi thalathat ashhur faqat.",
+        },
+        {
+          position: "Al-Ra'is Al-Tanfidhi",
+          text:
+            "Sammamu hawiyyat alamatina wa banaw mawqiana wa nafadhu hamla adakhalatna ila kubra Al-Manshurat.",
+        },
+        {
+          position: "Mudirat Al-Tijara Al-Iliktruniyya",
+          text:
+            "Irtafaat mabiatuna ala Al-Intirnit bi-nisbat 78% mundhu bidayat Al-Amal maahum. Kanat hamlat Al-Itlaq Al-Mawsimiyya rai'a bi-haqq.",
+        },
+      ],
+    },
+
+    trustedBy: {
+      badge: "Umalauna",
+      headingStart: "Mahall thiqat Al-Furaq",
+      headingAccent: "al-mustashrifa lil-mustaqbal",
+      headingEnd: "",
+      subtitle: "Alamat ikhtarat Creative Surf li-tanmiyat huduriha",
+    },
+  },
 });

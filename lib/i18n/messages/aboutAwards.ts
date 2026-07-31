@@ -440,4 +440,71 @@ export const aboutAwardsMessages = defineMessages({
       button: "Jetzt Kontakt aufnehmen",
     },
   },
+  ar: {
+    metaTitle: "Al-Jawaiz wal-Taqdir",
+    metaDescription:
+      "Istakshif Al-Jawaiz wa taqdir Al-Qita allati hasalat alayha Creative Surf li-tamayyuziha fil-taswiq Al-Raqmi wa tasmim Al-Wib wa ridha Al-Umala.",
+    breadcrumbCurrent: "Al-Jawaiz",
+    hero: {
+      title: "Al-Jawaiz wal-Taqdir",
+      subtitle:
+        "Nafkhar bi-nayl Al-Taqdir ala iltizamina bil-tamayyuz wal-ibtikar wa najah Al-Umala fi qita Al-Taswiq Al-Raqmi.",
+      imageAlt: "Jawaiz wa taqdir Creative Surf",
+    },
+    timelineTitle: "Sijill Jawaizina",
+    years: [
+      {
+        awards: [
+          { name: "Jaizat Al-Tamayyuz fil-Taswiq Al-Raqmi", organization: "Digital Innovation Awards", description: "Taqdiran lil-ada Al-Mutamayyiz wal-ibtikar fi hamalat Al-Taswiq Al-Raqmi." },
+          { name: "Afdal Wakalat SEO", organization: "Marketing Excellence Awards", description: "Taqdiran lil-nataij Al-Istithnaiyya wal-istratijiyyat Al-Mubtakara fi tahsin muharrikat Al-Bahth." },
+          { name: "Ahad Afdal 10 Sharikat Tasmim Wib", organization: "Design Industry Association", description: "Ikhtirat ka-ihda afdal sharikat tasmim Al-Wib lil-tamayyuz Al-Ibdai wa ridha Al-Umala." },
+        ],
+      },
+      {
+        awards: [
+          { name: "Afdal Makan lil-Amal", organization: "Employer Excellence Awards", description: "Taqdiran li-thaqafat Amal mutamayyiza wa ridha Al-Muwazzafin wa furas Al-Numuww." },
+          { name: "Al-Ibtikar fi Taswiq Wasail Al-Tawasul", organization: "Social Media Marketing Association", description: "Taqdiran li-hamalat tawasul ijtimai raida haqqaqat nataij istithnaiyya lil-umala." },
+          { name: "Wakala Sada Najma", organization: "Marketing Industry Network", description: "Ikhtirat ka-ihda asra Al-Wakalat numuwwan wa akthariha wadan fil-qita." },
+        ],
+      },
+      {
+        awards: [
+          { name: "Al-Tamayyuz fi Ridha Al-Umala", organization: "Customer Experience Awards", description: "Taqdiran lil-hifaz ala aala mustawayat ridha Al-Umala wa jawdat Al-Khidma." },
+          { name: "Afdal Hamlat Taswiq Muhtawa", organization: "Content Marketing Institute", description: "Taqdiran li-istratijiyyat muhtawa mubtakara zadat Al-Tafaul wal-tahwilat bi-shakl kabir." },
+        ],
+      },
+      {
+        awards: [
+          { name: "Al-Wakala Al-Raqmiyya Al-Sada li-Am", organization: "Digital Business Awards", description: "Ikhtirat ka-akthar Al-Wakalat Al-Jadida wadan ma numuww wa nataij umala istithnaiyya." },
+        ],
+      },
+    ],
+    certificationsTitle: "Shahadat Al-Qita",
+    certifications: [
+      { name: "Google Partner", description: "Sharik Google mutamad ma takhassusat fil-bahth wal-ard wal-ilanat Al-Marii." },
+      { name: "Meta Business Partner", description: "Sharik Meta Business mutamad bi-khibra fi ilanat Facebook wa Instagram." },
+      { name: "HubSpot Solutions Partner", description: "Sharik HubSpot Solutions mutamad bi-khibra fil-taswiq Al-Jadhib wa tatbiq anzimat CRM." },
+      { name: "Shopify Partner", description: "Sharik Shopify mutamad mutakhassis fi tatwir wa tahsin mawaqi Al-Tijara Al-Iliktruniyya." },
+    ],
+    featured: {
+      title: "Murashshah li-Jaizat Al-Wakala Al-Raqmiyya li-Am",
+      body: "Nafkhar bi-tarshihina li-jaizat Al-Wakala Al-Raqmiyya li-Am Al-Marmuqa fi hafl Digital Excellence Awards 2024. Yubriz hadha Al-Taqdir tafani fariqina fi taqdim nataij istithnaiyya li-umalaina wa daf hudud Al-Ibtikar fil-taswiq Al-Raqmi.",
+      event: "Digital Excellence Awards 2024",
+      imageAlt: "Hafl jaizat Al-Wakala Al-Raqmiyya li-Am",
+    },
+    stories: {
+      title: "Qisas Najah Umala Haiza ala Jawaiz",
+      viewCaseStudy: "Ard Dirasat Al-Hala",
+      items: [
+        { badge: "Afdal Hamlat Tijara Iliktruniyya", client: "StyleHouse Boutique", body: "Zadat istratijiyyatuna Al-Haiza ala jaiza Al-Mabiat ala Al-Intirnit bi-nisbat 78% wa wassaat qaidat umalaihim ila thalathat aswaq jadida.", imageAlt: "Qissat najah tijara iliktruniyya" },
+        { badge: "Afdal Hamlat SEO", client: "TechVision Inc.", body: "Saadat istratijiyyat Al-SEO ladayna TechVision ala tahqiq ziyada 150% fil-zayarat Al-Tabiiyya wa 200% fil-umala Al-Muahhalin.", imageAlt: "Qissat najah SEO" },
+        { badge: "Afdal Hamlat Wasail Tawasul", client: "Innovate Solutions", body: "Saadat hamlatuna Al-Ijtimaiyya Al-Mubtakara hadhihi Al-Sharika Al-Nashia ala tahqiq numuww 120% fil-mutabiin wa taamin tamwil Al-Silsila A.", imageAlt: "Qissat najah wasail Al-Tawasul" },
+      ],
+    },
+    cta: {
+      title: "Mustaidd lil-amal ma wakala haiza ala jawaiz?",
+      body: "Tasharak ma Creative Surf wa ish Al-Farq alladhi yumkin an yuhdithah Al-Taswiq Al-Raqmi Al-Mutamayyiz li-amalik.",
+      button: "Ittasil Bina Al-Yawm",
+    },
+  },
 });

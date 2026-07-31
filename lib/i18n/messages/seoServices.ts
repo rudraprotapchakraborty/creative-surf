@@ -477,4 +477,77 @@ export const seoServicesMessages = defineMessages({
       button: "Kostenlose SEO-Beratung",
     },
   },
+  ar: {
+    metaTitle: "Khadamat SEO",
+    metaDescription:
+      "Istratijiyyat SEO shamila li-tahsin tartibik fi muharrikat Al-Bahth wa jalb zayarat tabiiyya ila mawqiak.",
+    breadcrumbCurrent: "Khadamat SEO",
+    hero: {
+      title: "Khadamat SEO",
+      intro: "Istratijiyyat SEO shamila li-tahsin tartibik fi muharrikat Al-Bahth wa jalb zayarat tabiiyya ila mawqiak.",
+      imageAlt: "Khadamat SEO",
+      cta: "Utlub Istisharat SEO Majjaniyya",
+      highlights: [
+        "Istratijiyyat SEO mukhassasa tatawaam ma ahdafik Al-Tijariyya",
+        "Bahth shamil lil-kalimat Al-Miftahiyya wa tahsin Al-Muhtawa",
+        "Tadqiq SEO tiqni wa tanfidh",
+        "Taqarir dawriyya wa tahlil lil-ada",
+      ],
+    },
+    approach: {
+      title: "Manhajuna fil-SEO",
+      items: [
+        { title: "Al-Bahth wal-Tahlil", body: "Nujri abhathan mustafida li-fahm qitaik wa munafisik wa jumhurak Al-Mustahdaf li-tatwir istratijiyyat SEO faala." },
+        { title: "Al-Tahsin Al-Dakhili", body: "Nuhassin muhtawa mawqiak wa wusumah wa bunyatah li-tahsin sillatih wa zuhurih lil-kalimat Al-Mustahdafa." },
+        { title: "Istratijiyyat Al-Muhtawa", body: "Natur istratijiyyat muhtawa tulabbi ihtiyajat jumhurik wa tada alamatik ka-marja fi qitaik." },
+        { title: "Al-Muraqaba wal-Taqarir", body: "Nuraqib adaak fil-SEO bi-istimrar wa nuqaddim taqarir dawriyya bi-ruan qabila lil-tanfidh lil-tahsin Al-Mustamirr." },
+      ],
+    },
+    benefits: {
+      title: "Fawaid khadamatina fil-SEO",
+      items: [
+        { title: "Ziyadat Al-Zayarat Al-Tabiiyya", body: "Istratijiyyat SEO ladayna masmuma li-ziyadat zuhurik fi natai'j Al-Bahth, mimma yajlib Al-Mazid min Al-Zayarat Al-Tabiiyya ila mawqiak." },
+        { title: "Umala Muhtamalun Aali Al-Jawda", body: "Bi-istihdaf Al-Kalimat Al-Sahiha wa tahsin muhtawak, nusaiduk ala jadhb zuwwar akthar ihtimalan lil-tahwil ila umala." },
+        { title: "Tajribat Mustakhdim Afdal", body: "Tashmal khadamatuna fil-SEO tahsin bunyat mawqiak wa muhtawah li-taqdim tajriba afdal li-zuwwarik." },
+        { title: "Nataij Tawilat Al-Amad", body: "Ala aks Al-Ilan Al-Madfu, yuqaddim Al-SEO natai'j mustadama tawilat Al-Amad tastamirr fi ifadat amalik ma murur Al-Waqt." },
+      ],
+    },
+    caseStudy: {
+      label: "Dirasat Hala",
+      imageAlt: "Dirasat hala SEO",
+      title: "Kayfa zadna Al-Zayarat Al-Tabiiyya bi-nisbat 150% li-sharikat barmajiyat B2B",
+      body: "Atat ilayna sharikat barmajiyat B2B tuani min sauba fi jalb Al-Umala abr mawqiiha. Min khilal istratijiyyatina Al-Shamila lil-SEO, tamakkanna min:",
+      results: [
+        "Ziyadat Al-Zayarat Al-Tabiiyya bi-nisbat 150% fi 6 ashhur",
+        "Tahsin Al-Tartib li-akthar min 50 kalima miftahiyya aliyat Al-Qima",
+        "Tahqiq 40% Al-Mazid min Al-Umala Al-Muahhalin abr Al-Mawqi",
+      ],
+      readFull: "Iqra Dirasat Al-Hala Kamila",
+    },
+    packages: {
+      title: "Baqat khadamat Al-SEO",
+      popular: "SHAI",
+      perMonth: "/shahr",
+      getStarted: "Ibda Al-An",
+      tiers: [
+        { name: "Basic", audience: "Lil-sharikat Al-Saghira allati tabda ma Al-SEO", price: "1,500$", features: ["Bahth Al-Kalimat Al-Miftahiyya (hatta 20 kalima)", "Tahsin dakhili (hatta 10 safahat)", "Taqrir ada shahri", "Tadqiq SEO tiqni asasi"] },
+        { name: "Professional", audience: "Lil-sharikat Al-Namiya allati tabhath an SEO shamil", price: "3,000$", features: ["Bahth Al-Kalimat Al-Miftahiyya (hatta 50 kalima)", "Tahsin dakhili (hatta 25 safha)", "Insha muhtawa (maqalan fil-shahr)", "Tadqiq SEO tiqni shamil", "Tahlil Al-Munafisin", "Taqrir ada kull usbuayn"] },
+        { name: "Enterprise", audience: "Lil-sharikat Al-Kabira dhat Al-Ihtiyajat Al-Muaqqada", price: "5,000$ wa akthar", features: ["Bahth shamil lil-kalimat Al-Miftahiyya", "Tahsin kamil lil-mawqi", "Insha muhtawa (4 maqalat aw akthar fil-shahr)", "Tanfidh SEO tiqni mutaqaddim", "Tahlil munafisin muammaq", "Taqrir ada usbui", "Mudir SEO mukhassas"] },
+      ],
+    },
+    faq: {
+      title: "Al-Asila Al-Shaia",
+      items: [
+        { question: "Kam min Al-Waqt yastaghriq zuhur natai'j Al-SEO?", answer: "Al-SEO istratijiyya tawilat Al-Amad. Baad Al-Tahsinat tazhar khilal asabi, lakin Al-Nataij Al-Malmusa tastaghriq adatan 3-6 ashhur. Yatawaqqaf Al-Jadwal Al-Zamani ala halat mawqiak Al-Haliyya wal-munafasa wa quwwat istratijiyyatik." },
+        { question: "Ma alladhi yumayyiz khadamatikum fil-SEO?", answer: "Nattabi manhajan shaffafan mabniyyan ala Al-Bayanat. Narkuz ala taqdim natai'j qabila lil-qiyas wa taqarir wadiha li-tara athar amalina. Istratijiyyatuna mukhassasa li-ahdafik wa jumhurik." },
+        { question: "Hal tadmanun Al-Zuhur fil-safha Al-Ula?", answer: "La yumkin li-ayy wakalat SEO mawthuqa daman tartib muhaddad li-anna khawarizmiyyat Al-Bahth fi taghayyur mustamirr. Narkuz ala tatbiq istratijiyyat mujarraba tuhassin zuhurak wa tajlib zayarat muahhala, lakin la nataid bi-ma la nastati Al-Wafa bih." },
+        { question: "Madha ahtaj li-taqdimih lil-bidaya?", answer: "Lil-bidaya, sa-nahtaj ila Al-Wusul ila tahlilat mawqiak wa Search Console wa nizam idarat Al-Muhtawa. Kama sa-nujri istishara awwaliyya li-fahm ahdafik Al-Tijariyya wa jumhurak wa juhudik Al-Taswiqiyya Al-Haliyya." },
+      ],
+    },
+    cta: {
+      title: "Mustaidd li-tahsin tartibik fil-bahth?",
+      body: "Ittasil bina Al-Yawm li-munaqashat kayfiyyat musaadat khadamatina fil-SEO li-amalik ala Al-Numuww.",
+      button: "Uhsul ala Istisharat SEO Majjaniyya",
+    },
+  },
 });

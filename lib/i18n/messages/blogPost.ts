@@ -47,4 +47,19 @@ export const blogPostMessages = defineMessages({
       outbound: "Externe Ressourcen",
     },
   },
+  ar: {
+    notFound: "Al-Maqal ghayr mawjud",
+    backToBlogs: "← Al-Awda lil-Mudawwana",
+    backToBlogsShort: "Al-Awda lil-Mudawwana",
+    back: "Ruju",
+    backToAll: "Al-Awda li-jami Al-Maqalat",
+    edit: "Tahrir",
+    delete: "Hadhf",
+    confirmDelete: "Hadhf hadha Al-Maqal? La yumkin Al-Tarajju an dhalik.",
+    seo: {
+      inboundReal: "Dhu sila fi Creative Surf Al-Aqarat",
+      inbound: "Dhu sila fi Creative Surf",
+      outbound: "Masadir Kharijiyya",
+    },
+  },
 });

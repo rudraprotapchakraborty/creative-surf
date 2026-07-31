@@ -6,7 +6,7 @@
  * switcher updates the UI instantly without a navigation.
  */
 
-export const LOCALES = ["en", "fr", "de"] as const;
+export const LOCALES = ["en", "fr", "de", "ar"] as const;
 
 export type Locale = (typeof LOCALES)[number];
 
@@ -24,7 +24,24 @@ export const LOCALE_META: Record<
   en: { label: "English", short: "EN", native: "English", flag: "🇬🇧", intl: "en-US" },
   fr: { label: "French", short: "FR", native: "Français", flag: "🇫🇷", intl: "fr-FR" },
   de: { label: "German", short: "DE", native: "Deutsch", flag: "🇩🇪", intl: "de-DE" },
+  // Arabic romanised into Latin script ("Arabizi"), so it stays left-to-right
+  // and needs no RTL handling.
+  ar: { label: "Arabic (Latin)", short: "AR", native: "Arabi", flag: "🇸🇦", intl: "en-GB" },
 };
+
+/**
+ * Romanised Arabic month names — `Intl` would render these in Arabic script,
+ * which would contradict the whole point of this locale.
+ */
+const AR_MONTHS_LONG = [
+  "Yanayir", "Fibrayir", "Maris", "Abril", "Mayu", "Yunyu",
+  "Yulyu", "Aghustus", "Sibtambir", "Uktubar", "Nufambir", "Disambir",
+];
+
+const AR_MONTHS_SHORT = [
+  "Yan", "Fib", "Mar", "Abr", "May", "Yun",
+  "Yul", "Agh", "Sib", "Ukt", "Nuf", "Dis",
+];
 
 /** Formats a date string in the visitor's locale. */
 export function formatDateForLocale(
@@ -35,6 +52,12 @@ export function formatDateForLocale(
   if (!dateStr) return "";
   const date = new Date(dateStr);
   if (Number.isNaN(date.getTime())) return "";
+
+  if (locale === "ar") {
+    const months = options.month === "short" ? AR_MONTHS_SHORT : AR_MONTHS_LONG;
+    return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+  }
+
   return date.toLocaleDateString(LOCALE_META[locale].intl, options);
 }
 

@@ -357,4 +357,121 @@ export const realEstateMessages = defineMessages({
       ],
     },
   },
+  ar: {
+    hero: {
+      tag: "Creative Surf · Al-Aqarat",
+      headline: ["Ibni Al-Mashrou.", "Danaa nusaiduhu", "ala an yuktashaf."],
+      subtitle:
+        "Al-Mansa Al-Raqmiyya Al-Mutakhassisa fi Dhaka allati tarbut mutawwiri Al-Aqarat bi-mushtarin muahhalin wa mustathmirin wa shuraka aradin.",
+      pills: ["Sajjil mashrouak", "Isil ila Al-Mushtarin", "Ubrim Al-Safaqat"],
+      ctaPrimary: "Sajjil Al-Yawm",
+      ctaSecondary: "Iarif Al-Mazid",
+    },
+    about: {
+      badge: "Man Nahnu",
+      headingStart: "Nabni mustaqbal",
+      headingAccent: "aqarat Dhaka",
+      headingEnd: ".",
+      imageAlt: "Man Nahnu",
+      viewProjects: "Ard Al-Mashari",
+      tabBackground: "Al-Khalfiyya",
+      tabMessage: "Risalatuna",
+      brandName: "Creative Surf Al-Aqarat",
+      introRest:
+        "hiya mansa raqmiyya sariat Al-Numuww mukhassasa li-rabt mutawwiri Dhaka bi-mushtarin wa mustathmirin muahhalin fi jami anwa Al-Aqarat.",
+      body:
+        "Yadmij fariquna khibrat Al-Taswiq Al-Raqmi ma marifa amiqa bi-suq Al-Aqarat fi Bangladesh — min iad Al-Ilanat wa idarat Al-Hamalat ila bina Al-Hudur Al-Raqmi alladhi yajlib istifsarat haqiqiyya. Nahnu multazimun bil-jawda wal-shafafiyya wal-nataij Al-Qabila lil-qiyas.",
+      goals: [
+        {
+          name: "Manzuma Raqmiyya",
+          desc: "Bina mansa mukhassasa tutih li-mutawwiri Dhaka ard mashariihim Al-Sakaniyya wal-tijariyya ala nitaq wasi.",
+        },
+        {
+          name: "Zuhur Aqsa",
+          desc: "Tawzif Al-SEO wa wasail Al-Tawasul wal-ilanat Al-Adaiyya li-tahqiq aqsa zuhur li-kull aqar madruj.",
+        },
+        {
+          name: "Wusul Muahhal",
+          desc: "Rabt Al-Mutawwirin wa furas Al-Aradi bil-mushtarin Al-Munasibin abr istihdaf dhaki lil-jumhur.",
+        },
+      ],
+      visionQuote:
+        "An nusbih Al-Bawwaba Al-Raqmiyya Al-Akthar mawthuqiyya fi Bangladesh li-iktishaf Al-Aqarat — bi-jal Al-Muamalat Al-Aqariyya shaffafa wa muyassara wa mulhima lil-mutawwirin wal-mushtarin ala hadd sawa.",
+      visionLabel: "Al-Ru'ya wal-Risala",
+    },
+    objectives: {
+      badge: "Ahdafuna",
+      headingStart: "Ma nasa",
+      headingAccent: "li-tahqiqih",
+      intro: "Arbaat arkan lil-tamayyuz tuhaqqiq nataij raqmiyya li-shurakaina Al-Mutawwirin fi jami anha Bangladesh.",
+      items: [
+        {
+          title: "Manzuma Raqmiyya",
+          body: "Bina mansa mukhassasa tutih li-mutawwiri Dhaka ard mashariihim Al-Sakaniyya wal-tijariyya ala nitaq wasi.",
+        },
+        {
+          title: "Zuhur Aqsa",
+          body: "Tawzif Al-SEO wa wasail Al-Tawasul wal-ilanat Al-Adaiyya li-tahqiq aqsa zuhur li-kull aqar madruj.",
+        },
+        {
+          title: "Wusul Muahhal",
+          body: "Rabt Al-Mutawwirin wa furas Al-Aradi bil-mushtarin Al-Munasibin abr istihdaf dhaki lil-jumhur.",
+        },
+        {
+          title: "Aid Qabil lil-Qiyas",
+          body: "Al-Hifaz ala aala mustawayat Al-Ibda wal-shafafiyya wal-nataij li-kull sharik.",
+        },
+      ],
+    },
+    featured: {
+      tag: "Amal Mukhtara",
+      headingStart: "Mashari",
+      headingAccent: "tuarrifuna",
+      viewAll: "Ard jami Al-Mashari",
+    },
+    process: {
+      badge: "Al-Amaliyya",
+      intro: "Min Al-Bidaya hatta Al-Bay Al-Kamil, fi arba khatawat madrusa.",
+      steps: [
+        {
+          title: "Iktishaf",
+          body: "Sharikna tafasil mashrouak — Al-Mawqi wal-wahdat wal-jumhur Al-Mustahdaf. Nuhallil talab Al-Suq wa nuhaddid Al-Tamawdu Al-Raqmi Al-Farid li-aqarik.",
+        },
+        {
+          title: "Tasmim",
+          body: "Nabni mawaqi mughra mukhassasa muhassana lil-SEO wa nasugh hamalat ilaniyya mumayyaza tunasib mashrouak.",
+        },
+        {
+          title: "Nashr",
+          body: "Nutliq hamalat mustahdafa aliyat Al-Ada abr qanawat Al-Bahth wal-tawasul li-jadhb istifsarat mushtarin muahhalin.",
+        },
+        {
+          title: "Taslim",
+          body: "Nunaqqil Al-Umala Al-Muahhalin mubasharatan ila fariq mabiatik, ma tatabbu Al-Tahwilat wal-tahsin hatta bay jami Al-Wahdat.",
+        },
+      ],
+    },
+    testimonials: {
+      tag: "Aswat Al-Shuraka",
+      headingStart: "Mahall thiqat afdal",
+      headingAccent: "mutawwiri Dhaka",
+      items: [
+        {
+          quote:
+            "Hawwalat Creative Surf ilanatina ila tadaffuq mustaqirr min Al-Mushtarin Al-Muahhalin. Ghattat Al-Hamalat taklifataha khilal Al-Shahr Al-Awwal.",
+          role: "Al-Mudir Al-Idari",
+        },
+        {
+          quote:
+            "Taswir ihtirafi wa mawqi mukhassas wa tahlilat haqiqiyya — akhiran sharik yafham Al-Taswiq wal-aqarat maan.",
+          role: "Ra'isat Al-Mabiat",
+        },
+        {
+          quote:
+            "Kana mashrouna ala Al-Hawa khilal 48 saa wa tamma bayuh bil-kamil qabl Al-Mawid. Al-Shafafiyya wal-taqarir la mathil laha fi Dhaka.",
+          role: "Ra'is Majlis Al-Idara",
+        },
+      ],
+    },
+  },
 });

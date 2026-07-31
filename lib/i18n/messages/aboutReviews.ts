@@ -216,4 +216,43 @@ export const aboutReviewsMessages = defineMessages({
       button: "Jetzt Kontakt aufnehmen",
     },
   },
+  ar: {
+    metaTitle: "Ara wa Shahadat Al-Umala",
+    metaDescription:
+      "Ittali ala ma yaquluh umalauna an Al-Amal ma Creative Surf. Iqra shahadat wa ara Al-Sharikat allati saadnaha ala Al-Najah.",
+    breadcrumbCurrent: "Al-Ara",
+    hero: {
+      title: "Ara wa Shahadat Al-Umala",
+      subtitle: "La tathiq bi-kalamina wahdahu. Ittali ala ma yaquluh umalauna an Al-Amal ma Creative Surf.",
+      outOfFive: "{rating} min 5",
+      basedOn: "Bina ala {count} ara umala",
+    },
+    reviews: [
+      { position: "Mudirat Al-Taswiq", date: "15 Maris 2025", text: "Al-Amal ma Creative Surf ghayyara huduruna Al-Raqmi tamaman. Haqqaqa manhajuhum Al-Istratiji li-tahaddiyatina Al-Taswiqiyya nataij malmusa khilal thalathat ashhur faqat. Irtafaat muaddalat Al-Tahwil bi-nisbat 45% wa tadaafa tafaul wasail Al-Tawasul." },
+      { position: "Al-Rais Al-Tanfidhi", date: "3 Fibrayir 2025", text: "Ka-muassis sharika nashia, kuntu bi-haja ila wakala tudir jami jawanib Al-Taswiq bayna atarakkaz ana ala tatwir Al-Muntaj. Faqat Creative Surf tawaqquati fi kull shay. Sammamu hawiyyat alamatina wa banaw mawqiana wa nafadhu hamlat itlaq adakhalatna ila kubra Al-Manshurat Al-Mutakhassisa. Sahama amaluhum mubasharatan fi najah jawlat tamwilina." },
+      { position: "Mudirat Al-Tijara Al-Iliktruniyya", date: "22 Yanayir 2025", text: "Irtafaat mabiatuna ala Al-Intirnit bi-nisbat 78% mundhu bidayat Al-Amal ma Creative Surf. Fahmuhum li-ittijahat Al-Tijara Al-Iliktruniyya wa suluk Al-Mustahlik istithnai. Kanat suwar Al-Muntajat wa hamalat wasail Al-Tawasul allati anshauha li-itlaq majmuatina Al-Mawsimiyya rai'a wa faala lil-ghaya. Hum daiman yasbiquna bi-afkar mubtakara." },
+      { position: "Mudir Al-Amaliyyat", date: "10 Disambir 2024", text: "Fi qita B2B mithl qitaina, kana ijad wakala tafham daqaiq suqina amran saban hatta wajadna Creative Surf. Aadu bina istratijiyyat jalb Al-Umala wa anshau muhtawa yulamis umalaana Al-Mustahdafin faalan. Manhajuhum Al-Mabni ala Al-Bayanat wa taqariruhum Al-Dawriyya tajal aid Al-Istithmar wadihan." },
+      { position: "Mudirat Al-Taswiq", date: "5 Nufambir 2024", text: "Kanat khibrat Creative Surf fil-SEO dhat qima kubra li-sharikatina. Khilal sittat ashhur min tatbiq tawsiyatihim, irtafaat zayaratuna Al-Tabiiyya bi-nisbat 120% wa shahadna tahassunan malhuzan fi tartibina ala Al-Kalimat Al-Miftahiyya Al-Raisiyya. Fariquhum sari Al-Istijaba wa mutamakkin wa muhtamm sidqan bi-najahina." },
+      { position: "Al-Muassis", date: "18 Uktubar 2024", text: "Ka-sahib amal saghir, kuntu mutaraddidan fil-istithmar bil-taswiq Al-Raqmi, lakin Creative Surf jaalat Al-Amaliyya muyassara wa fi mutanawal Al-Yad. Akhadhu Al-Waqt li-fahm ihtiyajat amali Al-Farida wa anshau istratijiyya mukhassasa saadatni ala Al-Wusul ila umala judud wa tanmiyat amali. Lamsatuhum Al-Shakhsiyya wa ihtimamuhum bil-tafasil yumayyizuhum." },
+    ],
+    recognition: {
+      title: "Taqdir Al-Qita",
+      items: [
+        { name: "Al-Tamayyuz Al-Taswiqi", event: "Digital Innovation Awards 2024", imageAlt: "Jaizat Al-Tamayyuz fil-Taswiq Al-Raqmi" },
+        { name: "Afdal Wakalat SEO", event: "Digital Marketing Awards 2023", imageAlt: "Afdal wakalat SEO" },
+        { name: "Afdal Sharikat Tasmim Wib", event: "Creative Excellence Awards 2023", imageAlt: "Afdal sharikat tasmim wib" },
+        { name: "Afdal Makan lil-Amal", event: "Employer Excellence Awards 2022", imageAlt: "Afdal makan lil-amal" },
+      ],
+    },
+    platforms: {
+      title: "Jiduna ala Manassat Al-Taqyim",
+      summary: "{rating} min 5 bina ala {count} taqyim",
+      readOn: "Iqra ara {platform}",
+    },
+    cta: {
+      title: "Mustaidd li-tahqiq nataij mumathila?",
+      body: "Indamm ila qaimat umalaina Al-Radin Al-Mutanamiya wa shahid kayfa yumkin li-Creative Surf tahwil hudurik Al-Raqmi.",
+      button: "Ittasil Bina Al-Yawm",
+    },
+  },
 });

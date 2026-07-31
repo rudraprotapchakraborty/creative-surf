@@ -786,4 +786,97 @@ export const ecommerceSeoMessages = defineMessages({
       secondary: "Unser Team kontaktieren",
     },
   },
+  ar: {
+    metaTitle: "Khadamat SEO lil-Tijara Al-Iliktruniyya",
+    metaDescription:
+      "Zid Al-Zayarat Al-Tabiiyya wa zuhur Al-Muntajat wa nammi iradat matjarak abr istratijiyyatina lil-SEO fil-tijara Al-Iliktruniyya.",
+    hero: {
+      title: "SEO lil-tijara Al-Iliktruniyya yuhaqqiq Al-Iradat",
+      subtitle:
+        "Zid Al-Zayarat Al-Tabiiyya wa zuhur Al-Muntajat wa nammi iradat matjarak abr istratijiyyatina lil-SEO Al-Mabniyya ala Al-Bayanat.",
+      ctaPrimary: "Uhsul ala Istratijiyya Mukhassasa",
+      ctaSecondary: "Ard Nataijna",
+      imageAlt: "Lawhat maalumat SEO lil-tijara Al-Iliktruniyya",
+      badgeValue: "+187%",
+      badgeLabel: "Mutawassit numuww Al-Zayarat Al-Tabiiyya",
+    },
+    stats: [
+      { value: "93%", label: "min Al-Tajarib ala Al-Intirnit tabda bi-muharrik bahth" },
+      { value: "44%", label: "min Al-Mutasawwiqin yabdaun bahthahum an Al-Muntajat ala Google" },
+      { value: "35%", label: "muaddalat tahwil aala min Al-Bahth Al-Tabii" },
+      { value: "1.8 trilyun $", label: "min mabiat Al-Tijara Al-Iliktruniyya Al-Alamiyya tataathar bil-bahth" },
+    ],
+    services: {
+      title: "Khadamat SEO shamila lil-tijara Al-Iliktruniyya",
+      intro:
+        "Khadamatuna fil-SEO lil-tijara Al-Iliktruniyya masmuma li-ziyadat zuhur matjarak wa jalb zayarat muahhala wa taziz muaddalat Al-Tahwil.",
+      items: [
+        { title: "Tahsin Safahat Al-Muntajat", body: "Hassin safahat muntajatik bi-kalimat miftahiyya mustahdafa wa awsaf muhassana wa bayanat munazzama li-tahsin Al-Zuhur wa muaddalat Al-Naqr.", points: ["Anawin wa awsaf muntajat ghaniyya bil-kalimat Al-Miftahiyya", "Balaghat schema lil-muqtatafat Al-Ghaniyya", "Tahsin Al-Suwar bi-nass badil"] },
+        { title: "Tahsin Safahat Al-Fiat", body: "Nazzim wa hassin safahat Al-Fiat lil-tasnif ala kalimat miftahiyya tanafusiyya ma tawfir tajribat mustakhdim mumtaza tuhaqqiq Al-Tahwilat.", points: ["Tasalsul hirarki istratiji lil-fiat", "Awsaf fiat muhassana", "Bunyat rabt dakhili"] },
+        { title: "SEO Tiqni lil-Tijara Al-Iliktruniyya", body: "Hull Al-Mushkilat Al-Tiqniyya allati tamna muharrikat Al-Bahth min Al-Zahf wa Al-Fahrasa Al-Sahiha li-mawqiak li-tahsin Al-Tartib.", points: ["Tahsin surat Al-Mawqi", "Tahsinat mulaima lil-mahmul", "Hall mushkilat Al-Muhtawa Al-Mukarrar"] },
+        { title: "Taswiq Al-Muhtawa lil-Tijara Al-Iliktruniyya", body: "Anshi muhtawa qayyiman yajdhib Al-Umala Al-Muhtamalin fi kull marhala min rihlat Al-Shira wa yabni sultat alamatik.", points: ["Adillat Al-Shira wa muqaranat Al-Muntajat", "Muhtawa mudawwana yastahdif kalimat aala Al-Masar", "Tatwir Al-Asila Al-Shaia wa qaidat Al-Marifa"] },
+        { title: "Idarat Al-Ara wal-Sumaa", body: "Wazzif ara Al-Umala li-tahsin zuhurik fil-bahth wa muaddalat Al-Tahwil ma bina Al-Thiqa ma Al-Umala Al-Muhtamalin.", points: ["Istratijiyyat jam Al-Ara", "Tanfidh balaghat Al-Ara", "Muraqabat wa idarat Al-Sumaa"] },
+        { title: "Tahsin Muaddal Al-Tahwil", body: "Hawwil Al-Mazid min Al-Zuwwar ila umala abr istratijiyyat CRO mabniyya ala Al-Bayanat wa masmuma khassisan li-mawaqi Al-Tijara Al-Iliktruniyya.", points: ["Tahsinat tajribat Al-Mustakhdim", "Ikhtibar A/B li-safahat Al-Muntajat", "Tahsin amaliyyat itmam Al-Shira"] },
+      ],
+    },
+    process: {
+      title: "Amaliyyatuna fil-SEO lil-tijara Al-Iliktruniyya",
+      intro: "Nattabi manhajiyya mujarraba li-taqdim natai'j li-matjarak Al-Iliktruni.",
+      steps: [
+        { title: "Tadqiq Shamil", body: "Nuhallil adaak Al-Hali fil-SEO lil-tijara Al-Iliktruniyya wa nuhaddid Al-Mushkilat wa nakshif furas Al-Numuww." },
+        { title: "Wad Al-Istratijiyya", body: "Nunshi istratijiyyat SEO mukhassasa lil-tijara Al-Iliktruniyya bina ala muntajatik wa suqik wa ahdafik Al-Tijariyya." },
+        { title: "Al-Tanfidh", body: "Yunaffidh fariquna Al-Istratijiyya, muhassinan safahat muntajatik wa bunyatak Al-Tiqniyya wa muhtawak." },
+        { title: "Al-Muraqaba wal-Tahsin", body: "Natatabba Al-Ada bi-istimrar wa nujri taadilat mabniyya ala Al-Bayanat wa nuwassi Al-Istratijiyyat Al-Najiha." },
+      ],
+    },
+    platforms: {
+      title: "Khibratuna fi manassat Al-Tijara Al-Iliktruniyya",
+      intro: "Ladayna khibra mutakhassisa fi tahsin Al-SEO li-jami manassat Al-Tijara Al-Iliktruniyya Al-Raisiyya.",
+      items: [
+        { title: "Khibrat Shopify fil-SEO", body: "Ladayna khibra amiqa fi tahsin matajir Shopify li-muharrikat Al-Bahth, ma Al-Talub ala qiyud Al-Mansa wal-istifada min nuqat quwwatiha.", imageAlt: "SEO Shopify", points: ["Tahsin bunyat Al-Rawabit", "Tawsiyat bil-tatbiqat li-taziz Al-SEO", "Tahsin Al-Qalib lil-sura wal-SEO"] },
+        { title: "Khibrat WooCommerce fil-SEO", body: "Nastafid min muranat WordPress wa WooCommerce li-insha matajir muhassana bi-shakl kabir ma zuhur mumtaz fil-bahth.", imageAlt: "SEO WooCommerce", points: ["Idad idafat SEO li-WordPress", "Tahsin Al-Tasnifat Al-Mukhassasa", "Tahsin Al-Ada li-WooCommerce"] },
+        { title: "Khibrat Magento fil-SEO", body: "Yafham mutakhassisuna taaqid Magento wa Adobe Commerce, wa yuhassinun mawaqi Al-Tijara Al-Kabira li-aqsa zuhur fil-bahth.", imageAlt: "SEO Magento", points: ["Tahsin Al-Katalugat Al-Muaqqada", "SEO lil-tanaqqul Al-Tabaqi", "SEO tiqni ala mustawa Al-Muassasat"] },
+        { title: "Khibrat BigCommerce fil-SEO", body: "Nuazzim Al-Istifada min mizat Al-SEO Al-Madmuna fi BigCommerce ma tanfidh istratijiyyat mutaqaddima lil-tafawwuq ala Al-Munafisin.", imageAlt: "SEO BigCommerce", points: ["Tahsin idadat SEO fi BigCommerce", "Tahsin qalib Stencil", "Tahsin Al-Bay muta'addid Al-Qanawat"] },
+      ],
+    },
+    caseStudies: {
+      title: "Qisas najah fil-SEO lil-tijara Al-Iliktruniyya",
+      intro: "Shahid kayfa saadna sharikat Al-Tijara Al-Iliktruniyya ala ziyadat zayaratiha Al-Tabiiyya wa iradatiha.",
+      resultsLabel: "Al-Nataij:",
+      readMore: "Iqra Dirasat Al-Hala",
+      viewAll: "Ard Jami Dirasat Al-Hala",
+      items: [
+        { tag: "Tajir Azya", title: "Ziyada 213% fil-zayarat Al-Tabiiyya", body: "Saadna matjar azya iliktruni ala Al-Taghallub ala tahdith khawarizmiyyat Google wa tahqiq mustawayat qiyasiyya min Al-Zayarat Al-Tabiiyya wal-mabiat.", result: "+189% numuww fil-iradat", imageAlt: "Dirasat hala tajir azya" },
+        { tag: "Mustalzamat Manziliyya", title: "Ziyada 157% fil-tahwilat Al-Tabiiyya", body: "Saadat istratijiyyatuna li-tahsin safahat Al-Muntajat hadha Al-Tajir ala ziyadat muaddal tahwilih min Al-Zayarat Al-Tabiiyya bi-shakl kabir.", result: "+142% iradat tabiiyya", imageAlt: "Dirasat hala mustalzamat manziliyya" },
+        { tag: "Iliktruniyyat", title: "Ziyada 278% fi tartib Al-Kalimat Al-Miftahiyya", body: "Saadna hadha Al-Tajir ala Al-Haymana ala kalimat muntajat tanafusiyya wa ziyadat zuhurih Al-Tabii bi-shakl kabir.", result: "+203% zayarat tabiiyya", imageAlt: "Dirasat hala iliktruniyyat" },
+      ],
+    },
+    testimonials: {
+      title: "Ma yaquluh umalauna",
+      intro: "Istami ila sharikat tijara iliktruniyya hawwalat adaha fil-bahth Al-Tabii bi-khadamatina.",
+      items: [
+        { quote: "Kanat khadamat Creative Surf fil-SEO lil-tijara Al-Iliktruniyya nuqtat tahawwul li-matjarina. Irtafaat zayaratuna Al-Tabiiyya bi-nisbat 187% wa akthar min tadaaft iradatuna min Al-Bahth Al-Tabii fi 6 ashhur faqat.", role: "Mudirat Al-Taswiq, tajir azya" },
+        { quote: "Kunna nuani min mushkilat SEO tiqniyya tamna muntajatina min Al-Zuhur. Haddada fariq Creative Surf hadhihi Al-Mushkilat wa asalahaha, mimma adda ila ziyada 142% fil-zayarat Al-Tabiiyya wa dafa qawiyya lil-mabiat.", role: "Al-Rais Al-Tanfidhi, tijara iliktruniyya lil-iliktruniyyat" },
+        { quote: "Hassanat istratijiyyat tahsin safahat Al-Muntajat allati nafadhat-ha Creative Surf muaddalat tahwilina bi-shakl kabir. Nashhad Al-An muaddal tahwil aala bi-nisbat 35% min Al-Zayarat Al-Tabiiyya muqaranatan bi-qanawatina Al-Madfua.", role: "Mudirat Al-Tijara Al-Iliktruniyya, mustalzamat manziliyya" },
+      ],
+    },
+    faq: {
+      title: "Al-Asila Al-Shaia",
+      intro: "Ihsal ala ijabat lil-asila Al-Shaia hawl khadamat Al-SEO lil-tijara Al-Iliktruniyya.",
+      items: [
+        { question: "Kam min Al-Waqt yastaghriq zuhur natai'j Al-SEO lil-tijara Al-Iliktruniyya?", answer: "Baad Al-Tahsinat tazhar khilal asabi, lakin Al-Nataij Al-Malmusa tastaghriq adatan 3-6 ashhur. Qad tuzhir Al-Islahat Al-Tiqniyya natai'j asra, bayna tastaghriq istratijiyyat Al-Muhtawa wa bina Al-Rawabit waqtan atwal li-tuathir fil-tartib. Nuqaddim taqarir shahriyya li-tatabbu Al-Taqaddum." },
+        { question: "Kayfa yakhtalif SEO Al-Tijara Al-Iliktruniyya an khadamat Al-SEO Al-Adiyya?", answer: "Yurakkiz SEO Al-Tijara Al-Iliktruniyya tahdidan ala safahat Al-Muntajat wal-fiat wa balaghat schema lil-muntajat wa idarat mushkilat Al-Muhtawa Al-Mukarrar Al-Shaia fi mawaqi Al-Tijara wal-tahsin lil-kalimat dhat Al-Niyya Al-Tijariyya. Kama yuaalij tahaddiyat khassa bil-tijara Al-Iliktruniyya mithl Al-Tanaqqul Al-Tabaqi wa taghayyurat Al-Makhzun." },
+        { question: "Hal tamalun ma jami manassat Al-Tijara Al-Iliktruniyya?", answer: "Naam, ladayna khibra fi tahsin Al-SEO li-jami manassat Al-Tijara Al-Iliktruniyya Al-Raisiyya bi-ma fi dhalika Shopify wa WooCommerce wa Magento wa BigCommerce wa mawaqi Al-Tijara Al-Mabniyya khassisan. Li-kull mansa tahaddiyat wa furas SEO farida yatadarrab mutakhassisuna ala muaalajatiha." },
+        { question: "Kam yukallif SEO Al-Tijara Al-Iliktruniyya?", answer: "Tabda khadamatuna fil-SEO lil-tijara Al-Iliktruniyya min 2,500$ shahriyyan, ma tahdid Al-Sir bina ala hajm matjarak wa halat Al-SEO Al-Haliyya wa mustawa Al-Munafasa wal-ahdaf. Nuqaddim baqat mukhassasa tunasib mizaniyyat wa ihtiyajat mukhtalifa. Ittasil bina lil-husul ala sir mukhassas." },
+        { question: "Hal astathmir fil-SEO am fil-PPC li-matjari?", answer: "Fil-mithali, yuhaqqiq Al-Manhaj Al-Mutawazin alladhi yastakhdim Al-SEO wal-PPC maan afdal Al-Natai'j. Yuwaffir Al-SEO zayarat mustadama tawilat Al-Amad bi-muaddalat tahwil aala wa taklifat istihwadh aqall ma murur Al-Waqt, bayna yuwaffir Al-PPC zuhuran fawriyyan wa yumtaz lil-urud wa itlaq Al-Muntajat Al-Jadida." },
+        { question: "Ayy Al-Muashirat tatatabbaunaha li-qiyas najah Al-SEO?", answer: "Natatabba Al-Zayarat Al-Tabiiyya wa tartib Al-Kalimat Al-Miftahiyya wa muaddal Al-Tahwil Al-Tabii wal-iradat min Al-Bahth Al-Tabii wa mutawassit qimat Al-Talab min Al-Zuwwar Al-Tabiiyyin wa zuhur safahat Al-Muntajat wa aid Al-Istithmar. Tubayyin taqarirna Al-Shamila kayfa tatahassan hadhihi Al-Muashirat ma murur Al-Waqt." },
+      ],
+    },
+    cta: {
+      title: "Mustaidd li-tanmiyat matjarak Al-Iliktruni?",
+      body: "Uhsul ala istratijiyyat SEO mukhassasa lil-tijara Al-Iliktruniyya tajlib Al-Mazid min Al-Zayarat wa tazid Al-Tahwilat wa tunammi iradatik.",
+      primary: "Uhsul ala Istratijiyya Mukhassasa",
+      secondary: "Ittasil bi-Fariqina",
+    },
+  },
 });

@@ -326,4 +326,61 @@ export const serviceHubsMessages = defineMessages({
       ctaButton: "Kontakt aufnehmen",
     },
   },
+  ar: {
+    learnMore: "Iarif Al-Mazid",
+    seo: {
+      metaTitle: "SEO wa Jalb Al-Umala",
+      metaDescription:
+        "Ijlib zayarat muahhala wa hawwil Al-Zuwwar ila umala muhtamalin abr khadamatina Al-Shamila lil-SEO wa jalb Al-Umala.",
+      title: "SEO wa Jalb Al-Umala",
+      subtitle:
+        "Ijlib zayarat muahhala wa hawwil Al-Zuwwar ila umala muhtamalin abr khadamatina Al-Shamila lil-SEO wa jalb Al-Umala.",
+      cards: [
+        { title: "Al-Bahth Al-Tabii", body: "Hassin zuhurak fi muharrikat Al-Bahth wa ijlib zayarat tabiiyya mustadama." },
+        { title: "Al-Ilan Al-Raqmi", body: "Hamalat ilaniyya madfua istratijiyya lil-wusul ila jumhurik Al-Mustahdaf wa tahqiq Al-Tahwilat." },
+        { title: "Al-Tijara Al-Iliktruniyya", body: "Istratijiyyat SEO wa ilan mutakhassisa li-sharikat Al-Tijara Al-Iliktruniyya li-tahqiq Al-Mabiat." },
+        { title: "Al-Marifa", body: "Mawarid talimiyya tusaiduk ala fahm wa tatbiq istratijiyyat SEO faala." },
+      ],
+      featuredTitle: "Khadamatuna Al-Mumayyaza fil-SEO wa Jalb Al-Umala",
+      featured: [
+        { title: "Khadamat SEO", body: "Istratijiyyat SEO shamila li-tahsin tartibik fi muharrikat Al-Bahth wa jalb zayarat tabiiyya.", imageAlt: "Khadamat SEO" },
+        { title: "Idarat Hamalat PPC", body: "Hamalat daf lil-naqra istratijiyya li-jalb zayarat mustahdafa wa tadif aidik.", imageAlt: "Idarat PPC" },
+        { title: "SEO lil-Tijara Al-Iliktruniyya", body: "Istratijiyyat SEO mutakhassisa li-mawaqi Al-Tijara Al-Iliktruniyya li-ziyadat Al-Zuhur wal-mabiat.", imageAlt: "SEO lil-tijara Al-Iliktruniyya" },
+      ],
+      ctaTitle: "Mustaidd li-tanmiyat hudurik ala Al-Intirnit?",
+      ctaBody: "Falnatahaddath an kayfiyyat musaadat khadamatina lil-SEO wa jalb Al-Umala li-amalik ala tahqiq ahdafih.",
+      ctaButton: "Ittasil Bina Al-Yawm",
+    },
+    digitalMarketing: {
+      metaTitle: "Khadamat Al-Taswiq Al-Raqmi",
+      metaDescription:
+        "Istakshif khadamatina Al-Shamila fil-taswiq Al-Raqmi Al-Masmuma li-tahqiq Al-Numuww wal-iradat li-amalik.",
+      title: "Khadamat Al-Taswiq Al-Raqmi",
+      subtitle: "Hulul taswiq raqmi shamila masmuma li-tahqiq Al-Numuww wal-iradat li-amalik.",
+      cards: [
+        { title: "Al-Dhaka Al-Raqmi", body: "Ruan mabniyya ala Al-Bayanat li-tawjih istratijiyyatik Al-Taswiqiyya wa tadif Al-Aid." },
+        { title: "Al-Tahwil", body: "Hassin mawqiak wa masarat Al-Taswiq li-tahwil Al-Mazid min Al-Zuwwar ila umala." },
+        { title: "Al-Atmata Al-Taswiqiyya", body: "Bassit amaliyyatik Al-Taswiqiyya wa nammi umalaak abr sayr Amal muatmat." },
+        { title: "Manassat Al-Tijara", body: "Hassin hudurak ala kubra manassat Al-Tijara li-tahqiq Al-Mabiat wal-numuww." },
+      ],
+      closing: "Mustaidd li-naql taswiqik Al-Raqmi ila Al-Mustawa Al-Tali? Ittasil bina li-istratijiyya mukhassasa.",
+      ctaButton: "Tawasal Maana",
+    },
+    ux: {
+      metaTitle: "Tajribat Al-Mustakhdim wal-Tafaul",
+      metaDescription:
+        "Ikhluq tajarib raqmiyya jadhdhaba tusid Al-Mustakhdimin wa tuhaqqiq Al-Tahwilat abr khadamatina fi tajribat Al-Mustakhdim wal-tafaul.",
+      title: "Tajribat Al-Mustakhdim wal-Tafaul",
+      subtitle:
+        "Ikhluq tajarib raqmiyya jadhdhaba tusid Al-Mustakhdimin wa tuhaqqiq Al-Tahwilat abr khadamatina fi tajribat Al-Mustakhdim wal-tafaul.",
+      cards: [
+        { title: "Al-Tasmim", body: "Khadamat tasmim murakkaza ala Al-Mustakhdim tanshu tajarib raqmiyya jamila wa amaliyya." },
+        { title: "Taswiq Al-Muhtawa", body: "Insha wa tawzi muhtawa istratiji li-ishrak jumhurik wa dafih lil-tasarruf." },
+        { title: "Al-Tatwir", body: "Khadamat tatwir wib mukhassasa tuhyi ru'yatak Al-Raqmiyya." },
+        { title: "Al-Tahaddiyat allati Nahulluha", body: "Hulul li-tahaddiyat Al-Tajriba Al-Raqmiyya Al-Shaia allati tuwajih Al-Sharikat." },
+      ],
+      closing: "Mustaidd li-khalq tajarib raqmiyya istithnaiyya? Ittasil bina li-munaqashat mashrouak.",
+      ctaButton: "Tawasal Maana",
+    },
+  },
 });
