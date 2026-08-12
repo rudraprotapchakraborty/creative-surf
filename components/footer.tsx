@@ -101,11 +101,11 @@ export function Footer() {
             <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-flow-textSoft/60 mb-4">{t("contactTitle")}</h3>
 
             <div className="flex flex-col gap-3 text-flow-text">
-              <a href="mailto:contact@creativesurf.agency" className="group flex items-center gap-3 hover:text-aurora-1 transition-colors">
+              <a href="mailto:creativesurfcs@gmail.com" className="group flex items-center gap-3 hover:text-aurora-1 transition-colors">
                 <span className="flex-shrink-0 grid place-items-center w-10 h-10 rounded-xl glass border border-flow-border group-hover:border-aurora-1/40 transition-colors">
                   <Mail className="w-4 h-4 text-aurora-1" />
                 </span>
-                <span className="text-sm sm:text-base break-all">contact@creativesurf.agency</span>
+                <span className="text-sm sm:text-base break-all">creativesurfcs@gmail.com</span>
               </a>
 
               <div className="flex items-center gap-3">
