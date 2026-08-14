@@ -1,12 +1,15 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import Link from "next/link"
 import { motion } from "framer-motion"
-import { Check, Pencil, Users, X } from "lucide-react"
+import { Check, Download, ExternalLink, FileText, Loader2, Pencil, Plus, Trash2, Users, X } from "lucide-react"
 import { formatDateForLocale, useLocale, useT } from "@/lib/i18n"
 import { authMessages } from "@/lib/i18n/messages/auth"
 import type { AuthPayload } from "@/lib/auth"
 import type { DirectoryEntry } from "@/lib/users"
+import type { SavedCvDoc } from "@/lib/cv-types"
+import { buildCvHtml } from "@/lib/cv-document"
 import { Avatar } from "@/components/auth/user-menu"
 
 interface Directory {
@@ -41,7 +44,7 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
 
   return (
     <main className="min-h-screen bg-flow-bg px-4 pt-28 sm:pt-32 pb-20">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl mx-auto space-y-6">
         <motion.header
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -60,8 +63,6 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
               {user.email || user.username}
             </p>
           </div>
-          {/* Signing out and the admin badge both live on the navbar avatar,
-              so neither is repeated here. */}
         </motion.header>
 
         <Card title={t("profileDetails")}>
@@ -70,8 +71,10 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
           {isAdmin && <Row label={t("accountRole")} value={t("roleAdmin")} />}
         </Card>
 
+        {!isAdmin && <SavedCvsSection formatDate={formatDate} isAdmin={false} />}
+
         {isAdmin && (
-          <div className="mt-6">
+          <div className="space-y-6">
             <Card title={t("usersTitle")} icon={<Users size={15} />}>
               <Section title={t("administrators")} count={directory?.admins.length}>
                 {(directory?.admins ?? []).map(entry => (
@@ -91,11 +94,223 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
                 )}
               </Section>
             </Card>
+
+            <SavedCvsSection formatDate={formatDate} isAdmin={true} />
           </div>
         )}
       </div>
     </main>
   )
+}
+
+function SavedCvsSection({ formatDate, isAdmin = false }: { formatDate: (iso?: string) => string; isAdmin?: boolean }) {
+  const [cvs, setCvs] = useState<SavedCvDoc[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const fetchCvs = useCallback(() => {
+    fetch("/api/cv/saved")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d?.cvs) setCvs(d.cvs);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    fetchCvs();
+  }, [fetchCvs]);
+
+  const handleDownload = (cv: SavedCvDoc) => {
+    const html = buildCvHtml(cv.cvData, {
+      summary: "Profile",
+      experience: "Experience",
+      education: "Education",
+      skills: "Skills",
+      projects: "Projects",
+      certifications: "Certifications",
+      languages: "Languages",
+    });
+
+    const frame = document.createElement("iframe");
+    frame.setAttribute("aria-hidden", "true");
+    frame.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;";
+    frame.srcdoc = html;
+
+    frame.onload = () => {
+      const win = frame.contentWindow;
+      if (!win) return;
+      win.focus();
+      win.print();
+      setTimeout(() => frame.remove(), 1000);
+    };
+
+    document.body.appendChild(frame);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this saved CV?")) return;
+    setDeletingId(id);
+    try {
+      const res = await fetch(`/api/cv/saved/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setCvs((prev) => (prev ? prev.filter((c) => c._id !== id) : []));
+      }
+    } catch {
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  return (
+    <Card title={isAdmin ? "All User CVs" : "My Saved CVs"} icon={<FileText size={15} />}>
+      {loading ? (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-6 w-6 animate-spin text-aurora" />
+        </div>
+      ) : !cvs || cvs.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-12 px-4 text-center space-y-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-aurora-grad/10 border border-aurora/20">
+            <FileText className="h-6 w-6 text-aurora" />
+          </div>
+          <p className="text-sm" style={{ color: "rgb(var(--flow-text-soft))" }}>
+            {isAdmin ? "No CVs have been generated by users yet." : "You haven't saved any CVs yet."}
+          </p>
+          {!isAdmin && (
+            <Link href="/cv-builder">
+              <button className="shine bg-aurora-grad shadow-aurora text-white text-xs font-semibold rounded-full px-5 py-2.5 flex items-center gap-1.5 cursor-pointer mt-1">
+                <Plus size={14} /> Create your first CV
+              </button>
+            </Link>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 pt-2">
+          {cvs.map((cv) => (
+            <CvThumbnailCard
+              key={cv._id}
+              cv={cv}
+              showUserEmail={isAdmin}
+              formatDate={formatDate}
+              onDownload={handleDownload}
+              onDelete={handleDelete}
+              deleting={deletingId === cv._id}
+            />
+          ))}
+        </div>
+      )}
+    </Card>
+  );
+}
+
+function CvThumbnailCard({
+  cv,
+  showUserEmail,
+  formatDate,
+  onDownload,
+  onDelete,
+  deleting,
+}: {
+  cv: SavedCvDoc;
+  showUserEmail?: boolean;
+  formatDate: (iso?: string) => string;
+  onDownload: (cv: SavedCvDoc) => void;
+  onDelete: (id: string) => void;
+  deleting: boolean;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0.32);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const updateScale = () => {
+      if (el.clientWidth > 0) {
+        setScale(el.clientWidth / 794);
+      }
+    };
+    updateScale();
+    const ro = new ResizeObserver(updateScale);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const html = useMemo(() => {
+    return buildCvHtml(cv.cvData, {
+      summary: "Profile",
+      experience: "Experience",
+      education: "Education",
+      skills: "Skills",
+      projects: "Projects",
+      certifications: "Certifications",
+      languages: "Languages",
+    });
+  }, [cv.cvData]);
+
+  return (
+    <div
+      className="group relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-aurora hover:-translate-y-1"
+      style={{
+        background: "rgb(var(--flow-surface) / 0.8)",
+        border: "1px solid var(--flow-border-strong)",
+      }}
+    >
+      {/* Thumbnail Document Box */}
+      <div
+        ref={containerRef}
+        className="relative w-full aspect-[1/1.3] overflow-hidden bg-white/95 border-b border-flow-border select-none"
+      >
+        <div style={{ width: 794, height: 1123, transform: `scale(${scale})`, transformOrigin: "top left" }}>
+          <iframe
+            title={cv.title}
+            srcDoc={html}
+            sandbox=""
+            tabIndex={-1}
+            className="w-[794px] h-[1123px] border-0 pointer-events-none bg-white"
+          />
+        </div>
+
+        {/* Action Overlay on Hover */}
+        <div className="absolute inset-0 bg-flow-bg/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-2.5 p-4 backdrop-blur-[2px]">
+          <button
+            onClick={() => onDownload(cv)}
+            className="shine bg-aurora-grad shadow-aurora text-white text-xs font-semibold rounded-full px-4 py-2 flex items-center justify-center gap-2 cursor-pointer w-36"
+          >
+            <Download size={13} /> Download PDF
+          </button>
+          <Link href={`/cv-builder?id=${cv._id}`} className="w-36">
+            <button className="w-full bg-flow-surface hover:bg-flow-card border border-flow-border text-flow-text text-xs font-semibold rounded-full px-4 py-2 flex items-center justify-center gap-2 cursor-pointer transition-colors">
+              <ExternalLink size={13} /> Edit CV
+            </button>
+          </Link>
+          <button
+            onClick={() => cv._id && onDelete(cv._id)}
+            disabled={deleting}
+            className="text-xs text-red-400 hover:text-red-300 transition-colors flex items-center gap-1.5 pt-1 cursor-pointer"
+          >
+            {deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />} Delete
+          </button>
+        </div>
+      </div>
+
+      {/* Thumbnail Card Footer */}
+      <div className="p-3.5 flex items-start justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <h4 className="text-xs font-bold text-flow-text truncate" title={cv.title}>
+            {cv.title}
+          </h4>
+          <p className="text-[11px] text-flow-textSoft mt-0.5 truncate">
+            {showUserEmail && cv.userEmail ? `${cv.userEmail} • ` : ""}
+            {formatDate(cv.createdAt as string)}
+          </p>
+        </div>
+        <span className="shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-aurora/10 text-aurora border border-aurora/20">
+          {cv.inputData?.language || "English"}
+        </span>
+      </div>
+    </div>
+  );
 }
 
 /** Inline display-name editor. Saving re-issues the session cookie server-side. */

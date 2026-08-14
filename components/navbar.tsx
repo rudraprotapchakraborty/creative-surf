@@ -29,8 +29,9 @@ export function Navbar() {
         { label: t("links.blogs"),    href: "/real-estate/blogs" },
       ]
     : [
-        { label: t("links.home"),  href: "/" },
-        { label: t("links.blogs"), href: "/blogs" },
+        { label: t("links.home"),      href: "/" },
+        { label: t("links.blogs"),     href: "/blogs" },
+        { label: t("links.cvBuilder"), href: "/cv-builder" },
       ];
 
   const sections = [
