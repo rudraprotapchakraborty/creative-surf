@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyToken, COOKIE_NAME } from '@/lib/auth'
+import { requireAdmin } from '@/lib/auth'
 
 /**
  * Uploads an image to ImgBB and returns the hosted URL.
@@ -10,10 +10,8 @@ import { verifyToken, COOKIE_NAME } from '@/lib/auth'
  * which gets stored in the database (just like a normal URL).
  */
 export async function POST(request: NextRequest) {
-  const token = request.cookies.get(COOKIE_NAME)?.value
-  if (!token || !verifyToken(token)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const denied = requireAdmin(request)
+  if (denied) return denied
 
   const apiKey = process.env.IMGBB_API_KEY
   if (!apiKey) {

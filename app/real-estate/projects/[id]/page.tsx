@@ -91,7 +91,7 @@ export default function ProjectDetailPage() {
 
     fetch("/api/auth/me")
       .then(r => r.json())
-      .then(d => { if (d.authenticated) setIsAdmin(true) })
+      .then(d => { if (d.role === "admin") setIsAdmin(true) })
       .catch(() => {})
   }, [id])
 

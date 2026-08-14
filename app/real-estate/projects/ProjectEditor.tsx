@@ -194,7 +194,10 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
   useEffect(() => {
     fetch("/api/auth/me")
       .then(r => r.json())
-      .then(d => { if (!d.authenticated) router.push("/login?from=/real-estate/projects") })
+      .then(d => {
+        if (!d.authenticated) router.push("/login?from=/real-estate/projects")
+        else if (d.role !== "admin") router.push("/account")
+      })
       .catch(() => router.push("/login?from=/real-estate/projects"))
   }, [router])
 

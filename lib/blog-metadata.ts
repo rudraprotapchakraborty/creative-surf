@@ -4,13 +4,13 @@ import type { BlogRecord } from "@/lib/blog-db"
 const SITE_CONFIG = {
   "creative-surf": {
     siteName: "Creative Surf",
-    baseUrl: "https://www.creativesurf.com",
+    baseUrl: "https://www.creativesurf.agency",
     blogPath: "/blogs",
     brand: "Creative Surf",
   },
   "real-estate": {
     siteName: "Creative Surf Real Estate",
-    baseUrl: "https://www.creativesurf.com",
+    baseUrl: "https://www.creativesurf.agency",
     blogPath: "/real-estate/blogs",
     brand: "Creative Surf Real Estate",
   },

@@ -14,13 +14,17 @@ function validLinks(links?: BlogSeoLink[]) {
   return (links ?? []).filter(link => link.label.trim() && link.url.trim())
 }
 
+// `creativesurf.com` predates the move to `.agency` and is kept so links already
+// written into published posts still resolve as internal.
+const SAME_SITE_HOSTS = new Set(["creativesurf.agency", "creativesurf.com", "localhost"])
+
 function sameSitePath(url: string): string | null {
   const trimmed = url.trim()
   if (trimmed.startsWith("/") || trimmed.startsWith("#")) return trimmed
   try {
     const parsed = new URL(trimmed)
     const host = parsed.hostname.replace(/^www\./, "")
-    if (host === "creativesurf.com" || host === "localhost") {
+    if (SAME_SITE_HOSTS.has(host)) {
       return `${parsed.pathname}${parsed.search}${parsed.hash}`
     }
   } catch {

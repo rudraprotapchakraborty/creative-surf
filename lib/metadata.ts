@@ -20,7 +20,7 @@ export function generateMetadata({
   const defaultDescription =
     "Creative Surf is a leading digital marketing agency specializing in SEO, content marketing, and social media strategies to drive revenue growth for businesses."
   const defaultImage = "/og-image.jpg" // Replace with your default OG image
-  const baseUrl = "https://www.creativesurf.com" // Replace with your actual domain
+  const baseUrl = "https://www.creativesurf.agency"
 
   const metaTitle = title ? `${title} | ${siteName}` : defaultTitle
   const metaDescription = description || defaultDescription

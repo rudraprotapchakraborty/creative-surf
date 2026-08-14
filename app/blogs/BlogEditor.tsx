@@ -91,7 +91,10 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
   useEffect(() => {
     fetch("/api/auth/me")
       .then(r => r.json())
-      .then(d => { if (!d.authenticated) router.push("/login") })
+      .then(d => {
+        if (!d.authenticated) router.push("/login")
+        else if (d.role !== "admin") router.push("/account")
+      })
       .catch(() => router.push("/login"))
   }, [router])
 

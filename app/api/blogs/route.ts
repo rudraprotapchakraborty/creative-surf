@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getDb } from '@/lib/mongodb'
-import { verifyToken, COOKIE_NAME } from '@/lib/auth'
+import { requireAdmin } from '@/lib/auth'
 
 function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/(^-|-$)/g, '')
@@ -17,10 +17,8 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const token = request.cookies.get(COOKIE_NAME)?.value
-  if (!token || !verifyToken(token)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const denied = requireAdmin(request)
+  if (denied) return denied
 
   try {
     const db = await getDb()

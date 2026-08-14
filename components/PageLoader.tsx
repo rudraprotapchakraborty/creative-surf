@@ -22,16 +22,30 @@ const BUILDING_DETAILS = [
   'M6 27 h1.5', 'M6 31 h1.5',
 ];
 
+/**
+ * The two section landing pages. The loader is a branded intro for arriving at
+ * a section, not a transition for every navigation, so interior pages
+ * (/blogs, /about, /login, /real-estate/projects …) skip it entirely.
+ */
+const LOADER_ROUTES = new Set(['/', '/real-estate']);
+
 export default function PageLoader() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [loading, setLoading] = useState(true);
+  const enabled = LOADER_ROUTES.has(pathname);
+  // Seeded from the route so an interior page never flashes the loader on its
+  // first paint before the effect below can switch it off.
+  const [loading, setLoading] = useState(enabled);
 
   useEffect(() => {
-    setTimeout(() => setLoading(true), 0);
+    if (!enabled) {
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
     const timeout = setTimeout(() => setLoading(false), 1100);
     return () => clearTimeout(timeout);
-  }, [pathname, searchParams]);
+  }, [pathname, searchParams, enabled]);
 
   // Real-estate section runs on a dark theme + gold accent; everywhere else is the light wave.
   const realEstate = pathname.startsWith('/real-estate');

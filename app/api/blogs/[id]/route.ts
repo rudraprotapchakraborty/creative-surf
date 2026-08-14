@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ObjectId } from 'mongodb'
 import { getDb } from '@/lib/mongodb'
-import { verifyToken, COOKIE_NAME } from '@/lib/auth'
+import { requireAdmin } from '@/lib/auth'
 
 function toObjectId(id: string) {
   return ObjectId.isValid(id) ? new ObjectId(id) : null
@@ -31,10 +31,8 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const token = request.cookies.get(COOKIE_NAME)?.value
-  if (!token || !verifyToken(token)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const denied = requireAdmin(request)
+  if (denied) return denied
 
   try {
     const { id } = await params
@@ -62,10 +60,8 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const token = request.cookies.get(COOKIE_NAME)?.value
-  if (!token || !verifyToken(token)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const denied = requireAdmin(request)
+  if (denied) return denied
 
   try {
     const { id } = await params

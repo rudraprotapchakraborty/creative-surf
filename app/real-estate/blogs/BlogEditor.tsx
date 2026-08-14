@@ -89,7 +89,10 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
   useEffect(() => {
     fetch("/api/auth/me")
       .then(r => r.json())
-      .then(d => { if (!d.authenticated) router.push("/login") })
+      .then(d => {
+        if (!d.authenticated) router.push("/login")
+        else if (d.role !== "admin") router.push("/account")
+      })
       .catch(() => router.push("/login"))
   }, [router])
 
@@ -405,7 +408,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                   setShowSeoValidation(false)
                   setForm(prev => ({ ...prev, ...seo }))
                 }}
-                inboundUrlPlaceholder="https://www.creativesurf.com/real-estate/projects"
+                inboundUrlPlaceholder="https://www.creativesurf.agency/real-estate/projects"
                 inboundHint="Internal links to your site. Use the full URL (https://…). Label and URL are both required."
                 outboundHint="External links to trusted property, finance, or market sources. Label and URL are both required."
               />

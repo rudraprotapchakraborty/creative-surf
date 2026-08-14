@@ -63,7 +63,7 @@ export default function ProjectsPage() {
   useEffect(() => {
     fetchProjects()
     fetch("/api/auth/me").then(r => r.json()).then(d => {
-      if (d.authenticated) { setIsAdmin(true); setAdminUsername(d.username) }
+      if (d.role === "admin") { setIsAdmin(true); setAdminUsername(d.username) }
     }).catch(() => {})
   }, [fetchProjects])
 
