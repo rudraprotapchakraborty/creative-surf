@@ -1,15 +1,14 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowRight, TrendingUp, Sparkles, Star } from "lucide-react";
 import Link from "next/link";
-import WaveBackdrop from "./WaveBackdrop";
+import { motion } from "framer-motion";
+import { ArrowRight, ArrowDown, TrendingUp, Sparkles, Star } from "lucide-react";
+
 import { useT } from "@/lib/i18n";
 import { homeMessages } from "@/lib/i18n/messages/home";
+import { EASE, Kicker, KineticHeading, Magnetic } from "./shared";
 
-const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
-
-export default function HeroSection() {
+export default function Hero() {
   const t = useT(homeMessages);
 
   const lines = [
@@ -25,14 +24,12 @@ export default function HeroSection() {
   return (
     <section
       id="home"
-      className="relative min-h-[92vh] w-full flex items-center px-5 sm:px-10 lg:px-20 xl:px-28 pt-32 pb-20 md:pb-24 bg-flow-bg text-flow-text overflow-hidden"
+      className="relative w-full flex flex-col bg-flow-bg text-flow-text overflow-hidden"
     >
-      {/* ---- Ambient backdrop (non-interactive) ---- */}
+      {/* Ambient backdrop */}
       <div className="absolute inset-0 bg-aurora-mesh opacity-60 pointer-events-none animate-mesh" />
       <div className="absolute inset-0 bg-grid mask-radial pointer-events-none opacity-30" />
       <div className="absolute inset-0 bg-grain opacity-[0.04] pointer-events-none mix-blend-overlay" />
-
-      {/* Soft aurora accent — top left */}
       <div
         className="absolute pointer-events-none rounded-full animate-aurora"
         style={{
@@ -45,81 +42,65 @@ export default function HeroSection() {
         }}
       />
 
-      {/* On-brand animated ocean swell — bottom right, ambient */}
-      <WaveBackdrop corner="br" size="lg" opacity={0.5} showTop id="hero-wave" />
-
-      {/* ---- Content grid ---- */}
-      <div className="relative z-10 mx-auto w-full max-w-7xl grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-10 items-center">
-        {/* LEFT — copy */}
+      {/* ---- Content ---- */}
+      <div className="relative z-10 section-px w-full mx-auto max-w-7xl pt-32 sm:pt-36 pb-24 sm:pb-28 grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-10 items-center">
         <div className="flex flex-col items-start">
-          {/* Eyebrow */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, ease: EASE }}
-            className="inline-flex items-center gap-2 mb-8 px-4 py-1.5 rounded-full glass border border-flow-border"
+            className="mb-8"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-aurora-1" />
-            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.28em] text-aurora-1">
-              {t("hero.eyebrow")}
-            </span>
+            <Kicker>{t("hero.eyebrow")}</Kicker>
           </motion.div>
 
-          {/* Headline */}
-          <div className="mb-6">
-            {lines.map(({ text, accent }, i) => (
-              <motion.h1
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: EASE, delay: 0.15 + i * 0.15 }}
-                className="block font-bold leading-[1.04] tracking-tight"
-                style={{ fontSize: "clamp(2.4rem, 5vw, 4.4rem)" }}
-              >
-                {accent ? <span className="text-aurora">{text}</span> : text}
-              </motion.h1>
-            ))}
-          </div>
+          <KineticHeading
+            lines={lines}
+            className="mb-6 font-bold leading-[1.03] tracking-tight"
+            style={{ fontSize: "clamp(2.6rem, 6vw, 5.4rem)" }}
+            delay={0.15}
+          />
 
-          {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: EASE, delay: 0.5 }}
+            transition={{ duration: 0.8, ease: EASE, delay: 0.7 }}
             className="text-flow-textSoft text-base sm:text-lg leading-relaxed max-w-lg mb-9"
           >
             {t("hero.subtitle")}
           </motion.p>
 
-          {/* CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: EASE, delay: 0.65 }}
+            transition={{ duration: 0.8, ease: EASE, delay: 0.85 }}
             className="flex flex-wrap items-center gap-4 sm:gap-5"
           >
-            <Link
-              href="/contact"
-              className="focus-ring group inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm text-white shadow-aurora bg-aurora-grad hover:opacity-95 transition-opacity"
-            >
-              {t("hero.ctaPrimary")}
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
+            <Magnetic>
+              <Link
+                href="/contact"
+                className="focus-ring group inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm text-white shadow-aurora bg-aurora-grad hover:opacity-95 transition-opacity"
+              >
+                {t("hero.ctaPrimary")}
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+            </Magnetic>
 
-            <Link
-              href="#services"
-              className="focus-ring group inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold text-flow-text glass border border-flow-borderStrong hover:border-aurora-1/40 transition-colors"
-            >
-              {t("hero.ctaSecondary")}
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
+            <Magnetic>
+              <Link
+                href="#services"
+                className="focus-ring group inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold text-flow-text glass border border-flow-borderStrong hover:border-aurora-1/40 transition-colors"
+              >
+                {t("hero.ctaSecondary")}
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+            </Magnetic>
           </motion.div>
 
-          {/* Stats row */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: EASE, delay: 0.8 }}
+            transition={{ duration: 0.8, ease: EASE, delay: 1 }}
             className="mt-12 flex items-center gap-8 sm:gap-10"
           >
             {stats.map((s, i) => (
@@ -138,21 +119,23 @@ export default function HeroSection() {
           </motion.div>
         </div>
 
-        {/* RIGHT — premium "results" visual */}
+        {/* RIGHT — floating growth panel */}
         <motion.div
           initial={{ opacity: 0, y: 30, scale: 0.97 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 1, ease: EASE, delay: 0.4 }}
+          transition={{ duration: 1, ease: EASE, delay: 0.5 }}
           className="relative hidden lg:flex justify-center items-center"
         >
-          {/* glow behind panel */}
           <div
             className="absolute inset-0 -z-10 rounded-[2rem] blur-3xl opacity-60"
             style={{ background: "radial-gradient(circle at 50% 40%, rgb(var(--accent-2) / 0.28), transparent 70%)" }}
           />
 
-          {/* Main growth panel */}
-          <div className="glass-strong border border-flow-border rounded-[1.75rem] shadow-premium p-7 w-full max-w-md">
+          <motion.div
+            animate={{ rotate: [0, 1.2, 0] }}
+            transition={{ duration: 8, ease: "easeInOut", repeat: Infinity }}
+            className="glass-strong border border-flow-border rounded-[1.75rem] shadow-premium p-7 w-full max-w-md"
+          >
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2.5">
                 <span className="grid place-items-center w-9 h-9 rounded-xl bg-aurora-grad text-white shadow-aurora">
@@ -168,7 +151,6 @@ export default function HeroSection() {
               </span>
             </div>
 
-            {/* Mini chart */}
             <div className="relative h-32 mb-2">
               <svg viewBox="0 0 320 120" preserveAspectRatio="none" className="w-full h-full">
                 <defs>
@@ -185,7 +167,7 @@ export default function HeroSection() {
                   strokeLinecap="round"
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
-                  transition={{ duration: 1.6, ease: EASE, delay: 0.8 }}
+                  transition={{ duration: 1.6, ease: EASE, delay: 0.9 }}
                 />
                 <path
                   d="M0,95 C40,90 60,70 100,72 C140,74 150,40 195,38 C240,36 260,18 320,8 L320,120 L0,120 Z"
@@ -194,7 +176,6 @@ export default function HeroSection() {
               </svg>
             </div>
 
-            {/* Mini stats */}
             <div className="grid grid-cols-3 gap-3 pt-4 border-t border-flow-border">
               {[
                 { k: t("hero.panel.roas"), v: "6.2x" },
@@ -207,9 +188,8 @@ export default function HeroSection() {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          {/* Floating chip — top right */}
           <motion.div
             animate={{ y: [0, -10, 0] }}
             transition={{ duration: 5, ease: "easeInOut", repeat: Infinity }}
@@ -224,7 +204,6 @@ export default function HeroSection() {
             </div>
           </motion.div>
 
-          {/* Floating chip — bottom left */}
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 6, ease: "easeInOut", repeat: Infinity, delay: 0.5 }}
@@ -240,6 +219,22 @@ export default function HeroSection() {
           </motion.div>
         </motion.div>
       </div>
+
+      {/* Scroll cue */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 1.4 }}
+        className="pointer-events-none absolute z-10 left-1/2 -translate-x-1/2 bottom-6 sm:bottom-8 flex flex-col items-center gap-1.5"
+      >
+        <motion.span
+          animate={{ y: [0, 6, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          className="grid place-items-center w-8 h-8 rounded-full glass border border-flow-border text-aurora-1"
+        >
+          <ArrowDown className="w-3.5 h-3.5" />
+        </motion.span>
+      </motion.div>
 
       {/* Bottom fade into next section */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-flow-bg to-transparent pointer-events-none" />

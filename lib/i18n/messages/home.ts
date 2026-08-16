@@ -30,7 +30,7 @@ export const homeMessages = defineMessages({
       badge: "Our Expertise",
       headingLine1: "What we do",
       headingAccent: "exceptionally well.",
-      intro: "Eight disciplines. One integrated team. Every service built to compound your growth.",
+      intro: "Seven disciplines. One integrated team. Every service built to compound your growth.",
       items: [
         {
           title: "Graphics Design",
@@ -57,12 +57,6 @@ export const homeMessages = defineMessages({
           tags: ["Next.js", "React", "E-commerce"],
         },
         {
-          title: "OVC / TVC",
-          description:
-            "Premium television and online video commercials that communicate your brand's value with maximum impact.",
-          tags: ["Commercials", "Broadcast", "Online"],
-        },
-        {
           title: "SEO & Social Media",
           description:
             "Precision SEO and social campaigns that compound your visibility and bring high-intent audiences directly to you.",
@@ -79,36 +73,6 @@ export const homeMessages = defineMessages({
           description:
             "Cohesive digital identities for lasting impressions — visual systems, brand voice, and positioning that stick.",
           tags: ["Strategy", "Visual Identity", "Voice"],
-        },
-      ],
-    },
-
-    impact: {
-      badge: "Measurable Outcomes",
-      headingLine1: "Data that drives",
-      headingAccent: "results.",
-      body:
-        "We engineer success through observable metrics. Our strategies align with your business objectives to deliver undeniable, measurable impact — every single time.",
-      pills: ["Higher Retention", "Faster Time-to-Market", "Better ROAS"],
-      accordion: [
-        {
-          title: "Actionable Analytics",
-          content:
-            "Gain deep insights to refine campaigns and boost ROI with precision targeting at every stage.",
-        },
-        {
-          title: "Data Empowerment",
-          content:
-            "Empower your teams with accessible, real-time data so every decision is backed by evidence.",
-        },
-        {
-          title: "Content Marketing",
-          content:
-            "Targeted content strategies that attract the right audience, convert leads, and build loyalty.",
-        },
-        {
-          title: "Sales Enablement",
-          content: "Align sales and marketing into one seamless engine that accelerates deal closures.",
         },
       ],
     },
@@ -138,59 +102,6 @@ export const homeMessages = defineMessages({
       },
       floatingTitle: "Niche Audience",
       floatingSub: "Real-estate buyers & investors",
-    },
-
-    pricing: {
-      badge: "Pricing",
-      headingLine1: "Clear, transparent",
-      headingAccent: "pricing.",
-      intro:
-        "No hidden fees. No surprises. Pick the package that matches where you are — and where you're going.",
-      billingMonthly: "Monthly",
-      billingHalfShort: "6-Month · 20% off",
-      billingHalfLong: "Half-Yearly · 20% off",
-      perMonth: "mo",
-      perHalfYear: "half-yr",
-      mostPopular: "Most Popular",
-      cta: "Get Started",
-      footnote: "All plans include a dedicated account manager. Cancel anytime.",
-      plans: [
-        {
-          title: "Basic",
-          description: "Perfect for small businesses ready to grow their digital presence.",
-          features: [
-            "Business Development",
-            "Campaign Marketing",
-            "Creative Visual Content (Up to 7)",
-            "Series Content",
-            "Animated Motion Video",
-            "Social Media Management",
-            "Media Buying on Demand",
-          ],
-        },
-        {
-          title: "Standard",
-          description: "The complete package — our most popular choice for scaling brands.",
-          features: [
-            "Product Photography",
-            "Creative Visual Content (Up to 10)",
-            "Copyright Content with SEO",
-            "Media Buying on Demand ($50 free)",
-            "Everything in Basic",
-          ],
-        },
-        {
-          title: "Premium",
-          description: "Full-service digital marketing for enterprise businesses.",
-          features: [
-            "Website Development",
-            "Creative Visual Content (Up to 15)",
-            "Media Buying on Demand ($100 free)",
-            "Content Writing (Up to 5)",
-            "Everything in Standard",
-          ],
-        },
-      ],
     },
 
     reviews: {
@@ -255,7 +166,7 @@ export const homeMessages = defineMessages({
       headingLine1: "Ce que nous faisons",
       headingAccent: "exceptionnellement bien.",
       intro:
-        "Huit disciplines. Une équipe intégrée. Chaque service conçu pour démultiplier votre croissance.",
+        "Sept disciplines. Une équipe intégrée. Chaque service conçu pour démultiplier votre croissance.",
       items: [
         {
           title: "Design graphique",
@@ -282,12 +193,6 @@ export const homeMessages = defineMessages({
           tags: ["Next.js", "React", "E-commerce"],
         },
         {
-          title: "OVC / TVC",
-          description:
-            "Des publicités premium pour la télévision et le web qui communiquent la valeur de votre marque avec un impact maximal.",
-          tags: ["Publicités", "Télévision", "En ligne"],
-        },
-        {
           title: "SEO & réseaux sociaux",
           description:
             "Des campagnes SEO et sociales précises qui font croître votre visibilité et attirent des audiences à forte intention.",
@@ -304,37 +209,6 @@ export const homeMessages = defineMessages({
           description:
             "Des identités digitales cohérentes qui marquent durablement — systèmes visuels, voix de marque et positionnement.",
           tags: ["Stratégie", "Identité visuelle", "Voix"],
-        },
-      ],
-    },
-
-    impact: {
-      badge: "Résultats mesurables",
-      headingLine1: "La donnée au service",
-      headingAccent: "des résultats.",
-      body:
-        "Nous construisons le succès sur des métriques observables. Nos stratégies s'alignent sur vos objectifs business pour livrer un impact mesurable et incontestable — chaque fois.",
-      pills: ["Meilleure fidélisation", "Mise sur le marché plus rapide", "Meilleur ROAS"],
-      accordion: [
-        {
-          title: "Analytics actionnables",
-          content:
-            "Obtenez des insights approfondis pour affiner vos campagnes et augmenter le ROI grâce à un ciblage précis à chaque étape.",
-        },
-        {
-          title: "Autonomie par la donnée",
-          content:
-            "Donnez à vos équipes un accès à des données en temps réel pour que chaque décision repose sur des preuves.",
-        },
-        {
-          title: "Marketing de contenu",
-          content:
-            "Des stratégies de contenu ciblées qui attirent la bonne audience, convertissent les leads et bâtissent la fidélité.",
-        },
-        {
-          title: "Sales enablement",
-          content:
-            "Alignez ventes et marketing en un moteur unique et fluide qui accélère la signature des contrats.",
         },
       ],
     },
@@ -364,59 +238,6 @@ export const homeMessages = defineMessages({
       },
       floatingTitle: "Audience de niche",
       floatingSub: "Acheteurs et investisseurs immobiliers",
-    },
-
-    pricing: {
-      badge: "Tarifs",
-      headingLine1: "Des tarifs clairs",
-      headingAccent: "et transparents.",
-      intro:
-        "Aucuns frais cachés. Aucune surprise. Choisissez la formule qui correspond à votre situation — et à vos ambitions.",
-      billingMonthly: "Mensuel",
-      billingHalfShort: "6 mois · -20 %",
-      billingHalfLong: "Semestriel · -20 %",
-      perMonth: "mois",
-      perHalfYear: "semestre",
-      mostPopular: "Le plus choisi",
-      cta: "Commencer",
-      footnote: "Toutes les formules incluent un chargé de compte dédié. Annulable à tout moment.",
-      plans: [
-        {
-          title: "Basic",
-          description: "Idéal pour les petites entreprises prêtes à développer leur présence digitale.",
-          features: [
-            "Développement commercial",
-            "Marketing de campagne",
-            "Contenus visuels créatifs (jusqu'à 7)",
-            "Contenus en série",
-            "Vidéo en motion design",
-            "Gestion des réseaux sociaux",
-            "Achat média à la demande",
-          ],
-        },
-        {
-          title: "Standard",
-          description: "La formule complète — notre choix le plus populaire pour les marques en croissance.",
-          features: [
-            "Photographie produit",
-            "Contenus visuels créatifs (jusqu'à 10)",
-            "Contenus protégés optimisés SEO",
-            "Achat média à la demande (50 $ offerts)",
-            "Tout le contenu de Basic",
-          ],
-        },
-        {
-          title: "Premium",
-          description: "Marketing digital complet pour les entreprises d'envergure.",
-          features: [
-            "Développement de site web",
-            "Contenus visuels créatifs (jusqu'à 15)",
-            "Achat média à la demande (100 $ offerts)",
-            "Rédaction de contenus (jusqu'à 5)",
-            "Tout le contenu de Standard",
-          ],
-        },
-      ],
     },
 
     reviews: {
@@ -481,7 +302,7 @@ export const homeMessages = defineMessages({
       headingLine1: "Was wir",
       headingAccent: "außergewöhnlich gut können.",
       intro:
-        "Acht Disziplinen. Ein integriertes Team. Jede Leistung darauf ausgelegt, Ihr Wachstum zu vervielfachen.",
+        "Sieben Disziplinen. Ein integriertes Team. Jede Leistung darauf ausgelegt, Ihr Wachstum zu vervielfachen.",
       items: [
         {
           title: "Grafikdesign",
@@ -508,12 +329,6 @@ export const homeMessages = defineMessages({
           tags: ["Next.js", "React", "E-Commerce"],
         },
         {
-          title: "OVC / TVC",
-          description:
-            "Hochwertige TV- und Online-Videospots, die den Wert Ihrer Marke mit maximaler Wirkung vermitteln.",
-          tags: ["Werbespots", "Broadcast", "Online"],
-        },
-        {
           title: "SEO & Social Media",
           description:
             "Präzise SEO- und Social-Kampagnen, die Ihre Sichtbarkeit steigern und kaufbereite Zielgruppen direkt zu Ihnen bringen.",
@@ -530,37 +345,6 @@ export const homeMessages = defineMessages({
           description:
             "Stimmige digitale Identitäten für nachhaltigen Eindruck — visuelle Systeme, Markenstimme und Positionierung.",
           tags: ["Strategie", "Visuelle Identität", "Markenstimme"],
-        },
-      ],
-    },
-
-    impact: {
-      badge: "Messbare Ergebnisse",
-      headingLine1: "Daten, die",
-      headingAccent: "Ergebnisse bringen.",
-      body:
-        "Wir bauen Erfolg auf messbaren Kennzahlen. Unsere Strategien richten sich an Ihren Geschäftszielen aus und liefern unbestreitbare, messbare Wirkung — jedes Mal.",
-      pills: ["Höhere Kundenbindung", "Schnellere Time-to-Market", "Besserer ROAS"],
-      accordion: [
-        {
-          title: "Handlungsfähige Analytics",
-          content:
-            "Gewinnen Sie tiefe Einblicke, um Kampagnen zu verfeinern und den ROI durch präzises Targeting in jeder Phase zu steigern.",
-        },
-        {
-          title: "Datenkompetenz",
-          content:
-            "Geben Sie Ihren Teams zugängliche Echtzeitdaten, damit jede Entscheidung belegbar ist.",
-        },
-        {
-          title: "Content-Marketing",
-          content:
-            "Gezielte Content-Strategien, die die richtige Zielgruppe anziehen, Leads konvertieren und Loyalität aufbauen.",
-        },
-        {
-          title: "Sales Enablement",
-          content:
-            "Vertrieb und Marketing zu einem reibungslosen Motor verbinden, der Abschlüsse beschleunigt.",
         },
       ],
     },
@@ -590,59 +374,6 @@ export const homeMessages = defineMessages({
       },
       floatingTitle: "Nischen-Zielgruppe",
       floatingSub: "Immobilienkäufer & Investoren",
-    },
-
-    pricing: {
-      badge: "Preise",
-      headingLine1: "Klare, transparente",
-      headingAccent: "Preise.",
-      intro:
-        "Keine versteckten Kosten. Keine Überraschungen. Wählen Sie das Paket, das zu Ihrem Stand — und Ihren Zielen — passt.",
-      billingMonthly: "Monatlich",
-      billingHalfShort: "6 Monate · 20 % Rabatt",
-      billingHalfLong: "Halbjährlich · 20 % Rabatt",
-      perMonth: "Mon.",
-      perHalfYear: "Halbjahr",
-      mostPopular: "Am beliebtesten",
-      cta: "Loslegen",
-      footnote: "Alle Pakete enthalten einen persönlichen Account Manager. Jederzeit kündbar.",
-      plans: [
-        {
-          title: "Basic",
-          description: "Perfekt für kleine Unternehmen, die ihre digitale Präsenz ausbauen wollen.",
-          features: [
-            "Business Development",
-            "Kampagnen-Marketing",
-            "Kreative Visuals (bis zu 7)",
-            "Serien-Content",
-            "Animiertes Motion-Video",
-            "Social-Media-Betreuung",
-            "Mediaeinkauf auf Abruf",
-          ],
-        },
-        {
-          title: "Standard",
-          description: "Das Komplettpaket — unsere beliebteste Wahl für wachsende Marken.",
-          features: [
-            "Produktfotografie",
-            "Kreative Visuals (bis zu 10)",
-            "Geschützter Content mit SEO",
-            "Mediaeinkauf auf Abruf (50 $ gratis)",
-            "Alles aus Basic",
-          ],
-        },
-        {
-          title: "Premium",
-          description: "Full-Service-Digitalmarketing für größere Unternehmen.",
-          features: [
-            "Website-Entwicklung",
-            "Kreative Visuals (bis zu 15)",
-            "Mediaeinkauf auf Abruf (100 $ gratis)",
-            "Texterstellung (bis zu 5)",
-            "Alles aus Standard",
-          ],
-        },
-      ],
     },
 
     reviews: {
@@ -706,7 +437,7 @@ export const homeMessages = defineMessages({
       badge: "Khibratuna",
       headingLine1: "Ma naqum bihi",
       headingAccent: "bi-shakl istithnai.",
-      intro: "Thaman takhassusat. Fariq wahid mutakamil. Kull khidma masmuma li-mudaafat numuwwik.",
+      intro: "Sabaa takhassusat. Fariq wahid mutakamil. Kull khidma masmuma li-mudaafat numuwwik.",
       items: [
         {
           title: "Tasmim Jirafik",
@@ -733,12 +464,6 @@ export const homeMessages = defineMessages({
           tags: ["Next.js", "React", "Tijara Iliktruniyya"],
         },
         {
-          title: "OVC / TVC",
-          description:
-            "Ilanat fidyu mumayyaza lil-tilfizyun wal-intirnit tunqil qimat alamatik bi-aqsa athar mumkin.",
-          tags: ["Ilanat", "Bath Tilfizyuni", "Ala Al-Intirnit"],
-        },
-        {
           title: "SEO wa Wasail Al-Tawasul",
           description:
             "Hamalat SEO wa ijtimaiyya daqiqa tudaif zuhurak wa tajlib jumhuran shadid Al-Ihtimam mubasharatan ilayk.",
@@ -755,36 +480,6 @@ export const homeMessages = defineMessages({
           description:
             "Hawiyyat raqmiyya mutanasiqa tatruk athran daiman — anzima basariyya wa sawt alama wa tamawdu rasikh.",
           tags: ["Istratijiyya", "Hawiyya Basariyya", "Sawt Al-Alama"],
-        },
-      ],
-    },
-
-    impact: {
-      badge: "Nataij Qabila lil-Qiyas",
-      headingLine1: "Bayanat tuhaqqiq",
-      headingAccent: "al-nataij.",
-      body:
-        "Nabni Al-Najah ala muashirat mulahaza. Tatawaam istratijiyyatuna ma ahdafik Al-Tijariyya li-tuqaddim athran malmusan wa qabilan lil-qiyas — fi kull marra.",
-      pills: ["Wafa Aala", "Wusul Asra lil-Suq", "ROAS Afdal"],
-      accordion: [
-        {
-          title: "Tahlilat Qabila lil-Tanfidh",
-          content:
-            "Ihsal ala ruan amiqa li-tahsin Al-Hamalat wa rafi Al-Aid bi-istihdaf daqiq fi kull marhala.",
-        },
-        {
-          title: "Tamkin bil-Bayanat",
-          content:
-            "Imnah furaqak bayanat fawriyya wa muyassara li-yakun kull qarar mabniyyan ala dalil.",
-        },
-        {
-          title: "Taswiq Al-Muhtawa",
-          content:
-            "Istratijiyyat muhtawa mustahdafa tajdhib Al-Jumhur Al-Munasib wa tuhawwil Al-Umala wa tabni Al-Wala.",
-        },
-        {
-          title: "Tamkin Al-Mabiat",
-          content: "Wahhid Al-Mabiat wal-taswiq fi muharrik wahid salis yusarri ibram Al-Safaqat.",
         },
       ],
     },
@@ -814,59 +509,6 @@ export const homeMessages = defineMessages({
       },
       floatingTitle: "Jumhur Mutakhassis",
       floatingSub: "Mushtaru wa mustathmiru Al-Aqarat",
-    },
-
-    pricing: {
-      badge: "Al-Asaar",
-      headingLine1: "Asaar wadiha",
-      headingAccent: "wa shaffafa.",
-      intro:
-        "La rusum khafiyya. La mufajaat. Ikhtar Al-Baqa Al-Munasiba li-mawqiik Al-Hali — wa li-wijhatik.",
-      billingMonthly: "Shahri",
-      billingHalfShort: "6 shuhur · khasm 20%",
-      billingHalfLong: "Nisf Sanawi · khasm 20%",
-      perMonth: "shahr",
-      perHalfYear: "nisf sana",
-      mostPopular: "Al-Akthar Shuhra",
-      cta: "Ibda Al-An",
-      footnote: "Jami Al-Baqat tashmal mudir hisab makhsus. Yumkinuka Al-Ilgha fi ayy waqt.",
-      plans: [
-        {
-          title: "Basic",
-          description: "Munasiba lil-sharikat Al-Saghira Al-Mustaidda li-tanmiyat hudurha Al-Raqmi.",
-          features: [
-            "Tatwir Al-Aamal",
-            "Taswiq Al-Hamalat",
-            "Muhtawa basari ibdai (hatta 7)",
-            "Muhtawa mutasalsil",
-            "Fidyu mutaharrik",
-            "Idarat wasail Al-Tawasul",
-            "Shira masahat ilaniyya hasab Al-Talab",
-          ],
-        },
-        {
-          title: "Standard",
-          description: "Al-Baqa Al-Kamila — ikhtiyaruna Al-Akthar shuhra lil-alamat Al-Namiya.",
-          features: [
-            "Taswir Al-Muntajat",
-            "Muhtawa basari ibdai (hatta 10)",
-            "Muhtawa mahmi ma SEO",
-            "Shira masahat ilaniyya (50$ majjanan)",
-            "Kull ma fi Basic",
-          ],
-        },
-        {
-          title: "Premium",
-          description: "Taswiq raqmi mutakamil lil-sharikat Al-Kabira.",
-          features: [
-            "Tatwir Al-Mawqi Al-Iliktruni",
-            "Muhtawa basari ibdai (hatta 15)",
-            "Shira masahat ilaniyya (100$ majjanan)",
-            "Kitabat muhtawa (hatta 5)",
-            "Kull ma fi Standard",
-          ],
-        },
-      ],
     },
 
     reviews: {
