@@ -1,34 +1,29 @@
 "use client"
 
 import * as React from "react"
+import { createPortal } from "react-dom"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { AnimatePresence, motion } from "framer-motion"
 import { ArrowRight, LogIn, LogOut, ShieldCheck, UserRound } from "lucide-react"
 import type { AuthPayload } from "@/lib/auth"
+import { NAVBAR_PANEL_TOP, NAVBAR_RIGHT_OFFSET } from "@/lib/navbar-offset"
 
 /**
- * Avatar button in the navbar that opens a Profile / Log out menu.
- *
- * Mirrors LanguageSwitcher: same outside-click and Escape handling, same
- * glass-strong panel, so the two dropdowns in the navbar behave identically.
+ * Shared open/close + outside-click/Escape wiring for the navbar's dropdowns.
  */
-export function UserMenu({
-  user,
-  labels,
-}: {
-  user: AuthPayload
-  labels: { menu: string; profile: string; logout: string; loggingOut: string }
-}) {
-  const router = useRouter()
+function useDropdown() {
   const [open, setOpen] = React.useState(false)
-  const [busy, setBusy] = React.useState(false)
-  const containerRef = React.useRef<HTMLDivElement>(null)
+  const triggerRef = React.useRef<HTMLDivElement>(null)
+  const panelRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
     if (!open) return
     const onPointerDown = (event: MouseEvent | TouchEvent) => {
-      if (!containerRef.current?.contains(event.target as Node)) setOpen(false)
+      const target = event.target as Node
+      if (triggerRef.current?.contains(target)) return
+      if (panelRef.current?.contains(target)) return
+      setOpen(false)
     }
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpen(false)
@@ -43,6 +38,69 @@ export function UserMenu({
     }
   }, [open])
 
+  return { open, setOpen, triggerRef, panelRef }
+}
+
+/**
+ * Renders the dropdown panel in place by default. When `detached`, it's
+ * portaled to `document.body` and pinned to the navbar's right edge instead —
+ * needed because these mobile triggers live inside the header's transformed
+ * box, which would otherwise hijack `position: fixed` and misalign the panel.
+ */
+function DropdownPanel({
+  detached,
+  panelRef,
+  className,
+  children,
+}: {
+  detached?: boolean
+  panelRef: React.RefObject<HTMLDivElement | null>
+  className: string
+  children: React.ReactNode
+}) {
+  const [mounted, setMounted] = React.useState(false)
+  React.useEffect(() => setMounted(true), [])
+
+  const panel = (
+    <motion.div
+      ref={panelRef}
+      role="menu"
+      initial={{ opacity: 0, y: -6, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -6, scale: 0.97 }}
+      transition={{ duration: 0.16, ease: "easeOut" }}
+      className={detached ? `fixed ${className}` : `absolute top-[calc(100%+0.6rem)] right-0 ${className}`}
+      style={detached ? { top: NAVBAR_PANEL_TOP, right: NAVBAR_RIGHT_OFFSET } : undefined}
+    >
+      {children}
+    </motion.div>
+  )
+
+  if (!detached) return panel
+  if (!mounted) return null
+  return createPortal(panel, document.body)
+}
+
+/**
+ * Avatar button in the navbar that opens a Profile / Log out menu.
+ *
+ * Mirrors LanguageSwitcher: same outside-click and Escape handling, same
+ * glass-strong panel, so the two dropdowns in the navbar behave identically.
+ */
+export function UserMenu({
+  user,
+  labels,
+  detached,
+}: {
+  user: AuthPayload
+  labels: { menu: string; profile: string; logout: string; loggingOut: string }
+  /** Mobile usage: portals the panel so it aligns with the navbar's right edge. */
+  detached?: boolean
+}) {
+  const router = useRouter()
+  const { open, setOpen, triggerRef, panelRef } = useDropdown()
+  const [busy, setBusy] = React.useState(false)
+
   async function handleLogout() {
     setBusy(true)
     try {
@@ -56,7 +114,7 @@ export function UserMenu({
   }
 
   return (
-    <div className="relative" ref={containerRef}>
+    <div className="relative" ref={triggerRef}>
       <button
         type="button"
         onClick={() => setOpen(v => !v)}
@@ -70,13 +128,10 @@ export function UserMenu({
 
       <AnimatePresence>
         {open && (
-          <motion.div
-            role="menu"
-            initial={{ opacity: 0, y: -6, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -6, scale: 0.97 }}
-            transition={{ duration: 0.16, ease: "easeOut" }}
-            className="absolute top-[calc(100%+0.6rem)] right-0 min-w-[13rem] p-1.5 rounded-2xl glass-strong border border-flow-border shadow-soft z-[6000]"
+          <DropdownPanel
+            detached={detached}
+            panelRef={panelRef}
+            className="min-w-[13rem] p-1.5 rounded-2xl glass-strong border border-flow-border shadow-soft z-[6000]"
           >
             {/* Identity header — who you are actually signed in as. */}
             <div className="flex items-center gap-2.5 px-3 py-2.5 border-b border-flow-border mb-1.5">
@@ -111,7 +166,7 @@ export function UserMenu({
               <LogOut className="w-4 h-4" />
               {busy ? labels.loggingOut : labels.logout}
             </button>
-          </motion.div>
+          </DropdownPanel>
         )}
       </AnimatePresence>
     </div>
@@ -125,32 +180,16 @@ export function UserMenu({
  */
 export function GuestMenu({
   labels,
+  detached,
 }: {
   labels: { menu: string; login: string; register: string }
+  /** Mobile usage: portals the panel so it aligns with the navbar's right edge. */
+  detached?: boolean
 }) {
-  const [open, setOpen] = React.useState(false)
-  const containerRef = React.useRef<HTMLDivElement>(null)
-
-  React.useEffect(() => {
-    if (!open) return
-    const onPointerDown = (event: MouseEvent | TouchEvent) => {
-      if (!containerRef.current?.contains(event.target as Node)) setOpen(false)
-    }
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false)
-    }
-    document.addEventListener("mousedown", onPointerDown)
-    document.addEventListener("touchstart", onPointerDown)
-    document.addEventListener("keydown", onKeyDown)
-    return () => {
-      document.removeEventListener("mousedown", onPointerDown)
-      document.removeEventListener("touchstart", onPointerDown)
-      document.removeEventListener("keydown", onKeyDown)
-    }
-  }, [open])
+  const { open, setOpen, triggerRef, panelRef } = useDropdown()
 
   return (
-    <div className="relative" ref={containerRef}>
+    <div className="relative" ref={triggerRef}>
       <button
         type="button"
         onClick={() => setOpen(v => !v)}
@@ -165,13 +204,10 @@ export function GuestMenu({
 
       <AnimatePresence>
         {open && (
-          <motion.div
-            role="menu"
-            initial={{ opacity: 0, y: -6, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -6, scale: 0.97 }}
-            transition={{ duration: 0.16, ease: "easeOut" }}
-            className="absolute top-[calc(100%+0.6rem)] right-0 min-w-[11rem] p-1.5 rounded-2xl glass-strong border border-flow-border shadow-soft z-[6000]"
+          <DropdownPanel
+            detached={detached}
+            panelRef={panelRef}
+            className="min-w-[11rem] p-1.5 rounded-2xl glass-strong border border-flow-border shadow-soft z-[6000]"
           >
             <Link
               href="/login"
@@ -193,7 +229,7 @@ export function GuestMenu({
               {labels.register}
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
-          </motion.div>
+          </DropdownPanel>
         )}
       </AnimatePresence>
     </div>

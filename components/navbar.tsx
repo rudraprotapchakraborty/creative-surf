@@ -11,6 +11,7 @@ import { useAuthUser } from "@/components/auth/use-auth-user";
 import { GuestMenu, UserMenu } from "@/components/auth/user-menu";
 import { useT } from "@/lib/i18n";
 import { navMessages } from "@/lib/i18n/messages/nav";
+import { NAVBAR_PANEL_TOP, NAVBAR_RIGHT_OFFSET } from "@/lib/navbar-offset";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -167,6 +168,7 @@ export function Navbar() {
             {user ? (
               <UserMenu
                 user={user}
+                detached
                 labels={{
                   menu: t("accountMenu"),
                   profile: t("profile"),
@@ -176,6 +178,7 @@ export function Navbar() {
               />
             ) : (
               <GuestMenu
+                detached
                 labels={{
                   menu: t("account"),
                   login: t("login"),
@@ -208,8 +211,8 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.97 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
-            className="fixed top-[4.5rem] left-4 right-4 max-w-sm mx-auto z-[9999] glass-strong border border-flow-border rounded-2xl shadow-soft overflow-hidden"
-            style={{ fontFamily: "var(--font-jakarta)" }}
+            className="fixed w-[min(24rem,calc(100vw-2rem))] z-[9999] glass-strong border border-flow-border rounded-2xl shadow-soft overflow-hidden"
+            style={{ top: NAVBAR_PANEL_TOP, right: NAVBAR_RIGHT_OFFSET, fontFamily: "var(--font-jakarta)" }}
           >
             {/* Nav links */}
             <div className="flex flex-col p-2">
