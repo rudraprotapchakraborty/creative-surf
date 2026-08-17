@@ -25,6 +25,8 @@ export const navMessages = defineMessages({
     accountMenu: "Account menu",
     logoAlt: "Creative Surf logo",
     toggleMenu: "Toggle menu",
+    lightMode: "Light",
+    darkMode: "Dark",
   },
   fr: {
     links: {
@@ -50,6 +52,8 @@ export const navMessages = defineMessages({
     accountMenu: "Menu du compte",
     logoAlt: "Logo Creative Surf",
     toggleMenu: "Ouvrir le menu",
+    lightMode: "Clair",
+    darkMode: "Sombre",
   },
   de: {
     links: {
@@ -75,6 +79,8 @@ export const navMessages = defineMessages({
     accountMenu: "Kontomenü",
     logoAlt: "Creative Surf Logo",
     toggleMenu: "Menü umschalten",
+    lightMode: "Hell",
+    darkMode: "Dunkel",
   },
   ar: {
     links: {
@@ -100,5 +106,7 @@ export const navMessages = defineMessages({
     accountMenu: "Qaimat Al-Hisab",
     logoAlt: "Shiar Creative Surf",
     toggleMenu: "Fath Al-Qaima",
+    lightMode: "Fatih",
+    darkMode: "Dakin",
   },
 });

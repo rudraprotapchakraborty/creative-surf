@@ -183,7 +183,6 @@ export function Navbar() {
                 }}
               />
             )}
-            <ThemeToggle />
             <button
               onClick={() => setMobileOpen(v => !v)}
               aria-label={t("toggleMenu")}
@@ -248,6 +247,14 @@ export function Navbar() {
                     {s.label}
                   </Link>
                 ))}
+              </div>
+
+              {/* Theme */}
+              <div className="mt-1">
+                <ThemeToggle
+                  variant="inline"
+                  labels={{ light: t("lightMode"), dark: t("darkMode") }}
+                />
               </div>
             </div>
 
