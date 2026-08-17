@@ -1,15 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, X, ArrowRight, UserRound } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useAuthUser } from "@/components/auth/use-auth-user";
-import { Avatar, UserMenu } from "@/components/auth/user-menu";
-import { SignOutButton } from "@/components/auth/sign-out-button";
+import { GuestMenu, UserMenu } from "@/components/auth/user-menu";
 import { useT } from "@/lib/i18n";
 import { navMessages } from "@/lib/i18n/messages/nav";
 
@@ -165,7 +164,25 @@ export function Navbar() {
 
           {/* MOBILE — toggle */}
           <div className="md:hidden flex items-center gap-1">
-            <LanguageSwitcher />
+            {user ? (
+              <UserMenu
+                user={user}
+                labels={{
+                  menu: t("accountMenu"),
+                  profile: t("profile"),
+                  logout: t("logout"),
+                  loggingOut: t("loggingOut"),
+                }}
+              />
+            ) : (
+              <GuestMenu
+                labels={{
+                  menu: t("account"),
+                  login: t("login"),
+                  register: t("register"),
+                }}
+              />
+            )}
             <ThemeToggle />
             <button
               onClick={() => setMobileOpen(v => !v)}
@@ -237,58 +254,6 @@ export function Navbar() {
             {/* Language */}
             <div className="border-t border-flow-border p-2">
               <LanguageSwitcher variant="inline" onSelect={() => setMobileOpen(false)} />
-            </div>
-
-            {/* Divider + auth */}
-            <div className="border-t border-flow-border p-2 space-y-2">
-              {user ? (
-                <>
-                  {/* The sheet is already a menu, so the entries sit flat rather than behind a dropdown. */}
-                  <div className="flex items-center gap-2.5 px-2 py-1.5">
-                    <Avatar user={user} size={34} badgeAdmin />
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-flow-text truncate">
-                        {user.name || user.username || user.email}
-                      </p>
-                      {user.email && <p className="text-xs text-flow-textSoft truncate">{user.email}</p>}
-                    </div>
-                  </div>
-                  <Link
-                    href="/account"
-                    onClick={() => setMobileOpen(false)}
-                    className="group flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-semibold text-white"
-                    style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
-                  >
-                    <UserRound className="w-3.5 h-3.5" />
-                    {t("profile")}
-                  </Link>
-                  <SignOutButton
-                    label={t("logout")}
-                    loadingLabel={t("loggingOut")}
-                    redirectTo="/"
-                    onDone={() => setMobileOpen(false)}
-                  />
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/register"
-                    onClick={() => setMobileOpen(false)}
-                    className="group flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-semibold text-white"
-                    style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
-                  >
-                    {t("register")}
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                  </Link>
-                  <Link
-                    href="/login"
-                    onClick={() => setMobileOpen(false)}
-                    className="flex items-center justify-center w-full py-2.5 rounded-xl text-sm font-semibold text-flow-text glass border border-flow-border hover:bg-flow-card transition-colors"
-                  >
-                    {t("login")}
-                  </Link>
-                </>
-              )}
             </div>
           </motion.div>
           </>

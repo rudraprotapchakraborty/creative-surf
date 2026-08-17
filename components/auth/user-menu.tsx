@@ -4,7 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { AnimatePresence, motion } from "framer-motion"
-import { LogOut, ShieldCheck, UserRound } from "lucide-react"
+import { ArrowRight, LogIn, LogOut, ShieldCheck, UserRound } from "lucide-react"
 import type { AuthPayload } from "@/lib/auth"
 
 /**
@@ -111,6 +111,88 @@ export function UserMenu({
               <LogOut className="w-4 h-4" />
               {busy ? labels.loggingOut : labels.logout}
             </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
+/**
+ * Signed-out counterpart to UserMenu — same avatar-button/dropdown shape, but
+ * a plain guest icon opening onto Login / Register instead of an avatar
+ * opening onto Profile / Log out.
+ */
+export function GuestMenu({
+  labels,
+}: {
+  labels: { menu: string; login: string; register: string }
+}) {
+  const [open, setOpen] = React.useState(false)
+  const containerRef = React.useRef<HTMLDivElement>(null)
+
+  React.useEffect(() => {
+    if (!open) return
+    const onPointerDown = (event: MouseEvent | TouchEvent) => {
+      if (!containerRef.current?.contains(event.target as Node)) setOpen(false)
+    }
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false)
+    }
+    document.addEventListener("mousedown", onPointerDown)
+    document.addEventListener("touchstart", onPointerDown)
+    document.addEventListener("keydown", onKeyDown)
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown)
+      document.removeEventListener("touchstart", onPointerDown)
+      document.removeEventListener("keydown", onKeyDown)
+    }
+  }, [open])
+
+  return (
+    <div className="relative" ref={containerRef}>
+      <button
+        type="button"
+        onClick={() => setOpen(v => !v)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label={labels.menu}
+        className="flex items-center justify-center rounded-full bg-flow-card border border-flow-border text-flow-textSoft transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-1"
+        style={{ width: 32, height: 32 }}
+      >
+        <UserRound size={19} />
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            role="menu"
+            initial={{ opacity: 0, y: -6, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.97 }}
+            transition={{ duration: 0.16, ease: "easeOut" }}
+            className="absolute top-[calc(100%+0.6rem)] right-0 min-w-[11rem] p-1.5 rounded-2xl glass-strong border border-flow-border shadow-soft z-[6000]"
+          >
+            <Link
+              href="/login"
+              role="menuitem"
+              onClick={() => setOpen(false)}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-flow-textSoft hover:text-flow-text hover:bg-flow-card transition-colors mb-1"
+            >
+              <LogIn className="w-4 h-4" />
+              {labels.login}
+            </Link>
+
+            <Link
+              href="/register"
+              role="menuitem"
+              onClick={() => setOpen(false)}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold text-white"
+              style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
+            >
+              {labels.register}
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>
