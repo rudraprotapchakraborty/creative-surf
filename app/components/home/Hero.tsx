@@ -6,7 +6,8 @@ import { ArrowRight, ArrowDown, TrendingUp, Sparkles, Star } from "lucide-react"
 
 import { useT } from "@/lib/i18n";
 import { homeMessages } from "@/lib/i18n/messages/home";
-import { EASE, Kicker, KineticHeading, Magnetic } from "./shared";
+import { EASE, Kicker, KineticHeading, Magnetic, ParallaxLayer, Tilt3D } from "./shared";
+import HeroBackdrop3D from "./HeroBackdrop3D";
 
 export default function Hero() {
   const t = useT(homeMessages);
@@ -41,6 +42,10 @@ export default function Hero() {
           filter: "blur(60px)",
         }}
       />
+
+      {/* 3D swell — loads at idle and cross-fades over the CSS backdrop above,
+          which stays as the permanent base layer if WebGL is unavailable. */}
+      <HeroBackdrop3D />
 
       {/* ---- Content ---- */}
       <div className="relative z-10 section-px w-full mx-auto max-w-7xl pt-32 sm:pt-36 pb-24 sm:pb-28 grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-10 items-center">
@@ -131,10 +136,14 @@ export default function Hero() {
             style={{ background: "radial-gradient(circle at 50% 40%, rgb(var(--accent-2) / 0.28), transparent 70%)" }}
           />
 
+          <Tilt3D className="relative w-full flex justify-center items-center" max={9}>
+          {/* PANEL — mid plane. The cursor tilt replaces the old fixed rotate
+              loop; the float keeps it alive while the cursor is still. */}
+          <ParallaxLayer depth={14} className="w-full max-w-md mx-auto">
           <motion.div
-            animate={{ rotate: [0, 1.2, 0] }}
-            transition={{ duration: 8, ease: "easeInOut", repeat: Infinity }}
-            className="glass-strong border border-flow-border rounded-[1.75rem] shadow-premium p-7 w-full max-w-md"
+            animate={{ y: [0, -7, 0] }}
+            transition={{ duration: 7, ease: "easeInOut", repeat: Infinity }}
+            className="glass-strong border border-flow-border rounded-[1.75rem] shadow-premium p-7 w-full"
           >
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2.5">
@@ -165,6 +174,8 @@ export default function Hero() {
                   stroke="rgb(var(--accent-1))"
                   strokeWidth="2.5"
                   strokeLinecap="round"
+                  /* Lifts the trend line off the card face under the tilt. */
+                  style={{ filter: "drop-shadow(0 3px 6px rgb(var(--accent-1) / 0.45))" }}
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
                   transition={{ duration: 1.6, ease: EASE, delay: 0.9 }}
@@ -189,11 +200,14 @@ export default function Hero() {
               ))}
             </div>
           </motion.div>
+          </ParallaxLayer>
 
+          {/* CHIPS — nearest plane, so they travel furthest against the panel. */}
+          <ParallaxLayer depth={46} className="absolute -top-5 -right-2">
           <motion.div
             animate={{ y: [0, -10, 0] }}
             transition={{ duration: 5, ease: "easeInOut", repeat: Infinity }}
-            className="absolute -top-5 -right-2 glass-strong border border-flow-border rounded-2xl shadow-soft px-4 py-3 flex items-center gap-2.5"
+            className="glass-strong border border-flow-border rounded-2xl shadow-soft px-4 py-3 flex items-center gap-2.5"
           >
             <span className="grid place-items-center w-8 h-8 rounded-lg bg-aurora-warm/15">
               <Star className="w-4 h-4 text-aurora-warm fill-aurora-warm" />
@@ -203,11 +217,13 @@ export default function Hero() {
               <p className="text-[10px] text-flow-textSoft mt-1">{t("hero.chipRating")}</p>
             </div>
           </motion.div>
+          </ParallaxLayer>
 
+          <ParallaxLayer depth={38} className="absolute -bottom-6 -left-4">
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 6, ease: "easeInOut", repeat: Infinity, delay: 0.5 }}
-            className="absolute -bottom-6 -left-4 glass-strong border border-flow-border rounded-2xl shadow-soft px-4 py-3 flex items-center gap-2.5"
+            className="glass-strong border border-flow-border rounded-2xl shadow-soft px-4 py-3 flex items-center gap-2.5"
           >
             <span className="grid place-items-center w-8 h-8 rounded-lg bg-aurora-grad text-white">
               <Sparkles className="w-4 h-4" />
@@ -217,6 +233,8 @@ export default function Hero() {
               <p className="text-[10px] text-flow-textSoft mt-1">{t("hero.chipAwardSub")}</p>
             </div>
           </motion.div>
+          </ParallaxLayer>
+          </Tilt3D>
         </motion.div>
       </div>
 
