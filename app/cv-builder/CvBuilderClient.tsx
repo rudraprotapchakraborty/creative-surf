@@ -254,7 +254,7 @@ export default function CvBuilderClient() {
   return (
     <div className="min-h-screen bg-flow-bg">
       {/* HERO */}
-      <section className="relative overflow-hidden pt-28 pb-12 md:pt-32 md:pb-16">
+      <section className="relative overflow-hidden pt-32 pb-12 md:pt-40 md:pb-16">
         <div className="absolute inset-0 bg-aurora-grad opacity-[0.07]" aria-hidden />
         {/* Same width as the navbar pill, so the page's edges line up with it. */}
         <div className="relative mx-auto w-[95%] max-w-7xl">

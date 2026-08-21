@@ -32,6 +32,7 @@ export function Navbar() {
         { label: t("links.home"),      href: "/" },
         { label: t("links.blogs"),     href: "/blogs" },
         { label: t("links.cvBuilder"), href: "/cv-builder" },
+        { label: t("links.team"),      href: "/team" },
       ];
 
   const sections = [
