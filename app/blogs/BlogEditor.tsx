@@ -37,14 +37,15 @@ interface BlogForm {
   outboundLinks: BlogSeoFields["outboundLinks"]
 }
 
-const CATEGORIES = ["Digital Marketing", "SEO", "Design", "UX", "Strategy", "General"]
+const CATEGORIES = ["Digital Marketing", "Lead Generation", "AI & Creative", "Branding", "Video Production", "Web Development", "SEO", "Design", "UX", "Strategy", "General"]
 
 const CATEGORY_EMOJI: Record<string, string> = {
   Strategy: "🎯", Marketing: "📈", Design: "🎨", SEO: "🔍",
   "Social Media": "📱", Content: "✍️", General: "💡", Technology: "⚡",
   Business: "💼", Branding: "🌟", UX: "🖥️", Analytics: "📊",
   Growth: "🚀", Copywriting: "🖊️", Advertising: "📣",
-  "Digital Marketing": "📣",
+  "Lead Generation": "🧲", "AI & Creative": "🤖", "Video Production": "🎬",
+  "Web Development": "🌐", "Digital Marketing": "📣",
 }
 
 const DEFAULT_FORM: BlogForm = {

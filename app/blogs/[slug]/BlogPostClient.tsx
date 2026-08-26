@@ -21,6 +21,8 @@ const CATEGORY_EMOJI: Record<string, string> = {
   "Social Media": "📱", Content: "✍️", General: "💡", Technology: "⚡",
   Business: "💼", Branding: "🌟", UX: "🖥️", Analytics: "📊",
   Growth: "🚀", Copywriting: "🖊️", Advertising: "📣",
+  "Lead Generation": "🧲", "AI & Creative": "🤖", "Video Production": "🎬",
+  "Web Development": "🌐", "Digital Marketing": "📣",
 }
 
 function formatDate(dateStr: string, locale: Locale) {
