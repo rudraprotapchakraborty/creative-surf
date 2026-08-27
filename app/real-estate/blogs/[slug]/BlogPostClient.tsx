@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import BlogSeoLinks from "@/components/blog/BlogSeoLinks"
+import BlogShare from "@/components/blog/BlogShare"
+import { getBlogPostUrl } from "@/lib/blog-metadata"
 import { normalizeBlogMarkdown } from "@/lib/blog-markdown-normalize"
 import type { BlogRecord } from "@/lib/blog-db"
 import { ArrowLeft, Clock, Calendar, User, Tag, Pencil, Trash2 } from "lucide-react"
@@ -20,6 +22,11 @@ const RE_CATEGORY_EMOJI: Record<string, string> = {
   "Property Guide": "🔑", Renting: "📋", "Buying Guide": "🏡",
   Legal: "⚖️", Finance: "💳", Location: "📍", Lifestyle: "✨",
   Construction: "🏗️", Commercial: "🏢",
+}
+
+/** Monogram for a writer's avatar: up to two initials. */
+function initials(name: string) {
+  return name.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join("").toUpperCase()
 }
 
 function formatDate(dateStr: string, locale: Locale) {
@@ -81,6 +88,8 @@ export default function BlogPostClient({
       </div>
     )
   }
+
+  const writers = blog.authors?.length ? blog.authors : [blog.author]
 
   return (
     <main className="min-h-screen bg-flow-bg" style={{ fontFamily: "var(--font-re)" }}>
@@ -273,6 +282,32 @@ export default function BlogPostClient({
           outboundTitle={t("seo.outbound")}
         />
 
+        {/* Written by */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
+          className="mt-10 sm:mt-12 pt-6 sm:pt-8"
+          style={{ borderTop: "1px solid var(--flow-border)" }}
+        >
+          <p className="text-[11px] font-bold uppercase tracking-widest mb-4" style={{ color: "rgb(var(--flow-text-soft))" }}>
+            {t("writtenBy")}
+          </p>
+          <div className="flex flex-col gap-3">
+            {writers.map(writer => (
+              <div key={writer} className="flex items-center gap-3">
+                <div
+                  className="flex items-center justify-center shrink-0"
+                  style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, #B8892A, #8A6520)" }}
+                >
+                  <span style={{ fontSize: 13, fontWeight: 900, color: "white" }}>{initials(writer)}</span>
+                </div>
+                <p className="text-sm font-semibold text-flow-text">{writer}</p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
         {/* Tags */}
         {blog.tags && blog.tags.length > 0 && (
           <motion.div
@@ -294,6 +329,13 @@ export default function BlogPostClient({
             ))}
           </motion.div>
         )}
+
+        <BlogShare
+          url={getBlogPostUrl(blog.slug, "real-estate")}
+          title={blog.title}
+          label={t("share")}
+          accentColor="#B8892A"
+        />
 
         {/* Back link */}
         <div className="mt-10 sm:mt-12 pt-5 sm:pt-6" style={{ borderTop: "1px solid var(--flow-border)" }}>

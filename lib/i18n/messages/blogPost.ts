@@ -11,6 +11,8 @@ export const blogPostMessages = defineMessages({
     edit: "Edit",
     delete: "Delete",
     confirmDelete: "Delete this post? This cannot be undone.",
+    writtenBy: "Written by",
+    share: "Share",
     seo: {
       inboundReal: "Related on Creative Surf Real Estate",
       inbound: "Related on Creative Surf",
@@ -26,6 +28,8 @@ export const blogPostMessages = defineMessages({
     edit: "Modifier",
     delete: "Supprimer",
     confirmDelete: "Supprimer cet article ? Cette action est irréversible.",
+    writtenBy: "Écrit par",
+    share: "Partager",
     seo: {
       inboundReal: "À lire aussi sur Creative Surf Immobilier",
       inbound: "À lire aussi sur Creative Surf",
@@ -41,6 +45,8 @@ export const blogPostMessages = defineMessages({
     edit: "Bearbeiten",
     delete: "Löschen",
     confirmDelete: "Diesen Beitrag löschen? Das kann nicht rückgängig gemacht werden.",
+    writtenBy: "Geschrieben von",
+    share: "Teilen",
     seo: {
       inboundReal: "Passend dazu bei Creative Surf Immobilien",
       inbound: "Passend dazu bei Creative Surf",
@@ -56,6 +62,8 @@ export const blogPostMessages = defineMessages({
     edit: "Tahrir",
     delete: "Hadhf",
     confirmDelete: "Hadhf hadha Al-Maqal? La yumkin Al-Tarajju an dhalik.",
+    writtenBy: "Kutiba bi-wasitat",
+    share: "Musharaka",
     seo: {
       inboundReal: "Dhu sila fi Creative Surf Al-Aqarat",
       inbound: "Dhu sila fi Creative Surf",

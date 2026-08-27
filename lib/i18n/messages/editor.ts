@@ -19,7 +19,8 @@ export const editorMessages = defineMessages({
     coverImageLabel: "Cover Image",
     tagsLabel: "Tags",
     tagPlaceholder: "Type tag + Enter",
-    authorLabel: "Author",
+    authorsLabel: "Written by",
+    authorPlaceholder: "Type name + Enter",
     tipsTitle: "Editor Tips",
     tips: [
       "Use the style dropdown for headings — they appear at full size as you type.",
@@ -56,7 +57,8 @@ export const editorMessages = defineMessages({
     coverImageLabel: "Image de couverture",
     tagsLabel: "Étiquettes",
     tagPlaceholder: "Saisissez une étiquette + Entrée",
-    authorLabel: "Auteur",
+    authorsLabel: "Écrit par",
+    authorPlaceholder: "Saisissez un nom + Entrée",
     tipsTitle: "Conseils d'édition",
     tips: [
       "Utilisez le menu de styles pour les titres — ils s'affichent en taille réelle pendant la saisie.",
@@ -93,7 +95,8 @@ export const editorMessages = defineMessages({
     coverImageLabel: "Titelbild",
     tagsLabel: "Schlagwörter",
     tagPlaceholder: "Schlagwort eingeben + Enter",
-    authorLabel: "Autor",
+    authorsLabel: "Geschrieben von",
+    authorPlaceholder: "Name eingeben + Enter",
     tipsTitle: "Editor-Tipps",
     tips: [
       "Nutzen Sie das Stil-Dropdown für Überschriften — sie erscheinen beim Tippen in voller Größe.",
@@ -129,7 +132,8 @@ export const editorMessages = defineMessages({
     coverImageLabel: "Surat Al-Ghilaf",
     tagsLabel: "Al-Wusum",
     tagPlaceholder: "Aktub wasman thumma Enter",
-    authorLabel: "Al-Muallif",
+    authorsLabel: "Kutiba bi-wasitat",
+    authorPlaceholder: "Aktub isman thumma Enter",
     tipsTitle: "Nasaih Al-Muharrir",
     tips: [
       "Istakhdim qaimat Al-Anmat lil-anawin — tazhar bi-hajmiha Al-Kamil athna Al-Kitaba.",

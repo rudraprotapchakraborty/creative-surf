@@ -18,6 +18,12 @@ const SITE_CONFIG = {
 
 export type BlogSite = keyof typeof SITE_CONFIG
 
+/** Canonical public URL for a post — share targets need an absolute, non-localhost URL. */
+export function getBlogPostUrl(slug: string, site: BlogSite): string {
+  const config = SITE_CONFIG[site]
+  return `${config.baseUrl}${config.blogPath}/${slug}`
+}
+
 export function getBlogSeoDescription(blog: Pick<BlogRecord, "metaDescription" | "excerpt">): string {
   const description = blog.metaDescription?.trim() || blog.excerpt?.trim()
   return description || "Read the latest insights and guides from our team."
@@ -46,7 +52,7 @@ export function generateBlogPostMetadata(
       type: "article",
       publishedTime: blog.createdAt,
       modifiedTime: blog.updatedAt ?? blog.createdAt,
-      authors: [blog.author],
+      authors: blog.authors?.length ? blog.authors : [blog.author],
       tags: blog.tags,
       images: [
         {

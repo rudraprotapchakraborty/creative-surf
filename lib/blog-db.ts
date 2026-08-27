@@ -12,7 +12,10 @@ export interface BlogRecord {
   coverImage: string
   category: string
   tags: string[]
+  /** Display line kept for cards, metadata and the post meta row (all writers joined). */
   author: string
+  /** One entry per writer; falls back to `[author]` for posts saved before multi-writer support. */
+  authors: string[]
   readTime: string
   published: boolean
   createdAt: string
@@ -24,6 +27,10 @@ export interface BlogRecord {
 
 function serializeBlog(doc: Record<string, unknown>): BlogRecord {
   const seo = pickBlogSeoFields(doc as Partial<BlogSeoFields>)
+  const author = String(doc.author ?? "Creative Surf")
+  const authors = Array.isArray(doc.authors)
+    ? doc.authors.map(String).map(a => a.trim()).filter(Boolean)
+    : []
   return {
     _id: String(doc._id),
     title: String(doc.title ?? ""),
@@ -33,7 +40,8 @@ function serializeBlog(doc: Record<string, unknown>): BlogRecord {
     coverImage: String(doc.coverImage ?? ""),
     category: String(doc.category ?? "General"),
     tags: Array.isArray(doc.tags) ? doc.tags.map(String) : [],
-    author: String(doc.author ?? "Creative Surf"),
+    author,
+    authors: authors.length ? authors : [author],
     readTime: String(doc.readTime ?? "5 min read"),
     published: Boolean(doc.published),
     createdAt: doc.createdAt ? new Date(doc.createdAt as string | Date).toISOString() : new Date().toISOString(),
