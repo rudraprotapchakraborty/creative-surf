@@ -9,14 +9,18 @@ import remarkGfm from "remark-gfm"
 import { ArrowLeft, Eye, EyeOff, Save, X, Plus } from "lucide-react"
 import { useT } from "@/lib/i18n"
 import { editorMessages } from "@/lib/i18n/messages/editor"
+import { editorUiMessages } from "@/lib/i18n/messages/editorUi"
 import ImageUpload from "@/components/ui/ImageUpload"
 import BlogRichTextEditor from "@/components/ui/BlogRichTextEditor"
 import BlogSeoPanel from "@/components/ui/BlogSeoPanel"
+import BlogKeyTakeawaysPanel from "@/components/ui/BlogKeyTakeawaysPanel"
+import BlogKeyTakeaways from "@/components/blog/BlogKeyTakeaways"
 import { blogMarkdownComponents } from "@/lib/blog-markdown"
 import { normalizeBlogMarkdown } from "@/lib/blog-markdown-normalize"
 import {
   DEFAULT_BLOG_SEO,
   getBlogLinkValidationMessage,
+  normalizeKeyTakeaways,
   pickBlogSeoFields,
   sanitizeBlogSeoLinks,
   type BlogSeoFields,
@@ -31,6 +35,7 @@ interface BlogForm {
   tags: string[]
   authors: string[]
   readTime: string
+  keyTakeaways: string[]
   coverImage: string
   metaDescription: string
   inboundLinks: BlogSeoFields["inboundLinks"]
@@ -57,6 +62,7 @@ const DEFAULT_FORM: BlogForm = {
   tags: [],
   authors: ["Creative Surf"],
   readTime: "5 min read",
+  keyTakeaways: [],
   coverImage: "",
   ...DEFAULT_BLOG_SEO,
 }
@@ -88,6 +94,7 @@ function slugify(text: string) {
 
 export default function BlogEditor({ blogId }: { blogId?: string }) {
   const t = useT(editorMessages)
+  const tUi = useT(editorUiMessages)
   const isEdit = !!blogId
   const [form, setForm] = useState<BlogForm>(DEFAULT_FORM)
   const [tagInput, setTagInput] = useState("")
@@ -126,6 +133,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
           tags: data.tags ?? [],
           authors: toAuthorList(data),
           readTime: data.readTime ?? "5 min read",
+          keyTakeaways: normalizeKeyTakeaways(data.keyTakeaways),
           coverImage: data.coverImage ?? "",
           ...seo,
         })
@@ -194,6 +202,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
       ...form,
       authors,
       author: authors.join(", "),
+      keyTakeaways: normalizeKeyTakeaways(form.keyTakeaways),
       published: true,
       inboundLinks: sanitizeBlogSeoLinks(form.inboundLinks),
       outboundLinks: sanitizeBlogSeoLinks(form.outboundLinks),
@@ -296,6 +305,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                 {form.excerpt}
               </p>
             )}
+            <BlogKeyTakeaways items={form.keyTakeaways} title={tUi("takeaways.label")} />
             <div className="prose-blog">
               <ReactMarkdown remarkPlugins={[remarkGfm]} components={blogMarkdownComponents}>
                 {normalizeBlogMarkdown(form.content) || t("noContent")}
@@ -337,6 +347,12 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                   className="w-full bg-transparent outline-none resize-none text-sm leading-relaxed text-flow-text placeholder:opacity-50"
                 />
               </div>
+
+              {/* Key takeaways */}
+              <BlogKeyTakeawaysPanel
+                value={form.keyTakeaways}
+                onChange={items => set("keyTakeaways", items)}
+              />
 
               {/* Content */}
               <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>

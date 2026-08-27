@@ -1,7 +1,7 @@
 import { cache } from "react"
 import { ObjectId } from "mongodb"
 import { getDb } from "@/lib/mongodb"
-import { pickBlogSeoFields, type BlogSeoFields } from "@/lib/blog-types"
+import { normalizeKeyTakeaways, pickBlogSeoFields, type BlogSeoFields } from "@/lib/blog-types"
 
 export interface BlogRecord {
   _id: string
@@ -17,6 +17,8 @@ export interface BlogRecord {
   /** One entry per writer; falls back to `[author]` for posts saved before multi-writer support. */
   authors: string[]
   readTime: string
+  /** Short bullet summary rendered in the highlight card above the article body. */
+  keyTakeaways: string[]
   published: boolean
   createdAt: string
   updatedAt?: string
@@ -43,6 +45,7 @@ function serializeBlog(doc: Record<string, unknown>): BlogRecord {
     author,
     authors: authors.length ? authors : [author],
     readTime: String(doc.readTime ?? "5 min read"),
+    keyTakeaways: normalizeKeyTakeaways(doc.keyTakeaways),
     published: Boolean(doc.published),
     createdAt: doc.createdAt ? new Date(doc.createdAt as string | Date).toISOString() : new Date().toISOString(),
     updatedAt: doc.updatedAt ? new Date(doc.updatedAt as string | Date).toISOString() : undefined,

@@ -96,3 +96,20 @@ export function sanitizeBlogSeoLinks(links: BlogSeoLink[]): BlogSeoLink[] {
     .map(link => ({ label: link.label.trim(), url: link.url.trim() }))
     .filter(link => link.label && link.url)
 }
+
+/** Upper bound on the takeaway card so it stays a summary, not a second article. */
+export const MAX_KEY_TAKEAWAYS = 6
+
+/**
+ * Key takeaways are the short bullet summary shown in a highlight card just
+ * under the post header. Accepts raw API/DB values and drops blank rows, so it
+ * doubles as the save-time sanitizer for the editor's in-progress list.
+ */
+export function normalizeKeyTakeaways(raw: unknown): string[] {
+  if (!Array.isArray(raw)) return []
+  return raw
+    .filter((item): item is string => typeof item === "string")
+    .map(item => item.trim())
+    .filter(Boolean)
+    .slice(0, MAX_KEY_TAKEAWAYS)
+}

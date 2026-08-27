@@ -10,6 +10,7 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { blogMarkdownComponents } from "@/lib/blog-markdown"
 import { normalizeBlogMarkdown } from "@/lib/blog-markdown-normalize"
+import BlogKeyTakeaways from "@/components/blog/BlogKeyTakeaways"
 import BlogSeoLinks from "@/components/blog/BlogSeoLinks"
 import BlogShare from "@/components/blog/BlogShare"
 import { getBlogPostUrl } from "@/lib/blog-metadata"
@@ -222,6 +223,17 @@ export default function BlogPostClient({
           >
             {blog.excerpt}
           </motion.p>
+        )}
+
+        {/* Key takeaways */}
+        {blog.keyTakeaways && blog.keyTakeaways.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+          >
+            <BlogKeyTakeaways items={blog.keyTakeaways} title={t("keyTakeaways")} />
+          </motion.div>
         )}
 
         {/* Content */}
