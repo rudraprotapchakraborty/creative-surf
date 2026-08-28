@@ -1,8 +1,8 @@
 import { defineMessages } from "../types";
 
 /**
- * Copy for /team. Names are fixed in the page component (they are proper nouns
- * and never translate); only roles and surrounding copy live here.
+ * Copy for /team. Names and cities are fixed in the page component (they are
+ * proper nouns and never translate); only roles and surrounding copy live here.
  */
 export const teamMessages = defineMessages({
   en: {
@@ -13,17 +13,25 @@ export const teamMessages = defineMessages({
       eyebrow: "Who we are",
       title: "Meet the team",
       subtitle:
-        "A small crew with a wide reach — strategy, engineering and storytelling under one roof.",
+        "A small crew with a wide reach — strategy, engineering, visuals and storytelling under one roof.",
     },
     roles: {
-      ceo: "CEO",
+      marketingLead: "Digital Marketing Lead",
       webDeveloper: "Web Developer",
-      writer: "Writer",
+      contentStrategist: "Content Strategist",
+      visualiser: "Senior Visualiser | Editor",
     },
     bios: {
-      ceo: "Sets the direction of Creative Surf and looks after our clients and partnerships.",
-      webDeveloper: "Builds and maintains the Creative Surf platform, from interface to infrastructure.",
-      writer: "Shapes the words behind our campaigns, blogs and brand voice.",
+      marketingLead:
+        "Leads our campaigns and growth work, and looks after our clients and partnerships.",
+      webDeveloper:
+        "Builds and maintains the Creative Surf platform, from interface to infrastructure.",
+      contentStrategist:
+        "Plans the words behind our campaigns, blogs and brand voice.",
+      visualiser:
+        "Turns ideas into visuals — design, motion and the edit that ties it together.",
+      editor:
+        "Shapes our video and visual output, from first storyboard to final cut.",
     },
     cta: {
       title: "Want to work with us?",
@@ -39,17 +47,25 @@ export const teamMessages = defineMessages({
       eyebrow: "Qui sommes-nous",
       title: "Rencontrez l'équipe",
       subtitle:
-        "Une petite équipe à large portée — stratégie, développement et rédaction sous un même toit.",
+        "Une petite équipe à large portée — stratégie, développement, visuels et rédaction sous un même toit.",
     },
     roles: {
-      ceo: "PDG",
+      marketingLead: "Responsable marketing digital",
       webDeveloper: "Développeur web",
-      writer: "Rédacteur",
+      contentStrategist: "Stratège de contenu",
+      visualiser: "Directeur visuel | Monteur",
     },
     bios: {
-      ceo: "Définit la direction de Creative Surf et veille sur nos clients et partenariats.",
-      webDeveloper: "Conçoit et maintient la plateforme Creative Surf, de l'interface à l'infrastructure.",
-      writer: "Façonne les mots de nos campagnes, de notre blog et de notre voix de marque.",
+      marketingLead:
+        "Dirige nos campagnes et notre croissance, et veille sur nos clients et partenariats.",
+      webDeveloper:
+        "Conçoit et maintient la plateforme Creative Surf, de l'interface à l'infrastructure.",
+      contentStrategist:
+        "Planifie les mots de nos campagnes, de notre blog et de notre voix de marque.",
+      visualiser:
+        "Transforme les idées en visuels — design, animation et montage qui relie le tout.",
+      editor:
+        "Façonne nos contenus vidéo et visuels, du premier storyboard au montage final.",
     },
     cta: {
       title: "Envie de travailler avec nous ?",
@@ -65,17 +81,25 @@ export const teamMessages = defineMessages({
       eyebrow: "Über uns",
       title: "Das Team",
       subtitle:
-        "Ein kleines Team mit großer Reichweite — Strategie, Entwicklung und Text unter einem Dach.",
+        "Ein kleines Team mit großer Reichweite — Strategie, Entwicklung, Visuals und Text unter einem Dach.",
     },
     roles: {
-      ceo: "Geschäftsführer",
+      marketingLead: "Leiter Digitalmarketing",
       webDeveloper: "Webentwickler",
-      writer: "Autor",
+      contentStrategist: "Content-Stratege",
+      visualiser: "Senior Visualizer | Editor",
     },
     bios: {
-      ceo: "Bestimmt die Ausrichtung von Creative Surf und betreut Kunden und Partnerschaften.",
-      webDeveloper: "Baut und pflegt die Creative-Surf-Plattform, von der Oberfläche bis zur Infrastruktur.",
-      writer: "Formt die Worte hinter unseren Kampagnen, Blogs und unserer Markenstimme.",
+      marketingLead:
+        "Führt unsere Kampagnen und unser Wachstum und betreut Kunden und Partnerschaften.",
+      webDeveloper:
+        "Baut und pflegt die Creative-Surf-Plattform, von der Oberfläche bis zur Infrastruktur.",
+      contentStrategist:
+        "Plant die Worte hinter unseren Kampagnen, Blogs und unserer Markenstimme.",
+      visualiser:
+        "Macht aus Ideen Bilder — Design, Motion und der Schnitt, der alles verbindet.",
+      editor:
+        "Gestaltet unsere Video- und Bildinhalte, vom ersten Storyboard bis zum finalen Schnitt.",
     },
     cta: {
       title: "Lust, mit uns zu arbeiten?",
@@ -91,17 +115,25 @@ export const teamMessages = defineMessages({
       eyebrow: "Man Nahnu",
       title: "Taarraf ala Al-Fariq",
       subtitle:
-        "Fariq saghir bi-athar kabir — istratijiyya wa barmaja wa kitaba tahta saqf wahid.",
+        "Fariq saghir bi-athar kabir — istratijiyya wa barmaja wa tasmim wa kitaba tahta saqf wahid.",
     },
     roles: {
-      ceo: "Al-Mudir Al-Tanfidhi",
+      marketingLead: "Masul Al-Taswiq Al-Raqmi",
       webDeveloper: "Mutawwir Web",
-      writer: "Katib",
+      contentStrategist: "Istratiji Al-Muhtawa",
+      visualiser: "Musammim Basari Awwal | Muharrir",
     },
     bios: {
-      ceo: "Yuhaddid ittijah Creative Surf wa yatawalla al-umala wal-sharakat.",
-      webDeveloper: "Yabni wa yaduim minassat Creative Surf min al-wajiha ila al-bunya al-tahtiyya.",
-      writer: "Yasugh al-kalimat khalfa hamalatina wa mudawwanatina wa sawt al-alama.",
+      marketingLead:
+        "Yaqud hamalatina wa numuwwana wa yatawalla al-umala wal-sharakat.",
+      webDeveloper:
+        "Yabni wa yaduim minassat Creative Surf min al-wajiha ila al-bunya al-tahtiyya.",
+      contentStrategist:
+        "Yukhattit lil-kalimat khalfa hamalatina wa mudawwanatina wa sawt al-alama.",
+      visualiser:
+        "Yuhawwil al-afkar ila suwar — tasmim wa haraka wa muntaj yajma al-kull.",
+      editor:
+        "Yasugh muhtawana al-mari wal-basari min awwal fikra hatta al-muntaj al-nihai.",
     },
     cta: {
       title: "Turid Al-Amal Maana?",

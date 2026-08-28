@@ -2,45 +2,61 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Crown, Code2, PenLine } from "lucide-react";
+import { ArrowRight, Megaphone, Code2, PenLine, Clapperboard, Film } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { teamMessages } from "@/lib/i18n/messages/team";
 
 /**
- * Names are proper nouns and stay in code; the role label, bio and accent are
- * looked up per member so the page follows the visitor's language.
+ * Names and cities are proper nouns and stay in code; the role label, bio and
+ * accent are looked up per member so the page follows the visitor's language.
  */
 const TEAM = [
   {
-    name: "Mehedee Hasaan",
-    roleKey: "roles.ceo",
-    bioKey: "bios.ceo",
-    icon: Crown,
+    name: "Mehedee Hasan",
+    initials: "MH",
+    location: "Dhaka, Bangladesh",
+    roleKey: "roles.marketingLead",
+    bioKey: "bios.marketingLead",
+    icon: Megaphone,
     accent: "linear-gradient(135deg,#B8892A,#D4A843)",
   },
   {
     name: "Rudra Protap Chakraborty",
+    initials: "RC",
+    location: "Kolkata, India",
     roleKey: "roles.webDeveloper",
     bioKey: "bios.webDeveloper",
     icon: Code2,
     accent: "linear-gradient(135deg,#0066A2,#0EA5E9)",
   },
   {
-    name: "Sharif",
-    roleKey: "roles.writer",
-    bioKey: "bios.writer",
+    name: "Shariful Hoque",
+    initials: "SH",
+    location: "Dhaka, Bangladesh",
+    roleKey: "roles.contentStrategist",
+    bioKey: "bios.contentStrategist",
     icon: PenLine,
     accent: "linear-gradient(135deg,#7C3AED,#C084FC)",
   },
+  {
+    name: "Shah Mahbood Ch.",
+    initials: "SM",
+    location: "Innsbruck, Austria",
+    roleKey: "roles.visualiser",
+    bioKey: "bios.visualiser",
+    icon: Clapperboard,
+    accent: "linear-gradient(135deg,#0F766E,#2DD4BF)",
+  },
+  {
+    name: "Iftekhar Arnob",
+    initials: "IA",
+    location: "Innsbruck, Austria",
+    roleKey: "roles.visualiser",
+    bioKey: "bios.editor",
+    icon: Film,
+    accent: "linear-gradient(135deg,#BE123C,#FB7185)",
+  },
 ] as const;
-
-/** "Rudra Protap Chakraborty" → "RC" */
-function initials(name: string) {
-  const parts = name.trim().split(/\s+/);
-  const first = parts[0]?.[0] ?? "";
-  const last = parts.length > 1 ? parts[parts.length - 1][0] : "";
-  return (first + last).toUpperCase();
-}
 
 export default function TeamContent() {
   const t = useT(teamMessages);
@@ -101,7 +117,7 @@ export default function TeamContent() {
                       className="relative w-24 h-24 rounded-full flex items-center justify-center text-white text-2xl font-extrabold tracking-wide"
                       style={{ background: member.accent }}
                     >
-                      {initials(member.name)}
+                      {member.initials}
                     </div>
                     <span
                       className="absolute -bottom-1 -right-1 w-9 h-9 rounded-full flex items-center justify-center bg-flow-card border border-flow-border text-flow-text"
@@ -120,6 +136,7 @@ export default function TeamContent() {
                   >
                     {t(member.roleKey)}
                   </p>
+                  <p className="mt-1 text-xs text-flow-textSoft/80">{member.location}</p>
                   <p className="mt-4 text-sm leading-relaxed text-flow-textSoft">
                     {t(member.bioKey)}
                   </p>
