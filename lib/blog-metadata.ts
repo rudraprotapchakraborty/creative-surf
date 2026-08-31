@@ -38,11 +38,13 @@ export function generateBlogPostMetadata(
   const path = `${config.blogPath}/${blog.slug}`
   const url = `${config.baseUrl}${path}`
   const title = `${blog.title} | ${config.siteName}`
-  const image = blog.coverImage?.trim() || "/og-image.jpg"
 
   return {
     title,
     description,
+    // Lets Next resolve the generated opengraph-image to an absolute URL —
+    // crawlers reject relative ones, and without this it falls back to localhost.
+    metadataBase: new URL(config.baseUrl),
     alternates: { canonical: url },
     openGraph: {
       title,
@@ -54,20 +56,13 @@ export function generateBlogPostMetadata(
       modifiedTime: blog.updatedAt ?? blog.createdAt,
       authors: blog.authors?.length ? blog.authors : [blog.author],
       tags: blog.tags,
-      images: [
-        {
-          url: image,
-          width: 1200,
-          height: 630,
-          alt: blog.title,
-        },
-      ],
+      // `images` is deliberately omitted: the sibling opengraph-image.tsx
+      // supplies it, so cover art and the generated fallback have one source.
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [image],
     },
     robots: {
       index: true,

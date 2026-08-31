@@ -8,6 +8,7 @@ import { Check, Eye, Facebook, Heart, Instagram, MessageCircle, Share2, X as Clo
 import { useT } from "@/lib/i18n"
 import { blogsMessages } from "@/lib/i18n/messages/blogs"
 import { type BlogEngagement, type ShareNetwork } from "@/lib/blog-engagement-shared"
+import { getBlogPostUrl, type BlogSite } from "@/lib/blog-metadata"
 
 /** lucide only ships the pre-rebrand bird, so the X mark is inlined. */
 function XMarkIcon({ size = 16 }: { size?: number }) {
@@ -44,6 +45,8 @@ interface BlogCardActionsProps {
    * the full-width column on a post page.
    */
   size?: "card" | "page"
+  /** Which blog section the post belongs to — decides the canonical share URL. */
+  site?: BlogSite
 }
 
 export default function BlogCardActions({
@@ -54,16 +57,18 @@ export default function BlogCardActions({
   engagement,
   onEngagementChange,
   size = "card",
+  site = "creative-surf",
 }: BlogCardActionsProps) {
   const t = useT(blogsMessages)
   const [shareOpen, setShareOpen] = useState(false)
   const [liking, setLiking] = useState(false)
-  const [shareUrl, setShareUrl] = useState("")
 
-  // Absolute URL is only knowable in the browser, and share dialogs reject relative paths.
-  useEffect(() => {
-    setShareUrl(`${window.location.origin}/blogs/${slug}`)
-  }, [slug])
+  /**
+   * The canonical public URL, never `window.location.origin` — otherwise a
+   * share from localhost or a preview deploy sends out a link nobody else can
+   * open, and no crawler can fetch for a preview card.
+   */
+  const shareUrl = getBlogPostUrl(slug, site)
 
   async function handleLike() {
     if (!visitorId || liking) return

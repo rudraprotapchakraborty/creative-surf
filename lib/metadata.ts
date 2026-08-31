@@ -30,6 +30,8 @@ export function generateMetadata({
   return {
     title: metaTitle,
     description: metaDescription,
+    // Without this Next resolves relative OG images against localhost.
+    metadataBase: new URL(baseUrl),
     openGraph: {
       title: metaTitle,
       description: metaDescription,
