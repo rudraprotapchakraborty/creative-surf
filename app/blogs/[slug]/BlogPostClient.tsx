@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useT, useLocale, formatDateForLocale, type Locale } from "@/lib/i18n"
 import { blogPostMessages } from "@/lib/i18n/messages/blogPost"
 import { motion } from "framer-motion"
@@ -12,12 +12,12 @@ import { blogMarkdownComponents } from "@/lib/blog-markdown"
 import { normalizeBlogMarkdown } from "@/lib/blog-markdown-normalize"
 import BlogKeyTakeaways from "@/components/blog/BlogKeyTakeaways"
 import BlogSeoLinks from "@/components/blog/BlogSeoLinks"
-import BlogShare from "@/components/blog/BlogShare"
-import { getBlogPostUrl } from "@/lib/blog-metadata"
+import BlogComments from "@/components/blog/BlogComments"
+import BlogCardActions from "@/components/blog/BlogCardActions"
+import { EMPTY_ENGAGEMENT, type BlogEngagement } from "@/lib/blog-engagement-shared"
+import { getVisitorId } from "@/lib/visitor-id"
 import type { BlogRecord } from "@/lib/blog-db"
-import { ArrowLeft, Clock, Calendar, User, Tag, Pencil, Trash2 } from "lucide-react"
-
-const CATEGORY_COLOR = "rgb(var(--accent-1))"
+import { ArrowLeft, Clock, Calendar, User, Tag, Pencil, Trash2, Eye } from "lucide-react"
 
 const CATEGORY_EMOJI: Record<string, string> = {
   Strategy: "🎯", Marketing: "📈", Design: "🎨", SEO: "🔍",
@@ -50,7 +50,43 @@ export default function BlogPostClient({
   const [loading, setLoading] = useState(!initialBlog)
   const [notFound, setNotFound] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [engagement, setEngagement] = useState<BlogEngagement | null>(null)
+  const [visitorId, setVisitorId] = useState("")
+  const viewRequest = useRef<{ id: string; done: Promise<void> } | null>(null)
   const router = useRouter()
+
+  /**
+   * Counts one view per post, then loads the tallies.
+   *
+   * The view POST is kept in a ref so React's double-invoked effects fire it
+   * only once, while the counts fetch re-runs on every invocation — guarding
+   * both with the same ref would let the cancelled first run claim it and
+   * leave the second with nothing to do. Awaiting the stored promise still
+   * guarantees the counts include the view just recorded.
+   */
+  useEffect(() => {
+    const id = blog?._id
+    if (!id) return
+
+    if (viewRequest.current?.id !== id) {
+      viewRequest.current = {
+        id,
+        done: fetch(`/api/blogs/${id}/view`, { method: "POST" }).then(() => {}, () => {}),
+      }
+    }
+
+    let cancelled = false
+    const vid = getVisitorId()
+    setVisitorId(vid)
+
+    viewRequest.current.done
+      .then(() => fetch(`/api/blogs/engagement?ids=${id}&visitorId=${vid}`))
+      .then(res => (res.ok ? res.json() : null))
+      .then(data => { if (data && !cancelled) setEngagement(data[id] ?? EMPTY_ENGAGEMENT) })
+      .catch(() => {})
+
+    return () => { cancelled = true }
+  }, [blog?._id])
 
   useEffect(() => {
     if (!initialBlog) {
@@ -104,12 +140,6 @@ export default function BlogPostClient({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
         >
-          <span
-            className="inline-block mb-4 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest text-white"
-            style={{ background: CATEGORY_COLOR }}
-          >
-            {blog.category}
-          </span>
           <h1
             className="font-bold text-flow-text leading-tight mb-4"
             style={{ fontSize: "clamp(1.6rem, 4vw, 2.8rem)" }}
@@ -120,6 +150,9 @@ export default function BlogPostClient({
             <span className="flex items-center gap-1.5"><User size={12} />{blog.author}</span>
             <span className="flex items-center gap-1.5"><Clock size={12} />{blog.readTime}</span>
             <span className="flex items-center gap-1.5"><Calendar size={12} />{formatDate(blog.createdAt, locale)}</span>
+            {engagement && (
+              <span className="flex items-center gap-1.5"><Eye size={12} />{engagement.views.toLocaleString()}</span>
+            )}
           </div>
         </motion.div>
       </div>
@@ -302,11 +335,22 @@ export default function BlogPostClient({
           </motion.div>
         )}
 
-        <BlogShare
-          url={getBlogPostUrl(blog.slug, "creative-surf")}
-          title={blog.title}
-          label={t("share")}
-        />
+        {/* Like / comment / share bar, sitting directly above the comments. */}
+        {engagement && (
+          <div className="mt-10 sm:mt-12">
+            <BlogCardActions
+              blogId={blog._id}
+              slug={blog.slug}
+              title={blog.title}
+              visitorId={visitorId}
+              engagement={engagement}
+              onEngagementChange={(_, next) => setEngagement(next)}
+              size="page"
+            />
+          </div>
+        )}
+
+        <BlogComments blogId={blog._id} />
 
         {/* Back link */}
         <div className="mt-10 sm:mt-12 pt-5 sm:pt-6" style={{ borderTop: "1px solid var(--flow-border)" }}>

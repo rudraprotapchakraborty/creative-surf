@@ -6,7 +6,10 @@ import { blogsMessages } from "@/lib/i18n/messages/blogs"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Plus, Pencil, Trash2, Clock, User, LogOut, Calendar } from "lucide-react"
+import { Plus, Pencil, Trash2, LogOut } from "lucide-react"
+import BlogCardActions from "@/components/blog/BlogCardActions"
+import { EMPTY_ENGAGEMENT, type BlogEngagement } from "@/lib/blog-engagement-shared"
+import { getVisitorId } from "@/lib/visitor-id"
 
 interface Blog {
   _id: string
@@ -22,8 +25,6 @@ interface Blog {
   published: boolean
   createdAt: string
 }
-
-const CATEGORY_COLOR = "rgb(var(--accent-1))"
 
 const CATEGORY_EMOJI: Record<string, string> = {
   Strategy: "🎯", Marketing: "📈", Design: "🎨", SEO: "🔍",
@@ -51,6 +52,8 @@ export default function BlogsPage() {
   const t = useT(blogsMessages)
   const locale = useLocale()
   const [blogs, setBlogs] = useState<Blog[]>([])
+  const [engagement, setEngagement] = useState<Record<string, BlogEngagement>>({})
+  const [visitorId, setVisitorId] = useState("")
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
   const [adminUsername, setAdminUsername] = useState("")
@@ -68,10 +71,31 @@ export default function BlogsPage() {
 
   useEffect(() => {
     fetchBlogs()
+    setVisitorId(getVisitorId())
     fetch("/api/auth/me").then(r => r.json()).then(d => {
       if (d.role === "admin") { setIsAdmin(true); setAdminUsername(d.username) }
     }).catch(() => {})
   }, [fetchBlogs])
+
+  // One batched request for every card's like/comment counts, re-run once the
+  // visitor id is known so the heart can render in its "already liked" state.
+  useEffect(() => {
+    if (blogs.length === 0) return
+    const ids = blogs.map(b => b._id).join(",")
+    const query = new URLSearchParams({ ids })
+    if (visitorId) query.set("visitorId", visitorId)
+
+    let cancelled = false
+    fetch(`/api/blogs/engagement?${query}`)
+      .then(r => (r.ok ? r.json() : {}))
+      .then(data => { if (!cancelled) setEngagement(data) })
+      .catch(() => {})
+    return () => { cancelled = true }
+  }, [blogs, visitorId])
+
+  const handleEngagementChange = useCallback((blogId: string, next: BlogEngagement) => {
+    setEngagement(prev => ({ ...prev, [blogId]: next }))
+  }, [])
 
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" })
@@ -278,14 +302,15 @@ export default function BlogsPage() {
                   </Link>
 
                   <div className="p-4 sm:p-5 flex flex-col flex-1">
-                    {/* Category + Admin controls */}
-                    <div className="flex items-center justify-between mb-3">
-                      <span
-                        className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white"
-                        style={{ background: CATEGORY_COLOR }}
+                    {/* Publish date + Admin controls — the cover art carries the category. */}
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                      <time
+                        dateTime={blog.createdAt}
+                        className="text-[11px] whitespace-nowrap"
+                        style={{ color: "rgb(var(--flow-text-soft))" }}
                       >
-                        {blog.category}
-                      </span>
+                        {formatDate(blog.createdAt, locale)}
+                      </time>
                       {isAdmin && (
                         <div className="flex gap-1.5">
                           <Link
@@ -318,21 +343,15 @@ export default function BlogsPage() {
                       {blog.excerpt}
                     </p>
 
-                    {/* Footer */}
-                    <div className="flex items-center justify-between gap-2 pt-3 flex-wrap" style={{ borderTop: "1px solid var(--flow-border)" }}>
-                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px]" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                        <span className="flex items-center gap-1"><User size={10} />{blog.author}</span>
-                        <span className="flex items-center gap-1"><Clock size={10} />{blog.readTime}</span>
-                        <span className="flex items-center gap-1"><Calendar size={10} />{formatDate(blog.createdAt, locale)}</span>
-                      </div>
-                      <Link
-                        href={`/blogs/${blog.slug}`}
-                        className="text-[11px] font-semibold shrink-0"
-                        style={{ color: "rgb(var(--accent-1))" }}
-                      >
-                        {t("read")}
-                      </Link>
-                    </div>
+                    {/* Footer — like / comment / share */}
+                    <BlogCardActions
+                      blogId={blog._id}
+                      slug={blog.slug}
+                      title={blog.title}
+                      visitorId={visitorId}
+                      engagement={engagement[blog._id] ?? EMPTY_ENGAGEMENT}
+                      onEngagementChange={handleEngagementChange}
+                    />
                   </div>
                 </motion.article>
               ))}
