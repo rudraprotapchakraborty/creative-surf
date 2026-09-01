@@ -10,14 +10,31 @@ import {
   type BlogComment,
 } from "@/lib/blog-engagement-shared"
 
+interface BlogCommentsProps {
+  blogId: string
+  /**
+   * `page` is the standalone section on a post page — anchored at `#comments`
+   * so a card's Comment button can deep-link to it. `feed` is the compact
+   * thread that expands inside a feed post, where the `#comments` id would be
+   * duplicated across every post in the list and the anchor scroll is wrong.
+   */
+  variant?: "page" | "feed"
+  /** Lets the feed keep its cached comment tally in step with new posts. */
+  onCountChange?: (blogId: string, count: number) => void
+}
+
 /**
- * Comment section for a blog post. Anchored at `#comments` so the Comment
- * button on a blog card can deep-link straight to it. No sign-in required —
- * a visitor supplies a display name with each comment.
+ * Comment section for a blog post. No sign-in required — a visitor supplies a
+ * display name with each comment.
  */
-export default function BlogComments({ blogId }: { blogId: string }) {
+export default function BlogComments({
+  blogId,
+  variant = "page",
+  onCountChange,
+}: BlogCommentsProps) {
   const t = useT(blogsMessages)
   const locale = useLocale()
+  const isFeed = variant === "feed"
   const [comments, setComments] = useState<BlogComment[] | null>(null)
   const [name, setName] = useState("")
   const [text, setText] = useState("")
@@ -43,12 +60,12 @@ export default function BlogComments({ blogId }: { blogId: string }) {
    * it lands short — scroll once the comments are in and the layout is final.
    */
   useEffect(() => {
-    if (didAnchorScroll.current || comments === null) return
+    if (isFeed || didAnchorScroll.current || comments === null) return
     if (window.location.hash !== "#comments") return
     didAnchorScroll.current = true
     // `html { scroll-behavior: smooth }` in globals.css drives the easing.
     sectionRef.current?.scrollIntoView({ block: "start" })
-  }, [comments])
+  }, [comments, isFeed])
 
   // Remember the commenter's name so repeat visitors do not retype it.
   useEffect(() => {
@@ -74,7 +91,11 @@ export default function BlogComments({ blogId }: { blogId: string }) {
       })
       if (!res.ok) throw new Error("post failed")
       const created: BlogComment = await res.json()
-      setComments(prev => [created, ...(prev ?? [])])
+      setComments(prev => {
+        const next = [created, ...(prev ?? [])]
+        onCountChange?.(blogId, next.length)
+        return next
+      })
       setText("")
       try { window.localStorage.setItem("cs-commenter-name", trimmedName) } catch {}
     } catch {
@@ -90,47 +111,72 @@ export default function BlogComments({ blogId }: { blogId: string }) {
 
   return (
     <section
-      id="comments"
+      // A feed renders one of these per post, so the shared anchor id is only
+      // safe on the single instance that lives on a post page.
+      id={isFeed ? undefined : "comments"}
       ref={sectionRef}
       // Clears the fixed navbar when the page jumps to this anchor.
-      style={{ borderTop: "1px solid var(--flow-border)", scrollMarginTop: 96 }}
-      className="mt-8 pt-6 sm:pt-8"
+      style={{
+        borderTop: "1px solid var(--flow-border)",
+        scrollMarginTop: isFeed ? undefined : 96,
+      }}
+      className={isFeed ? "mt-3 pt-3" : "mt-8 pt-6 sm:pt-8"}
     >
-      <h2 className="text-[11px] font-bold uppercase tracking-widest mb-4" style={{ color: "rgb(var(--flow-text-soft))" }}>
-        {t("commentsTitle")}
-        {comments && comments.length > 0 && ` (${comments.length})`}
-      </h2>
+      {!isFeed && (
+        <h2 className="text-[11px] font-bold uppercase tracking-widest mb-4" style={{ color: "rgb(var(--flow-text-soft))" }}>
+          {t("commentsTitle")}
+          {comments && comments.length > 0 && ` (${comments.length})`}
+        </h2>
+      )}
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2.5 mb-8">
+      <form
+        onSubmit={handleSubmit}
+        className={isFeed ? "flex flex-col gap-2 mb-4" : "flex flex-col gap-2.5 mb-8"}
+      >
         <input
           value={name}
           onChange={e => setName(e.target.value)}
           maxLength={MAX_NAME_LENGTH}
           placeholder={t("yourName")}
           required
-          className="w-full px-3.5 py-2.5 rounded-xl text-sm outline-none text-flow-text"
+          className={`w-full outline-none text-flow-text ${isFeed ? "px-3 py-2 rounded-full text-[13px]" : "px-3.5 py-2.5 rounded-xl text-sm"}`}
           style={fieldStyle}
         />
-        <textarea
-          value={text}
-          onChange={e => setText(e.target.value)}
-          maxLength={MAX_COMMENT_LENGTH}
-          rows={4}
-          placeholder={t("writeComment")}
-          required
-          className="w-full px-3.5 py-2.5 rounded-xl text-sm outline-none resize-y text-flow-text"
-          style={fieldStyle}
-        />
+        <div className={isFeed ? "flex items-end gap-2" : "contents"}>
+          <textarea
+            value={text}
+            onChange={e => setText(e.target.value)}
+            maxLength={MAX_COMMENT_LENGTH}
+            rows={isFeed ? 1 : 4}
+            placeholder={t("writeComment")}
+            required
+            className={`w-full outline-none resize-y text-flow-text ${isFeed ? "px-3 py-2 rounded-2xl text-[13px] min-h-[38px]" : "px-3.5 py-2.5 rounded-xl text-sm"}`}
+            style={fieldStyle}
+          />
+          {isFeed && (
+            <button
+              type="submit"
+              disabled={posting || !name.trim() || !text.trim()}
+              className="shrink-0 inline-flex items-center justify-center rounded-full text-white transition-all disabled:opacity-40"
+              style={{ width: 38, height: 38, background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
+              aria-label={t("postComment")}
+            >
+              <Send size={15} />
+            </button>
+          )}
+        </div>
         {error && <p className="text-xs" style={{ color: "rgb(239 68 68)" }}>{error}</p>}
-        <button
-          type="submit"
-          disabled={posting || !name.trim() || !text.trim()}
-          className="self-start inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all disabled:opacity-50"
-          style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
-        >
-          <Send size={14} />
-          {posting ? t("posting") : t("postComment")}
-        </button>
+        {!isFeed && (
+          <button
+            type="submit"
+            disabled={posting || !name.trim() || !text.trim()}
+            className="self-start inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all disabled:opacity-50"
+            style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
+          >
+            <Send size={14} />
+            {posting ? t("posting") : t("postComment")}
+          </button>
+        )}
       </form>
 
       {comments === null && (
@@ -144,27 +190,50 @@ export default function BlogComments({ blogId }: { blogId: string }) {
       )}
 
       {comments && comments.length > 0 && (
-        <ul className="flex flex-col gap-5">
+        <ul className={isFeed ? "flex flex-col gap-3" : "flex flex-col gap-5"}>
           {comments.map(c => (
-            <li key={c._id} className="flex gap-3">
+            <li key={c._id} className="flex gap-2.5">
               <div
-                className="shrink-0 flex items-center justify-center rounded-full text-xs font-bold text-white"
-                style={{ width: 36, height: 36, background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
+                className="shrink-0 flex items-center justify-center rounded-full font-bold text-white"
+                style={{
+                  width: isFeed ? 30 : 36,
+                  height: isFeed ? 30 : 36,
+                  fontSize: isFeed ? 11 : 12,
+                  background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))",
+                }}
                 aria-hidden="true"
               >
                 {c.name.charAt(0).toUpperCase()}
               </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-baseline gap-2 flex-wrap">
-                  <span className="text-sm font-bold text-flow-text">{c.name}</span>
-                  <span className="text-[11px]" style={{ color: "rgb(var(--flow-text-soft))" }}>
+              {isFeed ? (
+                /* Facebook-style: name and text share one rounded bubble. */
+                <div className="min-w-0 flex-1">
+                  <div
+                    className="inline-block max-w-full rounded-2xl px-3 py-2"
+                    style={{ background: "rgb(var(--flow-border) / 0.5)" }}
+                  >
+                    <span className="block text-[13px] font-bold text-flow-text">{c.name}</span>
+                    <p className="text-[13px] leading-relaxed whitespace-pre-wrap break-words text-flow-text">
+                      {c.text}
+                    </p>
+                  </div>
+                  <span className="block mt-1 ml-3 text-[11px]" style={{ color: "rgb(var(--flow-text-soft))" }}>
                     {formatDateForLocale(c.createdAt, locale, { month: "short", day: "numeric", year: "numeric" })}
                   </span>
                 </div>
-                <p className="text-sm leading-relaxed mt-1 whitespace-pre-wrap break-words" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                  {c.text}
-                </p>
-              </div>
+              ) : (
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <span className="text-sm font-bold text-flow-text">{c.name}</span>
+                    <span className="text-[11px]" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                      {formatDateForLocale(c.createdAt, locale, { month: "short", day: "numeric", year: "numeric" })}
+                    </span>
+                  </div>
+                  <p className="text-sm leading-relaxed mt-1 whitespace-pre-wrap break-words" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                    {c.text}
+                  </p>
+                </div>
+              )}
             </li>
           ))}
         </ul>

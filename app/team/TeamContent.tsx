@@ -2,19 +2,21 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Megaphone, Code2, PenLine, Clapperboard, Film } from "lucide-react";
+import { ArrowRight, Megaphone, Code2, PenLine, Clapperboard, Film, Mail } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { teamMessages } from "@/lib/i18n/messages/team";
 
 /**
- * Names and cities are proper nouns and stay in code; the role label, bio and
- * accent are looked up per member so the page follows the visitor's language.
+ * Names, cities and emails are proper nouns and stay in code; the role label,
+ * bio and accent are looked up per member so the page follows the visitor's
+ * language.
  */
 const TEAM = [
   {
     name: "Mehedee Hasan",
     initials: "MH",
     location: "Dhaka, Bangladesh",
+    email: "creativesurfagency@gmail.com",
     roleKey: "roles.marketingLead",
     bioKey: "bios.marketingLead",
     icon: Megaphone,
@@ -24,6 +26,7 @@ const TEAM = [
     name: "Rudra Protap Chakraborty",
     initials: "RC",
     location: "Kolkata, India",
+    email: "rudra@rudraprotapchakraborty.com",
     roleKey: "roles.webDeveloper",
     bioKey: "bios.webDeveloper",
     icon: Code2,
@@ -33,6 +36,7 @@ const TEAM = [
     name: "Shariful Hoque",
     initials: "SH",
     location: "Dhaka, Bangladesh",
+    email: "sharifastronaut@gmail.com",
     roleKey: "roles.contentStrategist",
     bioKey: "bios.contentStrategist",
     icon: PenLine,
@@ -42,6 +46,7 @@ const TEAM = [
     name: "Shah Mahbood Ch.",
     initials: "SM",
     location: "Innsbruck, Austria",
+    email: "creativesurfagency@gmail.com",
     roleKey: "roles.visualiser",
     bioKey: "bios.visualiser",
     icon: Clapperboard,
@@ -51,6 +56,7 @@ const TEAM = [
     name: "Iftekhar Arnob",
     initials: "IA",
     location: "Innsbruck, Austria",
+    email: "creativesurfagency@gmail.com",
     roleKey: "roles.visualiser",
     bioKey: "bios.editor",
     icon: Film,
@@ -100,7 +106,7 @@ export default function TeamContent() {
               return (
                 <motion.article
                   key={member.name}
-                  className="group relative glass border border-flow-border rounded-3xl p-8 text-center shadow-soft transition-transform duration-300 hover:-translate-y-2"
+                  className="group relative flex flex-col glass border border-flow-border rounded-3xl p-8 text-center shadow-soft transition-transform duration-300 hover:-translate-y-2"
                   initial={{ opacity: 0, y: 32 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.55, delay: i * 0.1 }}
@@ -140,6 +146,13 @@ export default function TeamContent() {
                   <p className="mt-4 text-sm leading-relaxed text-flow-textSoft">
                     {t(member.bioKey)}
                   </p>
+                  <a
+                    href={`mailto:${member.email}`}
+                    className="mt-auto pt-4 flex items-center justify-center gap-2 text-xs font-medium text-flow-textSoft break-all hover:text-flow-text transition-colors"
+                  >
+                    <Mail className="w-3.5 h-3.5 shrink-0" aria-hidden />
+                    {member.email}
+                  </a>
                 </motion.article>
               );
             })}

@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getDb } from '@/lib/mongodb'
-import { requireAdmin } from '@/lib/auth'
-
-function slugify(text: string) {
-  return text.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/(^-|-$)/g, '')
-}
+import { requireUser } from '@/lib/auth'
+import { sanitizeBlogInput, validateBlogInput } from '@/lib/blog-input'
 
 export async function GET() {
   try {
@@ -16,18 +13,29 @@ export async function GET() {
   }
 }
 
+/** Any signed-in account may publish; the session decides who owns the result. */
 export async function POST(request: NextRequest) {
-  const denied = requireAdmin(request)
-  if (denied) return denied
+  const gate = requireUser(request)
+  if ('denied' in gate) return gate.denied
+  const { auth } = gate
 
   try {
     const db = await getDb()
-    const data = await request.json()
+    const input = sanitizeBlogInput(await request.json())
 
-    if (!data.slug && data.title) data.slug = slugify(data.title)
+    const invalid = validateBlogInput(input)
+    if (invalid) return NextResponse.json({ error: invalid }, { status: 400 })
 
     const now = new Date()
-    const doc = { ...data, createdAt: now, updatedAt: now }
+    const doc = {
+      ...input,
+      // Stamped from the token, never from the body — this is what every later
+      // edit and delete check is measured against.
+      authorId: auth.sub,
+      authorRole: auth.role,
+      createdAt: now,
+      updatedAt: now,
+    }
 
     const result = await db.collection('blogs').insertOne(doc)
     return NextResponse.json({ ...doc, _id: result.insertedId }, { status: 201 })

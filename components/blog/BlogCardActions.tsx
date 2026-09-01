@@ -47,6 +47,13 @@ interface BlogCardActionsProps {
   size?: "card" | "page"
   /** Which blog section the post belongs to — decides the canonical share URL. */
   site?: BlogSite
+  /**
+   * When set, Comment expands an inline thread in place instead of deep-linking
+   * to the post page — the feed passes this, the post page does not.
+   */
+  onToggleComments?: () => void
+  /** Drives `aria-expanded` on the Comment button when it toggles inline. */
+  commentsOpen?: boolean
 }
 
 export default function BlogCardActions({
@@ -58,6 +65,8 @@ export default function BlogCardActions({
   onEngagementChange,
   size = "card",
   site = "creative-surf",
+  onToggleComments,
+  commentsOpen,
 }: BlogCardActionsProps) {
   const t = useT(blogsMessages)
   const [shareOpen, setShareOpen] = useState(false)
@@ -118,6 +127,12 @@ export default function BlogCardActions({
    * a no-op — so scroll to it instead.
    */
   function handleCommentClick(e: React.MouseEvent) {
+    // In a feed the thread lives under this very card — never navigate away.
+    if (onToggleComments) {
+      e.preventDefault()
+      onToggleComments()
+      return
+    }
     const section = document.getElementById("comments")
     if (!section) return
     e.preventDefault()
@@ -214,10 +229,11 @@ export default function BlogCardActions({
           href={commentsHref}
           onClick={handleCommentClick}
           className={actionBtn}
-          style={{ color: "rgb(var(--flow-text-soft))" }}
+          style={{ color: commentsOpen ? "rgb(var(--accent-1))" : "rgb(var(--flow-text-soft))" }}
           title={t("comment")}
+          aria-expanded={onToggleComments ? Boolean(commentsOpen) : undefined}
         >
-          <MessageCircle size={icon} />
+          <MessageCircle size={icon} fill={commentsOpen ? "currentColor" : "none"} />
           {t("comment")}
         </Link>
 

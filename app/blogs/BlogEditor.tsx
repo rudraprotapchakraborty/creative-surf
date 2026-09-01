@@ -104,15 +104,19 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(isEdit)
   const [showSeoValidation, setShowSeoValidation] = useState(false)
+  const [viewer, setViewer] = useState<{ sub: string; role: string } | null>(null)
+  /** Owner of the post being edited — "" for a new post. */
+  const [ownerId, setOwnerId] = useState("")
   const router = useRouter()
 
-  // Auth guard
+  // Auth guard — any signed-in account may write; the API is what actually
+  // enforces who may edit an existing post.
   useEffect(() => {
     fetch("/api/auth/me")
       .then(r => r.json())
       .then(d => {
         if (!d.authenticated) router.push("/login")
-        else if (d.role !== "admin") router.push("/account")
+        else setViewer({ sub: d.user?.sub ?? "", role: d.role })
       })
       .catch(() => router.push("/login"))
   }, [router])
@@ -137,10 +141,22 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
           coverImage: data.coverImage ?? "",
           ...seo,
         })
+        setOwnerId(typeof data.authorId === "string" ? data.authorId : "")
         setLoading(false)
       })
       .catch(() => { setError("Failed to load blog post."); setLoading(false) })
   }, [isEdit, blogId])
+
+  /**
+   * Don't sit in an editor whose Save the API will refuse. Mirrors
+   * `canManageBlog` — admins edit anything, writers only their own, and posts
+   * saved before ownership existed carry no `authorId` so they stay admin-only.
+   */
+  useEffect(() => {
+    if (!isEdit || loading || !viewer) return
+    const mayEdit = viewer.role === "admin" || (!!ownerId && ownerId === viewer.sub)
+    if (!mayEdit) router.push("/blogs")
+  }, [isEdit, loading, viewer, ownerId, router])
 
   const set = useCallback(<K extends keyof BlogForm>(key: K, value: BlogForm[K]) => {
     setForm(prev => ({ ...prev, [key]: value }))

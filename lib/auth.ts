@@ -78,6 +78,32 @@ export function requireAdmin(request: NextRequest): NextResponse | null {
   return null
 }
 
+/**
+ * Guard for routes any signed-in account may use, such as creating a post.
+ * Returns the caller when allowed, or a 401 response to send back.
+ */
+export function requireUser(request: NextRequest): { auth: AuthPayload } | { denied: NextResponse } {
+  const auth = getAuth(request)
+  if (!auth) return { denied: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }) }
+  return { auth }
+}
+
+/**
+ * Who may edit or delete a post: an admin, or the account that wrote it.
+ *
+ * Posts created before author ownership existed carry no `authorId`, so they
+ * stay admin-only rather than falling open to whoever asks.
+ */
+export function canManageBlog(
+  auth: AuthPayload | null,
+  blog: Record<string, unknown> | null
+): boolean {
+  if (!auth || !blog) return false
+  if (isAdmin(auth)) return true
+  const ownerId = typeof blog.authorId === 'string' ? blog.authorId : null
+  return ownerId !== null && ownerId === auth.sub
+}
+
 /** Attaches the session cookie to a response. */
 export function setSessionCookie(response: NextResponse, token: string): NextResponse {
   response.cookies.set(COOKIE_NAME, token, {

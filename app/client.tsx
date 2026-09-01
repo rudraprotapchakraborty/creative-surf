@@ -35,6 +35,26 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} className={`${jakarta.variable} font-sans`} suppressHydrationWarning>
+      <head>
+        {/*
+          One-time reset of a stale saved theme.
+
+          The site has always defaulted to light and ignores the OS setting
+          (`enableSystem={false}`), but an earlier build forced `dark` on the
+          real-estate section and persisted it under the same key — leaving
+          those visitors stuck dark on the main site with no clue why.
+
+          This clears that once per browser, then never runs again, so a
+          deliberate switch to dark still persists as normal. It has to be a
+          blocking script in <head>: next-themes reads localStorage from its
+          own inline script in <body>, so anything later would be too late.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var k='cs-theme-reset-v1';if(!localStorage.getItem(k)){if(localStorage.getItem('theme')==='dark'){localStorage.setItem('theme','light')}localStorage.setItem(k,'1')}}catch(e){}`,
+          }}
+        />
+      </head>
       <body suppressHydrationWarning>
         <LanguageProvider initialLocale={locale}>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
