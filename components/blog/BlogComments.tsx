@@ -67,6 +67,15 @@ export default function BlogComments({
     sectionRef.current?.scrollIntoView({ block: "start" })
   }, [comments, isFeed])
 
+  /**
+   * Report the comment count to the feed as a side effect, never during render.
+   * Also fires once the list first loads, which corrects the card's cached
+   * tally when a thread is opened.
+   */
+  useEffect(() => {
+    if (comments) onCountChange?.(blogId, comments.length)
+  }, [comments, blogId, onCountChange])
+
   // Remember the commenter's name so repeat visitors do not retype it.
   useEffect(() => {
     try {
@@ -91,11 +100,10 @@ export default function BlogComments({
       })
       if (!res.ok) throw new Error("post failed")
       const created: BlogComment = await res.json()
-      setComments(prev => {
-        const next = [created, ...(prev ?? [])]
-        onCountChange?.(blogId, next.length)
-        return next
-      })
+      // The parent is told the new count by the effect below, not from inside
+      // this updater — an updater must stay pure, and React may run it during
+      // render, which would set state on the parent mid-render.
+      setComments(prev => [created, ...(prev ?? [])])
       setText("")
       try { window.localStorage.setItem("cs-commenter-name", trimmedName) } catch {}
     } catch {

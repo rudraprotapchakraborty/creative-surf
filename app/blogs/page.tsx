@@ -161,12 +161,17 @@ export default function BlogsPage() {
     setEngagement(prev => ({ ...prev, [blogId]: next }))
   }, [])
 
-  /** Keeps the summary row honest when a comment is posted inline. */
+  /**
+   * Keeps the summary row honest when a comment is posted inline. Returns the
+   * previous state untouched when the count already matches, so the thread
+   * reporting its count on open cannot churn a re-render of the whole feed.
+   */
   const handleCommentCount = useCallback((blogId: string, count: number) => {
-    setEngagement(prev => ({
-      ...prev,
-      [blogId]: { ...(prev[blogId] ?? EMPTY_ENGAGEMENT), comments: count },
-    }))
+    setEngagement(prev => {
+      const current = prev[blogId] ?? EMPTY_ENGAGEMENT
+      if (current.comments === count) return prev
+      return { ...prev, [blogId]: { ...current, comments: count } }
+    })
   }, [])
 
   const toggleComments = useCallback((blogId: string) => {
