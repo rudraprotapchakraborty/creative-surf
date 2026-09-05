@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Menu, X, ArrowRight } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -12,6 +12,88 @@ import { GuestMenu, UserMenu } from "@/components/auth/user-menu";
 import { useT } from "@/lib/i18n";
 import { navMessages } from "@/lib/i18n/messages/nav";
 import { NAVBAR_PANEL_TOP, NAVBAR_RIGHT_OFFSET } from "@/lib/navbar-offset";
+
+type NavSection = { label: string; href: string; active: boolean };
+
+
+/** Measuring before paint keeps the indicator from flashing in from zero width. */
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
+/**
+ * The Marketing / Real Estate / CV Builder switch, shared by the desktop bar
+ * and the mobile sheet.
+ *
+ * The indicator is measured off the active link rather than assuming equal
+ * thirds: the three labels are different lengths, and different again in every
+ * locale, so a fractional width would sit visibly off the word it highlights.
+ */
+function SectionToggle({
+  sections,
+  gradient,
+  variant,
+  className,
+  onSelect,
+}: {
+  sections: NavSection[];
+  gradient: string;
+  variant: "desktop" | "mobile";
+  className?: string;
+  onSelect?: () => void;
+}) {
+  const listRef = useRef<HTMLDivElement>(null);
+  const [indicator, setIndicator] = useState({ x: 0, width: 0 });
+  const activeHref = sections.find((section) => section.active)?.href;
+
+  useIsomorphicLayoutEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const measure = () => {
+      const active = list.querySelector<HTMLElement>("[data-active='true']");
+      // offsetLeft is measured from the border box; the indicator sits inside it.
+      if (active) setIndicator({ x: active.offsetLeft - list.clientLeft, width: active.offsetWidth });
+    };
+    measure();
+    // Labels reflow when the locale or the viewport changes — both move the pill.
+    const observer = new ResizeObserver(measure);
+    observer.observe(list);
+    return () => observer.disconnect();
+  }, [activeHref, sections.length]);
+
+  const radius = variant === "desktop" ? "rounded-full" : "rounded-xl";
+
+  return (
+    <div
+      ref={listRef}
+      className={`relative flex items-stretch glass border border-flow-border p-1 ${
+        variant === "desktop" ? "rounded-full" : "rounded-2xl"
+      } ${className ?? ""}`}
+    >
+      <span
+        aria-hidden
+        className={`absolute top-1 bottom-1 left-0 shadow-sm transition-[transform,width] duration-300 ease-out ${radius}`}
+        style={{
+          background: gradient,
+          width: indicator.width,
+          transform: `translateX(${indicator.x}px)`,
+        }}
+      />
+      {sections.map((section) => (
+        <Link
+          key={section.href}
+          href={section.href}
+          onClick={onSelect}
+          data-active={section.active}
+          aria-current={section.active ? "page" : undefined}
+          className={`relative z-10 flex-1 whitespace-nowrap px-3 py-2 text-center text-xs font-semibold transition-colors ${radius} ${
+            section.active ? "text-white" : "text-flow-textSoft hover:text-flow-text"
+          }`}
+        >
+          {section.label}
+        </Link>
+      ))}
+    </div>
+  );
+}
 
 export function Navbar() {
   const pathname = usePathname();
@@ -35,17 +117,20 @@ export function Navbar() {
         { label: t("links.team"),      href: "/team" },
       ];
 
+  // The toggle switches between the agency's two sides, each with its own logo,
+  // palette and content tree. Individual pages belong in the link pill above.
   const sections = [
     { label: t("sections.marketing"),  href: "/",            active: !isRE },
     { label: t("sections.realEstate"), href: "/real-estate", active: isRE  },
   ];
-  // Active index drives the sliding indicator (transform-based, so it never
-  // depends on scroll position — avoids the layoutId "fly from bottom" jump).
-  const activeIndex = isRE ? 1 : 0;
   const activeGrad = isRE
     ? "linear-gradient(135deg,#B8892A,#D4A843)"
     : "linear-gradient(135deg,#0066A2,#0EA5E9)";
-  const pillSpring = { type: "spring", stiffness: 400, damping: 34 } as const;
+
+  // Section landing pages match exactly; everything else matches by prefix so a
+  // blog post still lights up "Blogs".
+  const isCurrentPage = (href: string) =>
+    href === "/" || href === "/real-estate" ? pathname === href : pathname.startsWith(href);
 
   // Shared by the desktop "Sign up" / "Account" button — whichever is showing is
   // the single primary action, so it keeps the section's accent gradient.
@@ -98,41 +183,32 @@ export function Navbar() {
 
           {/* DESKTOP — nav pill */}
           <div className="hidden md:flex items-center gap-1 glass border border-flow-border px-2 py-1.5 rounded-full">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="px-4 py-2 rounded-full text-flow-textSoft text-xs font-semibold hover:text-flow-text hover:bg-flow-card transition-all"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const current = isCurrentPage(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={current ? "page" : undefined}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${
+                    current
+                      ? "bg-flow-card text-flow-text"
+                      : "text-flow-textSoft hover:text-flow-text hover:bg-flow-card"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </div>
 
-          {/* DESKTOP — section toggle (Marketing ⇄ Real Estate) */}
-          <div className="hidden md:flex relative items-stretch rounded-full glass border border-flow-border p-1">
-            {/* sliding indicator */}
-            <motion.span
-              aria-hidden
-              className="absolute top-1 bottom-1 left-1 rounded-full shadow-sm"
-              style={{ width: "calc(50% - 0.25rem)", background: activeGrad }}
-              initial={false}
-              animate={{ x: `${activeIndex * 100}%` }}
-              transition={pillSpring}
-            />
-            {sections.map((s) => (
-              <Link
-                key={s.href}
-                href={s.href}
-                aria-current={s.active ? "page" : undefined}
-                className={`relative z-10 flex-1 whitespace-nowrap text-center px-5 py-2 rounded-full text-xs font-semibold transition-colors ${
-                  s.active ? "text-white" : "text-flow-textSoft hover:text-flow-text"
-                }`}
-              >
-                {s.label}
-              </Link>
-            ))}
-          </div>
+          {/* DESKTOP — section toggle (Marketing / Real Estate / CV Builder) */}
+          <SectionToggle
+            sections={sections}
+            gradient={activeGrad}
+            variant="desktop"
+            className="hidden md:flex"
+          />
 
           {/* DESKTOP — language + theme + auth */}
           <div className="hidden md:flex items-center gap-2">
@@ -217,41 +293,32 @@ export function Navbar() {
           >
             {/* Nav links */}
             <div className="flex flex-col p-2">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="px-4 py-3 rounded-xl text-sm font-semibold text-flow-textSoft hover:text-flow-text hover:bg-flow-card transition-all"
-                >
-                  {link.label}
-                </Link>
-              ))}
-              {/* Section toggle (Marketing ⇄ Real Estate) */}
-              <div className="mt-1 relative flex p-1 rounded-2xl glass border border-flow-border">
-                {/* sliding indicator */}
-                <motion.span
-                  aria-hidden
-                  className="absolute top-1 bottom-1 left-1 rounded-xl"
-                  style={{ width: "calc(50% - 0.25rem)", background: activeGrad }}
-                  initial={false}
-                  animate={{ x: `${activeIndex * 100}%` }}
-                  transition={pillSpring}
-                />
-                {sections.map((s) => (
+              {navLinks.map((link) => {
+                const current = isCurrentPage(link.href);
+                return (
                   <Link
-                    key={s.href}
-                    href={s.href}
+                    key={link.href}
+                    href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    aria-current={s.active ? "page" : undefined}
-                    className={`relative z-10 flex-1 whitespace-nowrap text-center px-3 py-2 rounded-xl text-sm font-semibold transition-colors ${
-                      s.active ? "text-white" : "text-flow-textSoft"
+                    aria-current={current ? "page" : undefined}
+                    className={`px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
+                      current
+                        ? "bg-flow-card text-flow-text"
+                        : "text-flow-textSoft hover:text-flow-text hover:bg-flow-card"
                     }`}
                   >
-                    {s.label}
+                    {link.label}
                   </Link>
-                ))}
-              </div>
+                );
+              })}
+              {/* Section toggle (Marketing / Real Estate / CV Builder) */}
+              <SectionToggle
+                sections={sections}
+                gradient={activeGrad}
+                variant="mobile"
+                className="mt-1"
+                onSelect={() => setMobileOpen(false)}
+              />
 
               {/* Theme */}
               <div className="mt-1">
