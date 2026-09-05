@@ -4,6 +4,7 @@ import {
   MAX_BATCH_IDS,
   isValidVisitorId,
   type BlogComment,
+  type CommentViewer,
   type BlogEngagement,
   type ShareNetwork,
 } from "@/lib/blog-engagement-shared"
@@ -141,13 +142,85 @@ export async function recordBlogView(blogId: string): Promise<{ views: number }>
   return { views: Number(doc?.count ?? 1) }
 }
 
-export function serializeComment(doc: Record<string, unknown>): BlogComment {
+export function serializeComment(
+  doc: Record<string, unknown>,
+  viewer?: CommentViewer | null
+): BlogComment {
+  const userId = String(doc.userId ?? "")
   return {
     _id: String(doc._id),
     name: String(doc.name ?? ""),
+    avatar: String(doc.avatar ?? ""),
     text: String(doc.text ?? ""),
     createdAt: doc.createdAt
       ? new Date(doc.createdAt as string | Date).toISOString()
       : new Date().toISOString(),
+    editedAt: doc.editedAt ? new Date(doc.editedAt as string | Date).toISOString() : "",
+    canDelete: Boolean(viewer && (viewer.isAdmin || (userId !== "" && userId === viewer.userId))),
+    canEdit: Boolean(viewer && userId !== "" && userId === viewer.userId),
   }
+}
+
+export type CommentDeleteResult = "deleted" | "forbidden" | "not_found"
+
+/**
+ * Removes a comment on behalf of the given viewer.
+ *
+ * Ownership lives in the delete filter rather than in a preceding check, so
+ * another account's comment simply does not match — there is no window between
+ * deciding and writing. The follow-up existence check exists only to tell
+ * "not yours" apart from "already gone" for the status code.
+ */
+export async function deleteBlogComment(
+  commentId: string,
+  viewer: CommentViewer
+): Promise<CommentDeleteResult> {
+  const oid = toBlogObjectId(commentId)
+  if (!oid) return "not_found"
+
+  const db = await getDb()
+  const comments = db.collection(COMMENTS_COLLECTION)
+
+  const filter = viewer.isAdmin ? { _id: oid } : { _id: oid, userId: viewer.userId }
+  const result = await comments.deleteOne(filter)
+  if (result.deletedCount === 1) return "deleted"
+
+  const stillThere = await comments.countDocuments({ _id: oid }, { limit: 1 })
+  return stillThere > 0 ? "forbidden" : "not_found"
+}
+
+export type CommentUpdateResult =
+  | { status: "updated"; comment: BlogComment }
+  | { status: "forbidden" }
+  | { status: "not_found" }
+
+/**
+ * Rewrites a comment's text on behalf of its author.
+ *
+ * Unlike deletion there is no admin branch: ownership is the whole condition,
+ * so the update filter carries it and nobody can edit words they did not write.
+ */
+export async function updateBlogComment(
+  commentId: string,
+  viewer: CommentViewer,
+  text: string
+): Promise<CommentUpdateResult> {
+  const oid = toBlogObjectId(commentId)
+  if (!oid) return { status: "not_found" }
+
+  const db = await getDb()
+  const comments = db.collection(COMMENTS_COLLECTION)
+
+  const updated = await comments.findOneAndUpdate(
+    { _id: oid, userId: viewer.userId },
+    { $set: { text, editedAt: new Date() } },
+    { returnDocument: "after" }
+  )
+
+  if (updated) {
+    return { status: "updated", comment: serializeComment(updated as Record<string, unknown>, viewer) }
+  }
+
+  const stillThere = await comments.countDocuments({ _id: oid }, { limit: 1 })
+  return { status: stillThere > 0 ? "forbidden" : "not_found" }
 }

@@ -10,9 +10,32 @@ export const MAX_BATCH_IDS = 60
 
 export interface BlogComment {
   _id: string
+  /** Display name copied from the account at post time, so a later rename does
+   *  not silently rewrite history in an existing thread. */
   name: string
+  avatar: string
   text: string
   createdAt: string
+  /** ISO timestamp of the last edit, or "" if never edited. */
+  editedAt: string
+  /**
+   * Whether the account asking for this list may delete this comment: its
+   * author, or an admin. Resolved on the server so the browser is never handed
+   * other people's user ids to compare against.
+   */
+  canDelete: boolean
+  /**
+   * Whether they may edit it. Authors only — an admin moderating by rewriting
+   * someone else's words would be worse than removing the comment outright,
+   * so admins get delete without edit.
+   */
+  canEdit: boolean
+}
+
+/** Who is asking, for the purpose of resolving canDelete. */
+export interface CommentViewer {
+  userId: string
+  isAdmin: boolean
 }
 
 export interface BlogEngagement {

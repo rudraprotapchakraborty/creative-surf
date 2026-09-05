@@ -192,8 +192,8 @@ export function Navbar() {
                   aria-current={current ? "page" : undefined}
                   className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${
                     current
-                      ? "bg-flow-card text-flow-text"
-                      : "text-flow-textSoft hover:text-flow-text hover:bg-flow-card"
+                      ? "bg-flow-text/[0.07] text-flow-text"
+                      : "text-flow-textSoft hover:bg-flow-text/[0.04] hover:text-flow-text"
                   }`}
                 >
                   {link.label}
@@ -303,8 +303,8 @@ export function Navbar() {
                     aria-current={current ? "page" : undefined}
                     className={`px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
                       current
-                        ? "bg-flow-card text-flow-text"
-                        : "text-flow-textSoft hover:text-flow-text hover:bg-flow-card"
+                        ? "bg-flow-text/[0.07] text-flow-text"
+                        : "text-flow-textSoft hover:bg-flow-text/[0.04] hover:text-flow-text"
                     }`}
                   >
                     {link.label}
