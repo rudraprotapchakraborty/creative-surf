@@ -12,6 +12,28 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function CvBuilderPage() {
-  return <CvBuilderClient />;
+export default async function CvBuilderPage() {
+  const t = await getTranslator(cvBuilderMessages);
+
+  // The page already answers these in the FAQ accordion; publishing the same
+  // answers as structured data lets search engines show them directly.
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: t.raw<{ q: string; a: string }[]>("faq.items", []).map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <CvBuilderClient />
+    </>
+  );
 }
