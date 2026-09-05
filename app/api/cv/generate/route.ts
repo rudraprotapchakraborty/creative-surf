@@ -34,6 +34,13 @@ function rateLimited(ip: string): boolean {
   return false;
 }
 
+/**
+ * Groq retires models on a rolling basis, and the id is the thing that breaks
+ * when they do. Kept here so a swap is one line — check the current list at
+ * https://console.groq.com/docs/models when generation starts 404ing.
+ */
+const GROQ_MODEL = "openai/gpt-oss-120b";
+
 const TONE_GUIDANCE: Record<CvInput["tone"], string> = {
   professional:
     "Polished and formal. Full, well-formed sentences in the summary; measured, confident bullets.",
@@ -124,17 +131,30 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  // Provider 1: Groq Cloud (Free Llama 3.3 70B)
+  /** Saves the CV and returns it. A failed save must not lose the candidate's work. */
+  const respond = async (cv: GeneratedCv) => {
+    let cvId = "";
+    try {
+      cvId = await saveCv(auth.sub, auth.email || "", input, cv);
+    } catch (saveErr) {
+      console.error("Failed to auto-save CV to MongoDB:", saveErr);
+    }
+    return NextResponse.json({ cv, cvId });
+  };
+
+  // Provider 1: Groq Cloud
   if (groqKey) {
     try {
       const groq = new Groq({ apiKey: groqKey });
       const completion = await groq.chat.completions.create({
-        model: "llama-3.3-70b-versatile",
+        model: GROQ_MODEL,
         response_format: { type: "json_object" },
         messages: [
           {
             role: "system",
-            content: `${SYSTEM_PROMPT}\nReturn strictly a JSON object matching this schema:\n${JSON.stringify(CV_JSON_SCHEMA)}`,
+            content: `${SYSTEM_PROMPT}
+Return strictly a JSON object matching this schema:
+${JSON.stringify(CV_JSON_SCHEMA)}`,
           },
           { role: "user", content: buildUserPrompt(input) },
         ],
@@ -144,21 +164,11 @@ export async function POST(request: NextRequest) {
       const content = completion.choices[0]?.message?.content;
       if (!content) throw new Error("Groq returned no content");
 
-      const cv = JSON.parse(content) as GeneratedCv;
-      let cvId = "";
-      try {
-        cvId = await saveCv(auth.sub, auth.email || "", input, cv);
-      } catch (saveErr) {
-        console.error("Failed to auto-save CV to MongoDB:", saveErr);
-      }
-
-      return NextResponse.json({ cv, cvId });
-    } catch (err: any) {
-      console.error("CV generation with Groq failed:", err);
-      return NextResponse.json(
-        { error: err?.message || "CV generation with Groq failed. Please check GROQ_API_KEY in .env.local." },
-        { status: 500 }
-      );
+      return await respond(JSON.parse(content) as GeneratedCv);
+    } catch (err) {
+      // Deliberately not returned: a dead model or an expired key on one
+      // provider should hand over to the other, not take the tool down.
+      console.error("CV generation with Groq failed, falling back:", err);
     }
   }
 
@@ -179,27 +189,20 @@ export async function POST(request: NextRequest) {
       const text = response.text;
       if (!text) throw new Error("Model returned no text output");
 
-      const cv = JSON.parse(text) as GeneratedCv;
-      let cvId = "";
-      try {
-        cvId = await saveCv(auth.sub, auth.email || "", input, cv);
-      } catch (saveErr) {
-        console.error("Failed to auto-save CV to MongoDB:", saveErr);
-      }
-
-      return NextResponse.json({ cv, cvId });
-    } catch (err: any) {
+      return await respond(JSON.parse(text) as GeneratedCv);
+    } catch (err) {
       console.error("CV generation with Gemini failed:", err);
-      if (err?.status === 403 || err?.message?.includes("PERMISSION_DENIED") || err?.message?.includes("denied access")) {
-        return NextResponse.json(
-          { error: "Your GEMINI_API_KEY was denied access (403). Please enable Generative Language API in GCP or set GROQ_API_KEY." },
-          { status: 403 }
-        );
-      }
-      return NextResponse.json(
-        { error: err?.message || "We couldn't generate your CV. Please try again." },
-        { status: 500 }
-      );
     }
   }
+
+  /**
+   * Both providers are out. The candidate is told to try again and nothing
+   * more: the underlying messages carry model ids, key names and provider
+   * status codes, which mean nothing to them and everything to an attacker.
+   * The detail is in the server log above.
+   */
+  return NextResponse.json(
+    { error: "We couldn't write your CV just now. Please try again in a moment." },
+    { status: 502 }
+  );
 }
