@@ -3,7 +3,19 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Check, Download, ExternalLink, FileText, Loader2, Pencil, Plus, Trash2, Users, X } from "lucide-react"
+import {
+  Check,
+  Download,
+  FileText,
+  Loader2,
+  Mail,
+  Pencil,
+  Plus,
+  ShieldCheck,
+  Trash2,
+  Users,
+  X,
+} from "lucide-react"
 import { formatDateForLocale, useLocale, useT } from "@/lib/i18n"
 import { authMessages } from "@/lib/i18n/messages/auth"
 import type { AuthPayload } from "@/lib/auth"
@@ -18,13 +30,52 @@ interface Directory {
   total: number
 }
 
+/** The account record behind the session token — joining date and providers. */
+interface Profile {
+  createdAt: string | null
+  lastLoginAt: string | null
+  providers: string[]
+  emailVerified: boolean
+}
+
+/** Section headings the PDF renderer needs; the saved CV keeps its own language. */
+const CV_LABELS = {
+  summary: "Profile",
+  experience: "Experience",
+  education: "Education",
+  skills: "Skills",
+  projects: "Projects",
+  certifications: "Certifications",
+  languages: "Languages",
+}
+
 export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) {
   const t = useT(authMessages)
   const locale = useLocale()
   const [user, setUser] = useState(initialUser)
+  const [profile, setProfile] = useState<Profile | null>(null)
   const [directory, setDirectory] = useState<Directory | null>(null)
+  const [cvs, setCvs] = useState<SavedCvDoc[] | null>(null)
 
   const isAdmin = user.role === "admin"
+
+  useEffect(() => {
+    let active = true
+    fetch("/api/account")
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (active && d?.profile) setProfile(d.profile) })
+      .catch(() => {})
+    return () => { active = false }
+  }, [])
+
+  const loadCvs = useCallback(() => {
+    fetch("/api/cv/saved")
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => setCvs(d?.cvs ?? []))
+      .catch(() => setCvs([]))
+  }, [])
+
+  useEffect(() => { loadCvs() }, [loadCvs])
 
   // The account directory is admin-only, so members never issue the request.
   useEffect(() => {
@@ -38,289 +89,196 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
   }, [isAdmin])
 
   const formatDate = useCallback(
-    (iso?: string) => (iso ? formatDateForLocale(iso, locale, { month: "short", day: "numeric", year: "numeric" }) : t("never")),
+    (iso?: string | null) =>
+      iso ? formatDateForLocale(iso, locale, { month: "short", day: "numeric", year: "numeric" }) : t("never"),
     [locale, t],
   )
 
+  const monthYear = useCallback(
+    (iso?: string | null) =>
+      iso ? formatDateForLocale(iso, locale, { month: "long", year: "numeric" }) : null,
+    [locale],
+  )
+
+  const signInMethod =
+    !profile ? null
+      : profile.providers.length > 1 ? t("methodBoth")
+      : profile.providers[0] === "google" ? t("methodGoogle")
+      : t("methodPassword")
+
   return (
-    <main className="min-h-screen bg-flow-bg px-4 pt-28 sm:pt-32 pb-20">
-      <div className="max-w-5xl mx-auto space-y-6">
-        <motion.header
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-wrap items-center gap-4 mb-8"
-        >
-          <Avatar user={user} size={64} />
-          <div className="min-w-0 flex-1">
-            <h1
-              className="font-bold text-flow-text truncate"
-              style={{ fontSize: "1.6rem", fontFamily: "var(--font-heading)" }}
-            >
-              {user.name || user.username || user.email}
-            </h1>
-            <p className="text-sm truncate" style={{ color: "rgb(var(--flow-text-soft))" }}>
-              {user.email || user.username}
-            </p>
-          </div>
-        </motion.header>
+    <main className="min-h-screen bg-flow-bg pb-24">
+      <ProfileHeader
+        user={user}
+        isAdmin={isAdmin}
+        memberSince={monthYear(profile?.createdAt)}
+        cvCount={cvs?.length ?? null}
+        peopleCount={isAdmin ? directory?.total ?? null : null}
+        onSaved={setUser}
+      />
 
-        <Card title={t("profileDetails")}>
-          <NameRow user={user} onSaved={setUser} />
-          <Row label={t("accountEmail")} value={user.email || user.username || "—"} />
-          {isAdmin && <Row label={t("accountRole")} value={t("roleAdmin")} />}
-        </Card>
+      <div className="mx-auto w-[95%] max-w-6xl">
+        <div className="grid gap-6 lg:grid-cols-3 lg:items-start">
+          <aside className="lg:col-span-1 lg:sticky lg:top-28">
+            <Panel title={t("profileAbout")}>
+              <DetailRow icon={<Mail size={14} />} label={t("accountEmail")} value={user.email || user.username || "—"} />
+              <DetailRow
+                icon={<ShieldCheck size={14} />}
+                label={t("accountRole")}
+                value={isAdmin ? t("roleAdmin") : t("roleUser")}
+              />
+              {signInMethod && <DetailRow label={t("signInMethod")} value={signInMethod} />}
+              <DetailRow label={t("joined")} value={formatDate(profile?.createdAt)} />
+              <DetailRow label={t("lastSeen")} value={formatDate(profile?.lastLoginAt)} />
+            </Panel>
+          </aside>
 
-        {!isAdmin && <SavedCvsSection formatDate={formatDate} isAdmin={false} />}
+          <div className="lg:col-span-2 space-y-6">
+            <SavedCvsSection
+              cvs={cvs}
+              isAdmin={isAdmin}
+              formatDate={formatDate}
+              onDeleted={id => setCvs(prev => (prev ?? []).filter(c => c._id !== id))}
+            />
 
-        {isAdmin && (
-          <div className="space-y-6">
-            <Card title={t("usersTitle")} icon={<Users size={15} />}>
-              <Section title={t("administrators")} count={directory?.admins.length}>
-                {(directory?.admins ?? []).map(entry => (
-                  <PersonRow key={entry.id} entry={entry} t={t} formatDate={formatDate} />
-                ))}
-              </Section>
-
-              <Section title={t("members")} count={directory?.members.length}>
-                {directory && directory.members.length === 0 ? (
-                  <p className="text-sm py-3" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                    {t("noMembers")}
-                  </p>
-                ) : (
-                  (directory?.members ?? []).map(entry => (
+            {isAdmin && (
+              <Panel title={t("peopleTitle")} subtitle={t("peopleSubtitle")} icon={<Users size={15} />}>
+                <PeopleGroup title={t("administrators")} count={directory?.admins.length}>
+                  {(directory?.admins ?? []).map(entry => (
                     <PersonRow key={entry.id} entry={entry} t={t} formatDate={formatDate} />
-                  ))
-                )}
-              </Section>
-            </Card>
+                  ))}
+                </PeopleGroup>
 
-            <SavedCvsSection formatDate={formatDate} isAdmin={true} />
+                <PeopleGroup title={t("members")} count={directory?.members.length}>
+                  {directory && directory.members.length === 0 ? (
+                    <p className="text-sm py-2" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                      {t("noMembers")}
+                    </p>
+                  ) : (
+                    (directory?.members ?? []).map(entry => (
+                      <PersonRow key={entry.id} entry={entry} t={t} formatDate={formatDate} />
+                    ))
+                  )}
+                </PeopleGroup>
+              </Panel>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </main>
   )
 }
 
-function SavedCvsSection({ formatDate, isAdmin = false }: { formatDate: (iso?: string) => string; isAdmin?: boolean }) {
-  const [cvs, setCvs] = useState<SavedCvDoc[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-
-  const fetchCvs = useCallback(() => {
-    fetch("/api/cv/saved")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
-        if (d?.cvs) setCvs(d.cvs);
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    fetchCvs();
-  }, [fetchCvs]);
-
-  const handleDownload = (cv: SavedCvDoc) => {
-    const html = buildCvHtml(cv.cvData, {
-      summary: "Profile",
-      experience: "Experience",
-      education: "Education",
-      skills: "Skills",
-      projects: "Projects",
-      certifications: "Certifications",
-      languages: "Languages",
-    });
-
-    const frame = document.createElement("iframe");
-    frame.setAttribute("aria-hidden", "true");
-    frame.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;";
-    frame.srcdoc = html;
-
-    frame.onload = () => {
-      const win = frame.contentWindow;
-      if (!win) return;
-      win.focus();
-      win.print();
-      setTimeout(() => frame.remove(), 1000);
-    };
-
-    document.body.appendChild(frame);
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this saved CV?")) return;
-    setDeletingId(id);
-    try {
-      const res = await fetch(`/api/cv/saved/${id}`, { method: "DELETE" });
-      if (res.ok) {
-        setCvs((prev) => (prev ? prev.filter((c) => c._id !== id) : []));
-      }
-    } catch {
-    } finally {
-      setDeletingId(null);
-    }
-  };
-
-  return (
-    <Card title={isAdmin ? "All User CVs" : "My Saved CVs"} icon={<FileText size={15} />}>
-      {loading ? (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-6 w-6 animate-spin text-aurora" />
-        </div>
-      ) : !cvs || cvs.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-12 px-4 text-center space-y-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-aurora-grad/10 border border-aurora/20">
-            <FileText className="h-6 w-6 text-aurora" />
-          </div>
-          <p className="text-sm" style={{ color: "rgb(var(--flow-text-soft))" }}>
-            {isAdmin ? "No CVs have been generated by users yet." : "You haven't saved any CVs yet."}
-          </p>
-          {!isAdmin && (
-            <Link href="/cv-builder">
-              <button className="shine bg-aurora-grad shadow-aurora text-white text-xs font-semibold rounded-full px-5 py-2.5 flex items-center gap-1.5 cursor-pointer mt-1">
-                <Plus size={14} /> Create your first CV
-              </button>
-            </Link>
-          )}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 pt-2">
-          {cvs.map((cv) => (
-            <CvThumbnailCard
-              key={cv._id}
-              cv={cv}
-              showUserEmail={isAdmin}
-              formatDate={formatDate}
-              onDownload={handleDownload}
-              onDelete={handleDelete}
-              deleting={deletingId === cv._id}
-            />
-          ))}
-        </div>
-      )}
-    </Card>
-  );
-}
-
-function CvThumbnailCard({
-  cv,
-  showUserEmail,
-  formatDate,
-  onDownload,
-  onDelete,
-  deleting,
+/**
+ * Cover band, overlapping avatar, name and a short stat line.
+ *
+ * The name is edited in place here rather than through a "Display name" row
+ * further down: on a profile the name is the headline, so that is where you
+ * expect to change it.
+ */
+function ProfileHeader({
+  user,
+  isAdmin,
+  memberSince,
+  cvCount,
+  peopleCount,
+  onSaved,
 }: {
-  cv: SavedCvDoc;
-  showUserEmail?: boolean;
-  formatDate: (iso?: string) => string;
-  onDownload: (cv: SavedCvDoc) => void;
-  onDelete: (id: string) => void;
-  deleting: boolean;
+  user: AuthPayload
+  isAdmin: boolean
+  memberSince: string | null
+  cvCount: number | null
+  peopleCount: number | null
+  onSaved: (user: AuthPayload) => void
 }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(0.32);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const updateScale = () => {
-      if (el.clientWidth > 0) {
-        setScale(el.clientWidth / 794);
-      }
-    };
-    updateScale();
-    const ro = new ResizeObserver(updateScale);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  const html = useMemo(() => {
-    return buildCvHtml(cv.cvData, {
-      summary: "Profile",
-      experience: "Experience",
-      education: "Education",
-      skills: "Skills",
-      projects: "Projects",
-      certifications: "Certifications",
-      languages: "Languages",
-    });
-  }, [cv.cvData]);
+  const t = useT(authMessages)
 
   return (
-    <div
-      className="group relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-aurora hover:-translate-y-1"
-      style={{
-        background: "rgb(var(--flow-surface) / 0.8)",
-        border: "1px solid var(--flow-border-strong)",
-      }}
+    <motion.header
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className="relative"
     >
-      {/* Thumbnail Document Box */}
-      <div
-        ref={containerRef}
-        className="relative w-full aspect-[1/1.3] overflow-hidden bg-white/95 border-b border-flow-border select-none"
-      >
-        <div style={{ width: 794, height: 1123, transform: `scale(${scale})`, transformOrigin: "top left" }}>
-          <iframe
-            title={cv.title}
-            srcDoc={html}
-            sandbox=""
-            tabIndex={-1}
-            className="w-[794px] h-[1123px] border-0 pointer-events-none bg-white"
-          />
-        </div>
-
-        {/* Action Overlay on Hover */}
-        <div className="absolute inset-0 bg-flow-bg/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-2.5 p-4 backdrop-blur-[2px]">
-          <button
-            onClick={() => onDownload(cv)}
-            className="shine bg-aurora-grad shadow-aurora text-white text-xs font-semibold rounded-full px-4 py-2 flex items-center justify-center gap-2 cursor-pointer w-36"
-          >
-            <Download size={13} /> Download PDF
-          </button>
-          <Link href={`/cv-builder?id=${cv._id}`} className="w-36">
-            <button className="w-full bg-flow-surface hover:bg-flow-card border border-flow-border text-flow-text text-xs font-semibold rounded-full px-4 py-2 flex items-center justify-center gap-2 cursor-pointer transition-colors">
-              <ExternalLink size={13} /> Edit CV
-            </button>
-          </Link>
-          <button
-            onClick={() => cv._id && onDelete(cv._id)}
-            disabled={deleting}
-            className="text-xs text-red-400 hover:text-red-300 transition-colors flex items-center gap-1.5 pt-1 cursor-pointer"
-          >
-            {deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />} Delete
-          </button>
-        </div>
+      {/* Cover */}
+      <div className="relative h-40 sm:h-52 overflow-hidden border-b border-flow-border">
+        <div className="absolute inset-0 bg-aurora-mesh opacity-80" aria-hidden />
+        <div className="absolute inset-0 bg-grid mask-radial opacity-25" aria-hidden />
+        <div className="absolute inset-0 bg-grain opacity-[0.05] mix-blend-overlay" aria-hidden />
       </div>
 
-      {/* Thumbnail Card Footer */}
-      <div className="p-3.5 flex items-start justify-between gap-2">
-        <div className="min-w-0 flex-1">
-          <h4 className="text-xs font-bold text-flow-text truncate" title={cv.title}>
-            {cv.title}
-          </h4>
-          <p className="text-[11px] text-flow-textSoft mt-0.5 truncate">
-            {showUserEmail && cv.userEmail ? `${cv.userEmail} • ` : ""}
-            {formatDate(cv.createdAt as string)}
-          </p>
+      <div className="mx-auto w-[95%] max-w-6xl">
+        {/* Avatar rides the cover's lower edge, the way a profile page reads. */}
+        <div className="-mt-12 sm:-mt-14 flex flex-col gap-5 pb-8 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex items-end gap-4 min-w-0">
+            <span
+              className="shrink-0 rounded-full p-1"
+              style={{ background: "rgb(var(--flow-bg))" }}
+            >
+              <Avatar user={user} size={96} badgeAdmin />
+            </span>
+            <div className="min-w-0 pb-1">
+              <NameHeading user={user} onSaved={onSaved} />
+              <p className="mt-1 text-sm truncate" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                {user.email || user.username}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-2.5">
+            <span
+              className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold"
+              style={
+                isAdmin
+                  ? { background: "rgb(var(--accent-1) / 0.12)", color: "rgb(var(--accent-1))", border: "1px solid rgb(var(--accent-1) / 0.25)" }
+                  : { background: "rgb(var(--flow-surface))", color: "rgb(var(--flow-text-soft))", border: "1px solid var(--flow-border-strong)" }
+              }
+            >
+              {isAdmin && <ShieldCheck size={13} />}
+              {isAdmin ? t("roleAdmin") : t("roleUser")}
+            </span>
+          </div>
         </div>
-        <span className="shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-aurora/10 text-aurora border border-aurora/20">
-          {cv.inputData?.language || "English"}
-        </span>
+
+        {/* Stat line — figures rather than another label/value table. */}
+        <dl className="flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-flow-border py-5 mb-8">
+          <Stat value={cvCount} label={t("statCvs")} />
+          {peopleCount !== null && <Stat value={peopleCount} label={t("statPeople")} />}
+          {memberSince && (
+            <div className="flex flex-col">
+              <dd className="text-lg font-bold text-flow-text leading-none">{memberSince}</dd>
+              <dt className="mt-1.5 text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                {t("memberSince")}
+              </dt>
+            </div>
+          )}
+        </dl>
       </div>
-    </div>
-  );
+    </motion.header>
+  )
 }
 
-/** Inline display-name editor. Saving re-issues the session cookie server-side. */
-function NameRow({ user, onSaved }: { user: AuthPayload; onSaved: (user: AuthPayload) => void }) {
+function Stat({ value, label }: { value: number | null; label: string }) {
+  return (
+    <div className="flex flex-col">
+      {/* A dash until the count lands, so the figure never flashes a wrong zero. */}
+      <dd className="text-lg font-bold text-flow-text leading-none tabular-nums">
+        {value === null ? "—" : value}
+      </dd>
+      <dt className="mt-1.5 text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
+        {label}
+      </dt>
+    </div>
+  )
+}
+
+/** The display name as the page's heading, editable in place. */
+function NameHeading({ user, onSaved }: { user: AuthPayload; onSaved: (user: AuthPayload) => void }) {
   const t = useT(authMessages)
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(user.name || "")
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
-  const [saved, setSaved] = useState(false)
 
   async function save() {
     setSaving(true)
@@ -336,8 +294,6 @@ function NameRow({ user, onSaved }: { user: AuthPayload; onSaved: (user: AuthPay
       if (res.ok) {
         onSaved(data.user)
         setEditing(false)
-        setSaved(true)
-        setTimeout(() => setSaved(false), 2500)
       } else {
         setError(data.error || t("genericError"))
       }
@@ -348,79 +304,370 @@ function NameRow({ user, onSaved }: { user: AuthPayload; onSaved: (user: AuthPay
     }
   }
 
-  return (
-    <div
-      className="py-3 px-4 rounded-xl"
-      style={{ background: "rgb(var(--flow-surface) / 0.8)", border: "1px solid var(--flow-border-strong)" }}
-    >
-      <div className="flex items-center justify-between gap-4">
-        <span
-          className="text-xs font-semibold uppercase tracking-widest shrink-0"
-          style={{ color: "rgb(var(--flow-text-soft))" }}
-        >
-          {t("displayName")}
-        </span>
+  if (editing) {
+    return (
+      <div className="flex flex-col gap-1.5">
+        <div className="flex items-center gap-2">
+          <input
+            value={draft}
+            onChange={e => setDraft(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === "Enter") save()
+              if (e.key === "Escape") { setEditing(false); setError("") }
+            }}
+            autoFocus
+            maxLength={80}
+            className="min-w-0 flex-1 rounded-lg px-3 py-1.5 text-xl font-bold outline-none"
+            style={{
+              background: "rgb(var(--flow-surface))",
+              border: "1px solid var(--flow-border-strong)",
+              color: "rgb(var(--flow-text))",
+            }}
+          />
+          <button
+            type="button"
+            onClick={save}
+            disabled={saving}
+            aria-label={t("save")}
+            className="shrink-0 rounded-lg p-2 text-white disabled:opacity-60"
+            style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
+          >
+            {saving ? <Loader2 size={15} className="animate-spin" /> : <Check size={15} />}
+          </button>
+          <button
+            type="button"
+            onClick={() => { setEditing(false); setDraft(user.name || ""); setError("") }}
+            aria-label={t("cancel")}
+            className="shrink-0 rounded-lg p-2 hover:bg-flow-card transition-colors"
+            style={{ color: "rgb(var(--flow-text-soft))" }}
+          >
+            <X size={15} />
+          </button>
+        </div>
+        {error && <p className="text-xs" style={{ color: "rgb(239 68 68)" }}>{error}</p>}
+      </div>
+    )
+  }
 
-        {editing ? (
-          <div className="flex items-center gap-2 flex-1 justify-end">
-            <input
-              value={draft}
-              onChange={e => setDraft(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === "Enter") save()
-                if (e.key === "Escape") setEditing(false)
-              }}
-              autoFocus
-              maxLength={80}
-              className="min-w-0 flex-1 max-w-xs px-3 py-1.5 rounded-lg text-sm outline-none"
-              style={{
-                background: "rgb(var(--flow-bg))",
-                border: "1px solid var(--flow-border-strong)",
-                color: "rgb(var(--flow-text))",
-              }}
-            />
-            <button
-              type="button"
-              onClick={save}
-              disabled={saving}
-              aria-label={t("save")}
-              className="p-1.5 rounded-lg text-white disabled:opacity-60"
+  return (
+    <div className="flex items-center gap-2 min-w-0">
+      <h1
+        className="font-bold text-flow-text truncate"
+        style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontFamily: "var(--font-heading)" }}
+      >
+        {user.name || user.username || user.email}
+      </h1>
+      <button
+        type="button"
+        onClick={() => { setDraft(user.name || ""); setEditing(true) }}
+        aria-label={t("edit")}
+        title={t("edit")}
+        className="shrink-0 rounded-lg p-1.5 transition-colors hover:bg-flow-card hover:text-flow-text"
+        style={{ color: "rgb(var(--flow-text-soft))", border: "1px solid var(--flow-border)" }}
+      >
+        <Pencil size={15} />
+      </button>
+    </div>
+  )
+}
+
+/** A titled block of profile content. Sentence-case heading, not a micro-label. */
+function Panel({
+  title,
+  subtitle,
+  icon,
+  action,
+  children,
+}: {
+  title: string
+  subtitle?: string
+  icon?: React.ReactNode
+  action?: React.ReactNode
+  children: React.ReactNode
+}) {
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className="rounded-2xl p-5 sm:p-6"
+      style={{ background: "var(--flow-card)", border: "1px solid var(--flow-border)" }}
+    >
+      <header className="mb-4 flex items-start justify-between gap-3">
+        <div>
+          <h2 className="flex items-center gap-2 text-base font-bold text-flow-text">
+            {icon}
+            {title}
+          </h2>
+          {subtitle && (
+            <p className="mt-1 text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
+              {subtitle}
+            </p>
+          )}
+        </div>
+        {action}
+      </header>
+      {children}
+    </motion.section>
+  )
+}
+
+/** One fact about the account. Left label, right value, no boxed-row chrome. */
+function DetailRow({ icon, label, value }: { icon?: React.ReactNode; label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between gap-4 border-b border-flow-border py-2.5 last:border-0 last:pb-0">
+      <span className="flex items-center gap-2 text-sm shrink-0" style={{ color: "rgb(var(--flow-text-soft))" }}>
+        {icon}
+        {label}
+      </span>
+      <span className="text-sm font-medium truncate text-flow-text">{value}</span>
+    </div>
+  )
+}
+
+function SavedCvsSection({
+  cvs,
+  isAdmin,
+  formatDate,
+  onDeleted,
+}: {
+  cvs: SavedCvDoc[] | null
+  isAdmin: boolean
+  formatDate: (iso?: string | null) => string
+  onDeleted: (id: string) => void
+}) {
+  const t = useT(authMessages)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+
+  const handleDownload = (cv: SavedCvDoc) => {
+    const frame = document.createElement("iframe")
+    frame.setAttribute("aria-hidden", "true")
+    frame.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;"
+    frame.srcdoc = buildCvHtml(cv.cvData, CV_LABELS)
+
+    frame.onload = () => {
+      const win = frame.contentWindow
+      if (!win) return
+      win.focus()
+      win.print()
+      setTimeout(() => frame.remove(), 1000)
+    }
+
+    document.body.appendChild(frame)
+  }
+
+  const handleDelete = async (id: string) => {
+    if (!window.confirm(t("deleteCvConfirm"))) return
+    setDeletingId(id)
+    try {
+      const res = await fetch(`/api/cv/saved/${id}`, { method: "DELETE" })
+      if (res.ok) onDeleted(id)
+    } catch {
+      /* Leaving the card in place is the honest outcome of a failed delete. */
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
+  return (
+    <Panel
+      title={isAdmin ? t("allCvsTitle") : t("savedCvsTitle")}
+      icon={<FileText size={15} />}
+      action={
+        cvs && cvs.length > 0 && !isAdmin ? (
+          <Link
+            href="/cv-builder"
+            className="shine inline-flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold text-white shadow-aurora"
+            style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
+          >
+            <Plus size={13} />
+            {t("createFirstCv")}
+          </Link>
+        ) : undefined
+      }
+    >
+      {cvs === null ? (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-6 w-6 animate-spin" style={{ color: "rgb(var(--accent-1))" }} />
+        </div>
+      ) : cvs.length === 0 ? (
+        <div className="flex flex-col items-center justify-center gap-3 px-4 py-12 text-center">
+          <div
+            className="flex h-12 w-12 items-center justify-center rounded-2xl"
+            style={{ background: "rgb(var(--accent-1) / 0.1)", border: "1px solid rgb(var(--accent-1) / 0.2)" }}
+          >
+            <FileText className="h-6 w-6" style={{ color: "rgb(var(--accent-1))" }} />
+          </div>
+          <p className="text-sm" style={{ color: "rgb(var(--flow-text-soft))" }}>
+            {isAdmin ? t("cvsEmptyAdmin") : t("cvsEmptyMember")}
+          </p>
+          {!isAdmin && (
+            <Link
+              href="/cv-builder"
+              className="shine mt-1 inline-flex items-center gap-1.5 rounded-full px-5 py-2.5 text-xs font-semibold text-white shadow-aurora"
               style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
             >
-              <Check size={15} />
-            </button>
-            <button
-              type="button"
-              onClick={() => { setEditing(false); setDraft(user.name || ""); setError("") }}
-              aria-label={t("cancel")}
-              className="p-1.5 rounded-lg hover:bg-flow-card transition-colors"
-              style={{ color: "rgb(var(--flow-text-soft))" }}
-            >
-              <X size={15} />
-            </button>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="text-sm font-medium truncate" style={{ color: "rgb(var(--flow-text))" }}>
-              {user.name || "—"}
-            </span>
-            <button
-              type="button"
-              onClick={() => { setDraft(user.name || ""); setEditing(true) }}
-              aria-label={t("edit")}
-              className="p-1.5 rounded-lg hover:bg-flow-card transition-colors shrink-0"
-              style={{ color: "rgb(var(--flow-text-soft))" }}
-            >
-              <Pencil size={14} />
-            </button>
-          </div>
-        )}
+              <Plus size={14} />
+              {t("createFirstCv")}
+            </Link>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {cvs.map(cv => (
+            <CvThumbnailCard
+              key={cv._id}
+              cv={cv}
+              showUserEmail={isAdmin}
+              formatDate={formatDate}
+              onDownload={handleDownload}
+              onDelete={handleDelete}
+              deleting={deletingId === cv._id}
+            />
+          ))}
+        </div>
+      )}
+    </Panel>
+  )
+}
+
+function CvThumbnailCard({
+  cv,
+  showUserEmail,
+  formatDate,
+  onDownload,
+  onDelete,
+  deleting,
+}: {
+  cv: SavedCvDoc
+  showUserEmail?: boolean
+  formatDate: (iso?: string | null) => string
+  onDownload: (cv: SavedCvDoc) => void
+  onDelete: (id: string) => void
+  deleting: boolean
+}) {
+  const t = useT(authMessages)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [scale, setScale] = useState(0.32)
+
+  // The preview is a real A4 render scaled to the card, so it matches the PDF.
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const updateScale = () => {
+      if (el.clientWidth > 0) setScale(el.clientWidth / 794)
+    }
+    updateScale()
+    const ro = new ResizeObserver(updateScale)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
+  const html = useMemo(() => buildCvHtml(cv.cvData, CV_LABELS), [cv.cvData])
+
+  return (
+    <div
+      className="group relative flex flex-col overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-aurora"
+      style={{ background: "rgb(var(--flow-surface))", border: "1px solid var(--flow-border)" }}
+    >
+      <div
+        ref={containerRef}
+        className="relative aspect-[1/1.3] w-full select-none overflow-hidden border-b border-flow-border bg-white"
+      >
+        <div style={{ width: 794, height: 1123, transform: `scale(${scale})`, transformOrigin: "top left" }}>
+          <iframe
+            title={cv.title}
+            srcDoc={html}
+            sandbox=""
+            tabIndex={-1}
+            className="pointer-events-none h-[1123px] w-[794px] border-0 bg-white"
+          />
+        </div>
+
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2.5 p-4 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100"
+          style={{ background: "rgb(var(--flow-bg) / 0.82)" }}
+        >
+          <button
+            onClick={() => onDownload(cv)}
+            className="shine flex w-36 items-center justify-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-white shadow-aurora"
+            style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
+          >
+            <Download size={13} />
+            {t("downloadPdf")}
+          </button>
+          <Link
+            href={`/cv-builder?id=${cv._id}`}
+            className="flex w-36 items-center justify-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-flow-text transition-colors hover:bg-flow-card"
+            style={{ background: "rgb(var(--flow-surface))", border: "1px solid var(--flow-border-strong)" }}
+          >
+            <Pencil size={13} />
+            {t("openCv")}
+          </Link>
+          <button
+            onClick={() => cv._id && onDelete(cv._id)}
+            disabled={deleting}
+            className="flex items-center gap-1.5 pt-1 text-xs transition-colors disabled:opacity-60"
+            style={{ color: "rgb(239 68 68)" }}
+          >
+            {deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+            {t("deleteCv")}
+          </button>
+        </div>
       </div>
 
-      {error && <p className="text-xs mt-2 text-right" style={{ color: "rgb(239 68 68)" }}>{error}</p>}
-      {saved && (
-        <p className="text-xs mt-2 text-right" style={{ color: "rgb(var(--accent-1))" }}>{t("nameUpdated")}</p>
-      )}
+      <div className="flex items-start justify-between gap-2 p-3.5">
+        <div className="min-w-0 flex-1">
+          <h4 className="truncate text-xs font-bold text-flow-text" title={cv.title}>
+            {cv.title}
+          </h4>
+          <p className="mt-0.5 truncate text-[11px]" style={{ color: "rgb(var(--flow-text-soft))" }}>
+            {showUserEmail && cv.userEmail ? `${cv.userEmail} · ` : ""}
+            {formatDate(cv.createdAt as string)}
+          </p>
+        </div>
+        <span
+          className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold"
+          style={{
+            background: "rgb(var(--accent-1) / 0.1)",
+            color: "rgb(var(--accent-1))",
+            border: "1px solid rgb(var(--accent-1) / 0.2)",
+          }}
+        >
+          {cv.inputData?.language || "English"}
+        </span>
+      </div>
+    </div>
+  )
+}
+
+function PeopleGroup({
+  title,
+  count,
+  children,
+}: {
+  title: string
+  /** Undefined until the directory loads, so the pill does not flash a zero. */
+  count?: number
+  children: React.ReactNode
+}) {
+  return (
+    <div className="pt-4 first:pt-0">
+      <h3 className="mb-2.5 flex items-center gap-2 text-xs font-bold uppercase tracking-wider" style={{ color: "rgb(var(--flow-text-soft))" }}>
+        {title}
+        {count !== undefined && (
+          <span
+            className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full px-1.5 text-[10px] font-bold"
+            style={{
+              background: "rgb(var(--flow-surface))",
+              border: "1px solid var(--flow-border-strong)",
+              color: "rgb(var(--flow-text-soft))",
+            }}
+          >
+            {count}
+          </span>
+        )}
+      </h3>
+      <div className="space-y-1">{children}</div>
     </div>
   )
 }
@@ -432,7 +679,7 @@ function PersonRow({
 }: {
   entry: DirectoryEntry
   t: ReturnType<typeof useT<typeof authMessages.en>>
-  formatDate: (iso?: string) => string
+  formatDate: (iso?: string | null) => string
 }) {
   const method =
     entry.providers.length > 1
@@ -442,20 +689,15 @@ function PersonRow({
         : t("methodPassword")
 
   return (
-    <div
-      className="flex items-center gap-3 py-2.5 px-3 rounded-xl"
-      style={{ background: "rgb(var(--flow-surface) / 0.8)", border: "1px solid var(--flow-border-strong)" }}
-    >
-      <Avatar user={{ ...entry, sub: entry.id } as AuthPayload} size={32} />
+    <div className="flex items-center gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-flow-surface">
+      <Avatar user={{ ...entry, sub: entry.id } as AuthPayload} size={36} badgeAdmin />
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium truncate" style={{ color: "rgb(var(--flow-text))" }}>
-          {entry.name}
-        </p>
-        <p className="text-xs truncate" style={{ color: "rgb(var(--flow-text-soft))" }}>
+        <p className="truncate text-sm font-semibold text-flow-text">{entry.name}</p>
+        <p className="truncate text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
           {entry.email || entry.username} · {method}
         </p>
       </div>
-      <div className="text-right shrink-0 hidden sm:block">
+      <div className="hidden shrink-0 text-right sm:block">
         <p className="text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
           {t("joined")} {formatDate(entry.createdAt)}
         </p>
@@ -466,79 +708,3 @@ function PersonRow({
     </div>
   )
 }
-
-function Card({ title, icon, children }: { title: string; icon?: React.ReactNode; children: React.ReactNode }) {
-  return (
-    <motion.section
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="glass rounded-2xl p-6"
-      style={{ border: "1px solid var(--flow-border-strong)" }}
-    >
-      <h2
-        className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest mb-4"
-        style={{ color: "rgb(var(--flow-text-soft))" }}
-      >
-        {icon}
-        {title}
-      </h2>
-      <div className="space-y-2">{children}</div>
-    </motion.section>
-  )
-}
-
-function Section({
-  title,
-  count,
-  children,
-}: {
-  title: string
-  /** Undefined until the directory loads, so the pill does not flash a zero. */
-  count?: number
-  children: React.ReactNode
-}) {
-  return (
-    <div className="pt-2 first:pt-0">
-      <h3
-        className="flex items-center gap-2 text-xs font-bold mb-2"
-        style={{ color: "rgb(var(--flow-text))" }}
-      >
-        {title}
-        {count !== undefined && (
-          <span
-            className="inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 rounded-full text-[10px] font-bold"
-            style={{
-              background: "rgb(var(--flow-surface) / 0.9)",
-              border: "1px solid var(--flow-border-strong)",
-              color: "rgb(var(--flow-text-soft))",
-            }}
-          >
-            {count}
-          </span>
-        )}
-      </h3>
-      <div className="space-y-2">{children}</div>
-    </div>
-  )
-}
-
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div
-      className="flex items-center justify-between gap-4 py-3 px-4 rounded-xl"
-      style={{ background: "rgb(var(--flow-surface) / 0.8)", border: "1px solid var(--flow-border-strong)" }}
-    >
-      <span
-        className="text-xs font-semibold uppercase tracking-widest"
-        style={{ color: "rgb(var(--flow-text-soft))" }}
-      >
-        {label}
-      </span>
-      <span className="text-sm font-medium truncate" style={{ color: "rgb(var(--flow-text))" }}>
-        {value}
-      </span>
-    </div>
-  )
-}
-
