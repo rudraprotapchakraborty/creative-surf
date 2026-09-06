@@ -2,6 +2,7 @@ import "./globals.css"
 import { Navbar } from "@/components/navbar"
 import { ConditionalFooter } from "@/components/ConditionalFooter"
 import { LoadingBarProvider } from "@/components/LoadingBarContext"
+import { ChatWidget } from "@/components/ChatWidget"
 import type { Metadata } from "next"
 import { Plus_Jakarta_Sans } from "next/font/google"
 import { Suspense } from "react"
@@ -77,6 +78,9 @@ export default async function RootLayout({
 
             {/* FOOTER */}
             <ConditionalFooter />
+
+            {/* FLOATING AI ASSISTANT */}
+            <ChatWidget />
           </ThemeProvider>
         </LanguageProvider>
       </body>

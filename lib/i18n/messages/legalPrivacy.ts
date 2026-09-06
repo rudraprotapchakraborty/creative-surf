@@ -46,6 +46,8 @@ export const legalPrivacyMessages = defineMessages({
               "Analytics data",
             ],
           },
+          { type: "strong", text: "Chat Assistant Conversations" },
+          { type: "p", text: "When you use the chat assistant on our website, we store the full conversation — your messages and the assistant's replies — together with the page you started from, your language, and an anonymous browser identifier. If you are signed in, the conversation is linked to your account. These transcripts are retained indefinitely and are readable by our administrators; your messages are also sent to our AI providers in order to generate a reply. Please do not share passwords, payment details, or other sensitive information in the chat. You may ask us to delete your conversations at any time using the contact details below." },
         ],
       },
       {
@@ -213,6 +215,8 @@ export const legalPrivacyMessages = defineMessages({
               "Données analytiques",
             ],
           },
+          { type: "strong", text: "Conversations avec l'assistant de chat" },
+          { type: "p", text: "Lorsque vous utilisez l'assistant de chat de notre site, nous conservons l'intégralité de la conversation — vos messages et les réponses de l'assistant — ainsi que la page depuis laquelle vous avez commencé, votre langue et un identifiant de navigateur anonyme. Si vous êtes connecté, la conversation est associée à votre compte. Ces transcriptions sont conservées sans limite de durée et sont consultables par nos administrateurs ; vos messages sont également transmis à nos fournisseurs d'IA afin de générer une réponse. Merci de ne pas communiquer de mots de passe, de coordonnées bancaires ou d'autres informations sensibles dans le chat. Vous pouvez à tout moment demander la suppression de vos conversations via les coordonnées ci-dessous." },
         ],
       },
       {
@@ -380,6 +384,8 @@ export const legalPrivacyMessages = defineMessages({
               "Analytics-Daten",
             ],
           },
+          { type: "strong", text: "Gespräche mit dem Chat-Assistenten" },
+          { type: "p", text: "Wenn Sie den Chat-Assistenten auf unserer Website nutzen, speichern wir das vollständige Gespräch — Ihre Nachrichten und die Antworten des Assistenten — zusammen mit der Seite, auf der Sie begonnen haben, Ihrer Sprache und einer anonymen Browser-Kennung. Wenn Sie angemeldet sind, wird das Gespräch mit Ihrem Konto verknüpft. Diese Protokolle werden unbefristet aufbewahrt und sind für unsere Administratoren einsehbar; Ihre Nachrichten werden zudem an unsere KI-Anbieter übermittelt, um eine Antwort zu erzeugen. Bitte geben Sie im Chat keine Passwörter, Zahlungsdaten oder andere sensible Informationen an. Über die unten stehenden Kontaktdaten können Sie jederzeit die Löschung Ihrer Gespräche verlangen." },
         ],
       },
       {
@@ -524,6 +530,8 @@ export const legalPrivacyMessages = defineMessages({
           { type: "strong", text: "Al-Maalumat Al-Mujmaa Tilqaiyyan" },
           { type: "p", text: "Ind ziyaratik li-mawqiina, qad najma tilqaiyyan:" },
           { type: "ul", items: ["Unwan IP", "Naw Al-Mutasaffih", "Maalumat Al-Jihaz", "Al-Safahat Al-Mazura", "Al-Mawqi Al-Muhil", "Muddat Al-Jalsa", "Bayanat Al-Tahlilat"] },
+          { type: "strong", text: "Muhadathat Musaid Al-Dardasha" },
+          { type: "p", text: "Ind istikhdamik li-musaid al-dardasha ala mawqiina, nahtafiz bil-muhadatha kamila — rasailak wa rudud al-musaid — maa al-safha allati badat minha, wa lughatik, wa muarrif majhul lil-mutasaffih. Idha kunta musajjal al-dukhul, turbat al-muhadatha bi-hisabik. Yuhtafaz bi-hadhihi al-sijillat li-ajal ghayr musamma wa yumkin li-mudirina qiraatuha; kama tursal rasailak ila muzawwidi al-dhaka al-istinai ladayna li-tawlid al-radd. Yurja adam musharakat kalimat al-murur aw bayanat al-daf aw ay maalumat hassasa fi al-dardasha. Yumkinuka talab hadhf muhadathatik fi ay waqt abr bayanat al-ittisal adnah." },
         ],
       },
       {

@@ -9,6 +9,7 @@ import {
   FileText,
   Loader2,
   Mail,
+  MessageSquare,
   Pencil,
   Plus,
   ShieldCheck,
@@ -23,6 +24,8 @@ import type { DirectoryEntry } from "@/lib/users"
 import type { SavedCvDoc } from "@/lib/cv-types"
 import { buildCvHtml } from "@/lib/cv-document"
 import { Avatar } from "@/components/auth/user-menu"
+import { Panel } from "@/components/account/panel"
+import { ChatTranscriptsSection, useChatTranscripts } from "@/components/account/chat-transcripts"
 
 interface Directory {
   admins: DirectoryEntry[]
@@ -58,6 +61,8 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
   const [cvs, setCvs] = useState<SavedCvDoc[] | null>(null)
 
   const isAdmin = user.role === "admin"
+  const { chats, total: chatTotal, failed: chatsFailed, remove: removeChat } = useChatTranscripts(isAdmin)
+  const [tab, setTab] = useState<AdminTab>("people")
 
   useEffect(() => {
     let active = true
@@ -114,6 +119,7 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
         memberSince={monthYear(profile?.createdAt)}
         cvCount={cvs?.length ?? null}
         peopleCount={isAdmin ? directory?.total ?? null : null}
+        chatCount={isAdmin ? chatTotal : null}
         onSaved={setUser}
       />
 
@@ -133,34 +139,72 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
             </Panel>
           </aside>
 
-          <div className="lg:col-span-2 space-y-6">
-            <SavedCvsSection
-              cvs={cvs}
-              isAdmin={isAdmin}
-              formatDate={formatDate}
-              onDeleted={id => setCvs(prev => (prev ?? []).filter(c => c._id !== id))}
-            />
+          <div className="lg:col-span-2 space-y-5">
+            {/*
+              An admin has three unrelated collections to look through, and
+              stacking them made the page a long scroll where the last one was
+              never seen. A member has only their own CVs, so tabs would be a
+              control with nothing to switch between — they keep the plain panel.
+            */}
+            {isAdmin ? (
+              <>
+                <TabBar
+                  active={tab}
+                  onChange={setTab}
+                  tabs={[
+                    { id: "people", label: t("tabPeople"), icon: <Users size={14} />, count: directory?.total },
+                    { id: "cvs", label: t("tabCvs"), icon: <FileText size={14} />, count: cvs?.length },
+                    { id: "chats", label: t("tabChats"), icon: <MessageSquare size={14} />, count: chatTotal ?? undefined },
+                  ]}
+                />
 
-            {isAdmin && (
-              <Panel title={t("peopleTitle")} subtitle={t("peopleSubtitle")} icon={<Users size={15} />}>
-                <PeopleGroup title={t("administrators")} count={directory?.admins.length}>
-                  {(directory?.admins ?? []).map(entry => (
-                    <PersonRow key={entry.id} entry={entry} t={t} formatDate={formatDate} />
-                  ))}
-                </PeopleGroup>
+                {tab === "people" && (
+                  <Panel title={t("peopleTitle")} subtitle={t("peopleSubtitle")} icon={<Users size={15} />}>
+                    <PeopleGroup title={t("administrators")} count={directory?.admins.length}>
+                      {(directory?.admins ?? []).map(entry => (
+                        <PersonRow key={entry.id} entry={entry} t={t} formatDate={formatDate} />
+                      ))}
+                    </PeopleGroup>
 
-                <PeopleGroup title={t("members")} count={directory?.members.length}>
-                  {directory && directory.members.length === 0 ? (
-                    <p className="text-sm py-2" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                      {t("noMembers")}
-                    </p>
-                  ) : (
-                    (directory?.members ?? []).map(entry => (
-                      <PersonRow key={entry.id} entry={entry} t={t} formatDate={formatDate} />
-                    ))
-                  )}
-                </PeopleGroup>
-              </Panel>
+                    <PeopleGroup title={t("members")} count={directory?.members.length}>
+                      {directory && directory.members.length === 0 ? (
+                        <p className="text-sm py-2" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                          {t("noMembers")}
+                        </p>
+                      ) : (
+                        (directory?.members ?? []).map(entry => (
+                          <PersonRow key={entry.id} entry={entry} t={t} formatDate={formatDate} />
+                        ))
+                      )}
+                    </PeopleGroup>
+                  </Panel>
+                )}
+
+                {tab === "cvs" && (
+                  <SavedCvsSection
+                    cvs={cvs}
+                    isAdmin
+                    formatDate={formatDate}
+                    onDeleted={id => setCvs(prev => (prev ?? []).filter(c => c._id !== id))}
+                  />
+                )}
+
+                {tab === "chats" && (
+                  <ChatTranscriptsSection
+                    chats={chats}
+                    failed={chatsFailed}
+                    formatDate={formatDate}
+                    onDeleted={removeChat}
+                  />
+                )}
+              </>
+            ) : (
+              <SavedCvsSection
+                cvs={cvs}
+                isAdmin={false}
+                formatDate={formatDate}
+                onDeleted={id => setCvs(prev => (prev ?? []).filter(c => c._id !== id))}
+              />
             )}
           </div>
         </div>
@@ -182,6 +226,7 @@ function ProfileHeader({
   memberSince,
   cvCount,
   peopleCount,
+  chatCount,
   onSaved,
 }: {
   user: AuthPayload
@@ -189,6 +234,7 @@ function ProfileHeader({
   memberSince: string | null
   cvCount: number | null
   peopleCount: number | null
+  chatCount: number | null
   onSaved: (user: AuthPayload) => void
 }) {
   const t = useT(authMessages)
@@ -244,6 +290,7 @@ function ProfileHeader({
         <dl className="flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-flow-border py-5 mb-8">
           <Stat value={cvCount} label={t("statCvs")} />
           {peopleCount !== null && <Stat value={peopleCount} label={t("statPeople")} />}
+          {chatCount !== null && <Stat value={chatCount} label={t("statChats")} />}
           {memberSince && (
             <div className="flex flex-col">
               <dd className="text-lg font-bold text-flow-text leading-none">{memberSince}</dd>
@@ -371,44 +418,83 @@ function NameHeading({ user, onSaved }: { user: AuthPayload; onSaved: (user: Aut
   )
 }
 
-/** A titled block of profile content. Sentence-case heading, not a micro-label. */
-function Panel({
-  title,
-  subtitle,
-  icon,
-  action,
-  children,
+type AdminTab = "people" | "cvs" | "chats"
+
+interface TabDef {
+  id: AdminTab
+  label: string
+  icon: React.ReactNode
+  /** Undefined until that collection loads, so the badge never flashes a zero. */
+  count?: number
+}
+
+/**
+ * Switches the admin column between its three collections.
+ *
+ * The moving pill is a shared `layoutId`, so the highlight slides between tabs
+ * instead of cutting — the one animation that makes a tab bar read as one
+ * control rather than three buttons. It scrolls horizontally on narrow screens
+ * rather than wrapping to a second row.
+ */
+function TabBar({
+  active,
+  onChange,
+  tabs,
 }: {
-  title: string
-  subtitle?: string
-  icon?: React.ReactNode
-  action?: React.ReactNode
-  children: React.ReactNode
+  active: AdminTab
+  onChange: (tab: AdminTab) => void
+  tabs: TabDef[]
 }) {
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="rounded-2xl p-5 sm:p-6"
+    <div
+      role="tablist"
+      className="flex gap-1 overflow-x-auto rounded-full p-1"
       style={{ background: "var(--flow-card)", border: "1px solid var(--flow-border)" }}
     >
-      <header className="mb-4 flex items-start justify-between gap-3">
-        <div>
-          <h2 className="flex items-center gap-2 text-base font-bold text-flow-text">
-            {icon}
-            {title}
-          </h2>
-          {subtitle && (
-            <p className="mt-1 text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
-              {subtitle}
-            </p>
-          )}
-        </div>
-        {action}
-      </header>
-      {children}
-    </motion.section>
+      {tabs.map(tab => {
+        const selected = tab.id === active
+        return (
+          <button
+            key={tab.id}
+            role="tab"
+            type="button"
+            aria-selected={selected}
+            onClick={() => onChange(tab.id)}
+            className="relative flex flex-1 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-xs font-semibold transition-colors sm:px-4 sm:text-sm"
+            style={{ color: selected ? "#fff" : "rgb(var(--flow-text-soft))" }}
+          >
+            {selected && (
+              <motion.span
+                layoutId="account-tab-pill"
+                transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                className="absolute inset-0 rounded-full shadow-aurora"
+                style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
+              />
+            )}
+            <span className="relative flex items-center gap-1.5">
+              {tab.icon}
+              {tab.label}
+              {tab.count !== undefined && (
+                <span
+                  className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full px-1.5 text-[10px] font-bold"
+                  style={
+                    selected
+                      ? { background: "rgba(255,255,255,0.22)", color: "#fff" }
+                      : {
+                          background: "rgb(var(--flow-surface))",
+                          border: "1px solid var(--flow-border-strong)",
+                          color: "rgb(var(--flow-text-soft))",
+                        }
+                  }
+                >
+                  {tab.count}
+                </span>
+              )}
+            </span>
+          </button>
+        )
+      })}
+    </div>
   )
 }
 
