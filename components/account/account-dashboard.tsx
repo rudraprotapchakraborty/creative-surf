@@ -22,7 +22,7 @@ import { authMessages } from "@/lib/i18n/messages/auth"
 import type { AuthPayload } from "@/lib/auth"
 import type { DirectoryEntry } from "@/lib/users"
 import type { SavedCvDoc } from "@/lib/cv-types"
-import { buildCvHtml } from "@/lib/cv-document"
+import { buildCvHtml, printCvDocument } from "@/lib/cv-document"
 import { Avatar } from "@/components/auth/user-menu"
 import { Panel } from "@/components/account/panel"
 import { ChatTranscriptsSection, useChatTranscripts } from "@/components/account/chat-transcripts"
@@ -526,20 +526,7 @@ function SavedCvsSection({
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
   const handleDownload = (cv: SavedCvDoc) => {
-    const frame = document.createElement("iframe")
-    frame.setAttribute("aria-hidden", "true")
-    frame.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;"
-    frame.srcdoc = buildCvHtml(cv.cvData, CV_LABELS)
-
-    frame.onload = () => {
-      const win = frame.contentWindow
-      if (!win) return
-      win.focus()
-      win.print()
-      setTimeout(() => frame.remove(), 1000)
-    }
-
-    document.body.appendChild(frame)
+    printCvDocument(buildCvHtml(cv.cvData, CV_LABELS), cv.cvData.fullName)
   }
 
   const handleDelete = async (id: string) => {

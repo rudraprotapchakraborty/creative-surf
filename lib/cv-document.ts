@@ -121,7 +121,14 @@ export function buildCvHtml(cv: GeneratedCv, labels: CvDocumentLabels): string {
 <meta charset="utf-8" />
 <title>${esc(cv.fullName || "Curriculum Vitae")}</title>
 <style>
-  @page { size: A4; margin: 14mm 15mm; }
+  /*
+    Zero page margin on purpose. Chrome prints its own header and footer — the
+    date, the document title and the site URL — inside the @page margin, and
+    the only way to be rid of them without asking the visitor to untick a box
+    in the print dialog is to leave no margin for them to sit in. The page's
+    own breathing room comes from .sheet's padding instead.
+  */
+  @page { size: A4; margin: 0; }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: #ffffff; }
   body {
@@ -133,7 +140,8 @@ export function buildCvHtml(cv: GeneratedCv, labels: CvDocumentLabels): string {
     print-color-adjust: exact;
   }
   .sheet { max-width: 180mm; margin: 0 auto; padding: 14mm 15mm; }
-  @media print { .sheet { max-width: none; margin: 0; padding: 0; } }
+  /* Keeps its padding when printing, since @page no longer supplies a margin. */
+  @media print { .sheet { max-width: none; margin: 0; } }
 
   header { border-bottom: 2px solid #0066a2; padding-bottom: 10px; margin-bottom: 18px; }
   h1 { font-size: 24pt; line-height: 1.15; margin: 0; letter-spacing: -0.02em; color: #0f1723; }
@@ -190,4 +198,71 @@ export function buildCvHtml(cv: GeneratedCv, labels: CvDocumentLabels): string {
   </div>
 </body>
 </html>`;
+}
+
+/**
+ * The name the PDF saves under: "Mehedee Hasan" becomes "Mehedee_Hasan_CV",
+ * and the browser appends the extension.
+ *
+ * Characters that Windows and macOS refuse in a filename are turned into the
+ * separator rather than deleted, so two words never run together when one of
+ * them ends in a slash or a colon.
+ */
+export function cvFileName(fullName: string): string {
+  const slug = String(fullName ?? "")
+    // Characters Windows and macOS refuse in a filename become the separator
+    // rather than vanishing, so two words never run together when one of them
+    // ends in a slash or a colon.
+    .replace(/[\\/:*?"<>|]+/g, " ")
+    .trim()
+    // Spaces and hyphens both read as word breaks in a name.
+    .replace(/[\s-]+/g, "_")
+    .replace(/_{2,}/g, "_")
+    .replace(/^_+|_+$/g, "");
+
+  return slug ? `${slug}_CV` : "CV";
+}
+
+
+/**
+ * Prints a built CV from a detached iframe, so the browser's own "Save as PDF"
+ * produces real vector text rather than a rasterised image of the page.
+ *
+ * The filename needs help: Chrome takes it from the *top* document's title, not
+ * the printed iframe's, so a CV would otherwise save under whatever the page
+ * behind it is called. The page title is swapped for the candidate's filename
+ * for the duration of the dialog and put back afterwards.
+ */
+export function printCvDocument(html: string, fullName: string): void {
+  const frame = document.createElement("iframe");
+  frame.setAttribute("aria-hidden", "true");
+  frame.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;";
+  frame.srcdoc = html;
+
+  const originalTitle = document.title;
+  let done = false;
+  const cleanUp = () => {
+    if (done) return;
+    done = true;
+    document.title = originalTitle;
+    frame.remove();
+  };
+
+  frame.onload = () => {
+    const win = frame.contentWindow;
+    if (!win) return cleanUp();
+
+    document.title = cvFileName(fullName);
+    win.focus();
+
+    // Chrome fires afterprint when the dialog closes, Safari straight after the
+    // synchronous call. The timeout is the backstop for anything that fires
+    // neither, so the page is never left wearing the wrong title.
+    win.addEventListener("afterprint", cleanUp, { once: true });
+    window.setTimeout(cleanUp, 60_000);
+
+    win.print();
+  };
+
+  document.body.appendChild(frame);
 }

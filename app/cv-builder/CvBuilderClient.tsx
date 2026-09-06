@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/select";
 import { CtaButton, Eyebrow, Reveal } from "@/components/premium";
 import CvBuilderSections from "./CvBuilderSections";
-import { buildCvHtml } from "@/lib/cv-document";
+import { buildCvHtml, printCvDocument } from "@/lib/cv-document";
 import { scoreCvAgainstJob } from "@/lib/cv-match";
 import { CV_LANGUAGES, CV_TONES, type CvTone, type GeneratedCv } from "@/lib/cv-types";
 import { trackEvent } from "@/lib/analytics";
@@ -250,31 +250,10 @@ export default function CvBuilderClient() {
     }
   };
 
-  /**
-   * Prints from a detached iframe holding the same HTML as the preview. The
-   * browser's own "Save as PDF" gives real vector text and selectable content,
-   * which beats rasterising the page into an image-based PDF.
-   */
   const handleDownload = () => {
-    if (!documentHtml) return;
+    if (!documentHtml || !cv) return;
     trackEvent("tool_action", "cv_builder", "Download PDF");
-
-    const frame = document.createElement("iframe");
-    frame.setAttribute("aria-hidden", "true");
-    frame.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;";
-    frame.srcdoc = documentHtml;
-
-    frame.onload = () => {
-      const win = frame.contentWindow;
-      if (!win) return;
-      win.focus();
-      win.print();
-      // Safari fires print synchronously, Chrome after the dialog closes —
-      // a delayed removal covers both without leaving the node behind.
-      setTimeout(() => frame.remove(), 1000);
-    };
-
-    document.body.appendChild(frame);
+    printCvDocument(documentHtml, cv.fullName);
   };
 
   const handleDelete = async (id: string) => {
