@@ -6,13 +6,16 @@ import { motion } from "framer-motion"
 import {
   Check,
   Download,
+  Eye,
   FileText,
   Loader2,
   Mail,
   MessageSquare,
   Pencil,
   Plus,
+  Search,
   ShieldCheck,
+  ShieldOff,
   Trash2,
   Users,
   X,
@@ -26,6 +29,7 @@ import { buildCvHtml, printCvDocument } from "@/lib/cv-document"
 import { Avatar } from "@/components/auth/user-menu"
 import { Panel } from "@/components/account/panel"
 import { ChatTranscriptsSection, useChatTranscripts } from "@/components/account/chat-transcripts"
+import { CvPreviewModal } from "@/components/account/cv-preview-modal"
 
 interface Directory {
   admins: DirectoryEntry[]
@@ -105,6 +109,98 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
     [locale],
   )
 
+  const [busyUserId, setBusyUserId] = useState<string | null>(null)
+  const [directoryError, setDirectoryError] = useState("")
+  const [userQuery, setUserQuery] = useState("")
+
+  /** Filters both groups by name or email, the two things you'd search a person by. */
+  const visiblePeople = useMemo(() => {
+    if (!directory) return null
+    const needle = userQuery.trim().toLowerCase()
+    if (!needle) return directory
+
+    const matches = (entry: DirectoryEntry) =>
+      `${entry.name} ${entry.email ?? ""}`.toLowerCase().includes(needle)
+
+    return {
+      admins: directory.admins.filter(matches),
+      members: directory.members.filter(matches),
+      total: directory.total,
+    }
+  }, [directory, userQuery])
+
+  const noPeopleMatch =
+    !!visiblePeople && visiblePeople.admins.length === 0 && visiblePeople.members.length === 0
+
+  /** Applies a change to whichever group the account is in, without a refetch. */
+  const replaceEntry = useCallback((id: string, next: DirectoryEntry | null) => {
+    setDirectory(prev => {
+      if (!prev) return prev
+      const all = [...prev.admins, ...prev.members]
+        .map(e => (e.id === id ? next : e))
+        .filter((e): e is DirectoryEntry => e !== null)
+      return {
+        admins: all.filter(e => e.role === "admin"),
+        members: all.filter(e => e.role !== "admin"),
+        total: all.length,
+      }
+    })
+  }, [])
+
+  const toggleRole = useCallback(
+    async (entry: DirectoryEntry) => {
+      const role = entry.role === "admin" ? "user" : "admin"
+      const label = role === "admin" ? t("roleAdmin") : t("roleUser")
+      if (!window.confirm(t("roleChangeConfirm", { name: entry.name, role: label }))) return
+
+      setBusyUserId(entry.id)
+      setDirectoryError("")
+      try {
+        const res = await fetch(`/api/admin/users/${entry.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ role }),
+        })
+        const data = await res.json().catch(() => null)
+        if (!res.ok) {
+          setDirectoryError(data?.error || t("genericError"))
+          return
+        }
+        replaceEntry(entry.id, { ...entry, role })
+      } catch {
+        setDirectoryError(t("genericError"))
+      } finally {
+        setBusyUserId(null)
+      }
+    },
+    [replaceEntry, t],
+  )
+
+  const deleteUser = useCallback(
+    async (entry: DirectoryEntry) => {
+      if (!window.confirm(t("deleteUserConfirm", { name: entry.name }))) return
+
+      setBusyUserId(entry.id)
+      setDirectoryError("")
+      try {
+        const res = await fetch(`/api/admin/users/${entry.id}`, { method: "DELETE" })
+        const data = await res.json().catch(() => null)
+        if (!res.ok) {
+          setDirectoryError(data?.error || t("genericError"))
+          return
+        }
+        replaceEntry(entry.id, null)
+        // Their CVs went with the account, so the list on screen is now stale.
+        loadCvs()
+      } catch {
+        setDirectoryError(t("genericError"))
+      } finally {
+        setBusyUserId(null)
+      }
+    },
+    [loadCvs, replaceEntry, t],
+  )
+
   const signInMethod =
     !profile ? null
       : profile.providers.length > 1 ? t("methodBoth")
@@ -127,7 +223,7 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
         <div className="grid gap-6 lg:grid-cols-3 lg:items-start">
           <aside className="lg:col-span-1 lg:sticky lg:top-28">
             <Panel title={t("profileAbout")}>
-              <DetailRow icon={<Mail size={14} />} label={t("accountEmail")} value={user.email || user.username || "—"} />
+              <DetailRow icon={<Mail size={14} />} label={t("accountEmail")} value={user.email || "—"} />
               <DetailRow
                 icon={<ShieldCheck size={14} />}
                 label={t("accountRole")}
@@ -159,24 +255,86 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
                 />
 
                 {tab === "people" && (
-                  <Panel title={t("peopleTitle")} subtitle={t("peopleSubtitle")} icon={<Users size={15} />}>
-                    <PeopleGroup title={t("administrators")} count={directory?.admins.length}>
-                      {(directory?.admins ?? []).map(entry => (
-                        <PersonRow key={entry.id} entry={entry} t={t} formatDate={formatDate} />
-                      ))}
-                    </PeopleGroup>
+                  <Panel
+                    title={t("peopleTitle")}
+                    subtitle={t("peopleSubtitle")}
+                    icon={<Users size={15} />}
+                    action={
+                      directory && directory.total > 0 ? (
+                        <label className="relative shrink-0">
+                          <Search
+                            size={13}
+                            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2"
+                            style={{ color: "rgb(var(--flow-text-soft))" }}
+                          />
+                          <input
+                            value={userQuery}
+                            onChange={e => setUserQuery(e.target.value)}
+                            placeholder={t("userSearch")}
+                            aria-label={t("userSearch")}
+                            className="w-36 rounded-full py-1.5 pl-8 pr-3 text-xs outline-none transition-all focus:w-48 sm:w-44 sm:focus:w-60"
+                            style={{
+                              background: "rgb(var(--flow-surface))",
+                              border: "1px solid var(--flow-border-strong)",
+                              color: "rgb(var(--flow-text))",
+                            }}
+                          />
+                        </label>
+                      ) : undefined
+                    }
+                  >
+                    {directoryError && (
+                      <p
+                        className="mb-3 rounded-xl px-3 py-2 text-xs"
+                        style={{ background: "rgb(239 68 68 / 0.1)", color: "rgb(239 68 68)" }}
+                      >
+                        {directoryError}
+                      </p>
+                    )}
 
-                    <PeopleGroup title={t("members")} count={directory?.members.length}>
-                      {directory && directory.members.length === 0 ? (
-                        <p className="text-sm py-2" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                          {t("noMembers")}
-                        </p>
-                      ) : (
-                        (directory?.members ?? []).map(entry => (
-                          <PersonRow key={entry.id} entry={entry} t={t} formatDate={formatDate} />
-                        ))
-                      )}
-                    </PeopleGroup>
+                    {noPeopleMatch ? (
+                      <p className="py-8 text-center text-sm" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                        {t("userNoMatches")}
+                      </p>
+                    ) : (
+                      <>
+                        <PeopleGroup title={t("administrators")} count={visiblePeople?.admins.length}>
+                          {(visiblePeople?.admins ?? []).map(entry => (
+                            <PersonRow
+                              key={entry.id}
+                              entry={entry}
+                              t={t}
+                              formatDate={formatDate}
+                              isSelf={entry.id === user.sub}
+                              busy={busyUserId === entry.id}
+                              onToggleRole={toggleRole}
+                              onDelete={deleteUser}
+                            />
+                          ))}
+                        </PeopleGroup>
+
+                        <PeopleGroup title={t("members")} count={visiblePeople?.members.length}>
+                          {visiblePeople && visiblePeople.members.length === 0 ? (
+                            <p className="text-sm py-2" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                              {t("noMembers")}
+                            </p>
+                          ) : (
+                            (visiblePeople?.members ?? []).map(entry => (
+                              <PersonRow
+                                key={entry.id}
+                                entry={entry}
+                                t={t}
+                                formatDate={formatDate}
+                                isSelf={entry.id === user.sub}
+                                busy={busyUserId === entry.id}
+                                onToggleRole={toggleRole}
+                                onDelete={deleteUser}
+                              />
+                            ))
+                          )}
+                        </PeopleGroup>
+                      </>
+                    )}
                   </Panel>
                 )}
 
@@ -268,7 +426,7 @@ function ProfileHeader({
             <div className="min-w-0 pb-1">
               <NameHeading user={user} onSaved={onSaved} />
               <p className="mt-1 text-sm truncate" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                {user.email || user.username}
+                {user.email}
               </p>
             </div>
           </div>
@@ -404,7 +562,7 @@ function NameHeading({ user, onSaved }: { user: AuthPayload; onSaved: (user: Aut
         className="font-bold text-flow-text truncate"
         style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontFamily: "var(--font-heading)" }}
       >
-        {user.name || user.username || user.email}
+        {user.name || user.email}
       </h1>
       <button
         type="button"
@@ -529,6 +687,7 @@ function SavedCvsSection({
 }) {
   const t = useT(authMessages)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [previewing, setPreviewing] = useState<SavedCvDoc | null>(null)
 
   const handleDownload = (cv: SavedCvDoc) => {
     printCvDocument(buildCvHtml(cv.cvData, CV_LABELS), cv.cvData.fullName)
@@ -599,6 +758,7 @@ function SavedCvsSection({
               showUserEmail={isAdmin}
               canEdit={cv.userId === currentUserId}
               formatDate={formatDate}
+              onView={setPreviewing}
               onDownload={handleDownload}
               onDelete={handleDelete}
               deleting={deletingId === cv._id}
@@ -606,6 +766,15 @@ function SavedCvsSection({
           ))}
         </div>
       )}
+
+      <CvPreviewModal
+        cv={previewing?.cvData ?? null}
+        labels={CV_LABELS}
+        title={previewing?.title ?? ""}
+        ownerEmail={isAdmin ? previewing?.userEmail : undefined}
+        onClose={() => setPreviewing(null)}
+        onDownload={() => previewing && handleDownload(previewing)}
+      />
     </Panel>
   )
 }
@@ -615,6 +784,7 @@ function CvThumbnailCard({
   showUserEmail,
   canEdit,
   formatDate,
+  onView,
   onDownload,
   onDelete,
   deleting,
@@ -624,6 +794,7 @@ function CvThumbnailCard({
   /** False on someone else's CV, so an admin gets view and delete but not edit. */
   canEdit: boolean
   formatDate: (iso?: string | null) => string
+  onView: (cv: SavedCvDoc) => void
   onDownload: (cv: SavedCvDoc) => void
   onDelete: (id: string) => void
   deleting: boolean
@@ -669,10 +840,19 @@ function CvThumbnailCard({
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2.5 p-4 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100"
           style={{ background: "rgb(var(--flow-bg) / 0.82)" }}
         >
+          {/* Reading it is the common case and costs nothing, so it leads. */}
           <button
-            onClick={() => onDownload(cv)}
+            onClick={() => onView(cv)}
             className="shine flex w-36 items-center justify-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-white shadow-aurora"
             style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
+          >
+            <Eye size={13} />
+            {t("viewCv")}
+          </button>
+          <button
+            onClick={() => onDownload(cv)}
+            className="flex w-36 items-center justify-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-flow-text transition-colors hover:bg-flow-card"
+            style={{ background: "rgb(var(--flow-surface))", border: "1px solid var(--flow-border-strong)" }}
           >
             <Download size={13} />
             {t("downloadPdf")}
@@ -760,10 +940,19 @@ function PersonRow({
   entry,
   t,
   formatDate,
+  isSelf,
+  busy,
+  onToggleRole,
+  onDelete,
 }: {
   entry: DirectoryEntry
   t: ReturnType<typeof useT<typeof authMessages.en>>
   formatDate: (iso?: string | null) => string
+  /** Your own row carries no controls — see the guard in the API for why. */
+  isSelf: boolean
+  busy: boolean
+  onToggleRole: (entry: DirectoryEntry) => void
+  onDelete: (entry: DirectoryEntry) => void
 }) {
   const method =
     entry.providers.length > 1
@@ -772,16 +961,32 @@ function PersonRow({
         ? t("methodGoogle")
         : t("methodPassword")
 
+  const isEntryAdmin = entry.role === "admin"
+
   return (
     <div className="flex items-center gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-flow-surface">
       <Avatar user={{ ...entry, sub: entry.id } as AuthPayload} size={36} badgeAdmin />
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-semibold text-flow-text">{entry.name}</p>
+        <p className="flex items-center gap-2 truncate text-sm font-semibold text-flow-text">
+          <span className="truncate">{entry.name}</span>
+          {isSelf && (
+            <span
+              className="shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-bold"
+              style={{
+                background: "rgb(var(--accent-1) / 0.12)",
+                color: "rgb(var(--accent-1))",
+              }}
+            >
+              {t("youBadge")}
+            </span>
+          )}
+        </p>
         <p className="truncate text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
-          {entry.email || entry.username} · {method}
+          {entry.email} · {method}
         </p>
       </div>
-      <div className="hidden shrink-0 text-right sm:block">
+
+      <div className="hidden shrink-0 text-right lg:block">
         <p className="text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
           {t("joined")} {formatDate(entry.createdAt)}
         </p>
@@ -789,6 +994,40 @@ function PersonRow({
           {t("lastSeen")} {formatDate(entry.lastLoginAt)}
         </p>
       </div>
+
+      {!isSelf && (
+        <div className="flex shrink-0 items-center gap-1">
+          <button
+            type="button"
+            onClick={() => onToggleRole(entry)}
+            disabled={busy}
+            aria-label={isEntryAdmin ? t("makeMember") : t("makeAdmin")}
+            title={isEntryAdmin ? t("makeMember") : t("makeAdmin")}
+            className="rounded-lg p-2 transition-colors hover:bg-flow-card disabled:opacity-50"
+            style={{ color: isEntryAdmin ? "rgb(var(--accent-1))" : "rgb(var(--flow-text-soft))" }}
+          >
+            {busy ? (
+              <Loader2 size={14} className="animate-spin" />
+            ) : isEntryAdmin ? (
+              <ShieldCheck size={14} />
+            ) : (
+              <ShieldOff size={14} />
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onDelete(entry)}
+            disabled={busy}
+            aria-label={t("deleteUser")}
+            title={t("deleteUser")}
+            className="rounded-lg p-2 transition-colors hover:bg-flow-card disabled:opacity-50"
+            style={{ color: "rgb(239 68 68)" }}
+          >
+            <Trash2 size={14} />
+          </button>
+        </div>
+      )}
     </div>
   )
 }

@@ -86,6 +86,7 @@ export const cvBuilderMessages = defineMessages({
       generating: "Writing your CV…",
       regenerate: "Regenerate",
       download: "Download PDF",
+      view: "View",
       startOver: "Clear form",
     },
     progress: {
@@ -431,6 +432,7 @@ export const cvBuilderMessages = defineMessages({
       generating: "Rédaction en cours…",
       regenerate: "Régénérer",
       download: "Télécharger en PDF",
+      view: "Voir",
       startOver: "Effacer le formulaire",
     },
     progress: {
@@ -776,6 +778,7 @@ export const cvBuilderMessages = defineMessages({
       generating: "Lebenslauf wird geschrieben…",
       regenerate: "Neu erstellen",
       download: "PDF herunterladen",
+      view: "Ansehen",
       startOver: "Formular leeren",
     },
     progress: {
@@ -1121,6 +1124,7 @@ export const cvBuilderMessages = defineMessages({
       generating: "Jari kitabat Siratik…",
       regenerate: "Iadat Al-Insha",
       download: "Tahmil PDF",
+      view: "Muayana",
       startOver: "Masah Al-Namudhaj",
     },
     progress: {

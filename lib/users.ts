@@ -9,8 +9,6 @@ export type AuthProvider = 'password' | 'google'
 export interface UserDoc {
   /** Lowercased, trimmed — the unique key for an account. */
   email?: string
-  /** Retained for the original admin account, which signs in by username. */
-  username?: string
   name?: string
   password?: string
   role: Role
@@ -47,13 +45,9 @@ const INDEX_CONFLICT_CODES = new Set([85, 86])
 
 /**
  * Creates an index, rebuilding it when an older one with the same name exists
- * under different options.
- *
- * The site shipped with a plain `unique` index on `username`. That predates
- * self-registration, where accounts have an email and no username — under a
- * non-partial unique index every such account indexes as `null` and the second
- * one to register is rejected. Replacing it is required for registration to
- * work at all, and costs nothing but a rebuild on a small collection.
+ * under different options — Mongo rejects rather than amends such a change, so
+ * altering an index's options otherwise requires a manual drop against the
+ * database before the app will start cleanly.
  */
 async function ensureIndex(
   collection: Collection<any>,
@@ -79,15 +73,10 @@ async function ensureIndexes(): Promise<void> {
       const users = db.collection('users')
       const otps = db.collection('auth_otps')
 
-      // Partial filters so accounts that legitimately lack one identifier
-      // (email-only members, the username-only admin) do not collide on null.
+      // A partial filter so a document without an email cannot collide on null.
       await ensureIndex(users, { email: 1 }, {
         unique: true,
         partialFilterExpression: { email: { $type: 'string' } },
-      })
-      await ensureIndex(users, { username: 1 }, {
-        unique: true,
-        partialFilterExpression: { username: { $type: 'string' } },
       })
 
       // Mongo drops expired codes on its own; no cleanup job to run.
@@ -141,24 +130,17 @@ export async function findUserByEmail(email: string): Promise<WithId<UserDoc> | 
   return users.findOne({ email: normaliseEmail(email) })
 }
 
-/** The login form takes one field, so an identifier may be an email or the admin's username. */
+/** The login form takes one field, and every account is keyed by its email. */
 export async function findUserByIdentifier(identifier: string): Promise<WithId<UserDoc> | null> {
   const users = await usersCollection()
-  const value = identifier.trim().toLowerCase()
-  return users.findOne(value.includes('@') ? { email: value } : { username: value })
+  return users.findOne({ email: normaliseEmail(identifier) })
 }
 
-/**
- * Resolves the account behind a session. `sub` is a Mongo id for every account
- * created since registration shipped, but legacy admin tokens carry a username.
- */
+/** Resolves the account behind a session, whose `sub` is always a Mongo id. */
 export async function findUserByAuth(sub: string): Promise<WithId<UserDoc> | null> {
+  if (!ObjectId.isValid(sub)) return null
   const users = await usersCollection()
-  if (ObjectId.isValid(sub) && new ObjectId(sub).toString() === sub) {
-    const byId = await users.findOne({ _id: new ObjectId(sub) })
-    if (byId) return byId
-  }
-  return users.findOne({ username: sub.toLowerCase() })
+  return users.findOne({ _id: new ObjectId(sub) })
 }
 
 /** Returns an error message when the display name is unusable, or null when it passes. */
@@ -179,7 +161,6 @@ export interface DirectoryEntry {
   id: string
   name: string
   email?: string
-  username?: string
   role: Role
   providers: AuthProvider[]
   avatar?: string
@@ -200,10 +181,9 @@ export async function listAccounts(): Promise<DirectoryEntry[]> {
 
   return docs.map(doc => ({
     id: doc._id.toString(),
-    name: doc.name || doc.username || doc.email || 'Unknown',
+    name: doc.name || doc.email || 'Unknown',
     email: doc.email,
-    username: doc.username,
-    role: doc.role ?? 'admin',
+    role: doc.role,
     providers: doc.providers ?? ['password'],
     avatar: doc.avatar,
     createdAt: doc.createdAt?.toISOString(),
@@ -214,12 +194,9 @@ export async function listAccounts(): Promise<DirectoryEntry[]> {
 export function toAuthPayload(user: WithId<UserDoc>): AuthPayload {
   return {
     sub: user._id.toString(),
-    // Documents predating self-registration carry no `role`. The only accounts
-    // that could exist back then were the hand-created admins, so they stay admins.
-    role: user.role ?? 'admin',
+    role: user.role,
     email: user.email,
-    username: user.username,
-    name: user.name || user.username || user.email,
+    name: user.name || user.email,
     avatar: user.avatar,
   }
 }
@@ -407,4 +384,42 @@ export async function verifyOtp(email: string, purpose: OtpPurpose, code: string
 
   await otps.deleteOne(key)
   return { ok: true, pending: doc.pending }
+}
+
+/** How many admins remain — the guard against demoting or deleting the last one. */
+export async function countAdmins(): Promise<number> {
+  const users = await usersCollection()
+  return users.countDocuments({ role: 'admin' })
+}
+
+/** Promotes an account to admin or returns it to member. */
+export async function setUserRole(id: ObjectId, role: Role): Promise<boolean> {
+  const users = await usersCollection()
+  const result = await users.updateOne({ _id: id }, { $set: { role, updatedAt: new Date() } })
+  return result.matchedCount === 1
+}
+
+/**
+ * Removes an account for good.
+ *
+ * Their saved CVs go with it: those are private documents only that account
+ * could ever open, so leaving them behind would strand personal data nobody can
+ * reach or claim. Blog posts are deliberately left alone — they are published
+ * site content, and deleting an author should not silently delete articles.
+ */
+export async function deleteUser(id: ObjectId): Promise<boolean> {
+  const users = await usersCollection()
+  const result = await users.deleteOne({ _id: id })
+  if (result.deletedCount !== 1) return false
+
+  const db = await getDb()
+  try {
+    await db.collection('cvs').deleteMany({ userId: id.toString() })
+  } catch (err) {
+    // The account is already gone; a failed cleanup should be visible in the
+    // log rather than reported as a failed deletion.
+    console.error('Deleted account but failed to remove its CVs:', err)
+  }
+
+  return true
 }

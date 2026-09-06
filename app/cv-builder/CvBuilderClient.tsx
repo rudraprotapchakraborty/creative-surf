@@ -6,6 +6,7 @@ import {
   AlertCircle,
   BadgeCheck,
   Download,
+  Eye,
   FileText,
   Globe2,
   Loader2,
@@ -32,6 +33,7 @@ import { CtaButton, Eyebrow, Reveal } from "@/components/premium";
 import CvBuilderSections from "./CvBuilderSections";
 import { buildCvHtml, printCvDocument } from "@/lib/cv-document";
 import { scoreCvAgainstJob } from "@/lib/cv-match";
+import { CvPreviewModal } from "@/components/account/cv-preview-modal";
 import { CV_LANGUAGES, CV_TONES, type CvTone, type GeneratedCv } from "@/lib/cv-types";
 import { trackEvent } from "@/lib/analytics";
 import { useT } from "@/lib/i18n";
@@ -95,6 +97,7 @@ export default function CvBuilderClient() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isAuthChecking, setIsAuthChecking] = useState(true);
   const [savedCvs, setSavedCvs] = useState<SavedCvSummary[]>([]);
+  const [isReading, setIsReading] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -172,20 +175,23 @@ export default function CvBuilderClient() {
     return () => observer.disconnect();
   }, [cv]);
 
+  /** Shared by the inline preview, the PDF and the full-screen reader. */
+  const cvLabels = useMemo(
+    () => ({
+      summary: t("cv.summary"),
+      experience: t("cv.experience"),
+      education: t("cv.education"),
+      skills: t("cv.skills"),
+      projects: t("cv.projects"),
+      certifications: t("cv.certifications"),
+      languages: t("cv.languages"),
+    }),
+    [t]
+  );
+
   const documentHtml = useMemo(
-    () =>
-      cv
-        ? buildCvHtml(cv, {
-            summary: t("cv.summary"),
-            experience: t("cv.experience"),
-            education: t("cv.education"),
-            skills: t("cv.skills"),
-            projects: t("cv.projects"),
-            certifications: t("cv.certifications"),
-            languages: t("cv.languages"),
-          })
-        : "",
-    [cv, t]
+    () => (cv ? buildCvHtml(cv, cvLabels) : ""),
+    [cv, cvLabels]
   );
 
   /** Scored against the advert the CV was written from, so the number can't drift. */
@@ -670,14 +676,27 @@ export default function CvBuilderClient() {
                   {t("preview.title")}
                 </h2>
                 {cv && (
-                  <Button
-                    onClick={handleDownload}
-                    size="sm"
-                    className="shine rounded-full bg-aurora-grad font-semibold text-white shadow-aurora"
-                  >
-                    <Download className="mr-2 h-4 w-4" />
-                    {t("actions.download")}
-                  </Button>
+                  <div className="flex shrink-0 items-center gap-2">
+                    {/* The inline preview is a scaled-down page; this opens it
+                        at a size you can actually read. */}
+                    <Button
+                      onClick={() => setIsReading(true)}
+                      size="sm"
+                      variant="outline"
+                      className="rounded-full border-flow-border font-semibold text-flow-text"
+                    >
+                      <Eye className="mr-2 h-4 w-4" />
+                      {t("actions.view")}
+                    </Button>
+                    <Button
+                      onClick={handleDownload}
+                      size="sm"
+                      className="shine rounded-full bg-aurora-grad font-semibold text-white shadow-aurora"
+                    >
+                      <Download className="mr-2 h-4 w-4" />
+                      {t("actions.download")}
+                    </Button>
+                  </div>
                 )}
               </div>
 
@@ -836,6 +855,14 @@ export default function CvBuilderClient() {
       </section>
 
       <CvBuilderSections />
+
+      <CvPreviewModal
+        cv={isReading ? cv : null}
+        labels={cvLabels}
+        title={cv?.fullName || t("preview.title")}
+        onClose={() => setIsReading(false)}
+        onDownload={handleDownload}
+      />
     </div>
   );
 }

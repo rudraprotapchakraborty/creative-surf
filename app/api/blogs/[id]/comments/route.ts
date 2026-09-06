@@ -27,7 +27,7 @@ function viewerFrom(request: NextRequest): CommentViewer | null {
  * rather than printed in full next to someone's opinion.
  */
 function displayName(auth: AuthPayload): string {
-  const candidate = (auth.name || auth.username || auth.email || "").trim()
+  const candidate = (auth.name || auth.email || "").trim()
   if (!candidate) return "Reader"
   const at = candidate.indexOf("@")
   return (at > 0 ? candidate.slice(0, at) : candidate).slice(0, MAX_NAME_LENGTH)

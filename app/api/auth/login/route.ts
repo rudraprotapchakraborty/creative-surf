@@ -3,14 +3,11 @@ import bcrypt from 'bcryptjs'
 import { setSessionCookie, signToken } from '@/lib/auth'
 import { findUserByIdentifier, toAuthPayload, touchLastLogin } from '@/lib/users'
 
-/**
- * Password sign-in for every kind of account. The identifier is an email for
- * self-registered users, or a username for the original admin account.
- */
+/** Password sign-in. Accounts are identified by email. */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const identifier: string = body.identifier || body.email || body.username || ''
+    const identifier: string = body.identifier || body.email || ''
     const password: string = body.password || ''
 
     if (!identifier || !password) {

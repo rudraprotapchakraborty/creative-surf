@@ -9,19 +9,13 @@ export const SESSION_MAX_AGE = 60 * 60 * 24 * 7 // 7 days
 export type Role = 'admin' | 'user'
 
 export interface AuthPayload {
-  /** Mongo `_id` for accounts created through registration, username for the legacy admin. */
+  /** The account's Mongo `_id`. */
   sub: string
   role: Role
   email?: string
-  username?: string
   name?: string
   /** Google profile picture, carried in the token so the navbar avatar needs no extra request. */
   avatar?: string
-}
-
-/** Legacy tokens (issued before roles existed) carry `{ username, admin: true }`. */
-interface RawPayload extends Partial<AuthPayload> {
-  admin?: boolean
 }
 
 export function signToken(payload: AuthPayload): string {
@@ -29,22 +23,23 @@ export function signToken(payload: AuthPayload): string {
 }
 
 /**
- * Verifies a token and normalises it to the current shape. Tokens issued by the
- * pre-roles admin login stay valid until they expire, and map to `role: 'admin'`.
+ * Verifies a session token.
+ *
+ * Every token this app signs carries a subject and a role, so one that does not
+ * is not a token of ours and is refused rather than assigned a role by guesswork.
+ * Being treated as signed out is the safe failure: the visitor signs in again.
  */
 export function verifyToken(token: string): AuthPayload | null {
   try {
-    const raw = jwt.verify(token, JWT_SECRET) as RawPayload
+    const raw = jwt.verify(token, JWT_SECRET) as Partial<AuthPayload>
 
-    const role: Role = raw.role ?? (raw.admin ? 'admin' : 'user')
-    const sub = raw.sub ?? raw.username ?? raw.email
-    if (!sub) return null
+    if (!raw.sub) return null
+    if (raw.role !== 'admin' && raw.role !== 'user') return null
 
     return {
-      sub,
-      role,
+      sub: raw.sub,
+      role: raw.role,
       email: raw.email,
-      username: raw.username,
       name: raw.name,
       avatar: raw.avatar,
     }

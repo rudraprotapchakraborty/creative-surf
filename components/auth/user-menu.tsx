@@ -138,7 +138,7 @@ export function UserMenu({
               <Avatar user={user} size={34} />
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-flow-text truncate">
-                  {user.name || user.username || user.email}
+                  {user.name || user.email}
                 </p>
                 {user.email && (
                   <p className="text-xs text-flow-textSoft truncate">{user.email}</p>
@@ -252,7 +252,7 @@ export function Avatar({
   badgeAdmin?: boolean
 }) {
   const [failed, setFailed] = React.useState(false)
-  const label = user.name || user.username || user.email || "?"
+  const label = user.name || user.email || "?"
   const showBadge = badgeAdmin && user.role === "admin"
 
   const face =

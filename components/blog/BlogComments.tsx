@@ -339,7 +339,7 @@ export default function BlogComments({
                 {posting ? t("posting") : t("postComment")}
               </button>
               <span className="text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                {t("commentingAs", { name: user.name || user.username || "" })}
+                {t("commentingAs", { name: user.name || "" })}
               </span>
             </div>
           )}

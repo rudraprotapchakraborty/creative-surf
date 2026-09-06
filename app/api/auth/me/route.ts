@@ -8,8 +8,8 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({
     authenticated: true,
     user: payload,
-    // Kept for callers written against the original response shape.
-    username: payload.username || payload.name || payload.email,
+    // A display name under its original key, which existing callers read.
+    username: payload.name || payload.email,
     role: payload.role,
   })
 }
