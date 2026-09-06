@@ -72,7 +72,16 @@ export async function getAllCvs(): Promise<SavedCvDoc[]> {
   }));
 }
 
-export async function getCvById(cvId: string, userId: string, isAdmin = false): Promise<SavedCvDoc | null> {
+/**
+ * Fetches one CV for its owner, and only for its owner.
+ *
+ * There is deliberately no admin override here. This is the read that loads a
+ * CV back into the builder to be edited, and someone's CV is their own document
+ * to rewrite — an administrator overseeing the site does not need to author on
+ * their behalf. Admins see every CV through `getAllCvs`, and can delete one
+ * through `deleteCv`; that is the whole of the moderation they need.
+ */
+export async function getCvById(cvId: string, userId: string): Promise<SavedCvDoc | null> {
   const db = await getDb();
   const collection = db.collection(COLLECTION_NAME);
 
@@ -83,8 +92,9 @@ export async function getCvById(cvId: string, userId: string, isAdmin = false): 
     return null;
   }
 
-  const query = isAdmin ? { _id: oid } : { _id: oid, userId };
-  const doc = await collection.findOne(query);
+  // Ownership is part of the query rather than a check afterwards, so a CV
+  // belonging to someone else is indistinguishable from one that never existed.
+  const doc = await collection.findOne({ _id: oid, userId });
   if (!doc) return null;
 
   return {

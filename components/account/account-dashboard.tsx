@@ -184,6 +184,7 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
                   <SavedCvsSection
                     cvs={cvs}
                     isAdmin
+                    currentUserId={user.sub}
                     formatDate={formatDate}
                     onDeleted={id => setCvs(prev => (prev ?? []).filter(c => c._id !== id))}
                   />
@@ -202,6 +203,7 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
               <SavedCvsSection
                 cvs={cvs}
                 isAdmin={false}
+                currentUserId={user.sub}
                 formatDate={formatDate}
                 onDeleted={id => setCvs(prev => (prev ?? []).filter(c => c._id !== id))}
               />
@@ -514,11 +516,14 @@ function DetailRow({ icon, label, value }: { icon?: React.ReactNode; label: stri
 function SavedCvsSection({
   cvs,
   isAdmin,
+  currentUserId,
   formatDate,
   onDeleted,
 }: {
   cvs: SavedCvDoc[] | null
   isAdmin: boolean
+  /** Whose CVs may be reopened for editing — an admin's reach stops at delete. */
+  currentUserId: string
   formatDate: (iso?: string | null) => string
   onDeleted: (id: string) => void
 }) {
@@ -592,6 +597,7 @@ function SavedCvsSection({
               key={cv._id}
               cv={cv}
               showUserEmail={isAdmin}
+              canEdit={cv.userId === currentUserId}
               formatDate={formatDate}
               onDownload={handleDownload}
               onDelete={handleDelete}
@@ -607,6 +613,7 @@ function SavedCvsSection({
 function CvThumbnailCard({
   cv,
   showUserEmail,
+  canEdit,
   formatDate,
   onDownload,
   onDelete,
@@ -614,6 +621,8 @@ function CvThumbnailCard({
 }: {
   cv: SavedCvDoc
   showUserEmail?: boolean
+  /** False on someone else's CV, so an admin gets view and delete but not edit. */
+  canEdit: boolean
   formatDate: (iso?: string | null) => string
   onDownload: (cv: SavedCvDoc) => void
   onDelete: (id: string) => void
@@ -668,14 +677,16 @@ function CvThumbnailCard({
             <Download size={13} />
             {t("downloadPdf")}
           </button>
-          <Link
-            href={`/cv-builder?id=${cv._id}`}
-            className="flex w-36 items-center justify-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-flow-text transition-colors hover:bg-flow-card"
-            style={{ background: "rgb(var(--flow-surface))", border: "1px solid var(--flow-border-strong)" }}
-          >
-            <Pencil size={13} />
-            {t("openCv")}
-          </Link>
+          {canEdit && (
+            <Link
+              href={`/cv-builder?id=${cv._id}`}
+              className="flex w-36 items-center justify-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-flow-text transition-colors hover:bg-flow-card"
+              style={{ background: "rgb(var(--flow-surface))", border: "1px solid var(--flow-border-strong)" }}
+            >
+              <Pencil size={13} />
+              {t("openCv")}
+            </Link>
+          )}
           <button
             onClick={() => cv._id && onDelete(cv._id)}
             disabled={deleting}

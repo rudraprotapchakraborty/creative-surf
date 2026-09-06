@@ -19,7 +19,10 @@ export async function GET(
   }
 
   try {
-    const cv = await getCvById(id, auth.sub, isAdmin(auth));
+    // Owner-only, admins included: this is the read that reopens a CV in the
+    // builder, and a CV is its author's document to edit. Admins review the
+    // whole collection through /api/cv/saved and can delete below.
+    const cv = await getCvById(id, auth.sub);
     if (!cv) {
       return NextResponse.json({ error: "CV not found" }, { status: 404 });
     }
