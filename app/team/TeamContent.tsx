@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Megaphone, Code2, PenLine, Clapperboard, Film, Mail } from "lucide-react";
@@ -10,10 +11,14 @@ import { teamMessages } from "@/lib/i18n/messages/team";
  * Names, cities and emails are proper nouns and stay in code; the role label,
  * bio and accent are looked up per member so the page follows the visitor's
  * language.
+ *
+ * `photo` is null for anyone who has not sent one in; those cards keep the
+ * initials on the accent, so a half-photographed team still looks deliberate.
  */
 const TEAM = [
   {
     name: "Mehedee Hasan",
+    photo: "/team/mehedee.webp",
     initials: "MH",
     location: "Dhaka, Bangladesh",
     email: "creativesurfagency@gmail.com",
@@ -24,6 +29,7 @@ const TEAM = [
   },
   {
     name: "Rudra Protap Chakraborty",
+    photo: "/team/rudra.webp",
     initials: "RC",
     location: "Kolkata, India",
     email: "rudra@rudraprotapchakraborty.com",
@@ -34,6 +40,7 @@ const TEAM = [
   },
   {
     name: "Shariful Hoque",
+    photo: null,
     initials: "SH",
     location: "Dhaka, Bangladesh",
     email: "sharifastronaut@gmail.com",
@@ -44,9 +51,10 @@ const TEAM = [
   },
   {
     name: "Shah Mahbood Ch.",
+    photo: null,
     initials: "SM",
     location: "Innsbruck, Austria",
-    email: "creativesurfagency@gmail.com",
+    email: "shahmahbood@gmail.com",
     roleKey: "roles.visualiser",
     bioKey: "bios.visualiser",
     icon: Clapperboard,
@@ -54,9 +62,10 @@ const TEAM = [
   },
   {
     name: "Iftekhar Arnob",
+    photo: null,
     initials: "IA",
-    location: "Innsbruck, Austria",
-    email: "creativesurfagency@gmail.com",
+    location: "Dhaka, Bangladesh",
+    email: "iftekhararnob4@gmail.com",
     roleKey: "roles.visualiser",
     bioKey: "bios.editor",
     icon: Film,
@@ -120,10 +129,20 @@ export default function TeamContent() {
                       style={{ background: member.accent }}
                     />
                     <div
-                      className="relative w-24 h-24 rounded-full flex items-center justify-center text-white text-2xl font-extrabold tracking-wide"
+                      className="relative w-24 h-24 overflow-hidden rounded-full flex items-center justify-center text-white text-2xl font-extrabold tracking-wide"
                       style={{ background: member.accent }}
                     >
-                      {member.initials}
+                      {member.photo ? (
+                        <Image
+                          src={member.photo}
+                          alt={member.name}
+                          fill
+                          sizes="96px"
+                          className="object-cover"
+                        />
+                      ) : (
+                        member.initials
+                      )}
                     </div>
                     <span
                       className="absolute -bottom-1 -right-1 w-9 h-9 rounded-full flex items-center justify-center bg-flow-card border border-flow-border text-flow-text"
