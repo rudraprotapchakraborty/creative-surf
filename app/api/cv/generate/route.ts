@@ -4,6 +4,7 @@ import { GoogleGenAI } from "@google/genai";
 import { getAuth } from "@/lib/auth";
 import { saveCv } from "@/lib/cv-db";
 import { CV_JSON_SCHEMA, cvInputSchema, type CvInput, type GeneratedCv } from "@/lib/cv-types";
+import { buildContactLinks } from "@/lib/cv-links";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -61,7 +62,8 @@ Rules:
 - Order experience and education in reverse-chronological order.
 - Leave a field as an empty string, and a section as an empty array, when the candidate supplied nothing for it. An empty section is better than a padded one.
 - When a target job description is supplied, mirror its vocabulary and prioritise the candidate's genuinely relevant experience — reordering and emphasis only, never fabrication.
-- Write the entire CV in the requested output language, including section-level wording. Keep proper nouns (names, employers, schools, technologies) in their original form.`;
+- Write the entire CV in the requested output language, including section-level wording. Keep proper nouns (names, employers, schools, technologies) in their original form.
+- Leave contact.links as an empty array. The candidate's own URLs are attached after you finish, exactly as they typed them.`;
 
 function buildUserPrompt(input: CvInput): string {
   const field = (label: string, value: string) =>
@@ -77,7 +79,10 @@ ${field("Target role / current title", input.jobTitle)}
 ${field("Email", input.email)}
 ${field("Phone", input.phone)}
 ${field("Location", input.location)}
-${field("Links (LinkedIn, portfolio, GitHub…)", input.links)}
+${field("LinkedIn", input.linkedin)}
+${field("Portfolio / personal site", input.portfolio)}
+${field("GitHub", input.github)}
+${field("Other links", input.links)}
 ${field("Years of experience", input.yearsExperience)}
 ${field("Work history", input.workHistory)}
 ${field("Education", input.education)}
@@ -132,7 +137,22 @@ export async function POST(request: NextRequest) {
   }
 
   /** Saves the CV and returns it. A failed save must not lose the candidate's work. */
-  const respond = async (cv: GeneratedCv) => {
+  const respond = async (raw: GeneratedCv) => {
+    /*
+     * The candidate's own URLs, not the model's recollection of them. A profile
+     * link is the one field where a plausible-looking edit is a broken link, so
+     * whatever came back is overwritten rather than trusted.
+     */
+    const cv: GeneratedCv = {
+      ...raw,
+      contact: {
+        email: raw.contact?.email ?? "",
+        phone: raw.contact?.phone ?? "",
+        location: raw.contact?.location ?? "",
+        links: buildContactLinks(input),
+      },
+    };
+
     let cvId = "";
     try {
       cvId = await saveCv(auth.sub, auth.email || "", input, cv);

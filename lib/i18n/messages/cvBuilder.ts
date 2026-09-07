@@ -45,6 +45,9 @@ export const cvBuilderMessages = defineMessages({
       backgroundHint: "Half-sentences and typos are fine. Detail matters far more than polish.",
       tailoring: "Target & tone",
       tailoringHint: "Paste the advert here to unlock the match score.",
+      links: "Links (optional)",
+      linksHint:
+        "Add whichever you have. A bare handle is enough for LinkedIn and GitHub — we build the full address. Anything you leave blank is simply left off the CV.",
     },
     fields: {
       fullName: { label: "Full name", placeholder: "Alex Morgan" },
@@ -52,7 +55,10 @@ export const cvBuilderMessages = defineMessages({
       email: { label: "Email", placeholder: "alex@example.com" },
       phone: { label: "Phone", placeholder: "+44 7700 900123" },
       location: { label: "Location", placeholder: "London, UK" },
-      links: { label: "Links", placeholder: "linkedin.com/in/alexmorgan, alexmorgan.dev" },
+      linkedin: { label: "LinkedIn", placeholder: "linkedin.com/in/alexmorgan" },
+      portfolio: { label: "Portfolio or personal site", placeholder: "alexmorgan.dev" },
+      github: { label: "GitHub", placeholder: "github.com/alexmorgan" },
+      links: { label: "Other links", placeholder: "behance.net/alexmorgan, medium.com/@alex" },
       yearsExperience: { label: "Years of experience", placeholder: "6" },
       workHistory: {
         label: "Work history",
@@ -107,6 +113,69 @@ export const cvBuilderMessages = defineMessages({
       placeholderSubtitle: "Fill in your details on the left and click 'Generate my CV' to see your live preview.",
       loading: "Drafting your CV. This usually takes 5-15 seconds.",
       downloadHint: "Choose “Save as PDF” in the print dialog to keep a copy. It prints as real, selectable text.",
+    },
+    ats: {
+      title: "ATS readiness",
+      caption: "{passed} of {total} checks cleared",
+      tiers: { strong: "ATS-ready", good: "Nearly there", weak: "Needs work" },
+      tierHints: {
+        strong: "A tracking system can read every part of this CV. Nothing here is holding you back.",
+        good:
+          "Readable, but the points below are where CVs quietly lose marks. Fix what you can and regenerate.",
+        weak:
+          "An applicant tracking system will struggle with this. Work through the failures below — most are solved by adding detail to your notes.",
+      },
+      note:
+        "This grades the mechanics a recruiting system reads first: structure, dates, numbers, contact details. It is a different question from the advert match, and a CV can do well on one and badly on the other.",
+      checks: {
+        contact: {
+          label: "Contact details are complete",
+          fix: "Add your phone number and location — a parser looks for both in the header.",
+        },
+        profileLinks: {
+          label: "At least one profile link",
+          fix: "Add a LinkedIn, portfolio or GitHub link above. Most recruiters open one before they call.",
+        },
+        headline: {
+          label: "Short, specific headline",
+          fix: "The headline is missing or too long to scan. A tighter target role in the form fixes it.",
+        },
+        summary: {
+          label: "Summary is the right length",
+          fix: "Aim for 25 to 130 words. Shorter says nothing; longer gets skipped.",
+        },
+        experienceDepth: {
+          label: "Every role has enough detail",
+          fix:
+            "Some roles carry fewer than three bullets. Add more of what you did there to your work history.",
+        },
+        dates: {
+          label: "Every role is dated",
+          fix: "A role without dates is a role a parser cannot place. Add years to your work history.",
+        },
+        metrics: {
+          label: "Achievements are measurable",
+          fix:
+            "Too few bullets contain a number. Add team sizes, percentages, budgets or timeframes you genuinely remember.",
+        },
+        bulletLength: {
+          label: "Bullets are a readable length",
+          fix: "Several bullets are very short or run long. Six to thirty words each reads best.",
+        },
+        skills: {
+          label: "Skills are grouped and specific",
+          fix: "List more skills, and enough of them to fall into at least two groups.",
+        },
+        firstPerson: {
+          label: "Written without “I” and “my”",
+          fix: "A CV reads in the implied first person. Regenerating usually clears this.",
+        },
+        length: {
+          label: "Overall length is right",
+          fix:
+            "Aim for roughly 300 to 850 words. Add detail to your notes if it is thin, trim it if it runs long.",
+        },
+      },
     },
     match: {
       title: "Advert match",
@@ -391,6 +460,9 @@ export const cvBuilderMessages = defineMessages({
       backgroundHint: "Les demi-phrases et les fautes de frappe ne gênent pas. Le détail compte plus que la forme.",
       tailoring: "Cible et ton",
       tailoringHint: "Collez l'annonce ici pour débloquer le score de correspondance.",
+      links: "Liens (facultatif)",
+      linksHint:
+        "Ajoutez ceux que vous avez. Un simple identifiant suffit pour LinkedIn et GitHub — nous construisons l'adresse complète. Ce que vous laissez vide n'apparaît tout simplement pas sur le CV.",
     },
     fields: {
       fullName: { label: "Nom complet", placeholder: "Alex Morgan" },
@@ -398,7 +470,10 @@ export const cvBuilderMessages = defineMessages({
       email: { label: "E-mail", placeholder: "alex@example.com" },
       phone: { label: "Téléphone", placeholder: "+33 6 12 34 56 78" },
       location: { label: "Localisation", placeholder: "Paris, France" },
-      links: { label: "Liens", placeholder: "linkedin.com/in/alexmorgan, alexmorgan.dev" },
+      linkedin: { label: "LinkedIn", placeholder: "linkedin.com/in/alexmorgan" },
+      portfolio: { label: "Portfolio ou site personnel", placeholder: "alexmorgan.dev" },
+      github: { label: "GitHub", placeholder: "github.com/alexmorgan" },
+      links: { label: "Autres liens", placeholder: "behance.net/alexmorgan, medium.com/@alex" },
       yearsExperience: { label: "Années d'expérience", placeholder: "6" },
       workHistory: {
         label: "Expérience professionnelle",
@@ -453,6 +528,72 @@ export const cvBuilderMessages = defineMessages({
       placeholderSubtitle: "Remplissez vos informations à gauche et cliquez sur Générer mon CV.",
       loading: "Rédaction de votre CV. Cela prend généralement 5 à 15 secondes.",
       downloadHint: "Choisissez « Enregistrer au format PDF » dans la fenêtre d'impression. Le texte reste sélectionnable.",
+    },
+    ats: {
+      title: "Compatibilité ATS",
+      caption: "{passed} contrôles réussis sur {total}",
+      tiers: { strong: "Prêt pour les ATS", good: "Presque prêt", weak: "À retravailler" },
+      tierHints: {
+        strong: "Un logiciel de recrutement peut lire chaque partie de ce CV. Rien ne vous freine ici.",
+        good:
+          "Lisible, mais les points ci-dessous sont là où un CV perd discrètement des points. Corrigez ce que vous pouvez puis régénérez.",
+        weak:
+          "Un logiciel de suivi des candidatures aura du mal avec ce CV. Reprenez les échecs ci-dessous — la plupart se règlent en détaillant vos notes.",
+      },
+      note:
+        "Ceci évalue la mécanique qu'un logiciel de recrutement lit en premier : structure, dates, chiffres, coordonnées. C'est une question différente de la correspondance avec l'annonce, et un CV peut réussir l'une et rater l'autre.",
+      checks: {
+        contact: {
+          label: "Coordonnées complètes",
+          fix:
+            "Ajoutez votre téléphone et votre localisation — un analyseur cherche les deux dans l'en-tête.",
+        },
+        profileLinks: {
+          label: "Au moins un lien de profil",
+          fix:
+            "Ajoutez un lien LinkedIn, portfolio ou GitHub ci-dessus. La plupart des recruteurs en ouvrent un avant d'appeler.",
+        },
+        headline: {
+          label: "Accroche courte et précise",
+          fix:
+            "L'accroche manque ou est trop longue à lire. Un poste visé plus précis dans le formulaire y remédie.",
+        },
+        summary: {
+          label: "Résumé de la bonne longueur",
+          fix: "Visez 25 à 130 mots. Plus court ne dit rien ; plus long n'est pas lu.",
+        },
+        experienceDepth: {
+          label: "Chaque poste est assez détaillé",
+          fix:
+            "Certains postes comptent moins de trois puces. Détaillez davantage ce que vous y avez fait dans votre expérience.",
+        },
+        dates: {
+          label: "Chaque poste est daté",
+          fix:
+            "Un poste sans dates est un poste qu'un analyseur ne sait pas situer. Ajoutez les années à votre expérience.",
+        },
+        metrics: {
+          label: "Réalisations mesurables",
+          fix:
+            "Trop peu de puces contiennent un chiffre. Ajoutez les tailles d'équipe, pourcentages, budgets ou délais dont vous vous souvenez vraiment.",
+        },
+        bulletLength: {
+          label: "Puces d'une longueur lisible",
+          fix: "Plusieurs puces sont très courtes ou trop longues. Entre six et trente mots se lit le mieux.",
+        },
+        skills: {
+          label: "Compétences groupées et précises",
+          fix: "Listez plus de compétences, et assez pour former au moins deux groupes.",
+        },
+        firstPerson: {
+          label: "Rédigé sans « je » ni « mon »",
+          fix: "Un CV s'écrit à la première personne sous-entendue. Régénérer suffit généralement.",
+        },
+        length: {
+          label: "Longueur globale correcte",
+          fix: "Visez environ 300 à 850 mots. Étoffez vos notes si c'est mince, allégez si c'est trop long.",
+        },
+      },
     },
     match: {
       title: "Correspondance avec l'annonce",
@@ -737,6 +878,9 @@ export const cvBuilderMessages = defineMessages({
       backgroundHint: "Halbe Sätze und Tippfehler stören nicht. Inhalt zählt mehr als Form.",
       tailoring: "Ziel & Tonalität",
       tailoringHint: "Fügen Sie hier die Stellenanzeige ein, um die Trefferquote freizuschalten.",
+      links: "Links (optional)",
+      linksHint:
+        "Ergänzen Sie, was Sie haben. Für LinkedIn und GitHub genügt der reine Benutzername — die vollständige Adresse bauen wir. Was Sie leer lassen, erscheint einfach nicht im Lebenslauf.",
     },
     fields: {
       fullName: { label: "Vollständiger Name", placeholder: "Alex Morgan" },
@@ -744,7 +888,10 @@ export const cvBuilderMessages = defineMessages({
       email: { label: "E-Mail", placeholder: "alex@example.com" },
       phone: { label: "Telefon", placeholder: "+49 151 23456789" },
       location: { label: "Standort", placeholder: "Berlin, Deutschland" },
-      links: { label: "Links", placeholder: "linkedin.com/in/alexmorgan, alexmorgan.dev" },
+      linkedin: { label: "LinkedIn", placeholder: "linkedin.com/in/alexmorgan" },
+      portfolio: { label: "Portfolio oder eigene Website", placeholder: "alexmorgan.dev" },
+      github: { label: "GitHub", placeholder: "github.com/alexmorgan" },
+      links: { label: "Weitere Links", placeholder: "behance.net/alexmorgan, medium.com/@alex" },
       yearsExperience: { label: "Berufsjahre", placeholder: "6" },
       workHistory: {
         label: "Berufserfahrung",
@@ -799,6 +946,72 @@ export const cvBuilderMessages = defineMessages({
       placeholderSubtitle: "Füllen Sie Ihre Angaben links aus und klicken Sie auf Lebenslauf erstellen.",
       loading: "Ihr Lebenslauf entsteht. Das dauert meist 5-15 Sekunden.",
       downloadHint: "Wählen Sie im Druckdialog „Als PDF speichern“. Der Text bleibt echter, markierbarer Text.",
+    },
+    ats: {
+      title: "ATS-Tauglichkeit",
+      caption: "{passed} von {total} Prüfungen bestanden",
+      tiers: { strong: "ATS-tauglich", good: "Fast so weit", weak: "Noch Luft nach oben" },
+      tierHints: {
+        strong: "Ein Bewerbersystem kann jeden Teil dieses Lebenslaufs lesen. Hier bremst Sie nichts.",
+        good:
+          "Lesbar, aber an den Punkten unten verlieren Lebensläufe still und leise Punkte. Beheben Sie, was geht, und erstellen Sie neu.",
+        weak:
+          "Ein Bewerbermanagementsystem wird damit Mühe haben. Arbeiten Sie die Fehlschläge unten ab — die meisten löst mehr Detail in Ihren Notizen.",
+      },
+      note:
+        "Bewertet wird die Mechanik, die ein Bewerbersystem zuerst liest: Struktur, Daten, Zahlen, Kontaktangaben. Das ist eine andere Frage als die Übereinstimmung mit der Anzeige — ein Lebenslauf kann das eine gut und das andere schlecht können.",
+      checks: {
+        contact: {
+          label: "Kontaktangaben vollständig",
+          fix: "Ergänzen Sie Telefonnummer und Standort — ein Parser sucht beides im Kopfbereich.",
+        },
+        profileLinks: {
+          label: "Mindestens ein Profil-Link",
+          fix:
+            "Ergänzen Sie oben LinkedIn, Portfolio oder GitHub. Die meisten Recruiter öffnen einen davon vor dem Anruf.",
+        },
+        headline: {
+          label: "Kurze, konkrete Kopfzeile",
+          fix: "Die Kopfzeile fehlt oder ist zu lang. Eine präzisere Zielposition im Formular behebt das.",
+        },
+        summary: {
+          label: "Profil hat die richtige Länge",
+          fix: "Zielen Sie auf 25 bis 130 Wörter. Kürzer sagt nichts, länger wird übersprungen.",
+        },
+        experienceDepth: {
+          label: "Jede Station ist ausreichend beschrieben",
+          fix:
+            "Einige Stationen haben weniger als drei Stichpunkte. Ergänzen Sie in der Berufserfahrung, was Sie dort getan haben.",
+        },
+        dates: {
+          label: "Jede Station ist datiert",
+          fix:
+            "Eine Station ohne Daten kann ein Parser nicht einordnen. Ergänzen Sie Jahreszahlen in der Berufserfahrung.",
+        },
+        metrics: {
+          label: "Erfolge sind messbar",
+          fix:
+            "Zu wenige Stichpunkte enthalten eine Zahl. Ergänzen Sie Teamgrößen, Prozente, Budgets oder Zeiträume, an die Sie sich wirklich erinnern.",
+        },
+        bulletLength: {
+          label: "Stichpunkte in lesbarer Länge",
+          fix:
+            "Mehrere Stichpunkte sind sehr kurz oder zu lang. Sechs bis dreißig Wörter lesen sich am besten.",
+        },
+        skills: {
+          label: "Kenntnisse gruppiert und konkret",
+          fix: "Nennen Sie mehr Kenntnisse — genug für mindestens zwei Gruppen.",
+        },
+        firstPerson: {
+          label: "Ohne „ich“ und „mein“ geschrieben",
+          fix: "Ein Lebenslauf steht in der gedachten Ich-Form. Neu erstellen behebt das meist.",
+        },
+        length: {
+          label: "Gesamtlänge stimmt",
+          fix:
+            "Zielen Sie auf etwa 300 bis 850 Wörter. Ergänzen Sie Ihre Notizen, wenn es dünn ist, kürzen Sie, wenn es ausufert.",
+        },
+      },
     },
     match: {
       title: "Übereinstimmung mit der Anzeige",
@@ -1083,6 +1296,9 @@ export const cvBuilderMessages = defineMessages({
       backgroundHint: "Al-Jumal Al-Naqisa wal-Akhta Al-Imlaiyya la tudirr. Al-Tafsil ahamm min Al-Sayagha.",
       tailoring: "Al-Hadaf wal-Uslub",
       tailoringHint: "Alsiq Al-Ilan huna li-fath darajat Al-Mutabaqa.",
+      links: "Al-Rawabit (ikhtiyari)",
+      linksHint:
+        "Adif ma ladayka minha. Yakfi ism Al-Mustakhdim faqat li-LinkedIn wa GitHub — nahnu nabni Al-Unwan Al-Kamil. Ma tatrukuhu farighan la yazhar fi Al-Sira aslan.",
     },
     fields: {
       fullName: { label: "Al-Ism Al-Kamil", placeholder: "Alex Morgan" },
@@ -1090,7 +1306,10 @@ export const cvBuilderMessages = defineMessages({
       email: { label: "Al-Barid Al-Iliktruni", placeholder: "alex@example.com" },
       phone: { label: "Raqm Al-Hatif", placeholder: "+971 50 123 4567" },
       location: { label: "Al-Mawqi", placeholder: "Dubai, Al-Imarat" },
-      links: { label: "Al-Rawabit", placeholder: "linkedin.com/in/alexmorgan, alexmorgan.dev" },
+      linkedin: { label: "LinkedIn", placeholder: "linkedin.com/in/alexmorgan" },
+      portfolio: { label: "Al-Muallaf aw Al-Mawqi Al-Shakhsi", placeholder: "alexmorgan.dev" },
+      github: { label: "GitHub", placeholder: "github.com/alexmorgan" },
+      links: { label: "Rawabit ukhra", placeholder: "behance.net/alexmorgan, medium.com/@alex" },
       yearsExperience: { label: "Sanawat Al-Khibra", placeholder: "6" },
       workHistory: {
         label: "Al-Khibra Al-Amaliyya",
@@ -1145,6 +1364,71 @@ export const cvBuilderMessages = defineMessages({
       placeholderSubtitle: "Imla bayanatik ala Al-Yasar wa iqnad ala Anshi Siratee.",
       loading: "Jari isdad Siratik. Yastaghriq adatan 5-15 thaniya.",
       downloadHint: "Ikhtar « Hifz bi-sighat PDF » fi nafidhat Al-Tiba. Al-Nass yabqa qabilan lil-tahdid.",
+    },
+    ats: {
+      title: "Jahiziyyat ATS",
+      caption: "{passed} min {total} min Al-Fuhusat najahat",
+      tiers: { strong: "Jahiz li-ATS", good: "Qarib jiddan", weak: "Tahtaj amalan" },
+      tierHints: {
+        strong: "Nizam Al-Tawzif yaqdir an yaqra kull juz min hadhihi Al-Sira. La shay huna yuakhkhiruka.",
+        good:
+          "Maqrua, lakin Al-Nuqat adnah hiya haythu tafqid Al-Sira darajat bi-hudu. Asleh ma tastati thumma aid Al-Insha.",
+        weak:
+          "Nizam tatabbu Al-Mutaqaddimin sayajid sububa fi qiraat hadha. Raji Al-Ikhfaqat adnah — muzamuha yuhall bi-idafat tafasil ila mulahazatik.",
+      },
+      note:
+        "Hadha yuqayyim Al-Asasiyyat allati yaqrauha nizam Al-Tawzif awwalan: Al-Bunya wal-Tawarikh wal-Arqam wa Al-Bayanat. Huwa sual mukhtalif an Mutabaqat Al-Ilan, wa qad tanjah Al-Sira fi wahid wa takhfaq fi Al-Akhar.",
+      checks: {
+        contact: {
+          label: "Bayanat Al-Ittisal kamila",
+          fix: "Adif raqm hatifik wa mawqiaka — Al-Muhallil yabhath an kilayhima fi Al-Tarwisa.",
+        },
+        profileLinks: {
+          label: "Rabt malaff wahid ala Al-Aqall",
+          fix:
+            "Adif rabt LinkedIn aw Al-Muallaf aw GitHub aalah. Muzam Al-Muwazzifin yaftahun wahidan qabl Al-Ittisal.",
+        },
+        headline: {
+          label: "Unwan qasir wa muhaddad",
+          fix:
+            "Al-Unwan naqis aw tawil jiddan lil-qiraa Al-Sariaa. Wazifa mustahdafa adaqq fi Al-Namudhaj tahull hadha.",
+        },
+        summary: {
+          label: "Al-Mulakhkhas bil-tul Al-Munasib",
+          fix: "Istahdif 25 ila 130 kalima. Al-Aqsar la yaqul shayan, wal-Atwal yutakhatta.",
+        },
+        experienceDepth: {
+          label: "Kull wazifa mufassala kifaya",
+          fix:
+            "Badu Al-Wazaif tahmil aqall min thalath nuqat. Adif Al-Mazid amma faaltahu huna fi khibratik.",
+        },
+        dates: {
+          label: "Kull wazifa muarrakha",
+          fix:
+            "Al-Wazifa bila tawarikh la yastati Al-Muhallil tahdid mawqiiha. Adif Al-Sanawat ila khibratik.",
+        },
+        metrics: {
+          label: "Al-Injazat qabila lil-qiyas",
+          fix:
+            "Nuqat qalila jiddan tahtawi ala raqm. Adif ahjam Al-Firaq aw Al-Nisab aw Al-Mizaniyyat aw Al-Mudad allati tatadhakkaruha haqqan.",
+        },
+        bulletLength: {
+          label: "Al-Nuqat bi-tul maqru",
+          fix: "Iddat nuqat qasira jiddan aw tawila jiddan. Min sitt ila thalathin kalima huwa Al-Afdal.",
+        },
+        skills: {
+          label: "Al-Maharat murattaba wa muhaddada",
+          fix: "Udhkur maharat akthar, wa bi-adad yakfi li-majmuatayn ala Al-Aqall.",
+        },
+        firstPerson: {
+          label: "Maktuba bidun « ana » wa « li »",
+          fix: "Al-Sira tuktab bi-sighat Al-Mutakallim Al-Dimniyya. Iadat Al-Insha adatan tuhill hadha.",
+        },
+        length: {
+          label: "Al-Tul Al-Ijmali sahih",
+          fix: "Istahdif hawali 300 ila 850 kalima. Adif tafasil in kanat qalila, wa ikhtasir in talat.",
+        },
+      },
     },
     match: {
       title: "Mutabaqat Al-Ilan",

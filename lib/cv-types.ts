@@ -19,6 +19,15 @@ export const cvInputSchema = z.object({
   email: z.string().trim().email().max(160),
   phone: z.string().trim().max(60).optional().default(""),
   location: z.string().trim().max(160).optional().default(""),
+  /**
+   * The three profiles a recruiter actually looks for, each with its own field
+   * so the candidate never has to guess a separator — and so the URL that
+   * reaches the finished CV is the one they typed. All optional.
+   */
+  linkedin: z.string().trim().max(300).optional().default(""),
+  portfolio: z.string().trim().max(300).optional().default(""),
+  github: z.string().trim().max(300).optional().default(""),
+  /** Anything else worth linking: Behance, a GitLab mirror, a write-up. */
   links: z.string().trim().max(600).optional().default(""),
   yearsExperience: z.string().trim().max(40).optional().default(""),
   workHistory: z.string().trim().max(6000).optional().default(""),
@@ -110,7 +119,8 @@ export const CV_JSON_SCHEMA: Record<string, unknown> = {
         location: { type: "string", description: "Empty string when unknown." },
         links: {
           type: "array",
-          description: "Profile or portfolio links. Empty array when none were supplied.",
+          description:
+            "Profile or portfolio links. These are replaced with the candidate's own URLs after generation, so never invent, reformat or drop one.",
           items: {
             type: "object",
             additionalProperties: false,

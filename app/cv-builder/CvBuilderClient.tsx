@@ -12,11 +12,14 @@ import {
   Loader2,
   Lock,
   RefreshCw,
+  ScanLine,
   ShieldCheck,
   Sparkles,
   Target,
   Trash2,
+  TriangleAlert,
   Wand2,
+  XCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,6 +36,7 @@ import { CtaButton, Eyebrow, Reveal } from "@/components/premium";
 import CvBuilderSections from "./CvBuilderSections";
 import { buildCvHtml, printCvDocument } from "@/lib/cv-document";
 import { scoreCvAgainstJob } from "@/lib/cv-match";
+import { scoreCvForAts } from "@/lib/cv-ats";
 import { CvPreviewModal } from "@/components/account/cv-preview-modal";
 import { CV_LANGUAGES, CV_TONES, type CvTone, type GeneratedCv } from "@/lib/cv-types";
 import { trackEvent } from "@/lib/analytics";
@@ -49,6 +53,9 @@ const EMPTY_FORM = {
   email: "",
   phone: "",
   location: "",
+  linkedin: "",
+  portfolio: "",
+  github: "",
   links: "",
   yearsExperience: "",
   workHistory: "",
@@ -68,6 +75,9 @@ const PROGRESS_FIELDS = [
   "email",
   "phone",
   "location",
+  "linkedin",
+  "portfolio",
+  "github",
   "links",
   "yearsExperience",
   "workHistory",
@@ -138,7 +148,9 @@ export default function CvBuilderClient() {
       .then((data) => {
         if (!data?.cv) return;
         if (data.cv.inputData) {
-          setForm(data.cv.inputData);
+          // Merged over the empty form: a CV saved before a field existed
+          // would otherwise load that field as undefined.
+          setForm({ ...EMPTY_FORM, ...data.cv.inputData });
           setScoredAgainst(data.cv.inputData.targetJob || "");
         }
         if (data.cv.cvData) setCv(data.cv.cvData);
@@ -199,6 +211,13 @@ export default function CvBuilderClient() {
     () => (cv ? scoreCvAgainstJob(cv, scoredAgainst) : null),
     [cv, scoredAgainst]
   );
+
+  /**
+   * Scored from the finished CV alone. This is the other half of the question
+   * the advert match asks: that one grades what the CV says, this one grades
+   * whether a parser can read it in the first place.
+   */
+  const ats = useMemo(() => (cv ? scoreCvForAts(cv) : null), [cv]);
 
   const filledCount = PROGRESS_FIELDS.filter((key) => form[key].trim()).length;
   const progress = Math.round((filledCount / PROGRESS_FIELDS.length) * 100);
@@ -280,7 +299,17 @@ export default function CvBuilderClient() {
   };
 
   const field = (
-    key: "fullName" | "jobTitle" | "email" | "phone" | "location" | "links" | "yearsExperience",
+    key:
+      | "fullName"
+      | "jobTitle"
+      | "email"
+      | "phone"
+      | "location"
+      | "linkedin"
+      | "portfolio"
+      | "github"
+      | "links"
+      | "yearsExperience",
     type = "text"
   ) => (
     <div className="space-y-1.5">
@@ -336,6 +365,17 @@ export default function CvBuilderClient() {
       <div className="space-y-5">{children}</div>
     </section>
   );
+
+  /** One colour ramp for both scores, so 68% never reads amber here and green there. */
+  const tierText = (tier: "strong" | "good" | "weak") =>
+    tier === "strong"
+      ? "text-emerald-600 dark:text-emerald-400"
+      : tier === "good"
+        ? "text-amber-600 dark:text-amber-400"
+        : "text-red-600 dark:text-red-400";
+
+  const tierBar = (tier: "strong" | "good" | "weak") =>
+    tier === "strong" ? "bg-emerald-500" : tier === "good" ? "bg-amber-500" : "bg-red-500";
 
   const matchTier =
     match === null
@@ -505,7 +545,18 @@ export default function CvBuilderClient() {
                     {field("location")}
                     {field("yearsExperience")}
                   </div>
-                  {field("links")}
+                  <div className="space-y-4 rounded-2xl border border-flow-border bg-flow-surface p-4">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-flow-textSoft">
+                      {t("sections.links")}
+                    </p>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      {field("linkedin", "url")}
+                      {field("portfolio", "url")}
+                      {field("github", "url")}
+                      {field("links")}
+                    </div>
+                    <p className="text-xs leading-relaxed text-flow-textSoft">{t("sections.linksHint")}</p>
+                  </div>
                 </>
               )}
 
@@ -700,6 +751,87 @@ export default function CvBuilderClient() {
                 )}
               </div>
 
+              {/* ATS readiness: whether a machine can read this before a person does. */}
+              {cv && ats && (
+                <div className="rounded-2xl border border-flow-border bg-flow-card p-5 backdrop-blur-md">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <h3 className="flex items-center gap-2 text-sm font-bold text-flow-text">
+                        <ScanLine className="h-4 w-4 text-aurora-1" />
+                        {t("ats.title")}
+                      </h3>
+                      <p className="mt-1 text-xs text-flow-textSoft">
+                        {t("ats.caption", { passed: ats.passed, total: ats.total })}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <span className="block text-3xl font-extrabold leading-none text-flow-text tabular-nums">
+                        {ats.score}%
+                      </span>
+                      <span
+                        className={`mt-1 block text-[11px] font-bold uppercase tracking-wider ${tierText(ats.tier)}`}
+                      >
+                        {t(`ats.tiers.${ats.tier}`)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-flow-text/10">
+                    <div
+                      className={`h-full rounded-full transition-all duration-700 ${tierBar(ats.tier)}`}
+                      style={{ width: `${ats.score}%` }}
+                    />
+                  </div>
+
+                  <p className="mt-4 text-xs leading-relaxed text-flow-textSoft">
+                    {t(`ats.tierHints.${ats.tier}`)}
+                  </p>
+
+                  <ul className="mt-4 space-y-2.5">
+                    {ats.checks.map((check) => {
+                      const Icon =
+                        check.status === "pass"
+                          ? BadgeCheck
+                          : check.status === "warn"
+                            ? TriangleAlert
+                            : XCircle;
+                      return (
+                        <li key={check.id} className="flex items-start gap-2.5">
+                          <Icon
+                            className={`mt-0.5 h-4 w-4 shrink-0 ${
+                              check.status === "pass"
+                                ? "text-emerald-600 dark:text-emerald-400"
+                                : check.status === "warn"
+                                  ? "text-amber-600 dark:text-amber-400"
+                                  : "text-red-600 dark:text-red-400"
+                            }`}
+                          />
+                          <div>
+                            <p
+                              className={`text-xs font-semibold ${
+                                check.status === "pass" ? "text-flow-textSoft" : "text-flow-text"
+                              }`}
+                            >
+                              {t(`ats.checks.${check.id}.label`)}
+                            </p>
+                            {/* A cleared check needs no advice — only the misses earn a line. */}
+                            {check.status !== "pass" && (
+                              <p className="mt-0.5 text-xs leading-relaxed text-flow-textSoft">
+                                {t(`ats.checks.${check.id}.fix`)}
+                              </p>
+                            )}
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+
+                  <p className="mt-4 border-t border-flow-border pt-3 text-xs leading-relaxed text-flow-textSoft">
+                    {t("ats.note")}
+                  </p>
+                </div>
+              )}
+
               {/* Advert match: the check nobody else runs for you. */}
               {cv &&
                 (match && matchTier ? (
@@ -719,13 +851,7 @@ export default function CvBuilderClient() {
                           {match.score}%
                         </span>
                         <span
-                          className={`mt-1 block text-[11px] font-bold uppercase tracking-wider ${
-                            matchTier === "strong"
-                              ? "text-emerald-600 dark:text-emerald-400"
-                              : matchTier === "good"
-                                ? "text-amber-600 dark:text-amber-400"
-                                : "text-red-600 dark:text-red-400"
-                          }`}
+                          className={`mt-1 block text-[11px] font-bold uppercase tracking-wider ${tierText(matchTier)}`}
                         >
                           {t(`match.tiers.${matchTier}`)}
                         </span>
@@ -734,13 +860,7 @@ export default function CvBuilderClient() {
 
                     <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-flow-text/10">
                       <div
-                        className={`h-full rounded-full transition-all duration-700 ${
-                          matchTier === "strong"
-                            ? "bg-emerald-500"
-                            : matchTier === "good"
-                              ? "bg-amber-500"
-                              : "bg-red-500"
-                        }`}
+                        className={`h-full rounded-full transition-all duration-700 ${tierBar(matchTier)}`}
                         style={{ width: `${match.score}%` }}
                       />
                     </div>
