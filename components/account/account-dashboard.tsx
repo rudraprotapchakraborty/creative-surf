@@ -30,6 +30,7 @@ import { Avatar } from "@/components/auth/user-menu"
 import { Panel } from "@/components/account/panel"
 import { ChatTranscriptsSection, useChatTranscripts } from "@/components/account/chat-transcripts"
 import { CvPreviewModal } from "@/components/account/cv-preview-modal"
+import { BillingPanel } from "@/components/account/billing-panel"
 
 interface Directory {
   admins: DirectoryEntry[]
@@ -233,6 +234,10 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
               <DetailRow label={t("joined")} value={formatDate(profile?.createdAt)} />
               <DetailRow label={t("lastSeen")} value={formatDate(profile?.lastLoginAt)} />
             </Panel>
+
+            <div className="mt-5">
+              <BillingPanel />
+            </div>
           </aside>
 
           <div className="lg:col-span-2 space-y-5">
