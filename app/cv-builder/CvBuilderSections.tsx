@@ -21,7 +21,6 @@ import {
 } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { cvBuilderMessages } from "@/lib/i18n/messages/cvBuilder";
-import { PricingSection } from "@/components/billing/pricing-section";
 
 /**
  * Everything below the builder itself: the case for using this tool rather
@@ -231,9 +230,6 @@ export default function CvBuilderSections() {
           </p>
         </Reveal>
       </Section>
-
-      {/* PRICING ----------------------------------------------------------- */}
-      <PricingSection />
 
       {/* HOW IT WORKS ---------------------------------------------------- */}
       <Section id="how">
