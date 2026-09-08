@@ -38,7 +38,6 @@ import { buildCvHtml, printCvDocument } from "@/lib/cv-document";
 import { scoreCvAgainstJob } from "@/lib/cv-match";
 import { scoreCvForAts } from "@/lib/cv-ats";
 import { CvPreviewModal } from "@/components/account/cv-preview-modal";
-import { UpgradeDialog } from "@/components/billing/upgrade-dialog";
 import { CV_LANGUAGES, CV_TONES, type CvTone, type GeneratedCv } from "@/lib/cv-types";
 import { trackEvent } from "@/lib/analytics";
 import { useT } from "@/lib/i18n";
@@ -106,7 +105,6 @@ export default function CvBuilderClient() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [upgradeRequired, setUpgradeRequired] = useState(false);
-  const [upgradeDialogOpen, setUpgradeDialogOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isAuthChecking, setIsAuthChecking] = useState(true);
   const [savedCvs, setSavedCvs] = useState<SavedCvSummary[]>([]);
@@ -641,13 +639,9 @@ export default function CvBuilderClient() {
                     {upgradeRequired && (
                       <>
                         {" "}
-                        <button
-                          type="button"
-                          onClick={() => setUpgradeDialogOpen(true)}
-                          className="font-semibold underline underline-offset-2"
-                        >
+                        <a href="#pricing" className="font-semibold underline underline-offset-2">
                           Upgrade to Pro
-                        </button>
+                        </a>
                       </>
                     )}
                   </span>
@@ -681,16 +675,13 @@ export default function CvBuilderClient() {
                   <RefreshCw className="mr-2 h-4 w-4" />
                   {t("actions.startOver")}
                 </Button>
-                <button
-                  type="button"
-                  onClick={() => setUpgradeDialogOpen(true)}
+                <a
+                  href="#pricing"
                   className="ml-auto text-xs font-semibold text-flow-textSoft underline underline-offset-2 hover:text-flow-text"
                 >
                   View plans
-                </button>
+                </a>
               </div>
-
-              <UpgradeDialog open={upgradeDialogOpen} onOpenChange={setUpgradeDialogOpen} />
 
               <div className="rounded-2xl border border-flow-border bg-flow-surface p-5">
                 <h3 className="text-sm font-bold text-flow-text">{t("tips.title")}</h3>
