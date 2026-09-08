@@ -69,7 +69,7 @@ export function PaddleCheckoutButton({
 
   const handleClick = async () => {
     if (!user) {
-      router.push("/login?from=/pricing");
+      router.push("/login?from=/cv-builder");
       return;
     }
     if (!priceId) {
