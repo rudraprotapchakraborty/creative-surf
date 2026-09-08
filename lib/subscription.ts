@@ -1,7 +1,5 @@
 import { getDb } from "@/lib/mongodb";
 
-export { FREE_MONTHLY_GENERATIONS } from "@/lib/subscription-constants";
-
 /**
  * CV Builder subscription plans.
  *
@@ -11,6 +9,8 @@ export { FREE_MONTHLY_GENERATIONS } from "@/lib/subscription-constants";
  * more. Saves, downloads and ATS scoring stay free for both plans.
  */
 export type PlanId = "free" | "pro";
+
+export const FREE_MONTHLY_GENERATIONS = 3;
 
 export type SubscriptionStatus =
   | "active"
