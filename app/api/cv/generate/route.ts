@@ -2,10 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import Groq from "groq-sdk";
 import { GoogleGenAI } from "@google/genai";
 import { getAuth } from "@/lib/auth";
-import { saveCv, countCvsSince } from "@/lib/cv-db";
+import { saveCv } from "@/lib/cv-db";
 import { CV_JSON_SCHEMA, cvInputSchema, type CvInput, type GeneratedCv } from "@/lib/cv-types";
 import { buildContactLinks } from "@/lib/cv-links";
-import { isPro, FREE_MONTHLY_GENERATIONS } from "@/lib/subscription";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -98,20 +97,6 @@ export async function POST(request: NextRequest) {
       { error: "You must be signed in to create and save a CV." },
       { status: 401 }
     );
-  }
-
-  if (!(await isPro(auth.sub))) {
-    const startOfMonth = new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), 1));
-    const usedThisMonth = await countCvsSince(auth.sub, startOfMonth);
-    if (usedThisMonth >= FREE_MONTHLY_GENERATIONS) {
-      return NextResponse.json(
-        {
-          error: `You've used all ${FREE_MONTHLY_GENERATIONS} free CVs this month. Upgrade to Pro for unlimited generations.`,
-          code: "UPGRADE_REQUIRED",
-        },
-        { status: 402 }
-      );
-    }
   }
 
   const groqKey = process.env.GROQ_API_KEY?.trim();

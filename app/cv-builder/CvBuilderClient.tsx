@@ -104,7 +104,6 @@ export default function CvBuilderClient() {
   const [scoredAgainst, setScoredAgainst] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [upgradeRequired, setUpgradeRequired] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isAuthChecking, setIsAuthChecking] = useState(true);
   const [savedCvs, setSavedCvs] = useState<SavedCvSummary[]>([]);
@@ -246,7 +245,6 @@ export default function CvBuilderClient() {
     }
 
     setError(null);
-    setUpgradeRequired(false);
     setIsLoading(true);
     trackEvent("tool_action", "cv_builder", cv ? "Regenerate CV" : "Generate CV");
 
@@ -260,7 +258,6 @@ export default function CvBuilderClient() {
 
       if (!response.ok) {
         setError(data?.error || t("errors.generic"));
-        setUpgradeRequired(data?.code === "UPGRADE_REQUIRED");
         return;
       }
 
@@ -299,7 +296,6 @@ export default function CvBuilderClient() {
     setCv(null);
     setScoredAgainst("");
     setError(null);
-    setUpgradeRequired(false);
   };
 
   const field = (
@@ -634,17 +630,7 @@ export default function CvBuilderClient() {
                   className="flex items-start gap-2 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-600 dark:text-red-400"
                 >
                   <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-                  <span className="flex-1">
-                    {error}
-                    {upgradeRequired && (
-                      <>
-                        {" "}
-                        <Link href="/pricing" className="font-semibold underline underline-offset-2">
-                          Upgrade to Pro
-                        </Link>
-                      </>
-                    )}
-                  </span>
+                  <span>{error}</span>
                 </div>
               )}
 

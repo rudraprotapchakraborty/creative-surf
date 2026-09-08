@@ -35,25 +35,6 @@ npm run start   # Serve the production build
 npm run lint    # Run ESLint
 ```
 
-### CV Builder subscriptions (Paddle)
-
-The CV Builder's Pro plan is billed through [Paddle](https://www.paddle.com/) (a merchant of record — it handles card processing, recurring billing, and global sales tax, and pays out to sellers in Bangladesh via wire transfer or Payoneer with no US entity required). Free-tier accounts get 3 AI-written CVs per month (`FREE_MONTHLY_GENERATIONS` in `lib/subscription.ts`); Pro is unlimited.
-
-Set up:
-1. Create a Paddle account and, in **Catalog → Products**, add a "Pro" product with a recurring monthly price. Copy its price id.
-2. In **Developer Tools → Notifications**, add a webhook destination pointing at `https://<your-domain>/api/webhooks/paddle`, subscribed to the `subscription.*` events. Copy its signing secret.
-3. In **Developer Tools → Authentication**, generate a client-side token.
-4. Set these environment variables:
-
-   | Variable | Where it's used |
-   |---|---|
-   | `PADDLE_WEBHOOK_SECRET` | Server — verifies inbound webhook signatures |
-   | `NEXT_PUBLIC_PADDLE_CLIENT_TOKEN` | Browser — initializes Paddle.js checkout |
-   | `NEXT_PUBLIC_PADDLE_PRICE_ID` | Browser — the Pro plan's price id from step 1 |
-   | `NEXT_PUBLIC_PADDLE_ENVIRONMENT` | Browser — `sandbox` while testing, unset (or `production`) once live |
-
-Entitlement lives in the `subscriptions` MongoDB collection, keyed by user id and updated only by the verified webhook — the checkout flow itself never grants access. To add a second payment gateway (e.g. SSLCommerz for BDT-paying users) later, add a new adapter that writes to the same collection through `upsertSubscriptionFromPaddle`'s sibling function; `lib/subscription.ts`'s `isPro`/`getPlan` checks stay provider-agnostic.
-
 ## Project Structure
 
 ```
