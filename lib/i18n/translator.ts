@@ -1,4 +1,4 @@
-import type { Locale } from "./config";
+import { formatNumber, type Locale } from "./config";
 import type { Dict, DictValue, Messages } from "./types";
 
 /**
@@ -17,9 +17,20 @@ function lookup(source: DictValue | undefined, path: string): DictValue | undefi
   return current;
 }
 
-function interpolate(template: string, vars?: Record<string, string | number>): string {
+/**
+ * Substitutes `{name}` placeholders, rendering each value in the locale's own
+ * numerals. Only the value is converted, never the surrounding template, so a
+ * message keeps whatever digits it was written with — "Magento 2", "$15,000".
+ */
+function interpolate(
+  template: string,
+  locale: Locale,
+  vars?: Record<string, string | number>
+): string {
   if (!vars) return template;
-  return template.replace(/\{(\w+)\}/g, (match, key) => (key in vars ? String(vars[key]) : match));
+  return template.replace(/\{(\w+)\}/g, (match, key) =>
+    key in vars ? formatNumber(vars[key], locale) : match
+  );
 }
 
 export type Translator<T extends Dict = Dict> = {
@@ -45,8 +56,8 @@ export function createTranslator<T extends Dict>(messages: Messages<T>, locale: 
 
   const t = ((path: string, vars?: Record<string, string | number>) => {
     const value = resolve(path);
-    if (typeof value === "string") return interpolate(value, vars);
-    if (typeof value === "number") return String(value);
+    if (typeof value === "string") return interpolate(value, locale, vars);
+    if (typeof value === "number") return formatNumber(value, locale);
     // Missing keys surface as the key itself, which is obvious in review but
     // never breaks a render.
     return path;

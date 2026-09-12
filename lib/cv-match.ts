@@ -109,7 +109,7 @@ function singular(term: string): string {
 }
 
 /** Flattens every piece of written content in the CV into one comparable string. */
-function cvText(cv: GeneratedCv): string {
+export function cvPlainText(cv: GeneratedCv): string {
   return [
     cv.headline,
     cv.summary,
@@ -146,6 +146,41 @@ function advertTerms(jobDescription: string): string[] {
     .map(([, value]) => value.display);
 }
 
+/**
+ * Letters from the writing systems a CV on this site might realistically use.
+ * Latin is absent by design: this counts exactly what the tokenizer cannot see.
+ */
+const NON_LATIN_LETTERS =
+  /[\u0370-\u03FF\u0400-\u04FF\u0590-\u05FF\u0600-\u06FF\u0900-\u097F\u0980-\u09FF\u0E00-\u0E7F\u3040-\u30FF\u4E00-\u9FFF\uAC00-\uD7AF]/g;
+
+/**
+ * Whether two texts are written in the same alphabet, near enough to compare
+ * word for word.
+ *
+ * This grader works by string overlap, so it is only honest when the advert and
+ * the CV share a script. A Bengali CV against an English advert has nothing in
+ * common but the technology names, and grading that reports a perfectly good CV
+ * as 17% when the true answer is "not measurable this way". The model pass in
+ * `cv-coverage` is what answers it across languages.
+ */
+function comparableScripts(a: string, b: string): boolean {
+  const latinShare = (text: string) => {
+    const latin = (text.match(/[A-Za-z]/g) ?? []).length;
+    const other = (text.match(NON_LATIN_LETTERS) ?? []).length;
+    return latin + other === 0 ? 1 : latin / (latin + other);
+  };
+  // Half is a deliberately loose bar: a CV written in another language still
+  // carries plenty of Latin technology names, and that is not a mismatch.
+  return Math.abs(latinShare(a) - latinShare(b)) < 0.5;
+}
+
+/**
+ * Grades an advert against a CV by keyword overlap.
+ *
+ * Returns null when the advert is too thin, when it yields no gradeable terms,
+ * or when the two are not in comparable scripts. Null means "no answer here",
+ * never "zero" — a caller must not render it as a low score.
+ */
 export function scoreCvAgainstJob(cv: GeneratedCv, jobDescription: string): CvMatch | null {
   const advert = (jobDescription ?? "").trim();
   if (advert.split(/\s+/).filter(Boolean).length < MIN_ADVERT_WORDS) return null;
@@ -153,7 +188,9 @@ export function scoreCvAgainstJob(cv: GeneratedCv, jobDescription: string): CvMa
   const terms = advertTerms(advert);
   if (!terms.length) return null;
 
-  const haystack = cvText(cv);
+  const haystack = cvPlainText(cv);
+  if (!comparableScripts(advert, haystack)) return null;
+
   const present = new Set(tokenize(haystack).flatMap((token) => [token, singular(token)]));
   const normalizedHaystack = normalize(haystack);
 

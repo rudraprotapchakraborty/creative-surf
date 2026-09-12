@@ -6,7 +6,7 @@
  * switcher updates the UI instantly without a navigation.
  */
 
-export const LOCALES = ["en", "fr", "de", "ar"] as const;
+export const LOCALES = ["en", "fr", "de", "ar", "bn"] as const;
 
 export type Locale = (typeof LOCALES)[number];
 
@@ -27,6 +27,7 @@ export const LOCALE_META: Record<
   // Arabic romanised into Latin script ("Arabizi"), so it stays left-to-right
   // and needs no RTL handling.
   ar: { label: "Arabic (Latin)", short: "AR", native: "Arabi", flag: "🇸🇦", intl: "en-GB" },
+  bn: { label: "Bengali", short: "BN", native: "বাংলা", flag: "🇧🇩", intl: "bn-BD" },
 };
 
 /**
@@ -59,6 +60,28 @@ export function formatDateForLocale(
   }
 
   return date.toLocaleDateString(LOCALE_META[locale].intl, options);
+}
+
+/**
+ * Locales whose readers expect their own digits. Everything else keeps ASCII,
+ * so this is a lookup rather than a call into `Intl` on every render.
+ */
+const LOCALE_DIGITS: Partial<Record<Locale, readonly string[]>> = {
+  bn: ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"],
+};
+
+/**
+ * Renders a number in the locale's own numerals.
+ *
+ * Applied to interpolated values only, never to a whole translated string — a
+ * message can legitimately contain "Magento 2" or "$15,000", and those are
+ * names and prices rather than quantities the reader counts.
+ */
+export function formatNumber(value: string | number, locale: Locale): string {
+  const digits = LOCALE_DIGITS[locale];
+  const text = String(value);
+  if (!digits) return text;
+  return text.replace(/[0-9]/g, (digit) => digits[Number(digit)]);
 }
 
 export function isLocale(value: unknown): value is Locale {

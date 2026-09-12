@@ -76,6 +76,35 @@ const BULLET_MIN_WORDS = 6;
 const BULLET_MAX_WORDS = 32;
 
 /**
+ * Digits in every numeral system the output languages are written with.
+ * `\d` alone is ASCII, which quietly marks "৫০% কমিয়েছেন" as an unmeasured
+ * achievement — the CV carries the number, the grader simply cannot see it.
+ */
+const ANY_DIGIT = /[0-9\u0660-\u0669\u06F0-\u06F9\u09E6-\u09EF]/;
+
+/**
+ * Word counts, relative to English, for scripts that say the same thing in a
+ * different number of words. Bengali compounds heavily and drops articles: the
+ * same CV comes out about a fifth shorter, measured on matched pairs. Grading
+ * that against the English bands marks a complete CV as thin.
+ *
+ * A script absent here is graded on the English bands, which is the honest
+ * default until someone measures it.
+ */
+const WORD_COUNT_FACTORS: { letters: RegExp; factor: number }[] = [
+  { letters: /[\u0980-\u09FF]/g, factor: 0.8 },
+];
+
+/** Picks the factor for whichever script the CV is actually written in. */
+function lengthFactor(prose: string): number {
+  const latin = (prose.match(/[A-Za-z]/g) ?? []).length;
+  for (const { letters, factor } of WORD_COUNT_FACTORS) {
+    if ((prose.match(letters) ?? []).length > latin) return factor;
+  }
+  return 1;
+}
+
+/**
  * First-person pronouns across the five output languages. A CV is written in
  * the implied first person — "Rebuilt the checkout", not "I rebuilt the
  * checkout" — and parsers weight the opening word of a bullet heavily.
@@ -86,6 +115,7 @@ const FIRST_PERSON = new Set([
   "ich", "mich", "mir", "mein", "meine", "meinen", "meinem", "meiner",
   "yo", "mi", "mis",
   "ana",
+  "আমি", "আমার", "আমায়", "আমাকে", "আমরা", "আমাদের",
 ]);
 
 const words = (value: string): string[] =>
@@ -105,14 +135,21 @@ function proseOf(cv: GeneratedCv): string[] {
   ].filter(Boolean);
 }
 
-/** Lowercased, accent-folded words — so "Ich" and "ich" are one token. */
+/**
+ * Lowercased, accent-folded words — so "Ich" and "ich" are one token.
+ *
+ * Matches Bengali and Arabic letters alongside Latin ones. A Latin-only pattern
+ * finds no words at all in a Bengali CV, which reads as "no first-person
+ * pronouns" and hands out a pass the CV never earned. The combining-mark strip
+ * is scoped to Latin diacritics, so Bengali vowel signs survive intact.
+ */
 function tokens(text: string): string[] {
   return (
     text
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase()
-      .match(/[a-z]+/g) ?? []
+      .match(/[a-z]+|[\u0980-\u09FF]+|[\u0600-\u06FF]+/g) ?? []
   );
 }
 
@@ -132,20 +169,25 @@ function grade(cv: GeneratedCv): Record<AtsCheckId, AtsStatus> {
   const skillItems = skillGroups.flatMap((group) => group.items);
 
   const contact = cv.contact ?? { email: "", phone: "", location: "", links: [] };
+  const prose = proseOf(cv);
   const summaryWords = words(cv.summary).length;
-  const totalWords = proseOf(cv).reduce((sum, text) => sum + words(text).length, 0);
+  const totalWords = prose.reduce((sum, text) => sum + words(text).length, 0);
 
-  const firstPersonHits = tokens(proseOf(cv).join(" ")).filter((token) =>
+  /** Every word-count threshold below, scaled to the script this CV is written in. */
+  const factor = lengthFactor(prose.join(" "));
+  const band = (count: number) => Math.round(count * factor);
+
+  const firstPersonHits = tokens(prose.join(" ")).filter((token) =>
     FIRST_PERSON.has(token)
   ).length;
 
   const datedRoles = roles.filter((job) => job.period?.trim()).length;
   // A digit is the cheapest reliable proxy for a measurable outcome: a percentage,
   // a headcount, a budget, a timeframe.
-  const quantified = bullets.filter((bullet) => /\d/.test(bullet)).length;
+  const quantified = bullets.filter((bullet) => ANY_DIGIT.test(bullet)).length;
   const wellSized = bullets.filter((bullet) => {
     const length = words(bullet).length;
-    return length >= BULLET_MIN_WORDS && length <= BULLET_MAX_WORDS;
+    return length >= band(BULLET_MIN_WORDS) && length <= band(BULLET_MAX_WORDS);
   }).length;
   const deepRoles = roles.filter((job) => (job.bullets ?? []).length >= 3).length;
 
@@ -161,7 +203,11 @@ function grade(cv: GeneratedCv): Record<AtsCheckId, AtsStatus> {
     headline: !cv.headline?.trim() ? "fail" : cv.headline.trim().length <= 100 ? "pass" : "warn",
 
     summary:
-      summaryWords === 0 ? "fail" : summaryWords >= 25 && summaryWords <= 130 ? "pass" : "warn",
+      summaryWords === 0
+        ? "fail"
+        : summaryWords >= band(25) && summaryWords <= band(130)
+          ? "pass"
+          : "warn",
 
     experienceDepth: !roles.length ? "fail" : byRatio(deepRoles, roles.length, 1, 0.5),
 
@@ -181,9 +227,9 @@ function grade(cv: GeneratedCv): Record<AtsCheckId, AtsStatus> {
     firstPerson: firstPersonHits === 0 ? "pass" : firstPersonHits <= 2 ? "warn" : "fail",
 
     length:
-      totalWords >= 300 && totalWords <= 850
+      totalWords >= band(300) && totalWords <= band(850)
         ? "pass"
-        : totalWords >= 200 && totalWords <= 1100
+        : totalWords >= band(200) && totalWords <= band(1100)
           ? "warn"
           : "fail",
   };

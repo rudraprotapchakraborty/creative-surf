@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
-import type { CvInput, GeneratedCv, SavedCvDoc } from "@/lib/cv-types";
+import type { CvCoverage, CvInput, GeneratedCv, SavedCvDoc } from "@/lib/cv-types";
 
 const COLLECTION_NAME = "cvs";
 
@@ -8,7 +8,8 @@ export async function saveCv(
   userId: string,
   userEmail: string,
   inputData: CvInput,
-  cvData: GeneratedCv
+  cvData: GeneratedCv,
+  coverage: CvCoverage | null = null
 ): Promise<string> {
   const db = await getDb();
   const collection = db.collection(COLLECTION_NAME);
@@ -22,6 +23,7 @@ export async function saveCv(
     title,
     inputData,
     cvData,
+    coverage,
     createdAt: now,
     updatedAt: now,
   };
@@ -46,6 +48,7 @@ export async function getUserCvs(userId: string): Promise<SavedCvDoc[]> {
     title: doc.title,
     inputData: doc.inputData,
     cvData: doc.cvData,
+    coverage: doc.coverage ?? null,
     createdAt: doc.createdAt,
     updatedAt: doc.updatedAt,
   }));
@@ -67,6 +70,7 @@ export async function getAllCvs(): Promise<SavedCvDoc[]> {
     title: doc.title,
     inputData: doc.inputData,
     cvData: doc.cvData,
+    coverage: doc.coverage ?? null,
     createdAt: doc.createdAt,
     updatedAt: doc.updatedAt,
   }));
@@ -104,6 +108,7 @@ export async function getCvById(cvId: string, userId: string): Promise<SavedCvDo
     title: doc.title,
     inputData: doc.inputData,
     cvData: doc.cvData,
+    coverage: doc.coverage ?? null,
     createdAt: doc.createdAt,
     updatedAt: doc.updatedAt,
   };

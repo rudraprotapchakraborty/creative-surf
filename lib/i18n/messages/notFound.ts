@@ -29,4 +29,11 @@ export const notFoundMessages = defineMessages({
     body: "Ups! Al-Safha allati tabhath anha ghayr mawjuda aw tamma naqluha.",
     cta: "Al-Awda lil-Raisiyya",
   },
+  bn: {
+    metaTitle: "৪০৪ - পেজ পাওয়া যায়নি",
+    metaDescription: "আপনি যে পেজটি খুঁজছেন সেটি নেই অথবা সরিয়ে ফেলা হয়েছে।",
+    heading: "পেজ পাওয়া যায়নি",
+    body: "দুঃখিত! আপনি যে পেজটি খুঁজছেন সেটি নেই অথবা সরিয়ে ফেলা হয়েছে।",
+    cta: "হোমে ফিরে যান",
+  },
 });

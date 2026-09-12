@@ -5,6 +5,7 @@ import { getAuth } from "@/lib/auth";
 import { saveCv } from "@/lib/cv-db";
 import { CV_JSON_SCHEMA, cvInputSchema, type CvInput, type GeneratedCv } from "@/lib/cv-types";
 import { buildContactLinks } from "@/lib/cv-links";
+import { gradeCoverage } from "@/lib/cv-coverage";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -153,13 +154,22 @@ export async function POST(request: NextRequest) {
       },
     };
 
+    /*
+     * Graded here rather than in the browser because the CV and the advert are
+     * often in different languages, and only a model can tell whether Bengali
+     * prose satisfies an English requirement. Best-effort: a null grade shows
+     * as "not graded" in the panel, which beats a keyword score that reads a
+     * good CV as 17% purely because the two are in different alphabets.
+     */
+    const coverage = await gradeCoverage(cv, input.targetJob);
+
     let cvId = "";
     try {
-      cvId = await saveCv(auth.sub, auth.email || "", input, cv);
+      cvId = await saveCv(auth.sub, auth.email || "", input, cv, coverage);
     } catch (saveErr) {
       console.error("Failed to auto-save CV to MongoDB:", saveErr);
     }
-    return NextResponse.json({ cv, cvId });
+    return NextResponse.json({ cv, coverage, cvId });
   };
 
   // Provider 1: Groq Cloud

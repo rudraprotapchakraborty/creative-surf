@@ -35,12 +35,12 @@ import {
 import { CtaButton, Eyebrow, Reveal } from "@/components/premium";
 import CvBuilderSections from "./CvBuilderSections";
 import { buildCvHtml, printCvDocument } from "@/lib/cv-document";
-import { scoreCvAgainstJob } from "@/lib/cv-match";
+import { scoreCvAgainstJob, type CvMatch } from "@/lib/cv-match";
 import { scoreCvForAts } from "@/lib/cv-ats";
 import { CvPreviewModal } from "@/components/account/cv-preview-modal";
-import { CV_LANGUAGES, CV_TONES, type CvTone, type GeneratedCv } from "@/lib/cv-types";
+import { CV_LANGUAGES, CV_TONES, type CvCoverage, type CvTone, type GeneratedCv } from "@/lib/cv-types";
 import { trackEvent } from "@/lib/analytics";
-import { useT } from "@/lib/i18n";
+import { formatNumber, useT } from "@/lib/i18n";
 import { cvBuilderMessages } from "@/lib/i18n/messages/cvBuilder";
 
 /** A4 at 96dpi — the preview iframe renders at this width and is scaled to fit. */
@@ -102,6 +102,8 @@ export default function CvBuilderClient() {
   const [cv, setCv] = useState<GeneratedCv | null>(null);
   /** The advert the current `cv` was written against — not the live textarea. */
   const [scoredAgainst, setScoredAgainst] = useState("");
+  /** The server's cross-language grade of that advert. Null when it could not be graded. */
+  const [coverage, setCoverage] = useState<CvCoverage | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -153,6 +155,7 @@ export default function CvBuilderClient() {
           setForm({ ...EMPTY_FORM, ...data.cv.inputData });
           setScoredAgainst(data.cv.inputData.targetJob || "");
         }
+        setCoverage((data.cv.coverage as CvCoverage | null) ?? null);
         if (data.cv.cvData) setCv(data.cv.cvData);
       })
       .catch(() => {});
@@ -206,11 +209,33 @@ export default function CvBuilderClient() {
     [cv, cvLabels]
   );
 
-  /** Scored against the advert the CV was written from, so the number can't drift. */
-  const match = useMemo(
+  /**
+   * Keyword overlap against the advert the CV was written from, so the number
+   * can't drift. Null whenever overlap cannot answer the question — most often
+   * because the CV and the advert are in different alphabets.
+   */
+  const localMatch = useMemo(
     () => (cv ? scoreCvAgainstJob(cv, scoredAgainst) : null),
     [cv, scoredAgainst]
   );
+
+  /**
+   * The server's model grade where there is one, falling back to keyword
+   * overlap. The model reads across languages, so it is the only honest answer
+   * for a CV written in one language against an advert written in another; the
+   * local grade still covers CVs saved before grading existed.
+   */
+  const match = useMemo<CvMatch | null>(() => {
+    if (!cv || !coverage) return localMatch;
+    const total = coverage.matched.length + coverage.missing.length;
+    if (!total) return localMatch;
+    return {
+      score: Math.round((coverage.matched.length / total) * 100),
+      matched: coverage.matched,
+      missing: coverage.missing,
+      total,
+    };
+  }, [cv, coverage, localMatch]);
 
   /**
    * Scored from the finished CV alone. This is the other half of the question
@@ -263,6 +288,7 @@ export default function CvBuilderClient() {
 
       setCv(data.cv as GeneratedCv);
       setScoredAgainst(form.targetJob);
+      setCoverage((data.coverage as CvCoverage | null) ?? null);
       refreshSaved();
       // On mobile the preview sits below the form, so bring it into view.
       requestAnimationFrame(() =>
@@ -295,6 +321,7 @@ export default function CvBuilderClient() {
     setForm(EMPTY_FORM);
     setCv(null);
     setScoredAgainst("");
+    setCoverage(null);
     setError(null);
   };
 
@@ -514,7 +541,7 @@ export default function CvBuilderClient() {
                   <span className="text-xs font-bold uppercase tracking-[0.14em] text-flow-textSoft">
                     {t("progress.label")}
                   </span>
-                  <span className="text-sm font-bold text-flow-text tabular-nums">{progress}%</span>
+                  <span className="text-sm font-bold text-flow-text tabular-nums">{formatNumber(progress, t.locale)}%</span>
                 </div>
                 <div
                   className="mt-3 h-1.5 overflow-hidden rounded-full bg-flow-text/10"
@@ -766,7 +793,7 @@ export default function CvBuilderClient() {
                     </div>
                     <div className="text-right">
                       <span className="block text-3xl font-extrabold leading-none text-flow-text tabular-nums">
-                        {ats.score}%
+                        {formatNumber(ats.score, t.locale)}%
                       </span>
                       <span
                         className={`mt-1 block text-[11px] font-bold uppercase tracking-wider ${tierText(ats.tier)}`}
@@ -848,7 +875,7 @@ export default function CvBuilderClient() {
                       </div>
                       <div className="text-right">
                         <span className="block text-3xl font-extrabold leading-none text-flow-text tabular-nums">
-                          {match.score}%
+                          {formatNumber(match.score, t.locale)}%
                         </span>
                         <span
                           className={`mt-1 block text-[11px] font-bold uppercase tracking-wider ${tierText(matchTier)}`}
@@ -910,13 +937,19 @@ export default function CvBuilderClient() {
                     </p>
                   </div>
                 ) : (
+                  /*
+                   * Two different silences. No advert means the candidate has
+                   * not asked the question yet; an advert with no grade means we
+                   * asked and could not answer, and saying so is better than
+                   * printing a score we know to be wrong.
+                   */
                   <div className="rounded-2xl border border-dashed border-flow-border bg-flow-surface p-5">
                     <h3 className="flex items-center gap-2 text-sm font-bold text-flow-text">
                       <Target className="h-4 w-4 text-flow-textSoft" />
-                      {t("match.lockedTitle")}
+                      {t(scoredAgainst.trim() ? "match.ungradedTitle" : "match.lockedTitle")}
                     </h3>
                     <p className="mt-2 text-xs leading-relaxed text-flow-textSoft">
-                      {t("match.lockedBody")}
+                      {t(scoredAgainst.trim() ? "match.ungradedBody" : "match.lockedBody")}
                     </p>
                   </div>
                 ))}

@@ -11,7 +11,7 @@ export const CV_TONES = ["professional", "concise", "impact"] as const;
 export type CvTone = (typeof CV_TONES)[number];
 
 /** Output languages for the generated CV, independent of the site's UI locale. */
-export const CV_LANGUAGES = ["English", "French", "German", "Arabic", "Spanish"] as const;
+export const CV_LANGUAGES = ["English", "French", "German", "Arabic", "Spanish", "Bengali"] as const;
 
 export const cvInputSchema = z.object({
   fullName: z.string().trim().min(2).max(120),
@@ -71,6 +71,43 @@ export type GeneratedCv = {
   languages: string[];
 };
 
+/**
+ * How the finished CV covers the advert it was written for.
+ *
+ * Graded by a model rather than by keyword overlap, because the CV and the
+ * advert are routinely in different languages — a Bengali CV genuinely
+ * evidencing "যোগাযোগ" shares no characters with an advert asking for
+ * "communication", and a string comparison scores that as a miss.
+ *
+ * Both lists hold the advert's own wording, so the candidate can find each one
+ * in the text they pasted.
+ */
+export type CvCoverage = {
+  matched: string[];
+  missing: string[];
+};
+
+/** Structured-output schema for the coverage pass. Strict mode, as above. */
+export const CV_COVERAGE_JSON_SCHEMA: Record<string, unknown> = {
+  type: "object",
+  additionalProperties: false,
+  required: ["matched", "missing"],
+  properties: {
+    matched: {
+      type: "array",
+      description:
+        "Requirements from the advert that the CV genuinely evidences. Copy each one from the advert in the advert's own language, as a short phrase of one to four words.",
+      items: { type: "string" },
+    },
+    missing: {
+      type: "array",
+      description:
+        "Requirements from the advert the CV does not evidence yet, in the same short form.",
+      items: { type: "string" },
+    },
+  },
+};
+
 export interface SavedCvDoc {
   _id?: string;
   userId: string;
@@ -78,6 +115,8 @@ export interface SavedCvDoc {
   title: string;
   inputData: CvInput;
   cvData: GeneratedCv;
+  /** Absent on CVs saved before coverage grading existed, and on those written without an advert. */
+  coverage?: CvCoverage | null;
   createdAt: Date | string;
   updatedAt: Date | string;
 }

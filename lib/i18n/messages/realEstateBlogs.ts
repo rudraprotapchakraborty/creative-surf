@@ -73,4 +73,22 @@ export const realEstateBlogsMessages = defineMessages({
     read: "Iqra →",
     brand: "Creative Surf",
   },
+  bn: {
+    eyebrow: "Creative Surf · রিয়েল এস্টেট",
+    title: "বিশ্লেষণ ও ভাবনা",
+    subtitle:
+      "ঢাকার রিয়েল এস্টেট নিয়ে বাজার প্রবণতা, ক্রয় নির্দেশিকা আর বিনিয়োগ বিশ্লেষণ — সরাসরি Creative Surf টিমের কাছ থেকে।",
+    categoryAll: "সব",
+    newPost: "নতুন পোস্ট",
+    logout: "লগ আউট",
+    emptyTitle: "এখনও কোনো পোস্ট নেই",
+    emptyAdmin: "শুরু করতে আপনার প্রথম ব্লগ পোস্টটি লিখুন।",
+    emptyPublic: "Creative Surf টিমের বিশ্লেষণ পেতে শীঘ্রই আবার দেখুন।",
+    writeFirst: "প্রথম পোস্ট লিখুন",
+    edit: "সম্পাদনা",
+    delete: "মুছে ফেলুন",
+    confirmDelete: '"{title}" মুছে ফেলবেন? এটি আর ফেরানো যাবে না।',
+    read: "পড়ুন →",
+    brand: "Creative Surf",
+  },
 });

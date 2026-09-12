@@ -69,4 +69,21 @@ export const realEstateProjectsMessages = defineMessages({
       confirmDelete: 'Hadhf \"{name}\"? La yumkin Al-Tarajju an dhalik.',
     },
   },
+  bn: {
+    list: {
+      eyebrow: "Creative Surf · রিয়েল এস্টেট",
+      title: "আমাদের প্রকল্প",
+      subtitle: "ঢাকার প্রিমিয়াম আবাসিক প্রকল্প — মানসম্মত নির্মাণ, জীবনের জন্য ডিজাইন করা।",
+      statusAll: "সব",
+      newProject: "নতুন প্রকল্প",
+      logout: "লগ আউট",
+      emptyTitle: "এখনও কোনো প্রকল্প নেই",
+      emptyAdmin: "শুরু করতে আপনার প্রথম রিয়েল এস্টেট প্রকল্পটি যোগ করুন।",
+      emptyPublic: "প্রকল্পগুলো শীঘ্রই এখানে দেখা যাবে।",
+      addFirst: "প্রথম প্রকল্প যোগ করুন",
+      edit: "সম্পাদনা",
+      delete: "মুছে ফেলুন",
+      confirmDelete: '"{name}" মুছে ফেলবেন? এটি আর ফেরানো যাবে না।',
+    },
+  },
 });

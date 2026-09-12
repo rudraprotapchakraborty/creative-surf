@@ -74,4 +74,22 @@ export const blogPostMessages = defineMessages({
       outbound: "Masadir Kharijiyya",
     },
   },
+  bn: {
+    notFound: "পোস্ট পাওয়া যায়নি",
+    backToBlogs: "← ব্লগে ফিরুন",
+    backToBlogsShort: "ব্লগে ফিরুন",
+    back: "ফিরুন",
+    backToAll: "সব লেখায় ফিরুন",
+    edit: "সম্পাদনা",
+    delete: "মুছে ফেলুন",
+    confirmDelete: "এই পোস্টটি মুছে ফেলবেন? এটি আর ফেরানো যাবে না।",
+    writtenBy: "লিখেছেন",
+    share: "শেয়ার",
+    keyTakeaways: "মূল কথা",
+    seo: {
+      inboundReal: "Creative Surf রিয়েল এস্টেটে সম্পর্কিত",
+      inbound: "Creative Surf-এ সম্পর্কিত",
+      outbound: "বাইরের রিসোর্স",
+    },
+  },
 });

@@ -17,13 +17,13 @@ export const cvBuilderMessages = defineMessages({
         "Free PDF — no export fee",
         "Nothing invented",
         "ATS-safe single column",
-        "5 CV languages",
+        "6 CV languages",
       ],
     },
     stats: [
       { value: "~60s", label: "From rough notes to a finished PDF" },
       { value: "0", label: "Paywalls between you and your download" },
-      { value: "5", label: "Languages your CV can be written in" },
+      { value: "6", label: "Languages your CV can be written in" },
     ],
     authRequired: {
       title: "Sign in to build & save your CV",
@@ -182,6 +182,9 @@ export const cvBuilderMessages = defineMessages({
       lockedTitle: "Match score locked",
       lockedBody:
         "Paste the job advert into “Target & tone” and we'll score this CV against what that employer actually asked for.",
+      ungradedTitle: "Not graded this time",
+      ungradedBody:
+        "We couldn't grade this CV against the advert just now. Regenerating usually fixes it — and a score we can't stand behind is worse than none.",
       caption: "{matched} of {total} key terms from the advert appear in your CV",
       tiers: {
         strong: "Strong match",
@@ -250,9 +253,9 @@ export const cvBuilderMessages = defineMessages({
             "No export fee, no watermark, no 'upgrade to download'. It prints as selectable vector text in a single-column layout with no tables or text boxes — the things that usually break an applicant tracking system.",
         },
         {
-          title: "Five languages, one career",
+          title: "Six languages, one career",
           body:
-            "Write the same CV in English, French, German, Spanish or Arabic, independently of the language you are browsing in. Useful when you are applying across Europe and the Gulf rather than in one market.",
+            "Write the same CV in English, French, German, Spanish, Arabic or Bengali, independently of the language you are browsing in. Useful when you are applying across Europe, the Gulf and South Asia rather than in one market.",
         },
         {
           title: "There are real people behind it",
@@ -335,7 +338,7 @@ export const cvBuilderMessages = defineMessages({
           sites: "Often behind a payment",
         },
         {
-          label: "CV written in five languages",
+          label: "CV written in six languages",
           us: "Yes",
           assistant: "English-first",
           chatbot: "Yes",
@@ -432,13 +435,13 @@ export const cvBuilderMessages = defineMessages({
         "PDF gratuit — sans frais d'export",
         "Rien d'inventé",
         "Colonne unique, compatible ATS",
-        "5 langues de CV",
+        "6 langues de CV",
       ],
     },
     stats: [
       { value: "~60s", label: "De quelques notes à un PDF terminé" },
       { value: "0", label: "Paiement entre vous et votre téléchargement" },
-      { value: "5", label: "Langues possibles pour votre CV" },
+      { value: "6", label: "Langues possibles pour votre CV" },
     ],
     authRequired: {
       title: "Connectez-vous pour créer et enregistrer votre CV",
@@ -600,6 +603,9 @@ export const cvBuilderMessages = defineMessages({
       lockedTitle: "Score de correspondance verrouillé",
       lockedBody:
         "Collez l'annonce dans « Cible et ton » et nous évaluerons ce CV face à ce que cet employeur demande réellement.",
+      ungradedTitle: "Pas évalué cette fois",
+      ungradedBody:
+        "Nous n'avons pas pu évaluer ce CV face à l'annonce cette fois-ci. Relancer la génération suffit généralement — et un score dont nous ne répondons pas vaut moins que pas de score du tout.",
       caption: "{matched} des {total} termes clés de l'annonce apparaissent dans votre CV",
       tiers: {
         strong: "Forte correspondance",
@@ -668,9 +674,9 @@ export const cvBuilderMessages = defineMessages({
             "Aucun frais d'export, aucun filigrane, aucun « passez à la version payante ». Le PDF s'imprime en texte vectoriel sélectionnable, sur une seule colonne, sans tableaux ni zones de texte — ce qui casse d'ordinaire les logiciels de tri.",
         },
         {
-          title: "Cinq langues, un seul parcours",
+          title: "Six langues, un seul parcours",
           body:
-            "Rédigez le même CV en anglais, français, allemand, espagnol ou arabe, indépendamment de la langue du site. Utile quand vous postulez en Europe et dans le Golfe, pas sur un seul marché.",
+            "Rédigez le même CV en anglais, français, allemand, espagnol, arabe ou bengali, indépendamment de la langue du site. Utile quand vous postulez en Europe, dans le Golfe et en Asie du Sud, pas sur un seul marché.",
         },
         {
           title: "Il y a de vraies personnes derrière",
@@ -753,7 +759,7 @@ export const cvBuilderMessages = defineMessages({
           sites: "Souvent payant",
         },
         {
-          label: "CV rédigé en cinq langues",
+          label: "CV rédigé en six langues",
           us: "Oui",
           assistant: "Anglais d'abord",
           chatbot: "Oui",
@@ -850,13 +856,13 @@ export const cvBuilderMessages = defineMessages({
         "Kostenloses PDF — keine Exportgebühr",
         "Nichts erfunden",
         "ATS-sichere Einspaltigkeit",
-        "5 Sprachen",
+        "6 Sprachen",
       ],
     },
     stats: [
       { value: "~60s", label: "Von Stichpunkten zum fertigen PDF" },
       { value: "0", label: "Bezahlschranken vor dem Download" },
-      { value: "5", label: "Sprachen für Ihren Lebenslauf" },
+      { value: "6", label: "Sprachen für Ihren Lebenslauf" },
     ],
     authRequired: {
       title: "Melden Sie sich an, um Ihren Lebenslauf zu erstellen und zu speichern",
@@ -1018,6 +1024,9 @@ export const cvBuilderMessages = defineMessages({
       lockedTitle: "Trefferquote gesperrt",
       lockedBody:
         "Fügen Sie die Stellenanzeige unter „Ziel & Tonalität“ ein, dann bewerten wir diesen Lebenslauf gegen das, was dieser Arbeitgeber tatsächlich verlangt.",
+      ungradedTitle: "Diesmal nicht bewertet",
+      ungradedBody:
+        "Wir konnten diesen Lebenslauf gerade nicht gegen die Anzeige bewerten. Ein erneutes Erstellen hilft meist — und eine Zahl, für die wir nicht geradestehen können, ist schlechter als gar keine.",
       caption: "{matched} von {total} Schlüsselbegriffen der Anzeige stehen in Ihrem Lebenslauf",
       tiers: {
         strong: "Starke Übereinstimmung",
@@ -1086,9 +1095,9 @@ export const cvBuilderMessages = defineMessages({
             "Keine Exportgebühr, kein Wasserzeichen, kein „Upgrade zum Download“. Es druckt als markierbarer Vektortext, einspaltig, ohne Tabellen oder Textfelder — also ohne das, was Bewerbermanagementsysteme sonst scheitern lässt.",
         },
         {
-          title: "Fünf Sprachen, ein Werdegang",
+          title: "Sechs Sprachen, ein Werdegang",
           body:
-            "Schreiben Sie denselben Lebenslauf auf Englisch, Französisch, Deutsch, Spanisch oder Arabisch, unabhängig von der Sprache der Website. Nützlich, wenn Sie sich in Europa und am Golf bewerben.",
+            "Schreiben Sie denselben Lebenslauf auf Englisch, Französisch, Deutsch, Spanisch, Arabisch oder Bengalisch, unabhängig von der Sprache der Website. Nützlich, wenn Sie sich in Europa, am Golf und in Südasien bewerben.",
         },
         {
           title: "Dahinter stehen echte Menschen",
@@ -1171,7 +1180,7 @@ export const cvBuilderMessages = defineMessages({
           sites: "Oft kostenpflichtig",
         },
         {
-          label: "Lebenslauf in fünf Sprachen",
+          label: "Lebenslauf in sechs Sprachen",
           us: "Ja",
           assistant: "Englisch zuerst",
           chatbot: "Ja",
@@ -1268,13 +1277,13 @@ export const cvBuilderMessages = defineMessages({
         "PDF majjani — bidun rusum tasdir",
         "La shay makhtalaq",
         "Amud wahid mutawafiq ma Al-Farz",
-        "5 lughat lil-Sira",
+        "6 lughat lil-Sira",
       ],
     },
     stats: [
       { value: "~60s", label: "Min mulahazat basita ila PDF jahiz" },
       { value: "0", label: "Hawajiz dafi bainaka wa bayn Al-Tahmil" },
-      { value: "5", label: "Lughat yumkin kitabat Siratik biha" },
+      { value: "6", label: "Lughat yumkin kitabat Siratik biha" },
     ],
     authRequired: {
       title: "Sajjil dukhulak li-insha wa hifz Siratik Al-Dhatiyya",
@@ -1435,6 +1444,9 @@ export const cvBuilderMessages = defineMessages({
       lockedTitle: "Darajat Al-Mutabaqa mughlaqa",
       lockedBody:
         "Alsiq ilan Al-Wazifa fi « Al-Hadaf wal-Uslub » wa sanuqayyim hadhihi Al-Sira muqabil ma yatlubuhu sahib Al-Amal filan.",
+      ungradedTitle: "Lam yatimm Al-Taqyim hadhihi Al-Marra",
+      ungradedBody:
+        "Lam nastati taqyim hadhihi Al-Sira muqabil Al-Ilan Al-An. Iadat Al-Insha tahull Al-Mushkila adatan — wa darajat la nastati Al-Difa anha aswa min ghayabiha.",
       caption: "{matched} min {total} min Al-Mustalahat Al-Raisiyya fi Al-Ilan mawjuda fi Siratik",
       tiers: {
         strong: "Mutabaqa qawiyya",
@@ -1503,9 +1515,9 @@ export const cvBuilderMessages = defineMessages({
             "La rusum tasdir wa la alama mayiyya wa la « taraqqa lil-tahmil ». Yutba ka-nass shuai qabil lil-tahdid, fi amud wahid bidun jadawil aw sanadiq nass — wa hiya ma yuksir adatan anzimat tatabbu Al-Mutaqaddimin.",
         },
         {
-          title: "Khams lughat, masira wahida",
+          title: "Sitt lughat, masira wahida",
           body:
-            "Uktub nafs Al-Sira bil-Ingliziyya aw Al-Faransiyya aw Al-Almaniyya aw Al-Isbaniyya aw Al-Arabiyya, bi-sarf Al-Nazar an lughat Al-Mawqi. Mufid hina tuqaddim fi Uruba wal-Khalij ma.",
+            "Uktub nafs Al-Sira bil-Ingliziyya aw Al-Faransiyya aw Al-Almaniyya aw Al-Isbaniyya aw Al-Arabiyya aw Al-Bangaliyya, bi-sarf Al-Nazar an lughat Al-Mawqi. Mufid hina tuqaddim fi Uruba wal-Khalij wa Janub Asiya ma.",
         },
         {
           title: "Hunak bashar haqiqiyyun khalfahu",
@@ -1588,7 +1600,7 @@ export const cvBuilderMessages = defineMessages({
           sites: "Ghaliban madfu",
         },
         {
-          label: "Sira maktuba bi-khams lughat",
+          label: "Sira maktuba bi-sitt lughat",
           us: "Naam",
           assistant: "Al-Ingliziyya awwalan",
           chatbot: "Naam",
@@ -1666,6 +1678,424 @@ export const cvBuilderMessages = defineMessages({
         "Sa-tughadir ma PDF yumkinuka irsaluhu Al-Yawm — wa laysa fihi shay tatamanna alla yasalaka anhu Al-Muwazzif.",
       primary: "Anshi Siratee",
       secondary: "Tahaddath ma shakhs haqiqi",
+    },
+  },
+
+  bn: {
+    metaTitle: "এআই সিভি বিল্ডার — বিনামূল্যে, ATS-উপযোগী, কিছুই বানিয়ে লেখে না",
+    metaDescription:
+      "এলোমেলো নোট থেকে তৈরি করুন রিক্রুটারের উপযোগী সিভি। চাকরির বিজ্ঞপ্তিটি পেস্ট করুন, দেখুন কোন শর্তগুলো আপনি পূরণ করেছেন, আর বিনামূল্যে ATS-উপযোগী পিডিএফ নামান। আমরা কখনও প্রতিষ্ঠান, তারিখ বা সংখ্যা বানিয়ে লিখি না।",
+    hero: {
+      badge: "বিনামূল্যের এআই টুল",
+      title: "এআই সিভি বিল্ডার",
+      titleHighlight: "যা কিছুই বানিয়ে লেখে না",
+      subtitle:
+        "আপনার ক্যারিয়ারের এলোমেলো নোট আর যে চাকরিটি খুঁজছেন সেটির বিজ্ঞপ্তি দিন। আপনি পাবেন কেবল আপনার সত্যিকারের কাজ দিয়ে গড়া রিক্রুটার-উপযোগী সিভি, সেই বিজ্ঞপ্তির সাথে মিলের স্কোর, আর বিনামূল্যে পিডিএফ।",
+      ctaPrimary: "আমার সিভি বানান",
+      ctaSecondary: "তুলনাটা দেখুন",
+      trust: [
+        "বিনামূল্যে পিডিএফ — কোনো ফি নেই",
+        "কিছুই বানানো নয়",
+        "ATS-উপযোগী এক কলাম",
+        "৬টি সিভি ভাষা",
+      ],
+    },
+    stats: [
+      { value: "~৬০ সে.", label: "এলোমেলো নোট থেকে সম্পূর্ণ পিডিএফ" },
+      { value: "০", label: "ডাউনলোডের পথে কোনো পেওয়াল নেই" },
+      { value: "৬", label: "যত ভাষায় আপনার সিভি লেখা যায়" },
+    ],
+    authRequired: {
+      title: "সিভি বানাতে ও সংরক্ষণ করতে সাইন ইন করুন",
+      subtitle: "এআই দিয়ে পেশাদার সিভি বানাতে আর প্রোফাইলে সংরক্ষণ করতে লগ ইন করুন বা একটি অ্যাকাউন্ট খুলুন।",
+      login: "লগ ইন",
+      register: "বিনামূল্যে অ্যাকাউন্ট খুলুন",
+    },
+    builder: {
+      eyebrow: "বিল্ডার",
+      title: "তিন ধাপে,",
+      highlight: "একটি পূর্ণ সিভি",
+      description:
+        "যতটুকু মনে আছে লিখে ফেলুন। এলোমেলো নোটই কাম্য — সেগুলোকে সিভির ভাষায় সাজানো আমাদের কাজ, আপনার নয়।",
+    },
+    sections: {
+      basics: "আপনার সম্পর্কে",
+      basicsHint: "আপনার নাম, যে পদটি চাইছেন, আর রিক্রুটার কীভাবে আপনাকে পাবেন।",
+      background: "আপনার পটভূমি",
+      backgroundHint: "আধা বাক্য কিংবা বানান ভুল থাকলেও চলবে। ঝকঝকে লেখার চেয়ে বিস্তারিত তথ্য অনেক বেশি জরুরি।",
+      tailoring: "লক্ষ্য ও ধরন",
+      tailoringHint: "মিলের স্কোর দেখতে এখানে চাকরির বিজ্ঞপ্তিটি পেস্ট করুন।",
+      links: "লিংক (ঐচ্ছিক)",
+      linksHint:
+        "যেগুলো আছে দিন। LinkedIn আর GitHub-এর জন্য শুধু ইউজারনেমই যথেষ্ট — পুরো ঠিকানা আমরা বানিয়ে নেব। যা খালি রাখবেন, তা সিভিতে থাকবে না।",
+    },
+    fields: {
+      fullName: { label: "পুরো নাম", placeholder: "Alex Morgan" },
+      jobTitle: { label: "কাঙ্ক্ষিত বা বর্তমান পদ", placeholder: "Senior Frontend Engineer" },
+      email: { label: "ইমেইল", placeholder: "alex@example.com" },
+      phone: { label: "ফোন", placeholder: "+৮৮ ০১৭ ০০০ ০০০০" },
+      location: { label: "অবস্থান", placeholder: "ঢাকা, বাংলাদেশ" },
+      linkedin: { label: "LinkedIn", placeholder: "linkedin.com/in/alexmorgan" },
+      portfolio: { label: "পোর্টফোলিও বা নিজের সাইট", placeholder: "alexmorgan.dev" },
+      github: { label: "GitHub", placeholder: "github.com/alexmorgan" },
+      links: { label: "অন্যান্য লিংক", placeholder: "behance.net/alexmorgan, medium.com/@alex" },
+      yearsExperience: { label: "অভিজ্ঞতার বছর", placeholder: "৬" },
+      workHistory: {
+        label: "কাজের অভিজ্ঞতা",
+        placeholder:
+          "Northwind-এ ফ্রন্টএন্ড ইঞ্জিনিয়ার, ২০২১-বর্তমান। চেকআউট নতুন করে বানিয়েছি, লোড টাইম প্রায় অর্ধেক করেছি, দুজন জুনিয়রকে শিখিয়েছি।\n\nBelltower-এ জুনিয়র ডেভেলপার, ২০১৯-২০২১। React-এ অভ্যন্তরীণ ড্যাশবোর্ড বানিয়েছি।",
+        hint: "এলোমেলো নোটই চলবে — প্রতিটি পদের জন্য একটি অনুচ্ছেদ, সম্ভব হলে তারিখসহ।",
+      },
+      education: {
+        label: "শিক্ষা",
+        placeholder: "বিএসসি কম্পিউটার সায়েন্স, ঢাকা বিশ্ববিদ্যালয়, ২০১৫-২০১৯",
+      },
+      skills: {
+        label: "দক্ষতা",
+        placeholder: "React, TypeScript, Node.js, Figma, দলনেতৃত্ব, স্টেকহোল্ডারের সাথে যোগাযোগ",
+      },
+      targetJob: {
+        label: "কাঙ্ক্ষিত চাকরির বিবরণ",
+        placeholder: "যে চাকরিতে আবেদন করছেন সেই বিজ্ঞপ্তিটি পেস্ট করুন…",
+        hint: "ঐচ্ছিক, তবে এখানেই টুলটির আসল কাজ — বিজ্ঞপ্তি পেস্ট করলে আমরা তার সাথে আপনার সিভি মিলিয়ে স্কোর দিই।",
+      },
+      tone: { label: "ধরন" },
+      language: { label: "সিভির ভাষা" },
+    },
+    tones: {
+      professional: "পেশাদার",
+      concise: "সংক্ষিপ্ত",
+      impact: "ফলনির্ভর",
+    },
+    actions: {
+      generate: "আমার সিভি বানান",
+      generating: "আপনার সিভি লেখা হচ্ছে…",
+      regenerate: "আবার বানান",
+      download: "পিডিএফ নামান",
+      view: "দেখুন",
+      startOver: "ফর্ম খালি করুন",
+    },
+    progress: {
+      label: "এ পর্যন্ত দেওয়া তথ্য",
+      hint: "যত বেশি দেবেন, তত কম বাদ দিতে হবে।",
+    },
+    saved: {
+      title: "আপনার সংরক্ষিত সিভি",
+      subtitle: "আপনার বানানো প্রতিটি সিভি এখানে থাকে, তাই প্রতিটি আবেদনের জন্য আলাদা সংস্করণ রাখতে পারেন।",
+      empty: "এখনও কিছু সংরক্ষিত নেই — আপনার প্রথম সিভিটি এখানে দেখা যাবে।",
+      load: "খুলুন",
+      remove: "মুছে ফেলুন",
+      confirm: "এই সংরক্ষিত সিভিটি মুছে ফেলবেন? এটি আর ফেরানো যাবে না।",
+    },
+    preview: {
+      title: "প্রিভিউ",
+      placeholderTitle: "আপনার সিভি এখানে দেখা যাবে",
+      placeholderSubtitle: "বাঁ পাশে তথ্য পূরণ করে 'আমার সিভি বানান'-এ ক্লিক করলেই লাইভ প্রিভিউ দেখতে পাবেন।",
+      loading: "আপনার সিভি লেখা হচ্ছে। সাধারণত ৫-১৫ সেকেন্ড লাগে।",
+      downloadHint: "কপি রাখতে প্রিন্ট ডায়ালগে “Save as PDF” বেছে নিন। এটি সত্যিকারের, নির্বাচনযোগ্য লেখা হিসেবে প্রিন্ট হয়।",
+    },
+    ats: {
+      title: "ATS প্রস্তুতি",
+      caption: "{total} টির মধ্যে {passed} টি পরীক্ষা উতরেছে",
+      tiers: { strong: "ATS-উপযোগী", good: "প্রায় হয়ে এসেছে", weak: "কাজ বাকি" },
+      tierHints: {
+        strong: "একটি ট্র্যাকিং সিস্টেম এই সিভির প্রতিটি অংশ পড়তে পারবে। এখানে কিছুই আপনাকে আটকাচ্ছে না।",
+        good:
+          "পড়া যাচ্ছে, তবে নিচের জায়গাগুলোতেই সিভি চুপচাপ নম্বর হারায়। যতটা পারেন ঠিক করে আবার বানান।",
+        weak:
+          "অ্যাপ্লিক্যান্ট ট্র্যাকিং সিস্টেমের এটি পড়তে সমস্যা হবে। নিচের ঘাটতিগুলো দেখুন — বেশিরভাগই নোটে আরও তথ্য যোগ করলেই মিটে যায়।",
+      },
+      note:
+        "এটি সেই কারিগরি দিকগুলো যাচাই করে যা একটি রিক্রুটিং সিস্টেম আগে পড়ে: কাঠামো, তারিখ, সংখ্যা, যোগাযোগের তথ্য। বিজ্ঞপ্তির সাথে মিলের হিসাবটি আলাদা — একটিতে ভালো করেও অন্যটিতে খারাপ হওয়া সম্ভব।",
+      checks: {
+        contact: {
+          label: "যোগাযোগের তথ্য সম্পূর্ণ",
+          fix: "ফোন নম্বর আর অবস্থান যোগ করুন — পার্সার হেডারে দুটোই খোঁজে।",
+        },
+        profileLinks: {
+          label: "অন্তত একটি প্রোফাইল লিংক",
+          fix: "উপরে LinkedIn, পোর্টফোলিও বা GitHub লিংক দিন। বেশিরভাগ রিক্রুটার কল করার আগে একটি খুলে দেখেন।",
+        },
+        headline: {
+          label: "সংক্ষিপ্ত, সুনির্দিষ্ট হেডলাইন",
+          fix: "হেডলাইনটি নেই কিংবা এত বড় যে এক নজরে পড়া যায় না। ফর্মে কাঙ্ক্ষিত পদটি আরও নির্দিষ্ট করলেই ঠিক হয়ে যাবে।",
+        },
+        summary: {
+          label: "সারসংক্ষেপের দৈর্ঘ্য ঠিক আছে",
+          fix: "২৫ থেকে ১৩০ শব্দ রাখুন। এর কম হলে কিছুই বলা হয় না, বেশি হলে কেউ পড়ে না।",
+        },
+        experienceDepth: {
+          label: "প্রতিটি পদের জন্য যথেষ্ট বিবরণ",
+          fix:
+            "কিছু পদে তিনটির কম পয়েন্ট আছে। সেখানে কী কী করেছেন, কাজের অভিজ্ঞতায় আরও লিখুন।",
+        },
+        dates: {
+          label: "প্রতিটি পদের তারিখ দেওয়া আছে",
+          fix: "তারিখ ছাড়া পদ পার্সার সাজাতে পারে না। কাজের অভিজ্ঞতায় সালগুলো যোগ করুন।",
+        },
+        metrics: {
+          label: "অর্জনগুলো মাপযোগ্য",
+          fix:
+            "খুব কম পয়েন্টে সংখ্যা আছে। সত্যিই মনে আছে এমন দলের আকার, শতাংশ, বাজেট বা সময়সীমা যোগ করুন।",
+        },
+        bulletLength: {
+          label: "পয়েন্টগুলোর দৈর্ঘ্য পড়ার উপযোগী",
+          fix: "কিছু পয়েন্ট খুব ছোট বা খুব লম্বা। প্রতিটিতে ছয় থেকে ত্রিশ শব্দ হলে সবচেয়ে ভালো পড়া যায়।",
+        },
+        skills: {
+          label: "দক্ষতাগুলো সুনির্দিষ্ট ও বিভাগে সাজানো",
+          fix: "আরও দক্ষতা লিখুন, অন্তত দুটি বিভাগে ভাগ হওয়ার মতো যথেষ্ট।",
+        },
+        firstPerson: {
+          label: "“আমি”, “আমার” ছাড়া লেখা",
+          fix: "সিভি উহ্য উত্তম পুরুষে লেখা হয়। আবার বানালেই সাধারণত ঠিক হয়ে যায়।",
+        },
+        length: {
+          label: "সামগ্রিক দৈর্ঘ্য ঠিক আছে",
+          fix:
+            "মোটামুটি ৩০০ থেকে ৮৫০ শব্দ রাখুন। কম হলে নোটে আরও তথ্য দিন, বেশি হলে ছেঁটে নিন।",
+        },
+      },
+    },
+    match: {
+      title: "বিজ্ঞপ্তির সাথে মিল",
+      lockedTitle: "মিলের স্কোর বন্ধ আছে",
+      lockedBody:
+        "“লক্ষ্য ও ধরন”-এ চাকরির বিজ্ঞপ্তিটি পেস্ট করুন, আর সেই প্রতিষ্ঠান আসলে যা চেয়েছে তার সাথে মিলিয়ে আমরা সিভিটির স্কোর দেব।",
+      ungradedTitle: "এবার যাচাই করা যায়নি",
+      ungradedBody:
+        "এই মুহূর্তে বিজ্ঞপ্তির সাথে মিলিয়ে সিভিটি যাচাই করা গেল না। আবার বানালেই সাধারণত কাজ হয় — আর যে স্কোরের পক্ষে আমরা দাঁড়াতে পারি না, তার চেয়ে কোনো স্কোর না থাকাই ভালো।",
+      caption: "বিজ্ঞপ্তির {total} টি মূল শব্দের মধ্যে {matched} টি আপনার সিভিতে আছে",
+      tiers: {
+        strong: "চমৎকার মিল",
+        good: "মোটামুটি মিল",
+        weak: "কাজ বাকি",
+      },
+      tierHints: {
+        strong: "এই সিভি বিজ্ঞপ্তির ভাষাতেই কথা বলছে। নামিয়ে পাঠিয়ে দিন।",
+        good: "প্রায় হয়ে এসেছে। নিচের কিছু যদি সত্যিই আপনার হয়, নোটে যোগ করে আবার বানান।",
+        weak: "বিজ্ঞপ্তিতে এমন কিছু চাওয়া হয়েছে যা আপনার নোটে নেই। সত্যিই যা করেছেন তা যোগ করে আবার বানান।",
+      },
+      matchedLabel: "আছে",
+      missingLabel: "এখনও নেই",
+      honestNote:
+        "আমরা এগুলো আপনার হয়ে বসিয়ে দেব না। নোটে না থাকলে সিভিতেও থাকবে না — এটাই তো মূল কথা।",
+    },
+    errors: {
+      required: "অনুগ্রহ করে আপনার নাম, কাঙ্ক্ষিত পদ আর ইমেইল দিন।",
+      email: "অনুগ্রহ করে একটি সঠিক ইমেইল ঠিকানা দিন।",
+      background: "অন্তত আপনার কাজের অভিজ্ঞতা, শিক্ষা বা দক্ষতার যেকোনো একটি দিন।",
+      generic: "কিছু একটা ভুল হয়েছে। আবার চেষ্টা করুন।",
+    },
+    cv: {
+      summary: "পরিচিতি",
+      experience: "অভিজ্ঞতা",
+      education: "শিক্ষা",
+      skills: "দক্ষতা",
+      projects: "প্রকল্প",
+      certifications: "সনদ",
+      languages: "ভাষা",
+    },
+    tips: {
+      title: "আরও ভালো ফল পেতে",
+      items: [
+        "যেখানে সংখ্যা আছে দিন — দলের আকার, বাজেট, শতাংশ, সময়সীমা।",
+        "প্রতিটি পদের জন্য একটি অনুচ্ছেদ লিখুন, আর তারিখ দিন যাতে সময়রেখা ঠিক থাকে।",
+        "যে চাকরিতে আবেদন করছেন সেই বিজ্ঞপ্তিটি পেস্ট করুন, যাতে সিভি সেই প্রতিষ্ঠানের চাহিদা দিয়েই শুরু হয়।",
+        "আমরা কখনও প্রতিষ্ঠান, তারিখ বা ফলাফল বানিয়ে লিখি না — যত বেশি তথ্য দেবেন, সিভি তত শক্তিশালী হবে।",
+      ],
+    },
+    why: {
+      eyebrow: "কেন এটিই",
+      title: "অনেক টুলই আপনাকে সিভি লিখে দেবে।",
+      highlight: "খুব কমই সেটি সত্যি রাখবে।",
+      description:
+        "ডাউনলোডের পরের মুহূর্তটির কথা ভেবে আমরা এটি বানিয়েছি — যখন রিক্রুটার আপনাকে পাঠানো সিভিটি নিয়ে কথা বলতে বলেন।",
+      cards: [
+        {
+          title: "এটি আপনার ক্যারিয়ার বানিয়ে লিখবে না",
+          body:
+            "বেশিরভাগ এআই আপনাকে অনায়াসে এমন ৪৭% উন্নতি ধরিয়ে দেবে যা আপনি কখনও করেননি। আমাদেরটিকে বলা আছে কেবল আপনার লেখা তথ্যই ব্যবহার করতে: বানানো প্রতিষ্ঠান, তারিখ, ডিগ্রি বা সংখ্যা নয়। প্রতিটি লাইন এমন, যা আপনি সামনে বসে ব্যাখ্যা করতে পারবেন।",
+        },
+        {
+          title: "এটি শুধু বাক্য নয়, পুরো নথিটি লেখে",
+          body:
+            "গ্রামার সহায়কগুলো আপনার আগে থেকে লেখা টেক্সট ভালো করে। সিভির কাঠামো সাজানো, কোন অংশ রাখবেন আর কী বাদ দেবেন — সেটা তখনও আপনার কাজ। ঠিক সেই কাজটাই আমরা করি: এলোমেলো নোট দিন, সাজানো পূর্ণ সিভি নিন।",
+        },
+        {
+          title: "এটি সামনে থাকা বিজ্ঞপ্তির উত্তর দেয়",
+          body:
+            "চাকরির বিবরণ পেস্ট করুন, সিভিটি সেই অনুযায়ী নতুন করে সাজানো ও লেখা হবে। এরপর আমরা ফলাফলের স্কোর দিই আর বলে দিই কোন শর্তগুলো এখনও পূরণ হয়নি — রিক্রুটার জানার আগেই আপনি জানবেন।",
+        },
+        {
+          title: "পিডিএফ বিনামূল্যে, আর তা সত্যিকারের লেখা",
+          body:
+            "কোনো ফি নেই, ওয়াটারমার্ক নেই, 'ডাউনলোড করতে আপগ্রেড করুন' নেই। এটি এক কলামের লেআউটে নির্বাচনযোগ্য ভেক্টর লেখা হিসেবে প্রিন্ট হয় — কোনো টেবিল বা টেক্সট বক্স নেই, যেগুলোই সাধারণত ট্র্যাকিং সিস্টেম আটকে দেয়।",
+        },
+        {
+          title: "ছয় ভাষা, এক ক্যারিয়ার",
+          body:
+            "একই সিভি লিখুন ইংরেজি, ফরাসি, জার্মান, স্প্যানিশ, আরবি বা বাংলায় — আপনি সাইটটি যে ভাষায় দেখছেন তার সাথে এর কোনো সম্পর্ক নেই। এক বাজারে নয়, একাধিক দেশে আবেদন করলে এটি কাজে লাগে।",
+        },
+        {
+          title: "এর পেছনে সত্যিকারের মানুষ আছে",
+          body:
+            "আমরা একটি সক্রিয় এজেন্সি, নামহীন কোনো সাবস্ক্রিপশন নই। আপনার সিভিগুলো আপনার অ্যাকাউন্টেই থাকে, তাই প্রতিটি আবেদনের জন্য আলাদা সংস্করণ রাখতে পারেন, আর কন্টাক্ট ফর্মের ওপাশে সত্যিকারের একটি টিম আছে।",
+        },
+      ],
+    },
+    honesty: {
+      eyebrow: "একটি উদাহরণেই পার্থক্য",
+      title: "এলোমেলো নোট ভেতরে।",
+      highlight: "সৎ সিভি বাইরে।",
+      description:
+        "একই কয়েকটি শব্দ, তিনভাবে সামলানো। সাধারণ চ্যাটবটের বদলে এটি ব্যবহার করার পুরো যুক্তিটা এখানেই।",
+      typedLabel: "আপনি আসলে যা লিখেছেন",
+      typedBody: "Northwind-এ চেকআউট নিয়ে কাজ করেছি, দ্রুত করেছি, দুজন জুনিয়রকে সাহায্য করেছি।",
+      genericLabel: "সাধারণ এআই সাধারণত যা লেখে",
+      genericBody:
+        "চেকআউট কনভার্শন ৪৭% বাড়িয়েছি এবং ৮ জন ইঞ্জিনিয়ারের দল পরিচালনা করে বছরে অতিরিক্ত ২০ লাখ ডলার আয় এনেছি।",
+      genericNote: "যে সংখ্যাগুলো আপনি কখনও দেননি। এগুলো নিয়েই আপনাকে প্রশ্ন করা হবে।",
+      oursLabel: "আমরা যা লিখি",
+      oursBody:
+        "Northwind-এর চেকআউট নতুন করে তৈরি করে লোড টাইম কমিয়েছেন এবং কেনাকাটার পথ সহজ করেছেন। দুজন জুনিয়র ডেভেলপারকে তাঁদের প্রথম প্রোডাকশন রিলিজ পর্যন্ত পথ দেখিয়েছেন।",
+      oursNote: "শব্দ ধারালো, তথ্য অবিকল একই। এখানে কিছুই আপনাকে বিপদে ফেলবে না।",
+    },
+    compare: {
+      eyebrow: "একটি সৎ তুলনা",
+      title: "আমরা কোথায় কাজে আসি —",
+      highlight: "আর কোথায় আসি না",
+      description:
+        "রাইটিং অ্যাসিস্ট্যান্ট আর সাধারণ চ্যাটবট ভালো টুল। কেবল সেগুলো সিভি বিল্ডার নয়। পার্থক্যটা সোজাসুজি এখানে।",
+      feature: "আপনার যা দরকার",
+      columns: {
+        us: "Creative Surf",
+        assistant: "রাইটিং অ্যাসিস্ট্যান্ট",
+        chatbot: "সাধারণ এআই চ্যাট",
+        sites: "সাধারণ সিভি সাইট",
+      },
+      rows: [
+        {
+          label: "এলোমেলো নোট থেকে পূর্ণ সিভি বানায়",
+          us: "হ্যাঁ",
+          assistant: "না — আপনার লেখা সম্পাদনা করে",
+          chatbot: "ভালোভাবে বললে",
+          sites: "প্রতিটি লাইন আপনাকেই লিখতে হয়",
+        },
+        {
+          label: "সাজানো, প্রিন্ট-উপযোগী নথি দেয়",
+          us: "হ্যাঁ",
+          assistant: "না",
+          chatbot: "চ্যাটের লেখা, সাজাতে হয় নিজেকে",
+          sites: "হ্যাঁ",
+        },
+        {
+          label: "নির্দিষ্ট বিজ্ঞপ্তি অনুযায়ী সিভি নতুন করে লেখে",
+          us: "হ্যাঁ",
+          assistant: "না",
+          chatbot: "প্রতিবার বললে তবেই",
+          sites: "কদাচিৎ",
+        },
+        {
+          label: "সেই বিজ্ঞপ্তির সাথে মিলিয়ে স্কোর দেয়",
+          us: "হ্যাঁ, ঘাটতিগুলোসহ",
+          assistant: "না",
+          chatbot: "না",
+          sites: "সাধারণত টাকা দিয়ে কিনতে হয়",
+        },
+        {
+          label: "সংখ্যা ও প্রতিষ্ঠান বানিয়ে লিখতে অস্বীকার করে",
+          us: "গোড়া থেকেই",
+          assistant: "আপনার হয়ে লেখেই না",
+          chatbot: "অনায়াসে বানিয়ে লেখে",
+          sites: "ইঞ্জিনের উপর নির্ভর করে",
+        },
+        {
+          label: "পিডিএফ ডাউনলোড",
+          us: "বিনামূল্যে",
+          assistant: "প্রযোজ্য নয়",
+          chatbot: "প্রযোজ্য নয়",
+          sites: "প্রায়ই টাকার পেছনে",
+        },
+        {
+          label: "ছয় ভাষায় সিভি",
+          us: "হ্যাঁ",
+          assistant: "মূলত ইংরেজি",
+          chatbot: "হ্যাঁ",
+          sites: "সাধারণত একটি",
+        },
+        {
+          label: "প্রতিটি আবেদনের জন্য আলাদা সংস্করণ রাখে",
+          us: "হ্যাঁ",
+          assistant: "না",
+          chatbot: "না",
+          sites: "পেইড প্ল্যানে",
+        },
+      ],
+      note:
+        "তাদের প্রতি সুবিচার করেই বলি: এলোমেলো বাক্য ধরিয়ে দিতে Grammarly দারুণ, আর সিভিটি পরে সেটি দিয়ে চালিয়ে নিতে আমাদের আপত্তি নেই। কেবল সেটি নথিটি বানানোর চেষ্টা করছে না, আর বিজ্ঞপ্তিতে কী চাওয়া হয়েছে তা কখনও বলবে না।",
+    },
+    how: {
+      eyebrow: "যেভাবে কাজ করে",
+      title: "পাঁচ মিনিট টাইপ করুন,",
+      highlight: "বাকিটা আমাদের",
+      description: "টেমপ্লেট বাছাই নেই, ড্র্যাগ-অ্যান্ড-ড্রপ নেই, বারো ধাপের উইজার্ড নেই।",
+      steps: [
+        {
+          title: "যা মনে আছে লিখে ফেলুন",
+          body:
+            "প্রতিটি চাকরির জন্য একটি অনুচ্ছেদ, সম্ভব হলে তারিখসহ। বানান ভুল হলেও সমস্যা নেই। এইটুকুই কেবল আপনার কাজ, আর তাতে মিনিট পাঁচেক লাগে।",
+        },
+        {
+          title: "বিজ্ঞপ্তিটি পেস্ট করুন",
+          body:
+            "ঐচ্ছিক, তবে এখানেই টুলটির আসল কাজ। সেই প্রতিষ্ঠান আসলে যা চেয়েছে, তার চারপাশে সিভিটি নতুন করে সাজানো ও লেখা হয়।",
+        },
+        {
+          title: "ঘাটতি পূরণ করে নামিয়ে নিন",
+          body:
+            "কোন শর্তগুলো এখনও পূরণ হয়নি আমরা বলে দিই। সত্যিই আপনার এমন কিছু থাকলে যোগ করুন, আবার বানান, আর ব্রাউজার থেকেই পিডিএফটি সংরক্ষণ করুন।",
+        },
+      ],
+    },
+    faq: {
+      eyebrow: "সোজা উত্তর",
+      title: "যেসব প্রশ্ন",
+      highlight: "করা উচিত",
+      items: [
+        {
+          q: "এটি কি সত্যিই বিনামূল্যে?",
+          a: "হ্যাঁ। সিভিগুলো সংরক্ষিত রাখতে আর পরে ফিরে আসতে একটি বিনামূল্যের অ্যাকাউন্ট লাগে, তবে পিডিএফের পথে কোনো পেইড প্ল্যান নেই, আর ডাউনলোডে কোনো ওয়াটারমার্কও নেই।",
+        },
+        {
+          q: "চ্যাটবটকে সিভি লিখতে বলার সাথে এর পার্থক্য কী?",
+          a: "দুটি জিনিস। চ্যাটবট আপনাকে চ্যাট উইন্ডোতে লেখা দেয়, যা সাজানোর কাজ আপনারই থাকে, আর আপনাকে চমৎকার দেখাতে সে অনায়াসে সংখ্যা বানিয়ে লেখে। এটি আপনাকে দেয় সম্পূর্ণ, প্রিন্ট-উপযোগী একটি নথি, আর তা আপনার দেওয়া তথ্যেই সীমাবদ্ধ।",
+        },
+        {
+          q: "Grammarly কি যথেষ্ট নয়?",
+          a: "Grammarly লেখার মান দেখে। সিভিতে কী থাকবে তা ঠিক করে না, পদগুলো সাজায় না, বিজ্ঞপ্তি অনুযায়ী মেলায় না, স্কোর দেয় না, পিডিএফও দেয় না। ইচ্ছে হলে এর পরে সেটি ব্যবহার করুন — দুটি আসলে প্রতিযোগী নয়।",
+        },
+        {
+          q: "সিভিটি কি অ্যাপ্লিক্যান্ট ট্র্যাকিং সিস্টেম পেরোবে?",
+          a: "পিডিএফটি এক কলামে সত্যিকারের, নির্বাচনযোগ্য লেখা — কোনো টেবিল, কলাম, ছবি বা টেক্সট বক্স নেই, যেগুলোই সাধারণত পার্সার আটকে দেয়। সাথে বিজ্ঞপ্তিটি পেস্ট করলে আমরা দেখিয়ে দেব তার কোন শব্দগুলো এখনও আপনার সিভিতে নেই।",
+        },
+        {
+          q: "পরে কি বদলানো যাবে?",
+          a: "হ্যাঁ। নোট বদলে যতবার খুশি আবার বানান, কিংবা পিডিএফ নামিয়ে যেকোনো এডিটরে খুলুন। প্রতিটি সিভি আপনার অ্যাকাউন্টে সংরক্ষিত থাকে, তাই নতুন কিছু চেষ্টা করলেও আগেরটি হারায় না।",
+        },
+        {
+          q: "আমি যা লিখি তার কী হয়?",
+          a: "আপনার নোট আর তৈরি সিভিগুলো আপনার অ্যাকাউন্টে জমা থাকে, যাতে পরে খুলতে পারেন, আর যেকোনো সময় বিল্ডার থেকে মুছে ফেলতে পারেন। কেবল আপনার সিভি লেখার জন্যই সেগুলো একটি এআই সরবরাহকারীর কাছে পাঠানো হয়।",
+        },
+      ],
+    },
+    finalCta: {
+      title: "পাঁচ মিনিটের নোট,",
+      highlight: "একটি সিভি যার পক্ষে আপনি দাঁড়াতে পারবেন",
+      description:
+        "আপনি এমন একটি পিডিএফ নিয়ে যাবেন যা আজই পাঠানো যায় — আর তাতে এমন কিছু থাকবে না যা নিয়ে রিক্রুটার প্রশ্ন করলে আপনি অস্বস্তিতে পড়েন।",
+      primary: "আমার সিভি বানান",
+      secondary: "একজন মানুষের সাথে কথা বলুন",
     },
   },
 });

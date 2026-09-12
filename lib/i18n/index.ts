@@ -7,6 +7,7 @@ export {
   isLocale,
   resolveLocale,
   formatDateForLocale,
+  formatNumber,
   type Locale,
 } from "./config";
 
