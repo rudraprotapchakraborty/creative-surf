@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useT } from "@/lib/i18n";
 import { homeExtraMessages } from "@/lib/i18n/messages/homeExtra";
-import { EASE, Kicker } from "./shared";
+import { EASE, SectionHead } from "./shared";
 
 type Step = { title: string; description: string };
 
@@ -16,28 +16,16 @@ export default function Process() {
       <div className="absolute inset-0 bg-grid-fine mask-radial pointer-events-none opacity-25" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col items-start mb-16 sm:mb-20"
-        >
-          <div className="mb-6"><Kicker>{t("process.badge")}</Kicker></div>
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 w-full">
-            <h2 className="font-bold text-flow-text leading-tight" style={{ fontSize: "clamp(2.1rem,4vw,3.6rem)" }}>
-              {t("process.headingLine1")}<br />
-              <span className="text-aurora">{t("process.headingAccent")}</span>
-            </h2>
-            <p className="text-flow-textSoft text-base max-w-sm lg:text-right leading-relaxed">
-              {t("process.intro")}
-            </p>
-          </div>
-        </motion.div>
+        <SectionHead
+          className="mb-16 sm:mb-24"
+          label={t("process.badge")}
+          heading={t("process.headingLine1")}
+          accent={t("process.headingAccent")}
+        />
 
         <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-14">
           {/* Connecting line — desktop only */}
-          <div className="hidden lg:block absolute top-6 left-0 right-0 h-px bg-flow-border" />
+          <div className="hidden lg:block absolute top-7 left-0 right-0 h-px bg-flow-border" />
 
           {steps.map((step, i) => (
             <motion.div
@@ -48,16 +36,18 @@ export default function Process() {
               transition={{ duration: 0.6, ease: EASE, delay: i * 0.1 }}
               className="relative flex flex-col"
             >
-              <div className="relative z-10 flex items-center gap-4 mb-5">
+              {/* The step number is set large and light — it orders the column
+                  without competing with the step's own title. */}
+              <div className="relative z-10 flex items-baseline gap-4 mb-4">
                 <span
-                  className="flex-shrink-0 grid place-items-center w-12 h-12 rounded-2xl font-bold text-sm bg-flow-bg border-2"
-                  style={{ borderColor: "rgb(var(--accent-1) / 0.35)", color: "rgb(var(--accent-1))" }}
+                  className="display flex-shrink-0 bg-flow-bg pr-2 tabular-nums"
+                  style={{ fontSize: "2.75rem", color: "rgb(var(--accent-1) / 0.55)" }}
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="lg:hidden h-px flex-1 bg-flow-border" />
               </div>
-              <h3 className="text-lg sm:text-xl font-bold text-flow-text mb-2">{step.title}</h3>
+              <h3 className="display-sm text-lg sm:text-xl text-flow-text mb-2.5">{step.title}</h3>
               <p className="text-sm text-flow-textSoft leading-relaxed max-w-xs">{step.description}</p>
             </motion.div>
           ))}

@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useMemo, useRef, useState } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 
 export const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
@@ -219,5 +220,123 @@ export function ParallaxLayer({
     >
       {children}
     </motion.div>
+  );
+}
+
+/* ---------------------------------------------------------------------------
+ * Section design system
+ *
+ * Every homepage section opens the same way: a thin light beam, a quiet
+ * micro-label, a large light-weight heading, and an optional muted subline —
+ * centred. Consistency in the opener is what makes a long page feel authored
+ * rather than assembled, so these primitives exist to stop each section
+ * inventing its own header.
+ * ------------------------------------------------------------------------ */
+
+/** Thin horizontal light beam — the visual "curtain up" before a section. */
+export function Beam({ className = "" }: { className?: string }) {
+  return (
+    <span
+      aria-hidden
+      className={`block h-px w-full max-w-md mx-auto ${className}`}
+      style={{
+        background:
+          "linear-gradient(90deg, transparent, rgb(var(--accent-1) / 0.7), rgb(var(--accent-2) / 0.9), rgb(var(--accent-1) / 0.7), transparent)",
+        boxShadow: "0 0 24px 1px rgb(var(--accent-2) / 0.45)",
+      }}
+    />
+  );
+}
+
+/** Centred section opener: beam → label → display heading → subline. */
+export function SectionHead({
+  label,
+  heading,
+  accent,
+  subline,
+  onDark = false,
+  className = "",
+}: {
+  label?: React.ReactNode;
+  heading: React.ReactNode;
+  /** Second line, rendered in the brand gradient. */
+  accent?: React.ReactNode;
+  subline?: React.ReactNode;
+  /** Flips the label and subline colours for use on a dark panel. */
+  onDark?: boolean;
+  className?: string;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.7, ease: EASE }}
+      className={`flex flex-col items-center text-center ${className}`}
+    >
+      <Beam className="mb-10" />
+
+      {label && (
+        <span className={`micro mb-5 ${onDark ? "text-flow-bg/55" : "text-flow-textSoft"}`}>
+          {label}
+        </span>
+      )}
+
+      <h2
+        className={`display ${onDark ? "text-flow-bg" : "text-flow-text"}`}
+        style={{ fontSize: "clamp(2.1rem, 5vw, 4rem)" }}
+      >
+        {heading}
+        {accent && (
+          <>
+            <br />
+            <span className={onDark ? "text-aurora-shimmer" : "text-aurora"}>{accent}</span>
+          </>
+        )}
+      </h2>
+
+      {subline && (
+        <p
+          className={`mt-5 max-w-xl text-base leading-relaxed ${
+            onDark ? "text-flow-bg/60" : "text-flow-textSoft"
+          }`}
+        >
+          {subline}
+        </p>
+      )}
+    </motion.div>
+  );
+}
+
+/**
+ * Squared call-to-action: a wide label tile with a detached square arrow tile
+ * beside it. The split is the point — it reads as a control, not a pill.
+ */
+export function ActionButton({
+  children,
+  onDark = false,
+  className = "",
+}: {
+  children: React.ReactNode;
+  onDark?: boolean;
+  className?: string;
+}) {
+  const face = onDark
+    ? "bg-flow-bg text-flow-text"
+    : "text-white bg-aurora-grad";
+
+  return (
+    <span className={`group inline-flex items-stretch gap-1.5 ${className}`}>
+      <span
+        className={`inline-flex items-center rounded-xl px-7 py-3.5 text-[13px] font-semibold uppercase tracking-[0.12em] transition-opacity group-hover:opacity-90 ${face}`}
+      >
+        {children}
+      </span>
+      <span
+        className={`grid place-items-center w-[3.25rem] rounded-xl transition-transform duration-300 group-hover:-translate-y-0.5 ${face}`}
+      >
+        <ArrowUpRight className="w-4 h-4" />
+      </span>
+    </span>
   );
 }

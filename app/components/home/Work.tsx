@@ -4,11 +4,11 @@ import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Building2, Users, TrendingUp, ArrowRight, MapPin } from "lucide-react";
+import { Building2, Users, TrendingUp, MapPin } from "lucide-react";
 
 import { useT } from "@/lib/i18n";
 import { homeMessages } from "@/lib/i18n/messages/home";
-import { EASE } from "./shared";
+import { ActionButton, Beam, EASE } from "./shared";
 
 const PILL_ICONS = [MapPin, Building2, Users];
 
@@ -63,21 +63,20 @@ export default function Work() {
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: EASE }}
             >
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-flow-bg/15 text-xs font-bold uppercase tracking-[0.2em] text-aurora-3 mb-6 w-fit">
-                <span className="w-1.5 h-1.5 rounded-full bg-aurora-3 animate-pulse" />
-                {t("realEstate.badge")}
-              </span>
+              <Beam className="!mx-0 max-w-[14rem] mb-8" />
+
+              <span className="micro text-flow-bg/55 mb-5">{t("realEstate.badge")}</span>
 
               <h2
-                className="font-bold leading-tight mb-3 text-flow-bg"
-                style={{ fontSize: "clamp(2rem,3.6vw,3.4rem)" }}
+                className="display mb-4 text-flow-bg"
+                style={{ fontSize: "clamp(2.1rem,4.2vw,3.8rem)" }}
               >
                 {t("realEstate.headingLine1")}
                 <br />
                 <span className="text-aurora-shimmer">{t("realEstate.headingAccent")}</span>
               </h2>
 
-              <p className="text-flow-bg/50 text-sm font-medium uppercase tracking-widest mb-5">
+              <p className="micro text-flow-bg/45 mb-6">
                 {t("realEstate.subline")}
               </p>
 
@@ -91,7 +90,7 @@ export default function Work() {
                 {t.list("realEstate.pills").map((label, i) => ({ icon: PILL_ICONS[i] ?? MapPin, label })).map(({ icon: Icon, label }) => (
                   <div
                     key={label}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border border-flow-bg/15 text-aurora-3"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-flow-bg/15 text-aurora-3"
                   >
                     <Icon className="w-3 h-3" />
                     {label}
@@ -104,7 +103,7 @@ export default function Work() {
                 {stats.map(({ icon: Icon, label, value }) => (
                   <div key={label} className="flex flex-col items-start gap-1">
                     <Icon className="w-4 h-4 mb-1 text-aurora-3" />
-                    <span className="text-3xl sm:text-4xl font-extrabold text-flow-bg tabular-nums leading-none">
+                    <span className="display text-flow-bg tabular-nums" style={{ fontSize: "2.4rem" }}>
                       {value}
                     </span>
                     <span className="text-xs text-flow-bg/55 leading-tight">{label}</span>
@@ -112,12 +111,8 @@ export default function Work() {
                 ))}
               </div>
 
-              <Link
-                href="/real-estate"
-                className="group inline-flex items-center gap-3 w-fit px-7 py-3.5 rounded-full font-semibold text-sm text-flow-text bg-flow-bg transition-transform duration-300 hover:-translate-y-0.5"
-              >
-                {t("realEstate.cta")}
-                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+              <Link href="/real-estate" className="focus-ring inline-block w-fit">
+                <ActionButton onDark>{t("realEstate.cta")}</ActionButton>
               </Link>
             </motion.div>
 

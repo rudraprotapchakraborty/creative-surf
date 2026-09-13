@@ -160,9 +160,12 @@ export function Navbar() {
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
+          // Radius by role, not by size: the bar is a large surface, so it takes
+          // the same 16px the content cards use. The chips inside stay pills —
+          // that contrast is what reads as "selectable" rather than decorative.
           className={`
             w-full px-5 md:px-7 py-2.5 md:py-3 flex items-center justify-between gap-3 md:gap-6
-            rounded-full transition-all duration-500
+            rounded-2xl transition-all duration-500
             ${scrolledClass}
           `}
         >

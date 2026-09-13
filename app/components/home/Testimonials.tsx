@@ -6,7 +6,7 @@ import { Star, User, Quote } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
 import { homeMessages } from "@/lib/i18n/messages/home";
-import { EASE, Kicker } from "./shared";
+import { EASE, SectionHead } from "./shared";
 
 const REVIEW_META = [
   { name: "Sarah Johnson", company: "TechVision Inc.", rating: 5 },
@@ -48,19 +48,12 @@ export default function Testimonials() {
       <div className="absolute inset-0 bg-grid-fine mask-radial pointer-events-none opacity-30" />
 
       <div className="relative z-10 mx-auto max-w-5xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col items-center text-center mb-16"
-        >
-          <div className="mb-6"><Kicker>{t("reviews.badge")}</Kicker></div>
-          <h2 className="font-bold text-flow-text leading-tight" style={{ fontSize: "clamp(2.1rem,4vw,3.6rem)" }}>
-            {t("reviews.headingLine1")}<br />
-            <span className="text-aurora">{t("reviews.headingAccent")}</span>
-          </h2>
-        </motion.div>
+        <SectionHead
+          className="mb-16 sm:mb-20"
+          label={t("reviews.badge")}
+          heading={t("reviews.headingLine1")}
+          accent={t("reviews.headingAccent")}
+        />
 
         {/* Featured rotating quote */}
         <div className="relative min-h-[280px] sm:min-h-[240px] flex flex-col items-center text-center">
@@ -79,8 +72,8 @@ export default function Testimonials() {
             >
               <StarRating rating={current.rating} />
               <blockquote
-                className="font-semibold text-flow-text/90 leading-snug my-7 max-w-3xl"
-                style={{ fontSize: "clamp(1.15rem, 2.4vw, 1.75rem)" }}
+                className="display text-flow-text/90 my-8 max-w-3xl"
+                style={{ fontSize: "clamp(1.25rem, 2.8vw, 2.1rem)", lineHeight: 1.25 }}
               >
                 "{current.text}"
               </blockquote>

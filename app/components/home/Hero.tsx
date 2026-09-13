@@ -1,261 +1,348 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { ArrowRight, ArrowDown, TrendingUp, Sparkles, Star } from "lucide-react";
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
+import { ArrowDown, ArrowRight } from "lucide-react";
 
-import { useT } from "@/lib/i18n";
-import { homeMessages } from "@/lib/i18n/messages/home";
-import { EASE, Kicker, KineticHeading, Magnetic, ParallaxLayer, Tilt3D } from "./shared";
+import { EASE, Magnetic } from "./shared";
 import HeroBackdrop3D from "./HeroBackdrop3D";
 
+/** Services listed under the wordmark, as on the brand banner. */
+const SERVICES = [
+  "Digital Marketing",
+  "Branding",
+  "Content",
+  "Web",
+  "Real Estate Listings",
+  "Film",
+];
+
+const WORDMARK = [
+  { text: "Creative", tone: "var(--hero-blue)" },
+  { text: "Surf", tone: "var(--hero-cyan)" },
+];
+
+/**
+ * Per-character reveal. Each glyph swings up out of the water on its own axis
+ * with a little depth, so the lockup assembles rather than fades — the effect
+ * only reads if the characters are separate elements, hence the split.
+ */
+function Wordmark({ still }: { still: boolean }) {
+  let index = 0;
+  return (
+    <h1
+      className="relative flex flex-nowrap justify-center whitespace-nowrap gap-x-[0.26em] font-extrabold tracking-tight"
+      style={{ fontSize: "clamp(2.7rem, 8.2vw, 7.5rem)", lineHeight: 1.02, perspective: "900px" }}
+    >
+      {WORDMARK.map((word) => (
+        <span key={word.text} className="inline-flex" style={{ transformStyle: "preserve-3d" }}>
+          {word.text.split("").map((char) => {
+            const i = index++;
+            return (
+              <motion.span
+                key={`${char}-${i}`}
+                className="inline-block will-change-transform"
+                style={{ color: word.tone, transformOrigin: "50% 100%" }}
+                initial={still ? false : { opacity: 0, y: "0.5em", rotateX: -85, filter: "blur(8px)" }}
+                animate={{ opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)" }}
+                transition={{ duration: 1.1, ease: EASE, delay: 0.15 + i * 0.055 }}
+              >
+                {char}
+              </motion.span>
+            );
+          })}
+        </span>
+      ))}
+    </h1>
+  );
+}
+
 export default function Hero() {
-  const t = useT(homeMessages);
+  const still = !!useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  const [webgl, setWebgl] = useState(false);
 
-  const lines = [
-    { text: t("hero.headlineLine1"), accent: false },
-    { text: t("hero.headlineLine2"), accent: true },
-  ];
+  /* Content parallax. The copy drifts against the ocean's own camera parallax,
+     which is what separates the two planes in the viewer's eye. */
+  const px = useMotionValue(0);
+  const py = useMotionValue(0);
+  const sx = useSpring(px, { stiffness: 60, damping: 20, mass: 0.6 });
+  const sy = useSpring(py, { stiffness: 60, damping: 20, mass: 0.6 });
+  const contentX = useTransform(sx, [-1, 1], [14, -14]);
+  const contentY = useTransform(sy, [-1, 1], [8, -8]);
+  const contentRotY = useTransform(sx, [-1, 1], [-2.4, 2.4]);
+  const contentRotX = useTransform(sy, [-1, 1], [1.6, -1.6]);
 
-  const stats = [
-    { value: "150+", label: t("hero.stats.projects") },
-    { value: "98%", label: t("hero.stats.retention") },
-  ];
+  useEffect(() => {
+    // The SVG swell is the base layer; it hides once the canvas is live so the
+    // two don't stack into a muddy double horizon.
+    const id = window.setTimeout(() => {
+      try {
+        const c = document.createElement("canvas");
+        setWebgl(Boolean(window.WebGLRenderingContext && (c.getContext("webgl2") || c.getContext("webgl"))));
+      } catch {
+        setWebgl(false);
+      }
+    }, 0);
+    return () => clearTimeout(id);
+  }, []);
+
+  useEffect(() => {
+    if (still || window.matchMedia("(pointer: coarse)").matches) return;
+    const onMove = (e: PointerEvent) => {
+      const el = sectionRef.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      px.set(((e.clientX - r.left) / r.width) * 2 - 1);
+      py.set(((e.clientY - r.top) / r.height) * 2 - 1);
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
+  }, [px, py, still]);
 
   return (
     <section
       id="home"
-      className="relative w-full flex flex-col bg-flow-bg text-flow-text overflow-hidden"
+      ref={sectionRef}
+      className="relative w-full min-h-[100svh] flex flex-col items-center justify-center overflow-hidden"
+      style={{ background: "var(--hero-bg)" }}
     >
-      {/* Ambient backdrop */}
-      <div className="absolute inset-0 bg-aurora-mesh opacity-60 pointer-events-none animate-mesh" />
-      <div className="absolute inset-0 bg-grid mask-radial pointer-events-none opacity-30" />
-      <div className="absolute inset-0 bg-grain opacity-[0.04] pointer-events-none mix-blend-overlay" />
-      <div
-        className="absolute pointer-events-none rounded-full animate-aurora"
+      {/* ---- Atmosphere: two brand glows breathing behind the mark ---- */}
+      <motion.div
+        aria-hidden
+        className="absolute pointer-events-none rounded-full"
         style={{
-          width: "42vw",
-          height: "42vw",
-          top: "-16vw",
-          left: "-10vw",
-          background: "radial-gradient(circle, rgb(var(--accent-1) / 0.18), transparent 65%)",
-          filter: "blur(60px)",
+          width: "62vw",
+          height: "62vw",
+          top: "-24vw",
+          left: "-16vw",
+          background: "radial-gradient(circle, var(--hero-glow-1), transparent 62%)",
+          filter: "blur(80px)",
         }}
+        animate={still ? undefined : { scale: [1, 1.12, 1], opacity: [0.7, 1, 0.7] }}
+        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        aria-hidden
+        className="absolute pointer-events-none rounded-full"
+        style={{
+          width: "54vw",
+          height: "54vw",
+          top: "-18vw",
+          right: "-18vw",
+          background: "radial-gradient(circle, var(--hero-glow-2), transparent 62%)",
+          filter: "blur(80px)",
+        }}
+        animate={still ? undefined : { scale: [1.1, 1, 1.1], opacity: [1, 0.68, 1] }}
+        transition={{ duration: 17, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* 3D swell — loads at idle and cross-fades over the CSS backdrop above,
-          which stays as the permanent base layer if WebGL is unavailable. */}
-      <HeroBackdrop3D />
+      {/* ---- The ocean. Real geometry, real normals, real light.
+              Anchored to the lower half and masked at the top so the horizon
+              sits below the copy — water behind the words, never over them. ---- */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-[64%] pointer-events-none"
+        style={{
+          maskImage: "linear-gradient(to bottom, transparent 0%, black 16%, black 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 16%, black 100%)",
+        }}
+      >
+        <HeroBackdrop3D />
+      </div>
+
+      {/* ---- SVG swell: the permanent base layer. It carries the hero on its
+              own when WebGL is unavailable, and steps aside when it isn't. ---- */}
+      <motion.div
+        className="absolute inset-x-0 bottom-0 h-[58%] pointer-events-none"
+        aria-hidden
+        animate={{ opacity: webgl ? 0 : 1 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+      >
+        <svg viewBox="0 0 1280 460" preserveAspectRatio="none" className="w-full h-full">
+          <defs>
+            <linearGradient id="swell-deep" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="var(--hero-swell-deep-1)" />
+              <stop offset="50%" stopColor="var(--hero-swell-deep-2)" />
+              <stop offset="100%" stopColor="var(--hero-swell-deep-3)" />
+            </linearGradient>
+            <linearGradient id="swell-foam" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--hero-swell-foam)" stopOpacity="0.95" />
+              <stop offset="100%" stopColor="var(--hero-swell-foam)" stopOpacity="0.6" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M0,210 C200,140 360,300 640,268 C900,238 1080,120 1280,178 L1280,460 L0,460 Z"
+            fill="url(#swell-deep)"
+            opacity="0.5"
+          />
+          <path
+            d="M0,372 C200,342 400,418 640,400 C880,382 1060,316 1280,342 L1280,460 L0,460 Z"
+            fill="url(#swell-foam)"
+            opacity="var(--hero-swell-foam-op)"
+          />
+        </svg>
+      </motion.div>
+
+      {/* Light shafts raking down across the water — the one purely painterly
+          layer, kept on screen blend so it lifts rather than tints. */}
+      {!still && (
+        <motion.div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none mix-blend-screen"
+          style={{
+            background:
+              "linear-gradient(102deg, transparent 38%, var(--hero-sheen) 46%, transparent 52%, transparent 66%, var(--hero-sheen) 72%, transparent 78%)",
+            opacity: 0.25,
+          }}
+          animate={{ x: ["-8%", "8%", "-8%"] }}
+          transition={{ duration: 26, repeat: Infinity, ease: "easeInOut" }}
+        />
+      )}
+
+      {/* Scrim: the copy sits where sky meets water, and water is the one part
+          of the backdrop whose brightness we don't control. This keeps contrast
+          under the tagline without visibly tinting the scene. */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 top-[18%] h-[52%] pointer-events-none"
+        style={{ background: "radial-gradient(60% 60% at 50% 45%, var(--hero-scrim), transparent 72%)" }}
+      />
 
       {/* ---- Content ---- */}
-      <div className="relative z-10 section-px w-full mx-auto max-w-7xl pt-32 sm:pt-36 pb-24 sm:pb-28 grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-10 items-center">
-        <div className="flex flex-col items-start">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, ease: EASE }}
-            className="mb-8"
-          >
-            <Kicker>{t("hero.eyebrow")}</Kicker>
-          </motion.div>
+      <motion.div
+        style={{ x: contentX, y: contentY, rotateX: contentRotX, rotateY: contentRotY, transformPerspective: 1200 }}
+        className="relative z-10 section-px w-full mx-auto max-w-5xl pt-32 sm:pt-36 pb-32 flex flex-col items-center text-center"
+      >
+        <div className="relative">
+          <Wordmark still={still} />
 
-          <KineticHeading
-            lines={lines}
-            className="mb-6 font-bold leading-[1.03] tracking-tight"
-            style={{ fontSize: "clamp(2.6rem, 6vw, 5.4rem)" }}
-            delay={0.15}
-          />
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: EASE, delay: 0.7 }}
-            className="text-flow-textSoft text-base sm:text-lg leading-relaxed max-w-lg mb-9"
-          >
-            {t("hero.subtitle")}
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: EASE, delay: 0.85 }}
-            className="flex flex-wrap items-center gap-4 sm:gap-5"
-          >
-            <Magnetic>
-              <Link
-                href="/contact"
-                className="focus-ring group inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm text-white shadow-aurora bg-aurora-grad hover:opacity-95 transition-opacity"
-              >
-                {t("hero.ctaPrimary")}
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-              </Link>
-            </Magnetic>
-
-            <Magnetic>
-              <Link
-                href="#services"
-                className="focus-ring group inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold text-flow-text glass border border-flow-borderStrong hover:border-aurora-1/40 transition-colors"
-              >
-                {t("hero.ctaSecondary")}
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-              </Link>
-            </Magnetic>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: EASE, delay: 1 }}
-            className="mt-12 flex items-center gap-8 sm:gap-10"
-          >
-            {stats.map((s, i) => (
-              <div key={s.label} className="flex items-center gap-8 sm:gap-10">
-                {i > 0 && <span className="h-9 w-px bg-flow-border" />}
-                <div className="flex flex-col">
-                  <span className="text-2xl sm:text-3xl font-extrabold text-flow-text tabular-nums leading-none">
-                    {s.value}
-                  </span>
-                  <span className="mt-1.5 text-[11px] sm:text-xs font-medium text-flow-textSoft">
-                    {s.label}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </motion.div>
+          {/* Light sweep across the glyphs, long after they land. */}
+          {!still && (
+            <motion.span
+              aria-hidden
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  "linear-gradient(105deg, transparent 42%, var(--hero-sheen) 50%, transparent 58%)",
+                mixBlendMode: "overlay",
+              }}
+              initial={{ x: "-130%" }}
+              animate={{ x: "130%" }}
+              transition={{ duration: 2.6, ease: EASE, delay: 1.8, repeat: Infinity, repeatDelay: 7 }}
+            />
+          )}
         </div>
 
-        {/* RIGHT — floating growth panel */}
-        <motion.div
-          initial={{ opacity: 0, y: 30, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 1, ease: EASE, delay: 0.5 }}
-          className="relative hidden lg:flex justify-center items-center"
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: EASE, delay: 0.75 }}
+          className="mt-5 font-medium tracking-tight"
+          style={{ color: "var(--hero-ink)", fontSize: "clamp(1.15rem, 3vw, 2.2rem)" }}
         >
-          <div
-            className="absolute inset-0 -z-10 rounded-[2rem] blur-3xl opacity-60"
-            style={{ background: "radial-gradient(circle at 50% 40%, rgb(var(--accent-2) / 0.28), transparent 70%)" }}
-          />
-
-          <Tilt3D className="relative w-full flex justify-center items-center" max={9}>
-          {/* PANEL — mid plane. The cursor tilt replaces the old fixed rotate
-              loop; the float keeps it alive while the cursor is still. */}
-          <ParallaxLayer depth={14} className="w-full max-w-md mx-auto">
-          <motion.div
-            animate={{ y: [0, -7, 0] }}
-            transition={{ duration: 7, ease: "easeInOut", repeat: Infinity }}
-            className="glass-strong border border-flow-border rounded-[1.75rem] shadow-premium p-7 w-full"
+          Surfing Growth with{" "}
+          <span
+            style={{
+              backgroundImage: "linear-gradient(100deg, var(--hero-blue), var(--hero-cyan))",
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+              color: "transparent",
+            }}
           >
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2.5">
-                <span className="grid place-items-center w-9 h-9 rounded-xl bg-aurora-grad text-white shadow-aurora">
-                  <TrendingUp className="w-4 h-4" />
-                </span>
-                <div>
-                  <p className="text-xs font-semibold text-flow-text">{t("hero.panel.title")}</p>
-                  <p className="text-[10px] text-flow-textSoft uppercase tracking-wider">{t("hero.panel.subtitle")}</p>
-                </div>
-              </div>
-              <span className="text-xs font-bold text-aurora-1 bg-aurora-1/10 px-2.5 py-1 rounded-full">
-                +143%
-              </span>
-            </div>
+            AI-Powered Creativity.
+          </span>
+        </motion.p>
 
-            <div className="relative h-32 mb-2">
-              <svg viewBox="0 0 320 120" preserveAspectRatio="none" className="w-full h-full">
-                <defs>
-                  <linearGradient id="hero-chart-fill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="rgb(var(--accent-2))" stopOpacity="0.35" />
-                    <stop offset="100%" stopColor="rgb(var(--accent-2))" stopOpacity="0" />
-                  </linearGradient>
-                </defs>
-                <motion.path
-                  d="M0,95 C40,90 60,70 100,72 C140,74 150,40 195,38 C240,36 260,18 320,8"
-                  fill="none"
-                  stroke="rgb(var(--accent-1))"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  /* Lifts the trend line off the card face under the tilt. */
-                  style={{ filter: "drop-shadow(0 3px 6px rgb(var(--accent-1) / 0.45))" }}
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ duration: 1.6, ease: EASE, delay: 0.9 }}
-                />
-                <path
-                  d="M0,95 C40,90 60,70 100,72 C140,74 150,40 195,38 C240,36 260,18 320,8 L320,120 L0,120 Z"
-                  fill="url(#hero-chart-fill)"
-                />
-              </svg>
-            </div>
+        <ul className="mt-8 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+          {SERVICES.map((s, i) => (
+            <motion.li
+              key={s}
+              initial={{ opacity: 0, y: 16, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.6, ease: EASE, delay: 0.95 + i * 0.07 }}
+              className="rounded-full px-4 py-1.5 text-[13px] sm:text-sm font-semibold backdrop-blur-md"
+              style={{
+                color: "var(--hero-chip-text)",
+                background: "var(--hero-chip-bg)",
+                border: "1px solid var(--hero-chip-border)",
+                boxShadow: "var(--hero-chip-shadow)",
+              }}
+            >
+              {s}
+            </motion.li>
+          ))}
+        </ul>
 
-            <div className="grid grid-cols-3 gap-3 pt-4 border-t border-flow-border">
-              {[
-                { k: t("hero.panel.roas"), v: "6.2x" },
-                { k: t("hero.panel.leads"), v: "12.4k" },
-                { k: t("hero.panel.ctr"), v: "8.9%" },
-              ].map((m) => (
-                <div key={m.k}>
-                  <p className="text-lg font-extrabold text-flow-text tabular-nums leading-none">{m.v}</p>
-                  <p className="mt-1 text-[10px] uppercase tracking-wider text-flow-textSoft">{m.k}</p>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-          </ParallaxLayer>
+        <motion.span
+          initial={{ opacity: 0, scaleX: 0 }}
+          animate={{ opacity: 1, scaleX: 1 }}
+          transition={{ duration: 0.8, ease: EASE, delay: 1.4 }}
+          className="mt-10 block h-[3px] w-24 rounded-full"
+          style={{ background: "linear-gradient(90deg, var(--hero-blue), var(--hero-cyan))" }}
+          aria-hidden
+        />
 
-          {/* CHIPS — nearest plane, so they travel furthest against the panel. */}
-          <ParallaxLayer depth={46} className="absolute -top-5 -right-2">
-          <motion.div
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 5, ease: "easeInOut", repeat: Infinity }}
-            className="glass-strong border border-flow-border rounded-2xl shadow-soft px-4 py-3 flex items-center gap-2.5"
-          >
-            <span className="grid place-items-center w-8 h-8 rounded-lg bg-aurora-warm/15">
-              <Star className="w-4 h-4 text-aurora-warm fill-aurora-warm" />
-            </span>
-            <div>
-              <p className="text-sm font-bold text-flow-text leading-none">4.9/5</p>
-              <p className="text-[10px] text-flow-textSoft mt-1">{t("hero.chipRating")}</p>
-            </div>
-          </motion.div>
-          </ParallaxLayer>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: EASE, delay: 1.5 }}
+          className="mt-9 flex flex-wrap items-center justify-center gap-4"
+        >
+          <Magnetic>
+            <Link
+              href="/contact"
+              className="focus-ring group inline-flex items-center gap-2 rounded-xl px-8 py-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-95"
+              style={{
+                backgroundImage: "linear-gradient(105deg, var(--hero-blue), var(--hero-cyan))",
+                boxShadow: "0 14px 34px rgb(var(--accent-1) / 0.34)",
+              }}
+            >
+              Start a Project
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          </Magnetic>
 
-          <ParallaxLayer depth={38} className="absolute -bottom-6 -left-4">
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 6, ease: "easeInOut", repeat: Infinity, delay: 0.5 }}
-            className="glass-strong border border-flow-border rounded-2xl shadow-soft px-4 py-3 flex items-center gap-2.5"
-          >
-            <span className="grid place-items-center w-8 h-8 rounded-lg bg-aurora-grad text-white">
-              <Sparkles className="w-4 h-4" />
-            </span>
-            <div>
-              <p className="text-sm font-bold text-flow-text leading-none">{t("hero.chipAwardTitle")}</p>
-              <p className="text-[10px] text-flow-textSoft mt-1">{t("hero.chipAwardSub")}</p>
-            </div>
-          </motion.div>
-          </ParallaxLayer>
-          </Tilt3D>
+          <Magnetic>
+            <Link
+              href="#services"
+              className="focus-ring group inline-flex items-center gap-2 rounded-xl px-8 py-4 text-[13px] font-semibold uppercase tracking-[0.12em] backdrop-blur-md transition-colors"
+              style={{
+                color: "var(--hero-ink)",
+                background: "var(--hero-chip-bg)",
+                border: "1px solid var(--hero-chip-border)",
+              }}
+            >
+              See our work
+              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          </Magnetic>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Scroll cue */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 1.4 }}
-        className="pointer-events-none absolute z-10 left-1/2 -translate-x-1/2 bottom-6 sm:bottom-8 flex flex-col items-center gap-1.5"
+        transition={{ duration: 0.8, delay: 2 }}
+        className="pointer-events-none absolute z-10 left-1/2 -translate-x-1/2 bottom-6 sm:bottom-8"
       >
         <motion.span
-          animate={{ y: [0, 6, 0] }}
+          animate={still ? undefined : { y: [0, 6, 0] }}
           transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          className="grid place-items-center w-8 h-8 rounded-full glass border border-flow-border text-aurora-1"
+          className="grid place-items-center w-9 h-9 rounded-full backdrop-blur-md"
+          style={{
+            color: "var(--hero-blue)",
+            background: "var(--hero-chip-bg)",
+            border: "1px solid var(--hero-chip-border)",
+          }}
         >
           <ArrowDown className="w-3.5 h-3.5" />
         </motion.span>
       </motion.div>
 
-      {/* Bottom fade into next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-flow-bg to-transparent pointer-events-none" />
+      {/* Fine grain — takes the digital edge off the gradients. */}
+      <div className="absolute inset-0 bg-grain opacity-[0.05] pointer-events-none mix-blend-overlay" aria-hidden />
     </section>
   );
 }

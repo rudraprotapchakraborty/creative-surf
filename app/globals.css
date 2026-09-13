@@ -293,6 +293,30 @@ body {
     --flow-blob-1: rgba(125, 211, 252, 0.55);   /* light sky */
     --flow-blob-2: rgba(186, 230, 253, 0.55);   /* paler sky */
     --flow-blob-3: rgba(224, 242, 254, 0.6);    /* mist */
+
+    /* === Hero banner tokens — LIGHT ===
+       The homepage hero reproduces the brand banner, so its blues are fixed
+       literals rather than accent vars; the dark block re-tunes the same roles
+       for a midnight ocean instead of inverting them. */
+    --hero-bg: linear-gradient(180deg, #ffffff 0%, #f6fbff 38%, #e9f5fe 100%);
+    --hero-ink: #0b2f63;
+    --hero-blue: #0b57c4;
+    --hero-cyan: #22bdf0;
+    --hero-glow-1: rgba(11, 87, 196, 0.15);
+    --hero-glow-2: rgba(34, 189, 240, 0.18);
+    --hero-chip-bg: rgba(255, 255, 255, 0.72);
+    --hero-chip-border: rgba(47, 155, 240, 0.28);
+    --hero-chip-text: #17408a;
+    --hero-chip-shadow: 0 4px 16px rgba(11, 87, 196, 0.08);
+    --hero-swell-deep-1: #bfe4fb;
+    --hero-swell-deep-2: #7fc8f5;
+    --hero-swell-deep-3: #2f9bf0;
+    --hero-swell-mid-1: #57d3f6;
+    --hero-swell-mid-2: #9fdcfa;
+    --hero-swell-foam: #ffffff;
+    --hero-swell-foam-op: 0.9;
+    --hero-sheen: rgba(255, 255, 255, 0.85);
+    --hero-scrim: rgba(255, 255, 255, 0.55);
   }
 
   .dark {
@@ -352,6 +376,27 @@ body {
     --flow-blob-1: rgba(56, 189, 248, 0.45);
     --flow-blob-2: rgba(14, 165, 233, 0.4);
     --flow-blob-3: rgba(125, 211, 252, 0.4);
+
+    /* === Hero banner tokens — DARK === */
+    --hero-bg: linear-gradient(180deg, #040b18 0%, #061528 40%, #07223f 100%);
+    --hero-ink: #cfe4ff;
+    --hero-blue: #4aa8ff;
+    --hero-cyan: #5ee2ff;
+    --hero-glow-1: rgba(74, 168, 255, 0.22);
+    --hero-glow-2: rgba(94, 226, 255, 0.18);
+    --hero-chip-bg: rgba(255, 255, 255, 0.06);
+    --hero-chip-border: rgba(125, 211, 252, 0.24);
+    --hero-chip-text: #bfdcff;
+    --hero-chip-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+    --hero-swell-deep-1: #0a2b4d;
+    --hero-swell-deep-2: #0d4570;
+    --hero-swell-deep-3: #1268a8;
+    --hero-swell-mid-1: #12557f;
+    --hero-swell-mid-2: #0b3559;
+    --hero-swell-foam: #7fd6f7;
+    --hero-swell-foam-op: 0.3;
+    --hero-sheen: rgba(160, 220, 255, 0.55);
+    --hero-scrim: rgba(4, 11, 24, 0.55);
   }
 }
 
@@ -484,6 +529,46 @@ html {
   }
   .dark .premium-card:hover {
     box-shadow: 0 1px 2px rgba(0,0,0,0.5), 0 22px 48px -22px rgba(56,189,248,0.30);
+  }
+
+  /* === Editorial display type ==========================================
+     Section headings are set large and LIGHT rather than large and bold:
+     the size carries the emphasis, so the weight can drop to 400–500 and
+     the tracking tighten. Bold at this size reads as shouting. */
+  .display {
+    font-weight: 450;
+    letter-spacing: -0.03em;
+    line-height: 1.04;
+  }
+  .display-sm {
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  /* Small all-caps micro-label used above headings and inside cards. */
+  .micro {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  /* === Hairline card ===================================================
+     One flat surface, one 1px border, no drop shadow. Depth comes from the
+     border lifting on hover, not from elevation — which keeps a page of
+     many cards quiet instead of busy. */
+  .hairline-card {
+    background: var(--flow-card);
+    border: 1px solid var(--flow-border);
+    border-radius: 1.25rem;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    transition: border-color 0.4s ease, background-color 0.4s ease;
+  }
+  .hairline-card:hover {
+    border-color: rgb(var(--accent-1) / 0.34);
+    background: var(--flow-card-strong);
   }
 }
 

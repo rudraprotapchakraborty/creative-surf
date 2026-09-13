@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import Hero from "./components/home/Hero";
-import MarqueeStrip from "./components/home/MarqueeStrip";
 import Services from "./components/home/Services";
 import WebDev from "./components/home/WebDev";
 import Work from "./components/home/Work";
@@ -17,7 +16,6 @@ export default function Page() {
     <div className="flex flex-col min-h-screen" style={{ fontFamily: "var(--font-jakarta)" }}>
       <NoSSR>
         <Hero />
-        <MarqueeStrip />
         <Services />
         <WebDev />
         <Work />

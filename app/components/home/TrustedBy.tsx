@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useT } from "@/lib/i18n";
 import { homeMessages } from "@/lib/i18n/messages/home";
-import { Kicker } from "./shared";
+import { SectionHead } from "./shared";
 
 const LOGOS = [
   { src: "/bridgepoint.jpg", name: "Bridge Point" },
@@ -25,12 +25,17 @@ export default function TrustedBy() {
     <section className="relative w-full section-py bg-flow-bg overflow-hidden">
       <div className="absolute inset-0 bg-grid-fine mask-radial pointer-events-none opacity-25" />
 
-      <div className="section-px mx-auto max-w-7xl flex flex-col items-center text-center relative z-10 mb-14">
-        <div className="mb-6"><Kicker>{t("trustedBy.badge")}</Kicker></div>
-        <h2 className="font-bold text-flow-text leading-tight mb-3" style={{ fontSize: "clamp(2.1rem, 4vw, 3.6rem)" }}>
-          {t("trustedBy.headingStart")} <span className="text-aurora">{t("trustedBy.headingAccent")}</span> {t("trustedBy.headingEnd")}
-        </h2>
-        <p className="text-flow-textSoft font-medium text-sm md:text-base">{t("trustedBy.subtitle")}</p>
+      <div className="section-px mx-auto max-w-7xl relative z-10 mb-14">
+        <SectionHead
+          label={t("trustedBy.badge")}
+          heading={
+            <>
+              {t("trustedBy.headingStart")} <span className="text-aurora">{t("trustedBy.headingAccent")}</span>{" "}
+              {t("trustedBy.headingEnd")}
+            </>
+          }
+          subline={t("trustedBy.subtitle")}
+        />
       </div>
 
       {/* Infinite logo marquee */}
@@ -45,7 +50,7 @@ export default function TrustedBy() {
           {row.map((logo, i) => (
             <div
               key={i}
-              className="group conic-ring relative w-36 h-24 sm:w-44 sm:h-28 flex-shrink-0 rounded-2xl bg-white border border-flow-border shadow-soft flex items-center justify-center p-5 sm:p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-aurora"
+              className="group relative w-36 h-24 sm:w-44 sm:h-28 flex-shrink-0 rounded-xl bg-white border border-flow-border flex items-center justify-center p-5 sm:p-6 transition-colors duration-300 hover:border-aurora-1/35"
             >
               <img
                 src={logo.src}
