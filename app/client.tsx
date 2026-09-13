@@ -19,6 +19,41 @@ const jakarta = Plus_Jakarta_Sans({
   display: "swap",
 })
 
+/**
+ * The signature that greets anyone who opens devtools: a comment node at the
+ * very top of the document, plus a styled banner in the console.
+ *
+ * It runs from an inline <head> script rather than JSX because React has no way
+ * to render a comment node, and the mark has to sit *outside* <head> to read
+ * the way it does on hand-built sites.
+ */
+// Strokes are two blocks thick: a one-block stroke reads as hairline once the
+// console's monospace advance separates the columns.
+const MARK = [
+  "██████   ██   ██  ██████   ██████    █████ ",
+  "███████  ██   ██  ███████  ███████  ███████",
+  "██   ██  ██   ██  ██   ██  ██   ██  ██   ██",
+  "██   ██  ██   ██  ██   ██  ██   ██  ██   ██",
+  "███████  ██   ██  ██   ██  ███████  ███████",
+  "██████   ██   ██  ██   ██  ██████   ███████",
+  "██  ██   ███████  ███████  ██  ██   ██   ██",
+  "██   ██   █████   ██████   ██   ██  ██   ██",
+].join("\n")
+
+const SIGN_OFF = `\n  Coded by Rudra Protap Chakraborty\n\n${MARK}\n\n  rudraprotapchakraborty.com\n`
+
+// One colour, one face, credit above the art — the console banner reads as the
+// same mark as the DOM comment rather than as a second, louder thing.
+// JSON.stringify does the escaping, so the art survives the trip into an
+// inline script without a second layer of backslashes to get wrong.
+const SIGNATURE = `try{
+document.documentElement.insertBefore(document.createComment(${JSON.stringify(
+  SIGN_OFF
+)}),document.documentElement.firstChild);
+console.log("%c" + ${JSON.stringify(SIGN_OFF)},
+"color:#9b9b9b;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.05");
+}catch(e){}`
+
 export const metadata: Metadata = {
   title: "Creative Surf",
   description: "Creative Surf is a leading digital marketing agency...",
@@ -55,6 +90,15 @@ export default async function RootLayout({
             __html: `try{var k='cs-theme-reset-v1';if(!localStorage.getItem(k)){if(localStorage.getItem('theme')==='dark'){localStorage.setItem('theme','light')}localStorage.setItem(k,'1')}}catch(e){}`,
           }}
         />
+
+        {/*
+          Signature. React can't render a comment node, so the mark is inserted
+          as the first child of <html> from here — it lands above <head> in the
+          Elements panel, which is where anyone curious enough to look will be.
+          The console banner is the same credit for anyone who opens that tab
+          instead.
+        */}
+        <script dangerouslySetInnerHTML={{ __html: SIGNATURE }} />
       </head>
       <body suppressHydrationWarning>
         <LanguageProvider initialLocale={locale}>
