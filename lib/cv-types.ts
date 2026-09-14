@@ -18,7 +18,19 @@ export const CV_LANGUAGES = ["English", "French", "German", "Arabic", "Spanish",
  * `other` is the catch-all — it takes its name in the CV from the site it
  * points to, so the list never has to grow a row per website.
  */
-export const CV_LINK_TYPES = ["linkedin", "github", "portfolio", "other"] as const;
+export const CV_LINK_TYPES = [
+  "linkedin",
+  "github",
+  "portfolio",
+  "scholar",
+  "orcid",
+  "behance",
+  "researchgate",
+  "kaggle",
+  "leetcode",
+  "medium",
+  "other",
+] as const;
 export type CvLinkType = (typeof CV_LINK_TYPES)[number];
 
 /** How many links a CV header can carry before it stops being scannable. */
@@ -189,7 +201,7 @@ export const CV_JSON_SCHEMA: Record<string, unknown> = {
             additionalProperties: false,
             required: ["label", "url"],
             properties: {
-              label: { type: "string", description: "e.g. 'LinkedIn', 'Portfolio', 'GitHub'." },
+              label: { type: "string", description: "e.g. 'LinkedIn', 'Personal website', 'GitHub'." },
               url: { type: "string" },
             },
           },

@@ -15,6 +15,12 @@ import { MAX_CV_LINKS, type CvInput, type CvLink, type CvLinkType } from "./cv-t
 const HANDLE_BASES: Partial<Record<CvLinkType, string>> = {
   linkedin: "https://www.linkedin.com/in/",
   github: "https://github.com/",
+  orcid: "https://orcid.org/",
+  behance: "https://www.behance.net/",
+  researchgate: "https://www.researchgate.net/profile/",
+  kaggle: "https://www.kaggle.com/",
+  leetcode: "https://leetcode.com/u/",
+  medium: "https://medium.com/@",
 };
 
 /**
@@ -25,7 +31,14 @@ const HANDLE_BASES: Partial<Record<CvLinkType, string>> = {
 const TYPE_LABELS: Record<CvLinkType, string | null> = {
   linkedin: "LinkedIn",
   github: "GitHub",
-  portfolio: "Portfolio",
+  portfolio: "Personal website",
+  scholar: "Google Scholar",
+  orcid: "ORCID",
+  behance: "Behance",
+  researchgate: "ResearchGate",
+  kaggle: "Kaggle",
+  leetcode: "LeetCode",
+  medium: "Medium",
   other: null,
 };
 
@@ -44,6 +57,7 @@ const KNOWN_HOSTS: Record<string, string> = {
   "dev.to": "DEV",
   "stackoverflow.com": "Stack Overflow",
   "kaggle.com": "Kaggle",
+  "leetcode.com": "LeetCode",
   "figma.com": "Figma",
   "notion.so": "Notion",
   "youtube.com": "YouTube",
@@ -149,7 +163,7 @@ export function buildContactLinks(input: Partial<CvInput>): CvLink[] {
 
   const legacy: { label: string; value: string; base?: string }[] = [
     { label: "LinkedIn", value: input.linkedin ?? "", base: HANDLE_BASES.linkedin },
-    { label: "Portfolio", value: input.portfolio ?? "" },
+    { label: "Personal website", value: input.portfolio ?? "" },
     { label: "GitHub", value: input.github ?? "", base: HANDLE_BASES.github },
   ];
   for (const entry of legacy) add(entry.label, toUrl(entry.value, entry.base));

@@ -665,7 +665,7 @@ export default function CvBuilderClient() {
                           >
                             <SelectTrigger
                               aria-label={t("sections.linkType")}
-                              className="h-11 w-[7.5rem] shrink-0 rounded-xl border-flow-border bg-flow-surface text-flow-text sm:w-36"
+                              className="h-11 w-[8.5rem] shrink-0 rounded-xl border-flow-border bg-flow-surface text-flow-text sm:w-44"
                             >
                               <SelectValue />
                             </SelectTrigger>
