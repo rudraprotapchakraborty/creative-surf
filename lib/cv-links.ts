@@ -128,6 +128,20 @@ function labelFor(url: string): string {
 }
 
 /**
+ * What a row will be called if its name is left empty, for whatever the
+ * candidate has typed into the URL field so far. The form shows this as the
+ * name field's placeholder, so the name the CV would use is visible while
+ * filling the form in rather than a surprise on the finished page.
+ *
+ * Empty whenever the URL isn't one yet — there is nothing honest to show for
+ * half a domain.
+ */
+export function autoLinkLabel(value: string): string {
+  const url = toUrl(value);
+  return url ? labelFor(url) : "";
+}
+
+/**
  * Splits the free-text "other links" box. Commas, semicolons, newlines and
  * bare spaces all read as separators to someone filling in a form, so all four
  * are honoured rather than documented.
@@ -137,6 +151,26 @@ function splitLoose(value: string): string[] {
     .split(/[\s,;]+/)
     .map((entry) => entry.trim())
     .filter(Boolean);
+}
+
+/**
+ * One link row, whichever of the three shapes it was saved in.
+ *
+ * Today a row is a URL and the name the candidate gave it. A bare string is a
+ * row saved before the name field existed; an object with `value` is one saved
+ * back when the form asked what kind of link each row was, and that row keeps
+ * both its name and the base a bare handle hangs off.
+ */
+function readRow(row: NonNullable<CvInput["profileLinks"]>[number]): {
+  value: string;
+  label: string;
+  type: CvLinkType | null;
+} {
+  if (typeof row === "string") return { value: row, label: "", type: null };
+  if ("value" in row) {
+    return { value: row.value ?? "", label: "", type: (row.type ?? "linkedin") as CvLinkType };
+  }
+  return { value: row.url ?? "", label: (row.label ?? "").trim(), type: null };
 }
 
 /**
@@ -160,14 +194,13 @@ export function buildContactLinks(input: Partial<CvInput>): CvLink[] {
   };
 
   for (const row of input.profileLinks ?? []) {
-    // A row is a URL the candidate typed; a typed object is one saved back
-    // when the form asked what each link was, and keeps its name and its base.
-    const value = typeof row === "string" ? row : row?.value;
-    if (!value?.trim()) continue;
-    const type = typeof row === "string" ? null : ((row.type ?? "linkedin") as CvLinkType);
+    const { value, label, type } = readRow(row);
+    if (!value.trim()) continue;
     const url = toUrl(value, type ? HANDLE_BASES[type] : undefined);
     if (!url) continue;
-    add((type && TYPE_LABELS[type]) || labelFor(url), url);
+    // The candidate's own name for the row wins over every guess below it:
+    // they know their site is "Design portfolio" and the host does not.
+    add(label || (type && TYPE_LABELS[type]) || labelFor(url), url);
   }
 
   const legacy: { label: string; value: string; base?: string }[] = [

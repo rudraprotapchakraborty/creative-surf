@@ -46,6 +46,7 @@ import CvBuilderSections from "./CvBuilderSections";
 import { buildCvHtml, printCvDocument } from "@/lib/cv-document";
 import { scoreCvAgainstJob, type CvMatch } from "@/lib/cv-match";
 import { scoreCvForAts } from "@/lib/cv-ats";
+import { autoLinkLabel } from "@/lib/cv-links";
 import { CvPreviewModal } from "@/components/account/cv-preview-modal";
 import { compressImageFile } from "@/components/ui/ImageUpload";
 import {
@@ -54,6 +55,7 @@ import {
   CV_LANGUAGE_LEVELS,
   MAX_CV_LANGUAGES,
   MAX_CV_LINKS,
+  MAX_CV_LINK_LABEL,
   MAX_CV_PHOTO_DATA_URL,
   type CvCoverage,
   type CvLanguageLevel,
@@ -68,8 +70,15 @@ import { cvBuilderMessages } from "@/lib/i18n/messages/cvBuilder";
 const PAGE_WIDTH = 794;
 const PAGE_HEIGHT = 1123;
 
-/** A link row is just the URL the candidate typed; the CV names it by host. */
-type ProfileLink = string;
+/**
+ * A link row: the URL the candidate typed, and what they want it called. An
+ * empty name is the ordinary case — the CV then names the link after the site
+ * it points to, which is what the name field's placeholder shows.
+ */
+type ProfileLink = { url: string; label: string };
+
+/** A fresh row, and what the form falls back to rather than showing no rows. */
+const EMPTY_LINK: ProfileLink = { url: "", label: "" };
 
 /** A language the candidate speaks, and how well they will claim to speak it. */
 type SpokenLanguage = { name: string; level: CvLanguageLevel };
@@ -98,7 +107,7 @@ const EMPTY_FORM = {
   phone: "",
   location: "",
   /** One empty row to start: the "+" below it is how the rest appear. */
-  profileLinks: [""] as ProfileLink[],
+  profileLinks: [EMPTY_LINK] as ProfileLink[],
   /** The hosted URL of the headshot on a CV that has already been generated. */
   photo: "",
   /**
@@ -147,21 +156,28 @@ function linkRowsFrom(input: Record<string, unknown>): ProfileLink[] {
 
   if (Array.isArray(input.profileLinks)) {
     for (const row of input.profileLinks) {
-      // Rows saved before the form dropped its link-type dropdown are objects.
-      const value = typeof row === "string" ? row : (row as { value?: unknown })?.value;
-      if (typeof value === "string" && value.trim()) rows.push(value);
+      if (typeof row === "string") {
+        if (row.trim()) rows.push({ url: row, label: "" });
+        continue;
+      }
+      // A row carries `url` today; one saved before the form dropped its
+      // link-type dropdown carries `value` instead, and no name of its own.
+      const saved = row as { url?: unknown; label?: unknown; value?: unknown };
+      const url = typeof saved.url === "string" ? saved.url : saved.value;
+      if (typeof url !== "string" || !url.trim()) continue;
+      rows.push({ url, label: typeof saved.label === "string" ? saved.label : "" });
     }
   }
 
   for (const key of ["linkedin", "github", "portfolio"] as const) {
     const legacy = typeof input[key] === "string" ? (input[key] as string).trim() : "";
-    if (legacy) rows.push(legacy);
+    if (legacy) rows.push({ url: legacy, label: "" });
   }
   const loose = typeof input.links === "string" ? input.links : "";
-  for (const entry of loose.split(/[\s,;]+/).filter(Boolean)) rows.push(entry);
+  for (const entry of loose.split(/[\s,;]+/).filter(Boolean)) rows.push({ url: entry, label: "" });
 
   const capped = rows.slice(0, MAX_CV_LINKS);
-  return capped.length ? capped : [""];
+  return capped.length ? capped : [EMPTY_LINK];
 }
 
 /**
@@ -355,10 +371,12 @@ export default function CvBuilderClient() {
   );
 
   const setLink = useCallback(
-    (index: number, value: string) =>
+    (index: number, patch: Partial<ProfileLink>) =>
       setForm((prev) => ({
         ...prev,
-        profileLinks: prev.profileLinks.map((link, i) => (i === index ? value : link)),
+        profileLinks: prev.profileLinks.map((link, i) =>
+          i === index ? { ...link, ...patch } : link
+        ),
       })),
     []
   );
@@ -368,7 +386,7 @@ export default function CvBuilderClient() {
       setForm((prev) =>
         prev.profileLinks.length >= MAX_CV_LINKS
           ? prev
-          : { ...prev, profileLinks: [...prev.profileLinks, ""] }
+          : { ...prev, profileLinks: [...prev.profileLinks, EMPTY_LINK] }
       ),
     []
   );
@@ -380,7 +398,7 @@ export default function CvBuilderClient() {
         const remaining = prev.profileLinks.filter((_, i) => i !== index);
         return {
           ...prev,
-          profileLinks: remaining.length ? remaining : [""],
+          profileLinks: remaining.length ? remaining : [EMPTY_LINK],
         };
       }),
     []
@@ -454,7 +472,7 @@ export default function CvBuilderClient() {
 
   // The link rows count once between them — filling in three is more detail,
   // but it is not three times the CV.
-  const hasLink = form.profileLinks.some((link) => link.trim());
+  const hasLink = form.profileLinks.some((link) => link.url.trim());
   const filledCount =
     PROGRESS_FIELDS.filter((key) => form[key].trim()).length + (hasLink ? 1 : 0);
   const progress = Math.round((filledCount / (PROGRESS_FIELDS.length + 1)) * 100);
@@ -844,21 +862,49 @@ export default function CvBuilderClient() {
 
                     {/* One row to begin with; the button below is how the rest arrive. */}
                     <div className="space-y-2.5">
-                      {form.profileLinks.map((link, index) => (
+                      {form.profileLinks.map((link, index) => {
+                        const example = t(
+                          `linkPlaceholders.${
+                            LINK_PLACEHOLDERS[index % LINK_PLACEHOLDERS.length]
+                          }`
+                        );
+                        /*
+                         * Left empty, a link is named after its host — so the name
+                         * field shows exactly what the CV would print: the name for
+                         * the URL typed so far, or failing that the name the example
+                         * beside it would get. Both are the real answer rather than
+                         * a generic label, which is what makes the field read as an
+                         * override rather than another blank to fill in. The last
+                         * fallback covers the one example that isn't a URL.
+                         */
+                        const nameHint =
+                          autoLinkLabel(link.url) ||
+                          autoLinkLabel(example) ||
+                          t("sections.linkNamePlaceholder");
+
+                        return (
                         <div key={index} className="flex items-center gap-2">
-                          <Input
-                            type="url"
-                            value={link}
-                            disabled={isLocked}
-                            aria-label={t("sections.linkLabel")}
-                            placeholder={t(
-                              `linkPlaceholders.${
-                                LINK_PLACEHOLDERS[index % LINK_PLACEHOLDERS.length]
-                              }`
-                            )}
-                            onChange={(e) => setLink(index, e.target.value)}
-                            className="h-11 min-w-0 flex-1 rounded-xl border-flow-border bg-flow-surface text-flow-text"
-                          />
+                          {/* URL and name stack on a narrow screen rather than squeezing. */}
+                          <div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center">
+                            <Input
+                              type="url"
+                              value={link.url}
+                              disabled={isLocked}
+                              aria-label={t("sections.linkLabel")}
+                              placeholder={example}
+                              onChange={(e) => setLink(index, { url: e.target.value })}
+                              className="h-11 min-w-0 flex-1 rounded-xl border-flow-border bg-flow-surface text-flow-text"
+                            />
+                            <Input
+                              value={link.label}
+                              disabled={isLocked}
+                              maxLength={MAX_CV_LINK_LABEL}
+                              aria-label={t("sections.linkName")}
+                              placeholder={nameHint}
+                              onChange={(e) => setLink(index, { label: e.target.value })}
+                              className="h-11 min-w-0 rounded-xl border-flow-border bg-flow-surface text-flow-text sm:w-44"
+                            />
+                          </div>
                           {form.profileLinks.length > 1 && (
                             <button
                               type="button"
@@ -871,7 +917,8 @@ export default function CvBuilderClient() {
                             </button>
                           )}
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
 
                     {form.profileLinks.length < MAX_CV_LINKS && (

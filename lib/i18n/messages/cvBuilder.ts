@@ -62,10 +62,12 @@ export const cvBuilderMessages = defineMessages({
       languagesHint:
         "Your level goes into the CV exactly as you set it here — we never round it up to suit the advert.",
       linkLabel: "Link",
+      linkName: "Name",
+      linkNamePlaceholder: "LinkedIn",
       linkAdd: "Add another link",
       linkRemove: "Remove this link",
       linksHint:
-        "Paste a link — LinkedIn, GitHub, Google Scholar, your own site, anything. Each one is named in your CV after the site it points to, so paste the full address rather than just a username.",
+        "Paste a link — LinkedIn, GitHub, Google Scholar, your own site, anything. Each one is named in your CV after the site it points to, so paste the full address rather than just a username. Type your own name beside it to call it something else.",
     },
     fields: {
       fullName: { label: "Full name", placeholder: "Alex Morgan" },
@@ -108,7 +110,7 @@ export const cvBuilderMessages = defineMessages({
       github: "github.com/alexmorgan",
       portfolio: "alexmorgan.dev",
       scholar: "scholar.google.com/citations?user=…",
-      orcid: "0000-0002-1825-0097",
+      orcid: "orcid.org/0000-0002-1825-0097",
       behance: "behance.net/alexmorgan",
       researchgate: "researchgate.net/profile/Alex-Morgan",
       kaggle: "kaggle.com/alexmorgan",
@@ -514,10 +516,12 @@ export const cvBuilderMessages = defineMessages({
       languagesHint:
         "Votre niveau figure dans le CV tel que vous l'indiquez ici : nous ne l'arrondissons jamais pour coller à l'annonce.",
       linkLabel: "Lien",
+      linkName: "Nom",
+      linkNamePlaceholder: "LinkedIn",
       linkAdd: "Ajouter un autre lien",
       linkRemove: "Supprimer ce lien",
       linksHint:
-        "Collez un lien — LinkedIn, GitHub, Google Scholar, votre propre site, peu importe. Chacun prend dans le CV le nom du site visé, alors collez l'adresse complète plutôt qu'un simple identifiant.",
+        "Collez un lien — LinkedIn, GitHub, Google Scholar, votre propre site, peu importe. Chacun prend dans le CV le nom du site visé, alors collez l'adresse complète plutôt qu'un simple identifiant. Saisissez votre propre nom à côté pour l'intituler autrement.",
     },
     fields: {
       fullName: { label: "Nom complet", placeholder: "Alex Morgan" },
@@ -560,7 +564,7 @@ export const cvBuilderMessages = defineMessages({
       github: "github.com/alexmorgan",
       portfolio: "alexmorgan.dev",
       scholar: "scholar.google.com/citations?user=…",
-      orcid: "0000-0002-1825-0097",
+      orcid: "orcid.org/0000-0002-1825-0097",
       behance: "behance.net/alexmorgan",
       researchgate: "researchgate.net/profile/Alex-Morgan",
       kaggle: "kaggle.com/alexmorgan",
@@ -969,10 +973,12 @@ export const cvBuilderMessages = defineMessages({
       languagesHint:
         "Ihr Niveau steht im Lebenslauf genau so, wie Sie es hier angeben — wir runden es nie zugunsten der Ausschreibung auf.",
       linkLabel: "Link",
+      linkName: "Name",
+      linkNamePlaceholder: "LinkedIn",
       linkAdd: "Weiteren Link hinzufügen",
       linkRemove: "Diesen Link entfernen",
       linksHint:
-        "Fügen Sie einen Link ein — LinkedIn, GitHub, Google Scholar, Ihre eigene Website, was immer Sie möchten. Jeder wird im Lebenslauf nach der Website benannt, auf die er zeigt; fügen Sie deshalb die vollständige Adresse ein und nicht nur den Benutzernamen.",
+        "Fügen Sie einen Link ein — LinkedIn, GitHub, Google Scholar, Ihre eigene Website, was immer Sie möchten. Jeder wird im Lebenslauf nach der Website benannt, auf die er zeigt; fügen Sie deshalb die vollständige Adresse ein und nicht nur den Benutzernamen. Möchten Sie einen anderen Namen, tragen Sie ihn daneben ein.",
     },
     fields: {
       fullName: { label: "Vollständiger Name", placeholder: "Alex Morgan" },
@@ -1015,7 +1021,7 @@ export const cvBuilderMessages = defineMessages({
       github: "github.com/alexmorgan",
       portfolio: "alexmorgan.dev",
       scholar: "scholar.google.com/citations?user=…",
-      orcid: "0000-0002-1825-0097",
+      orcid: "orcid.org/0000-0002-1825-0097",
       behance: "behance.net/alexmorgan",
       researchgate: "researchgate.net/profile/Alex-Morgan",
       kaggle: "kaggle.com/alexmorgan",
@@ -1424,10 +1430,12 @@ export const cvBuilderMessages = defineMessages({
       languagesHint:
         "Mustawak yazhar fi As-Sira kama haddadtahu huna bi-l-dabt — la narfa'uhu abadan li-yunasib Al-I'lan.",
       linkLabel: "Rabit",
+      linkName: "Al-Ism",
+      linkNamePlaceholder: "LinkedIn",
       linkAdd: "Adif rabitan akhar",
       linkRemove: "Ihdhif hadha Al-Rabit",
       linksHint:
-        "Alsiq ayy rabit — LinkedIn aw GitHub aw Google Scholar aw mawqiaka Al-Shakhsi. Kull rabit yusamma fi As-Sira bi-ism Al-Mawqi Al-Ladhi yushir ilayh, fa-alsiq Al-Unwan Al-Kamil la Al-Ism Al-Mustaar faqat.",
+        "Alsiq ayy rabit — LinkedIn aw GitHub aw Google Scholar aw mawqiaka Al-Shakhsi. Kull rabit yusamma fi As-Sira bi-ism Al-Mawqi Al-Ladhi yushir ilayh, fa-alsiq Al-Unwan Al-Kamil la Al-Ism Al-Mustaar faqat. Wa idha aradta isman akhar, uktubhu fi Al-Khana Al-Mujawira.",
     },
     fields: {
       fullName: { label: "Al-Ism Al-Kamil", placeholder: "Alex Morgan" },
@@ -1470,7 +1478,7 @@ export const cvBuilderMessages = defineMessages({
       github: "github.com/alexmorgan",
       portfolio: "alexmorgan.dev",
       scholar: "scholar.google.com/citations?user=…",
-      orcid: "0000-0002-1825-0097",
+      orcid: "orcid.org/0000-0002-1825-0097",
       behance: "behance.net/alexmorgan",
       researchgate: "researchgate.net/profile/Alex-Morgan",
       kaggle: "kaggle.com/alexmorgan",
@@ -1878,10 +1886,12 @@ export const cvBuilderMessages = defineMessages({
       languagesHint:
         "আপনি এখানে যে স্তর দেবেন, সিভিতে ঠিক সেটিই যাবে — বিজ্ঞাপনের সঙ্গে মেলাতে আমরা কখনো বাড়িয়ে লিখি না।",
       linkLabel: "লিংক",
+      linkName: "নাম",
+      linkNamePlaceholder: "LinkedIn",
       linkAdd: "আরেকটি লিংক যোগ করুন",
       linkRemove: "এই লিংকটি সরান",
       linksHint:
-        "যেকোনো লিংক পেস্ট করুন — লিংকডইন, গিটহাব, গুগল স্কলার, নিজের ওয়েবসাইট, যা-ই হোক। সিভিতে প্রতিটি লিংক যে সাইটের, সেটির নামেই দেখাবে, তাই শুধু ইউজারনেম নয়, পুরো ঠিকানাটা পেস্ট করুন।",
+        "যেকোনো লিংক পেস্ট করুন — লিংকডইন, গিটহাব, গুগল স্কলার, নিজের ওয়েবসাইট, যা-ই হোক। সিভিতে প্রতিটি লিংক যে সাইটের, সেটির নামেই দেখাবে, তাই শুধু ইউজারনেম নয়, পুরো ঠিকানাটা পেস্ট করুন। অন্য নামে দেখাতে চাইলে পাশের ঘরে নিজের নামটি লিখুন।",
     },
     fields: {
       fullName: { label: "পুরো নাম", placeholder: "Alex Morgan" },
@@ -1924,7 +1934,7 @@ export const cvBuilderMessages = defineMessages({
       github: "github.com/alexmorgan",
       portfolio: "alexmorgan.dev",
       scholar: "scholar.google.com/citations?user=…",
-      orcid: "0000-0002-1825-0097",
+      orcid: "orcid.org/0000-0002-1825-0097",
       behance: "behance.net/alexmorgan",
       researchgate: "researchgate.net/profile/Alex-Morgan",
       kaggle: "kaggle.com/alexmorgan",

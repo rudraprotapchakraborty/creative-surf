@@ -61,6 +61,13 @@ export const MAX_CV_PHOTO_DATA_URL = 2_800_000;
 /** How many links a CV header can carry before it stops being scannable. */
 export const MAX_CV_LINKS = 6;
 
+/**
+ * How long a link's name may be. The header prints these on one line, so a
+ * name past this length costs the row below it rather than adding anything —
+ * "GitHub" and "Personal website" are the shape of the thing.
+ */
+export const MAX_CV_LINK_LABEL = 40;
+
 export const cvInputSchema = z.object({
   fullName: z.string().trim().min(2).max(120),
   jobTitle: z.string().trim().min(2).max(160),
@@ -68,13 +75,35 @@ export const cvInputSchema = z.object({
   phone: z.string().trim().max(60).optional().default(""),
   location: z.string().trim().max(160).optional().default(""),
   /**
-   * The candidate's profile links, as many as they add — one URL per row, in
-   * their own order. The URL that reaches the finished CV is the one they
-   * typed. Older CVs stored each row as a typed object; both shapes are read.
+   * The candidate's profile links, as many as they add — a URL and the name it
+   * should carry, in their own order. The URL that reaches the finished CV is
+   * the one they typed, and an empty name means the link is named after the
+   * site it points to. Older CVs stored a row as a bare string, or as a typed
+   * object from when the form asked what kind of link each row was; all three
+   * shapes are read, so nothing saved before today loses its links.
+   *
+   * Order matters here. The current shape is tried first and requires `url`,
+   * which no older row carries, so an older row falls through to the member
+   * that actually describes it instead of being parsed into an empty one.
    */
   profileLinks: z
     .array(
       z.union([
+        z.object({
+          url: z.string().trim().max(300),
+          /**
+           * Trimmed to length rather than rejected. A name too long is the one
+           * thing here that must not fail: the row would fall through to the
+           * shape below, which accepts any object at all, and the candidate
+           * would lose the link itself over what it was called.
+           */
+          label: z
+            .string()
+            .trim()
+            .transform((value) => value.slice(0, MAX_CV_LINK_LABEL))
+            .optional()
+            .default(""),
+        }),
         z.string().trim().max(300),
         // A row saved before the dropdown went away.
         z.object({
