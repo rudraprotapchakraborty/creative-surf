@@ -5,6 +5,7 @@ import { getAuth } from "@/lib/auth";
 import { saveCv } from "@/lib/cv-db";
 import { CV_JSON_SCHEMA, cvInputSchema, type CvInput, type GeneratedCv } from "@/lib/cv-types";
 import { buildContactLinks } from "@/lib/cv-links";
+import { isUploadableImage, uploadToImgbb } from "@/lib/imgbb";
 import { gradeCoverage } from "@/lib/cv-coverage";
 
 export const runtime = "nodejs";
@@ -145,8 +146,31 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
+  /**
+   * Hosts the chosen photo, once there is a CV to put it on.
+   *
+   * Deliberately late: a picture uploaded the moment it was picked would
+   * outlive every candidate who changed their mind, sitting on the image host
+   * with nothing pointing at it. Best-effort — a CV without its photo is worth
+   * far more than no CV at all, so a failure here is logged and moved past.
+   */
+  const hostPhoto = async (): Promise<string> => {
+    if (isUploadableImage(input.photoData)) {
+      try {
+        const { url } = await uploadToImgbb(input.photoData, `${input.fullName} photo`);
+        return url;
+      } catch (photoErr) {
+        console.error("Failed to host the CV photo:", photoErr);
+        return "";
+      }
+    }
+    // A CV opened from the account and regenerated already has a hosted photo.
+    return /^https:\/\//i.test(input.photo ?? "") ? input.photo : "";
+  };
+
   /** Saves the CV and returns it. A failed save must not lose the candidate's work. */
   const respond = async (raw: GeneratedCv) => {
+    const photoUrl = await hostPhoto();
     /*
      * The candidate's own URLs, not the model's recollection of them. A profile
      * link is the one field where a plausible-looking edit is a broken link, so
@@ -155,7 +179,7 @@ export async function POST(request: NextRequest) {
     const cv: GeneratedCv = {
       ...raw,
       // The photo is a URL too, and the model has no business restating it.
-      photoUrl: /^https:\/\//i.test(input.photo ?? "") ? input.photo : "",
+      photoUrl,
       contact: {
         email: raw.contact?.email ?? "",
         phone: raw.contact?.phone ?? "",
@@ -175,7 +199,10 @@ export async function POST(request: NextRequest) {
 
     let cvId = "";
     try {
-      cvId = await saveCv(auth.sub, auth.email || "", input, cv, coverage);
+      // The photo is stored as the URL it now lives at; the base64 the browser
+      // sent was a carrier for one request and has no business in a document.
+      const saved: CvInput = { ...input, photo: photoUrl, photoData: "" };
+      cvId = await saveCv(auth.sub, auth.email || "", saved, cv, coverage);
     } catch (saveErr) {
       console.error("Failed to auto-save CV to MongoDB:", saveErr);
     }

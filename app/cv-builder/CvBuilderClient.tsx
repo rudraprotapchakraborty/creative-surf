@@ -52,6 +52,7 @@ import {
   CV_LANGUAGES,
   CV_TONES,
   MAX_CV_LINKS,
+  MAX_CV_PHOTO_DATA_URL,
   type CvCoverage,
   type CvTone,
   type GeneratedCv,
@@ -92,8 +93,14 @@ const EMPTY_FORM = {
   location: "",
   /** One empty row to start: the "+" below it is how the rest appear. */
   profileLinks: [""] as ProfileLink[],
-  /** The hosted URL of an uploaded headshot, or "" for the usual no-photo CV. */
+  /** The hosted URL of the headshot on a CV that has already been generated. */
   photo: "",
+  /**
+   * A headshot chosen but not yet hosted. It travels with the generate request
+   * and is hosted there, so abandoning the form leaves nothing on the image
+   * host — see `hostPhoto` in the generate route.
+   */
+  photoData: "",
   yearsExperience: "",
   workHistory: "",
   education: "",
@@ -249,9 +256,9 @@ export default function CvBuilderClient() {
   );
 
   /**
-   * Hosts the chosen photo and keeps its URL, not the file. The CV is saved,
-   * previewed and printed as HTML, so the picture has to live somewhere a
-   * printed page can still reach.
+   * Keeps the chosen photo in the page, downscaled, until there is a CV to put
+   * it on. Nothing is uploaded here: a picture hosted the moment it was picked
+   * would outlive every candidate who changed their mind and closed the tab.
    */
   const onPhotoPick = useCallback(
     async (event: ChangeEvent<HTMLInputElement>) => {
@@ -266,22 +273,22 @@ export default function CvBuilderClient() {
         // A headshot prints at about 26mm square, so anything past 600px is
         // weight the candidate waits for and the page never shows.
         const dataUrl = await compressImageFile(file, { maxDim: 600, quality: 0.85 });
-        const res = await fetch("/api/cv/photo", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ image: dataUrl, name: file.name }),
-        });
-        const data = await res.json().catch(() => null);
-        if (!res.ok || !data?.url) throw new Error(data?.error || t("sections.photoFailed"));
-        setForm((prev) => ({ ...prev, photo: data.url as string }));
-      } catch (err) {
-        setPhotoError(err instanceof Error ? err.message : t("sections.photoFailed"));
+        if (dataUrl.length > MAX_CV_PHOTO_DATA_URL) {
+          setPhotoError(t("sections.photoTooLarge"));
+          return;
+        }
+        setForm((prev) => ({ ...prev, photoData: dataUrl, photo: "" }));
+      } catch {
+        setPhotoError(t("sections.photoFailed"));
       } finally {
         setPhotoBusy(false);
       }
     },
     [t]
   );
+
+  /** What the form shows: the picture waiting to be hosted, else the hosted one. */
+  const photoPreview = form.photoData || form.photo;
 
   const setLink = useCallback(
     (index: number, value: string) =>
@@ -427,7 +434,10 @@ export default function CvBuilderClient() {
         return;
       }
 
-      setCv(data.cv as GeneratedCv);
+      const generated = data.cv as GeneratedCv;
+      setCv(generated);
+      // The photo lives on the image host now, so the base64 has done its job.
+      setForm((prev) => ({ ...prev, photo: generated.photoUrl ?? "", photoData: "" }));
       setScoredAgainst(form.targetJob);
       setCoverage((data.coverage as CvCoverage | null) ?? null);
       refreshSaved();
@@ -711,10 +721,10 @@ export default function CvBuilderClient() {
                       {t("sections.photo")}
                     </p>
                     <div className="flex items-center gap-3">
-                      {form.photo ? (
+                      {photoPreview ? (
                         // eslint-disable-next-line @next/next/no-img-element -- an image host URL, not a bundled asset
                         <img
-                          src={form.photo}
+                          src={photoPreview}
                           alt=""
                           className="h-16 w-16 shrink-0 rounded-xl border border-flow-border object-cover"
                         />
@@ -732,18 +742,18 @@ export default function CvBuilderClient() {
                         >
                           {photoBusy && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                           {photoBusy
-                            ? t("sections.photoUploading")
-                            : form.photo
+                            ? t("sections.photoReading")
+                            : photoPreview
                               ? t("sections.photoChange")
                               : t("sections.photoAdd")}
                         </button>
-                        {form.photo && !photoBusy && (
+                        {photoPreview && !photoBusy && (
                           <button
                             type="button"
                             disabled={isLocked}
                             onClick={() => {
                               setPhotoError(null);
-                              set("photo", "");
+                              setForm((prev) => ({ ...prev, photo: "", photoData: "" }));
                             }}
                             className="rounded-xl px-2 py-2 text-sm font-semibold text-flow-textSoft transition-colors hover:text-red-500"
                           >

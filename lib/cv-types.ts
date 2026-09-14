@@ -33,6 +33,14 @@ export const CV_LINK_TYPES = [
 ] as const;
 export type CvLinkType = (typeof CV_LINK_TYPES)[number];
 
+/**
+ * The most a chosen photo may weigh as a base64 data URL — roughly 2 MB of
+ * image once base64's ~33% overhead is taken off. It travels inside the
+ * generate request, so it has to stay well inside a serverless host's body
+ * limit; a headshot downscaled in the browser is a small fraction of this.
+ */
+export const MAX_CV_PHOTO_DATA_URL = 2_800_000;
+
 /** How many links a CV header can carry before it stops being scannable. */
 export const MAX_CV_LINKS = 6;
 
@@ -62,12 +70,22 @@ export const cvInputSchema = z.object({
     .optional()
     .default([]),
   /**
-   * An optional headshot, as a URL on the image host the form uploaded it to.
+   * An optional headshot, as a URL on the image host.
+   *
    * Optional on purpose: a photo is expected on a CV in much of Europe, Asia
    * and Latin America, and screened out before a human sees it in the UK, the
    * US and Canada. Whether to include one is the candidate's call.
    */
   photo: z.string().trim().max(500).optional().default(""),
+  /**
+   * A photo chosen but not yet hosted, as a base64 data URL.
+   *
+   * The picture is carried here rather than uploaded when it is picked, so a
+   * candidate who changes their mind and closes the tab leaves nothing behind
+   * on the image host. It is hosted once the CV exists, and never stored: what
+   * the database keeps is the URL in `photo`.
+   */
+  photoData: z.string().max(MAX_CV_PHOTO_DATA_URL).optional().default(""),
   /**
    * The fixed link fields this form used before the rows above replaced them.
    * Still parsed so a CV saved back then loads with its links intact.

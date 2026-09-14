@@ -6,6 +6,8 @@
  * the server, and never reaches the browser.
  */
 
+import { MAX_CV_PHOTO_DATA_URL } from "./cv-types";
+
 export type ImgbbResult = { url: string; displayUrl: string };
 
 export class ImgbbError extends Error {
@@ -21,6 +23,18 @@ export class ImgbbError extends Error {
 
 export function isImgbbConfigured(): boolean {
   return Boolean(process.env.IMGBB_API_KEY);
+}
+
+/** What an uploaded photo may be. No SVG: it is a script vector, not a picture. */
+const IMAGE_DATA_URL = /^data:image\/(png|jpeg|jpg|webp|gif|avif);base64,/i;
+
+/** True when `value` is a base64 data URL of an image we accept and can carry. */
+export function isUploadableImage(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    value.length <= MAX_CV_PHOTO_DATA_URL &&
+    IMAGE_DATA_URL.test(value)
+  );
 }
 
 export async function uploadToImgbb(image: string, name?: string): Promise<ImgbbResult> {
