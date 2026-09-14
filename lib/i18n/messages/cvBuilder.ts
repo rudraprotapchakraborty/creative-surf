@@ -99,7 +99,7 @@ export const cvBuilderMessages = defineMessages({
     languageLevels: {
       native: "Native",
       fluent: "Fluent",
-      professional: "Professional working",
+      professional: "Professional",
       intermediate: "Intermediate",
       basic: "Basic",
     },
@@ -551,7 +551,7 @@ export const cvBuilderMessages = defineMessages({
     languageLevels: {
       native: "Langue maternelle",
       fluent: "Courant",
-      professional: "Usage professionnel",
+      professional: "Professionnel",
       intermediate: "Intermédiaire",
       basic: "Notions",
     },
@@ -1461,7 +1461,7 @@ export const cvBuilderMessages = defineMessages({
     languageLevels: {
       native: "Lugha Umm",
       fluent: "Talaqa",
-      professional: "Mustawa Mihani",
+      professional: "Mihani",
       intermediate: "Mutawassit",
       basic: "Mubtadi",
     },
@@ -1915,7 +1915,7 @@ export const cvBuilderMessages = defineMessages({
     languageLevels: {
       native: "মাতৃভাষা",
       fluent: "সাবলীল",
-      professional: "পেশাগত দক্ষতা",
+      professional: "পেশাগত",
       intermediate: "মাধ্যমিক",
       basic: "প্রাথমিক",
     },
