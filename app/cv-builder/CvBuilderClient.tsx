@@ -1,6 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type ReactNode,
+} from "react";
 import Link from "next/link";
 import {
   AlertCircle,
@@ -9,6 +17,7 @@ import {
   Download,
   Eye,
   FileText,
+  ImagePlus,
   Loader2,
   Lock,
   Plus,
@@ -38,6 +47,7 @@ import { buildCvHtml, printCvDocument } from "@/lib/cv-document";
 import { scoreCvAgainstJob, type CvMatch } from "@/lib/cv-match";
 import { scoreCvForAts } from "@/lib/cv-ats";
 import { CvPreviewModal } from "@/components/account/cv-preview-modal";
+import { compressImageFile } from "@/components/ui/ImageUpload";
 import {
   CV_LANGUAGES,
   CV_TONES,
@@ -82,6 +92,8 @@ const EMPTY_FORM = {
   location: "",
   /** One empty row to start: the "+" below it is how the rest appear. */
   profileLinks: [""] as ProfileLink[],
+  /** The hosted URL of an uploaded headshot, or "" for the usual no-photo CV. */
+  photo: "",
   yearsExperience: "",
   workHistory: "",
   education: "",
@@ -223,6 +235,9 @@ export default function CvBuilderClient() {
     if (id) openSaved(id);
   }, [isAuthenticated, openSaved]);
 
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const [photoError, setPhotoError] = useState<string | null>(null);
   const previewBoxRef = useRef<HTMLDivElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
@@ -231,6 +246,41 @@ export default function CvBuilderClient() {
     <K extends keyof FormState>(key: K, value: FormState[K]) =>
       setForm((prev) => ({ ...prev, [key]: value })),
     []
+  );
+
+  /**
+   * Hosts the chosen photo and keeps its URL, not the file. The CV is saved,
+   * previewed and printed as HTML, so the picture has to live somewhere a
+   * printed page can still reach.
+   */
+  const onPhotoPick = useCallback(
+    async (event: ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      // Cleared so picking the same file twice still fires a change event.
+      event.target.value = "";
+      if (!file) return;
+
+      setPhotoError(null);
+      setPhotoBusy(true);
+      try {
+        // A headshot prints at about 26mm square, so anything past 600px is
+        // weight the candidate waits for and the page never shows.
+        const dataUrl = await compressImageFile(file, { maxDim: 600, quality: 0.85 });
+        const res = await fetch("/api/cv/photo", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: dataUrl, name: file.name }),
+        });
+        const data = await res.json().catch(() => null);
+        if (!res.ok || !data?.url) throw new Error(data?.error || t("sections.photoFailed"));
+        setForm((prev) => ({ ...prev, photo: data.url as string }));
+      } catch (err) {
+        setPhotoError(err instanceof Error ? err.message : t("sections.photoFailed"));
+      } finally {
+        setPhotoBusy(false);
+      }
+    },
+    [t]
   );
 
   const setLink = useCallback(
@@ -656,6 +706,63 @@ export default function CvBuilderClient() {
                     {field("location")}
                     {field("yearsExperience")}
                   </div>
+                  <div className="space-y-3 rounded-2xl border border-flow-border bg-flow-surface p-4">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-flow-textSoft">
+                      {t("sections.photo")}
+                    </p>
+                    <div className="flex items-center gap-3">
+                      {form.photo ? (
+                        // eslint-disable-next-line @next/next/no-img-element -- an image host URL, not a bundled asset
+                        <img
+                          src={form.photo}
+                          alt=""
+                          className="h-16 w-16 shrink-0 rounded-xl border border-flow-border object-cover"
+                        />
+                      ) : (
+                        <div className="grid h-16 w-16 shrink-0 place-items-center rounded-xl border border-dashed border-flow-border text-flow-textSoft">
+                          <ImagePlus className="h-5 w-5" />
+                        </div>
+                      )}
+                      <div className="flex flex-wrap items-center gap-2">
+                        <button
+                          type="button"
+                          disabled={isLocked || photoBusy}
+                          onClick={() => photoInputRef.current?.click()}
+                          className="inline-flex items-center gap-2 rounded-xl border border-flow-border px-3 py-2 text-sm font-semibold text-flow-text transition-colors hover:border-flow-accent disabled:opacity-60"
+                        >
+                          {photoBusy && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                          {photoBusy
+                            ? t("sections.photoUploading")
+                            : form.photo
+                              ? t("sections.photoChange")
+                              : t("sections.photoAdd")}
+                        </button>
+                        {form.photo && !photoBusy && (
+                          <button
+                            type="button"
+                            disabled={isLocked}
+                            onClick={() => {
+                              setPhotoError(null);
+                              set("photo", "");
+                            }}
+                            className="rounded-xl px-2 py-2 text-sm font-semibold text-flow-textSoft transition-colors hover:text-red-500"
+                          >
+                            {t("sections.photoRemove")}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-xs leading-relaxed text-flow-textSoft">{t("sections.photoHint")}</p>
+                    {photoError && <p className="text-xs font-medium text-red-500">{photoError}</p>}
+                    <input
+                      ref={photoInputRef}
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      className="hidden"
+                      onChange={onPhotoPick}
+                    />
+                  </div>
+
                   <div className="space-y-4 rounded-2xl border border-flow-border bg-flow-surface p-4">
                     <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-flow-textSoft">
                       {t("sections.links")}

@@ -47,7 +47,17 @@ const prettyUrl = (url: string): string => String(url ?? "").replace(/^https?:\/
 const section = (title: string, body: string): string =>
   body.trim() ? `<section class="block"><h2>${esc(title)}</h2>${body}</section>` : "";
 
+/**
+ * The photo, only ever from an https image host. A CV is printed and emailed
+ * around, so a `data:` or `javascript:` src has no business in it.
+ */
+const photoSrc = (url: string | undefined): string | null => {
+  const trimmed = String(url ?? "").trim();
+  return /^https:\/\//i.test(trimmed) ? trimmed : null;
+};
+
 export function buildCvHtml(cv: GeneratedCv, labels: CvDocumentLabels): string {
+  const photo = photoSrc(cv.photoUrl);
   const contactBits = [
     cv.contact.location ? esc(cv.contact.location) : "",
     cv.contact.email ? linkOrText(`mailto:${cv.contact.email}`, cv.contact.email) : "",
@@ -143,7 +153,16 @@ export function buildCvHtml(cv: GeneratedCv, labels: CvDocumentLabels): string {
   /* Keeps its padding when printing, since @page no longer supplies a margin. */
   @media print { .sheet { max-width: none; margin: 0; } }
 
-  header { border-bottom: 2px solid #0066a2; padding-bottom: 10px; margin-bottom: 18px; }
+  header {
+    border-bottom: 2px solid #0066a2; padding-bottom: 10px; margin-bottom: 18px;
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 10mm;
+  }
+  /* Without this the name and contact line refuse to wrap beside the photo. */
+  .identity { flex: 1 1 auto; min-width: 0; }
+  .photo {
+    flex: 0 0 auto; width: 26mm; height: 26mm; object-fit: cover;
+    border-radius: 3px; border: 1px solid #dde3ea;
+  }
   h1 { font-size: 24pt; line-height: 1.15; margin: 0; letter-spacing: -0.02em; color: #0f1723; }
   .headline { margin: 4px 0 0; font-size: 11pt; font-weight: 600; color: #0066a2; }
   .contact { margin: 8px 0 0; font-size: 9pt; color: #4a5666; }
@@ -184,9 +203,12 @@ export function buildCvHtml(cv: GeneratedCv, labels: CvDocumentLabels): string {
 <body>
   <div class="sheet">
     <header>
-      <h1>${esc(cv.fullName)}</h1>
-      ${cv.headline ? `<p class="headline">${esc(cv.headline)}</p>` : ""}
-      ${contactBits.length ? `<p class="contact">${contactBits.map((bit) => `<span>${bit}</span>`).join("")}</p>` : ""}
+      <div class="identity">
+        <h1>${esc(cv.fullName)}</h1>
+        ${cv.headline ? `<p class="headline">${esc(cv.headline)}</p>` : ""}
+        ${contactBits.length ? `<p class="contact">${contactBits.map((bit) => `<span>${bit}</span>`).join("")}</p>` : ""}
+      </div>
+      ${photo ? `<img class="photo" src="${esc(photo)}" alt="${esc(cv.fullName)}" />` : ""}
     </header>
     ${cv.summary ? section(labels.summary, `<p>${esc(cv.summary)}</p>`) : ""}
     ${section(labels.experience, experience)}

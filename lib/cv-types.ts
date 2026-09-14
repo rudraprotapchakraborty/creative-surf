@@ -62,6 +62,13 @@ export const cvInputSchema = z.object({
     .optional()
     .default([]),
   /**
+   * An optional headshot, as a URL on the image host the form uploaded it to.
+   * Optional on purpose: a photo is expected on a CV in much of Europe, Asia
+   * and Latin America, and screened out before a human sees it in the UK, the
+   * US and Canada. Whether to include one is the candidate's call.
+   */
+  photo: z.string().trim().max(500).optional().default(""),
+  /**
    * The fixed link fields this form used before the rows above replaced them.
    * Still parsed so a CV saved back then loads with its links intact.
    */
@@ -85,6 +92,8 @@ export type CvLink = { label: string; url: string };
 export type GeneratedCv = {
   fullName: string;
   headline: string;
+  /** The candidate's photo, when they uploaded one. Never written by the model. */
+  photoUrl?: string;
   contact: {
     email: string;
     phone: string;

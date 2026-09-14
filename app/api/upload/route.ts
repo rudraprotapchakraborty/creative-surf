@@ -1,25 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/auth'
+import { ImgbbError, uploadToImgbb } from '@/lib/imgbb'
 
 /**
  * Uploads an image to ImgBB and returns the hosted URL.
  *
- * The ImgBB API key lives only on the server (IMGBB_API_KEY env var) so it is
- * never exposed to the browser. The client sends a base64 data URL; we strip the
- * prefix and forward the raw base64 to ImgBB, then hand back the public image URL
- * which gets stored in the database (just like a normal URL).
+ * The client sends a base64 data URL; the hosted URL that comes back is what
+ * gets stored in the database, just like a normal URL. The API key stays on the
+ * server — see `lib/imgbb.ts`.
  */
 export async function POST(request: NextRequest) {
   const denied = requireAdmin(request)
   if (denied) return denied
-
-  const apiKey = process.env.IMGBB_API_KEY
-  if (!apiKey) {
-    return NextResponse.json(
-      { error: 'Image upload is not configured. Add IMGBB_API_KEY to your environment.' },
-      { status: 500 }
-    )
-  }
 
   try {
     const { image, name } = await request.json()
@@ -27,28 +19,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No image provided' }, { status: 400 })
     }
 
-    // ImgBB wants the raw base64 payload, without the `data:image/...;base64,` prefix.
-    const base64 = image.includes(',') ? image.split(',')[1] : image
-
-    const body = new URLSearchParams()
-    body.append('image', base64)
-    if (name && typeof name === 'string') body.append('name', name.slice(0, 80))
-
-    const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
-      method: 'POST',
-      body,
-    })
-
-    const data = await res.json().catch(() => null)
-    const url: string | undefined = data?.data?.url
-
-    if (!res.ok || !url) {
-      const message = data?.error?.message || 'Image host rejected the upload.'
-      return NextResponse.json({ error: message }, { status: 502 })
+    const { url, displayUrl } = await uploadToImgbb(image, typeof name === 'string' ? name : undefined)
+    return NextResponse.json({ url, displayUrl })
+  } catch (err) {
+    if (err instanceof ImgbbError) {
+      return NextResponse.json({ error: err.message }, { status: err.status })
     }
-
-    return NextResponse.json({ url, displayUrl: data.data.display_url ?? url })
-  } catch {
     return NextResponse.json({ error: 'Upload failed. Please try again.' }, { status: 500 })
   }
 }

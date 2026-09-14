@@ -154,6 +154,8 @@ export async function POST(request: NextRequest) {
      */
     const cv: GeneratedCv = {
       ...raw,
+      // The photo is a URL too, and the model has no business restating it.
+      photoUrl: /^https:\/\//i.test(input.photo ?? "") ? input.photo : "",
       contact: {
         email: raw.contact?.email ?? "",
         phone: raw.contact?.phone ?? "",
