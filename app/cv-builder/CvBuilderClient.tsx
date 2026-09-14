@@ -14,7 +14,6 @@ import {
   Plus,
   RefreshCw,
   ScanLine,
-  Sparkles,
   Target,
   Trash2,
   TriangleAlert,
@@ -500,12 +499,9 @@ export default function CvBuilderClient() {
 
         <div className="relative z-10 mx-auto w-[95%] max-w-7xl">
           <div className="max-w-3xl">
-            <Reveal>
-              <Eyebrow icon={Sparkles}>{t("hero.badge")}</Eyebrow>
-            </Reveal>
             <Reveal delay={0.05}>
               <h1
-                className="mt-6 font-heading font-extrabold leading-[1.08] tracking-tight text-flow-text"
+                className="font-heading font-extrabold leading-[1.08] tracking-tight text-flow-text"
                 style={{ fontSize: "clamp(2.25rem, 5vw, 3.75rem)" }}
               >
                 {t("hero.title")}{" "}

@@ -6,7 +6,6 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "Turn rough notes into a recruiter-ready CV. Paste the job advert, see which requirements you have covered, and download a free ATS-safe PDF. We never invent employers, dates or numbers.",
     hero: {
-      badge: "Free · No sign-up",
       title: "Your real career, written",
       titleHighlight: "like a recruiter wants it",
       subtitle:
@@ -448,7 +447,6 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "Transformez quelques notes en un CV prêt pour les recruteurs. Collez l'annonce, voyez les exigences déjà couvertes et téléchargez un PDF gratuit compatible ATS. Nous n'inventons jamais d'employeur, de date ni de chiffre.",
     hero: {
-      badge: "Gratuit · Sans inscription",
       title: "Votre vrai parcours, écrit",
       titleHighlight: "comme un recruteur l'attend",
       subtitle:
@@ -893,7 +891,6 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "Aus Stichpunkten wird ein Lebenslauf, den Recruiter lesen wollen. Stellenanzeige einfügen, offene Anforderungen sehen und ein kostenloses ATS-sicheres PDF laden. Wir erfinden keine Arbeitgeber, Daten oder Zahlen.",
     hero: {
-      badge: "Kostenlos · Ohne Anmeldung",
       title: "Ihr echter Werdegang, geschrieben",
       titleHighlight: "wie Recruiter ihn lesen wollen",
       subtitle:
@@ -1338,7 +1335,6 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "Hawwil mulahazatik ila Sira Dhatiyya jahiza lil-Muwazzifin. Alsiq ilan Al-Wazifa, shahid ayy Al-Mutatallabat ghattaytaha, wa hammil PDF majjani mutawafiq ma anzimat Al-Farz. La nakhtali arbab amal aw tawarikh aw arqam.",
     hero: {
-      badge: "Majjani · Bidun Tasjil",
       title: "Masirak Al-Haqiqi, maktub",
       titleHighlight: "kama yuriduhu Al-Muwazzif",
       subtitle:
@@ -1782,7 +1778,6 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "এলোমেলো নোট থেকে তৈরি করুন রিক্রুটারের উপযোগী সিভি। চাকরির বিজ্ঞপ্তিটি পেস্ট করুন, দেখুন কোন শর্তগুলো আপনি পূরণ করেছেন, আর বিনামূল্যে ATS-উপযোগী পিডিএফ নামান। আমরা কখনও প্রতিষ্ঠান, তারিখ বা সংখ্যা বানিয়ে লিখি না।",
     hero: {
-      badge: "বিনামূল্যে · সাইন-আপ ছাড়াই",
       title: "আপনার সত্যিকারের ক্যারিয়ার, লেখা",
       titleHighlight: "যেভাবে রিক্রুটার চায়",
       subtitle:

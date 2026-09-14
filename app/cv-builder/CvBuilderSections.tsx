@@ -6,7 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { CtaButton, Eyebrow, Reveal, Section, SectionHeading } from "@/components/premium";
+import { CtaButton, Reveal, Section, SectionHeading } from "@/components/premium";
 import {
   BadgeCheck,
   Check,
@@ -295,9 +295,8 @@ export default function CvBuilderSections() {
           <div className="relative overflow-hidden rounded-3xl border border-flow-border bg-flow-card p-10 text-center sm:p-14">
             <div className="pointer-events-none absolute inset-0 bg-aurora-mesh opacity-70" aria-hidden />
             <div className="relative z-10 mx-auto max-w-2xl">
-              <Eyebrow>{t("hero.badge")}</Eyebrow>
               <h2
-                className="mt-6 font-bold leading-[1.1] text-flow-text"
+                className="font-bold leading-[1.1] text-flow-text"
                 style={{ fontSize: "clamp(1.85rem, 3.2vw, 2.9rem)" }}
               >
                 {t("finalCta.title")} <span className="text-aurora">{t("finalCta.highlight")}</span>
