@@ -34,6 +34,23 @@ export const CV_LINK_TYPES = [
 export type CvLinkType = (typeof CV_LINK_TYPES)[number];
 
 /**
+ * How well the candidate speaks a language, from the only five rungs a
+ * recruiter reads differently. Kept short on purpose: a longer scale invites
+ * false precision, and "B2" means nothing to a hiring manager outside Europe.
+ */
+export const CV_LANGUAGE_LEVELS = [
+  "native",
+  "fluent",
+  "professional",
+  "intermediate",
+  "basic",
+] as const;
+export type CvLanguageLevel = (typeof CV_LANGUAGE_LEVELS)[number];
+
+/** Enough for anyone honest; past this the section stops being read. */
+export const MAX_CV_LANGUAGES = 8;
+
+/**
  * The most a chosen photo may weigh as a base64 data URL — roughly 2 MB of
  * image once base64's ~33% overhead is taken off. It travels inside the
  * generate request, so it has to stay well inside a serverless host's body
@@ -94,6 +111,21 @@ export const cvInputSchema = z.object({
   portfolio: z.string().trim().max(300).optional().default(""),
   github: z.string().trim().max(300).optional().default(""),
   links: z.string().trim().max(600).optional().default(""),
+  /**
+   * Spoken languages and how well, in the candidate's own order. Written
+   * straight into the CV rather than through the model, which has a habit of
+   * promoting "basic" to "conversational" when a job advert asks for it.
+   */
+  languages: z
+    .array(
+      z.object({
+        name: z.string().trim().max(60).default(""),
+        level: z.enum(CV_LANGUAGE_LEVELS).default("fluent"),
+      })
+    )
+    .max(MAX_CV_LANGUAGES)
+    .optional()
+    .default([]),
   yearsExperience: z.string().trim().max(40).optional().default(""),
   workHistory: z.string().trim().max(6000).optional().default(""),
   education: z.string().trim().max(3000).optional().default(""),
@@ -304,6 +336,11 @@ export const CV_JSON_SCHEMA: Record<string, unknown> = {
       },
     },
     certifications: { type: "array", items: { type: "string" } },
-    languages: { type: "array", items: { type: "string" }, description: "Spoken languages with proficiency." },
+    languages: {
+      type: "array",
+      items: { type: "string" },
+      description:
+        "Leave this an empty array. The candidate's own languages and levels are attached after generation.",
+    },
   },
 };

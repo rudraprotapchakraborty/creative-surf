@@ -51,9 +51,12 @@ import { compressImageFile } from "@/components/ui/ImageUpload";
 import {
   CV_LANGUAGES,
   CV_TONES,
+  CV_LANGUAGE_LEVELS,
+  MAX_CV_LANGUAGES,
   MAX_CV_LINKS,
   MAX_CV_PHOTO_DATA_URL,
   type CvCoverage,
+  type CvLanguageLevel,
   type CvTone,
   type GeneratedCv,
 } from "@/lib/cv-types";
@@ -67,6 +70,9 @@ const PAGE_HEIGHT = 1123;
 
 /** A link row is just the URL the candidate typed; the CV names it by host. */
 type ProfileLink = string;
+
+/** A language the candidate speaks, and how well they will claim to speak it. */
+type SpokenLanguage = { name: string; level: CvLanguageLevel };
 
 /**
  * Example links, used as the placeholder of each row in turn. The first row
@@ -101,6 +107,8 @@ const EMPTY_FORM = {
    * host — see `hostPhoto` in the generate route.
    */
   photoData: "",
+  /** One empty row to start, like the links; the "+" adds the rest. */
+  languages: [{ name: "", level: "fluent" }] as SpokenLanguage[],
   yearsExperience: "",
   workHistory: "",
   education: "",
@@ -154,6 +162,29 @@ function linkRowsFrom(input: Record<string, unknown>): ProfileLink[] {
 
   const capped = rows.slice(0, MAX_CV_LINKS);
   return capped.length ? capped : [""];
+}
+
+/**
+ * The language rows for a stored CV. A CV saved before the section existed has
+ * none, and the form always shows one row rather than an empty box.
+ */
+function languageRowsFrom(input: Record<string, unknown>): SpokenLanguage[] {
+  const rows: SpokenLanguage[] = [];
+
+  if (Array.isArray(input.languages)) {
+    for (const row of input.languages) {
+      const name = typeof (row as SpokenLanguage)?.name === "string" ? (row as SpokenLanguage).name : "";
+      if (!name.trim()) continue;
+      const level = (row as SpokenLanguage)?.level;
+      rows.push({
+        name,
+        level: CV_LANGUAGE_LEVELS.includes(level) ? level : "fluent",
+      });
+    }
+  }
+
+  const capped = rows.slice(0, MAX_CV_LANGUAGES);
+  return capped.length ? capped : [{ name: "", level: "fluent" }];
 }
 
 /** Icons for the hero's trust row, paired with `hero.trust` by position. */
@@ -226,6 +257,7 @@ export default function CvBuilderClient() {
             ...EMPTY_FORM,
             ...data.cv.inputData,
             profileLinks: linkRowsFrom(data.cv.inputData),
+            languages: languageRowsFrom(data.cv.inputData),
           });
           setScoredAgainst(data.cv.inputData.targetJob || "");
         }
@@ -289,6 +321,38 @@ export default function CvBuilderClient() {
 
   /** What the form shows: the picture waiting to be hosted, else the hosted one. */
   const photoPreview = form.photoData || form.photo;
+
+  const setLanguage = useCallback(
+    (index: number, patch: Partial<SpokenLanguage>) =>
+      setForm((prev) => ({
+        ...prev,
+        languages: prev.languages.map((row, i) => (i === index ? { ...row, ...patch } : row)),
+      })),
+    []
+  );
+
+  const addLanguage = useCallback(
+    () =>
+      setForm((prev) =>
+        prev.languages.length >= MAX_CV_LANGUAGES
+          ? prev
+          : { ...prev, languages: [...prev.languages, { name: "", level: "fluent" }] }
+      ),
+    []
+  );
+
+  /** Clearing the last row is a reset, not a removal — the form always shows one. */
+  const removeLanguage = useCallback(
+    (index: number) =>
+      setForm((prev) => {
+        const remaining = prev.languages.filter((_, i) => i !== index);
+        return {
+          ...prev,
+          languages: remaining.length ? remaining : [{ name: "", level: "fluent" }],
+        };
+      }),
+    []
+  );
 
   const setLink = useCallback(
     (index: number, value: string) =>
@@ -823,6 +887,77 @@ export default function CvBuilderClient() {
                     )}
 
                     <p className="text-xs leading-relaxed text-flow-textSoft">{t("sections.linksHint")}</p>
+                  </div>
+
+                  <div className="space-y-4 rounded-2xl border border-flow-border bg-flow-surface p-4">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-flow-textSoft">
+                      {t("sections.languages")}
+                    </p>
+
+                    <div className="space-y-2.5">
+                      {form.languages.map((row, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          {/* Name and level stack on a narrow screen rather than squeezing. */}
+                          <div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center">
+                            <Input
+                              value={row.name}
+                              disabled={isLocked}
+                              aria-label={t("sections.languageName")}
+                              placeholder={t("sections.languagePlaceholder")}
+                              onChange={(e) => setLanguage(index, { name: e.target.value })}
+                              className="h-11 min-w-0 flex-1 rounded-xl border-flow-border bg-flow-surface text-flow-text"
+                            />
+                            <Select
+                              value={row.level}
+                              disabled={isLocked}
+                              onValueChange={(value) =>
+                                setLanguage(index, { level: value as CvLanguageLevel })
+                              }
+                            >
+                              <SelectTrigger
+                                aria-label={t("sections.languageLevel")}
+                                className="h-11 shrink-0 rounded-xl border-flow-border bg-flow-surface text-flow-text sm:w-44"
+                              >
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {CV_LANGUAGE_LEVELS.map((level) => (
+                                  <SelectItem key={level} value={level}>
+                                    {t(`languageLevels.${level}`)}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          {form.languages.length > 1 && (
+                            <button
+                              type="button"
+                              disabled={isLocked}
+                              onClick={() => removeLanguage(index)}
+                              aria-label={t("sections.languageRemove")}
+                              className="inline-flex h-11 w-9 shrink-0 items-center justify-center rounded-xl text-flow-textSoft transition-colors hover:text-red-500"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          )}
+                          {/* The "+" sits on the last row, where the next one will appear. */}
+                          {index === form.languages.length - 1 &&
+                            form.languages.length < MAX_CV_LANGUAGES && (
+                              <button
+                                type="button"
+                                disabled={isLocked}
+                                onClick={addLanguage}
+                                aria-label={t("sections.languageAdd")}
+                                className="inline-flex h-11 w-9 shrink-0 items-center justify-center rounded-xl border border-flow-border text-flow-text transition-colors hover:border-aurora-1/40 hover:text-aurora-1"
+                              >
+                                <Plus className="h-4 w-4" />
+                              </button>
+                            )}
+                        </div>
+                      ))}
+                    </div>
+
+                    <p className="text-xs leading-relaxed text-flow-textSoft">{t("sections.languagesHint")}</p>
                   </div>
                 </>
               )}

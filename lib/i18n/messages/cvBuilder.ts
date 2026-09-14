@@ -53,6 +53,14 @@ export const cvBuilderMessages = defineMessages({
       photoTooLarge: "That photo is too large. Try a smaller image.",
       photoHint:
         "A headshot is expected on a CV in much of Europe, Asia and Latin America, and screened out before a human sees it in the UK, the US and Canada. Leave it empty if you are applying there.",
+      languages: "Languages (optional)",
+      languageName: "Language",
+      languageLevel: "Level",
+      languageAdd: "Add another language",
+      languageRemove: "Remove this language",
+      languagePlaceholder: "English",
+      languagesHint:
+        "Your level goes into the CV exactly as you set it here — we never round it up to suit the advert.",
       linkLabel: "Link",
       linkAdd: "Add another link",
       linkRemove: "Remove this link",
@@ -87,6 +95,13 @@ export const cvBuilderMessages = defineMessages({
       },
       tone: { label: "Tone" },
       language: { label: "CV language" },
+    },
+    languageLevels: {
+      native: "Native",
+      fluent: "Fluent",
+      professional: "Professional working",
+      intermediate: "Intermediate",
+      basic: "Basic",
     },
     linkPlaceholders: {
       linkedin: "linkedin.com/in/alexmorgan",
@@ -490,6 +505,14 @@ export const cvBuilderMessages = defineMessages({
       photoTooLarge: "Cette photo est trop lourde. Essayez une image plus petite.",
       photoHint:
         "La photo est attendue sur un CV dans une grande partie de l'Europe, de l'Asie et de l'Amérique latine, mais elle est écartée avant tout regard humain au Royaume-Uni, aux États-Unis et au Canada. Laissez le champ vide si vous postulez là-bas.",
+      languages: "Langues (facultatif)",
+      languageName: "Langue",
+      languageLevel: "Niveau",
+      languageAdd: "Ajouter une autre langue",
+      languageRemove: "Retirer cette langue",
+      languagePlaceholder: "Français",
+      languagesHint:
+        "Votre niveau figure dans le CV tel que vous l'indiquez ici : nous ne l'arrondissons jamais pour coller à l'annonce.",
       linkLabel: "Lien",
       linkAdd: "Ajouter un autre lien",
       linkRemove: "Supprimer ce lien",
@@ -524,6 +547,13 @@ export const cvBuilderMessages = defineMessages({
       },
       tone: { label: "Ton" },
       language: { label: "Langue du CV" },
+    },
+    languageLevels: {
+      native: "Langue maternelle",
+      fluent: "Courant",
+      professional: "Usage professionnel",
+      intermediate: "Intermédiaire",
+      basic: "Notions",
     },
     linkPlaceholders: {
       linkedin: "linkedin.com/in/alexmorgan",
@@ -930,6 +960,14 @@ export const cvBuilderMessages = defineMessages({
       photoTooLarge: "Dieses Foto ist zu groß. Bitte ein kleineres Bild wählen.",
       photoHint:
         "In weiten Teilen Europas, Asiens und Lateinamerikas gehört ein Foto zum Lebenslauf; in Großbritannien, den USA und Kanada wird es aussortiert, bevor ein Mensch den Lebenslauf sieht. Lassen Sie das Feld leer, wenn Sie sich dort bewerben.",
+      languages: "Sprachen (optional)",
+      languageName: "Sprache",
+      languageLevel: "Niveau",
+      languageAdd: "Weitere Sprache hinzufügen",
+      languageRemove: "Diese Sprache entfernen",
+      languagePlaceholder: "Deutsch",
+      languagesHint:
+        "Ihr Niveau steht im Lebenslauf genau so, wie Sie es hier angeben — wir runden es nie zugunsten der Ausschreibung auf.",
       linkLabel: "Link",
       linkAdd: "Weiteren Link hinzufügen",
       linkRemove: "Diesen Link entfernen",
@@ -964,6 +1002,13 @@ export const cvBuilderMessages = defineMessages({
       },
       tone: { label: "Tonalität" },
       language: { label: "Sprache des Lebenslaufs" },
+    },
+    languageLevels: {
+      native: "Muttersprache",
+      fluent: "Fließend",
+      professional: "Verhandlungssicher",
+      intermediate: "Mittelstufe",
+      basic: "Grundkenntnisse",
     },
     linkPlaceholders: {
       linkedin: "linkedin.com/in/alexmorgan",
@@ -1370,6 +1415,14 @@ export const cvBuilderMessages = defineMessages({
       photoTooLarge: "Hadhihi As-Sura kabira jiddan. Jarrib suratan asghar.",
       photoHint:
         "As-Sura mutawaqqaa fi As-Sira fi mu'zam Uruba wa Asiya wa Amrika Al-Latiniya, lakinnaha tustab'ad qabla an yaraha insan fi Britaniya wa Amrika wa Kanada. Utruk hadha Al-Haql farighan idha kunta tuqaddim hunak.",
+      languages: "Al-Lughat (ikhtiyari)",
+      languageName: "Al-Lugha",
+      languageLevel: "Al-Mustawa",
+      languageAdd: "Adif lughatan ukhra",
+      languageRemove: "Ihdhif hadhihi Al-Lugha",
+      languagePlaceholder: "Al-Arabiya",
+      languagesHint:
+        "Mustawak yazhar fi As-Sira kama haddadtahu huna bi-l-dabt — la narfa'uhu abadan li-yunasib Al-I'lan.",
       linkLabel: "Rabit",
       linkAdd: "Adif rabitan akhar",
       linkRemove: "Ihdhif hadha Al-Rabit",
@@ -1404,6 +1457,13 @@ export const cvBuilderMessages = defineMessages({
       },
       tone: { label: "Al-Uslub" },
       language: { label: "Lughat Al-Sira Al-Dhatiyya" },
+    },
+    languageLevels: {
+      native: "Lugha Umm",
+      fluent: "Talaqa",
+      professional: "Mustawa Mihani",
+      intermediate: "Mutawassit",
+      basic: "Mubtadi",
     },
     linkPlaceholders: {
       linkedin: "linkedin.com/in/alexmorgan",
@@ -1809,6 +1869,14 @@ export const cvBuilderMessages = defineMessages({
       photoTooLarge: "ছবিটি অনেক বড়। ছোট একটি ছবি দিন।",
       photoHint:
         "ইউরোপ, এশিয়া ও লাতিন আমেরিকার বেশির ভাগ জায়গায় সিভিতে ছবি থাকাটাই স্বাভাবিক; যুক্তরাজ্য, যুক্তরাষ্ট্র আর কানাডায় মানুষের চোখে পড়ার আগেই সেটি বাদ পড়ে যায়। ওসব দেশে আবেদন করলে ঘরটি খালি রাখুন।",
+      languages: "ভাষা (ঐচ্ছিক)",
+      languageName: "ভাষা",
+      languageLevel: "দক্ষতার স্তর",
+      languageAdd: "আরেকটি ভাষা যোগ করুন",
+      languageRemove: "এই ভাষাটি সরান",
+      languagePlaceholder: "বাংলা",
+      languagesHint:
+        "আপনি এখানে যে স্তর দেবেন, সিভিতে ঠিক সেটিই যাবে — বিজ্ঞাপনের সঙ্গে মেলাতে আমরা কখনো বাড়িয়ে লিখি না।",
       linkLabel: "লিংক",
       linkAdd: "আরেকটি লিংক যোগ করুন",
       linkRemove: "এই লিংকটি সরান",
@@ -1843,6 +1911,13 @@ export const cvBuilderMessages = defineMessages({
       },
       tone: { label: "ধরন" },
       language: { label: "সিভির ভাষা" },
+    },
+    languageLevels: {
+      native: "মাতৃভাষা",
+      fluent: "সাবলীল",
+      professional: "পেশাগত দক্ষতা",
+      intermediate: "মাধ্যমিক",
+      basic: "প্রাথমিক",
     },
     linkPlaceholders: {
       linkedin: "linkedin.com/in/alexmorgan",

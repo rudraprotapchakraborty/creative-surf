@@ -5,6 +5,7 @@ import { getAuth } from "@/lib/auth";
 import { saveCv } from "@/lib/cv-db";
 import { CV_JSON_SCHEMA, cvInputSchema, type CvInput, type GeneratedCv } from "@/lib/cv-types";
 import { buildContactLinks } from "@/lib/cv-links";
+import { buildLanguageList } from "@/lib/cv-languages";
 import { isUploadableImage, uploadToImgbb } from "@/lib/imgbb";
 import { gradeCoverage } from "@/lib/cv-coverage";
 
@@ -65,7 +66,7 @@ Rules:
 - Leave a field as an empty string, and a section as an empty array, when the candidate supplied nothing for it. An empty section is better than a padded one.
 - When a target job description is supplied, mirror its vocabulary and prioritise the candidate's genuinely relevant experience — reordering and emphasis only, never fabrication.
 - Write the entire CV in the requested output language, including section-level wording. Keep proper nouns (names, employers, schools, technologies) in their original form.
-- Leave contact.links as an empty array. The candidate's own URLs are attached after you finish, exactly as they typed them.`;
+- Leave contact.links and languages as empty arrays. The candidate's own URLs and spoken languages are attached after you finish, exactly as they gave them.`;
 
 /**
  * The candidate's links as one readable list. The model never writes these out
@@ -97,6 +98,7 @@ ${field("Years of experience", input.yearsExperience)}
 ${field("Work history", input.workHistory)}
 ${field("Education", input.education)}
 ${field("Skills", input.skills)}
+${field("Spoken languages", buildLanguageList(input).join("\n"))}
 ${field("Target job description to tailor towards", input.targetJob)}`;
 }
 
@@ -180,6 +182,8 @@ export async function POST(request: NextRequest) {
       ...raw,
       // The photo is a URL too, and the model has no business restating it.
       photoUrl,
+      // A proficiency is a claim to defend in an interview, not a thing to tailor.
+      languages: buildLanguageList(input),
       contact: {
         email: raw.contact?.email ?? "",
         phone: raw.contact?.phone ?? "",
