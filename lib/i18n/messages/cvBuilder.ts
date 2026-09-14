@@ -6,18 +6,17 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "Turn rough notes into a recruiter-ready CV. Paste the job advert, see which requirements you have covered, and download a free ATS-safe PDF. We never invent employers, dates or numbers.",
     hero: {
-      badge: "Free AI tool",
-      title: "AI CV Builder",
-      titleHighlight: "that never makes things up",
+      badge: "Free · No sign-up",
+      title: "Your real career, written",
+      titleHighlight: "like a recruiter wants it",
       subtitle:
-        "Give us the rough notes of your career and the advert you are chasing. You get a recruiter-ready CV built only from what you actually did, a score against that advert, and a free PDF.",
+        "Paste your rough notes and the job advert. Get a recruiter-ready CV built only from what you actually did — scored against that advert, and yours as a free PDF.",
       ctaPrimary: "Build my CV",
-      ctaSecondary: "See how we compare",
+      ctaSecondary: "See a sample CV",
       trust: [
-        "Free PDF — no export fee",
         "Nothing invented",
+        "Free PDF, no export fee",
         "ATS-safe single column",
-        "6 CV languages",
       ],
     },
     stats: [
@@ -46,8 +45,11 @@ export const cvBuilderMessages = defineMessages({
       tailoring: "Target & tone",
       tailoringHint: "Paste the advert here to unlock the match score.",
       links: "Links (optional)",
+      linkType: "Link type",
+      linkAdd: "Add another link",
+      linkRemove: "Remove this link",
       linksHint:
-        "Add whichever you have. A bare handle is enough for LinkedIn and GitHub — we build the full address. Anything you leave blank is simply left off the CV.",
+        "Pick what a link is, then paste it. A bare handle is enough for LinkedIn and GitHub — we build the full address. Anything else goes under Other and is named after the site it points to.",
     },
     fields: {
       fullName: { label: "Full name", placeholder: "Alex Morgan" },
@@ -55,10 +57,6 @@ export const cvBuilderMessages = defineMessages({
       email: { label: "Email", placeholder: "alex@example.com" },
       phone: { label: "Phone", placeholder: "+44 7700 900123" },
       location: { label: "Location", placeholder: "London, UK" },
-      linkedin: { label: "LinkedIn", placeholder: "linkedin.com/in/alexmorgan" },
-      portfolio: { label: "Portfolio or personal site", placeholder: "alexmorgan.dev" },
-      github: { label: "GitHub", placeholder: "github.com/alexmorgan" },
-      links: { label: "Other links", placeholder: "behance.net/alexmorgan, medium.com/@alex" },
       yearsExperience: { label: "Years of experience", placeholder: "6" },
       workHistory: {
         label: "Work history",
@@ -81,6 +79,18 @@ export const cvBuilderMessages = defineMessages({
       },
       tone: { label: "Tone" },
       language: { label: "CV language" },
+    },
+    linkTypes: {
+      linkedin: "LinkedIn",
+      github: "GitHub",
+      portfolio: "Portfolio",
+      other: "Other",
+    },
+    linkPlaceholders: {
+      linkedin: "linkedin.com/in/alexmorgan",
+      github: "github.com/alexmorgan",
+      portfolio: "alexmorgan.dev",
+      other: "behance.net/alexmorgan",
     },
     tones: {
       professional: "Professional",
@@ -424,18 +434,17 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "Transformez quelques notes en un CV prêt pour les recruteurs. Collez l'annonce, voyez les exigences déjà couvertes et téléchargez un PDF gratuit compatible ATS. Nous n'inventons jamais d'employeur, de date ni de chiffre.",
     hero: {
-      badge: "Outil IA gratuit",
-      title: "Générateur de CV par IA",
-      titleHighlight: "qui n'invente jamais rien",
+      badge: "Gratuit · Sans inscription",
+      title: "Votre vrai parcours, écrit",
+      titleHighlight: "comme un recruteur l'attend",
       subtitle:
-        "Donnez-nous les grandes lignes de votre parcours et l'annonce que vous visez. Vous obtenez un CV prêt pour les recruteurs, construit uniquement sur ce que vous avez réellement fait, un score face à cette annonce et un PDF gratuit.",
+        "Collez vos notes en vrac et l'annonce visée. Vous obtenez un CV prêt pour les recruteurs, bâti uniquement sur ce que vous avez réellement fait — noté face à cette annonce, et à vous en PDF gratuit.",
       ctaPrimary: "Créer mon CV",
-      ctaSecondary: "Voir la comparaison",
+      ctaSecondary: "Voir un exemple de CV",
       trust: [
-        "PDF gratuit — sans frais d'export",
         "Rien d'inventé",
+        "PDF gratuit, sans frais d'export",
         "Colonne unique, compatible ATS",
-        "6 langues de CV",
       ],
     },
     stats: [
@@ -464,8 +473,11 @@ export const cvBuilderMessages = defineMessages({
       tailoring: "Cible et ton",
       tailoringHint: "Collez l'annonce ici pour débloquer le score de correspondance.",
       links: "Liens (facultatif)",
+      linkType: "Type de lien",
+      linkAdd: "Ajouter un autre lien",
+      linkRemove: "Supprimer ce lien",
       linksHint:
-        "Ajoutez ceux que vous avez. Un simple identifiant suffit pour LinkedIn et GitHub — nous construisons l'adresse complète. Ce que vous laissez vide n'apparaît tout simplement pas sur le CV.",
+        "Choisissez la nature du lien, puis collez-le. Un simple identifiant suffit pour LinkedIn et GitHub — nous construisons l'adresse complète. Tout le reste passe par Autre et prend le nom du site visé.",
     },
     fields: {
       fullName: { label: "Nom complet", placeholder: "Alex Morgan" },
@@ -473,10 +485,6 @@ export const cvBuilderMessages = defineMessages({
       email: { label: "E-mail", placeholder: "alex@example.com" },
       phone: { label: "Téléphone", placeholder: "+33 6 12 34 56 78" },
       location: { label: "Localisation", placeholder: "Paris, France" },
-      linkedin: { label: "LinkedIn", placeholder: "linkedin.com/in/alexmorgan" },
-      portfolio: { label: "Portfolio ou site personnel", placeholder: "alexmorgan.dev" },
-      github: { label: "GitHub", placeholder: "github.com/alexmorgan" },
-      links: { label: "Autres liens", placeholder: "behance.net/alexmorgan, medium.com/@alex" },
       yearsExperience: { label: "Années d'expérience", placeholder: "6" },
       workHistory: {
         label: "Expérience professionnelle",
@@ -499,6 +507,18 @@ export const cvBuilderMessages = defineMessages({
       },
       tone: { label: "Ton" },
       language: { label: "Langue du CV" },
+    },
+    linkTypes: {
+      linkedin: "LinkedIn",
+      github: "GitHub",
+      portfolio: "Portfolio",
+      other: "Autre",
+    },
+    linkPlaceholders: {
+      linkedin: "linkedin.com/in/alexmorgan",
+      github: "github.com/alexmorgan",
+      portfolio: "alexmorgan.dev",
+      other: "behance.net/alexmorgan",
     },
     tones: {
       professional: "Professionnel",
@@ -845,18 +865,17 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "Aus Stichpunkten wird ein Lebenslauf, den Recruiter lesen wollen. Stellenanzeige einfügen, offene Anforderungen sehen und ein kostenloses ATS-sicheres PDF laden. Wir erfinden keine Arbeitgeber, Daten oder Zahlen.",
     hero: {
-      badge: "Kostenloses KI-Tool",
-      title: "KI-Lebenslauf-Generator",
-      titleHighlight: "der nichts erfindet",
+      badge: "Kostenlos · Ohne Anmeldung",
+      title: "Ihr echter Werdegang, geschrieben",
+      titleHighlight: "wie Recruiter ihn lesen wollen",
       subtitle:
-        "Nennen Sie uns die Eckdaten Ihres Werdegangs und die Stelle, die Sie anstreben. Sie bekommen einen Lebenslauf, der nur auf Ihren echten Erfahrungen beruht, eine Bewertung gegen diese Anzeige und ein kostenloses PDF.",
+        "Fügen Sie Ihre groben Notizen und die Stellenanzeige ein. Sie bekommen einen Lebenslauf, der nur auf Ihren echten Erfahrungen beruht — bewertet gegen diese Anzeige, und als kostenloses PDF für Sie.",
       ctaPrimary: "Lebenslauf erstellen",
-      ctaSecondary: "Vergleich ansehen",
+      ctaSecondary: "Beispiel-Lebenslauf ansehen",
       trust: [
-        "Kostenloses PDF — keine Exportgebühr",
         "Nichts erfunden",
+        "Kostenloses PDF, keine Exportgebühr",
         "ATS-sichere Einspaltigkeit",
-        "6 Sprachen",
       ],
     },
     stats: [
@@ -885,8 +904,11 @@ export const cvBuilderMessages = defineMessages({
       tailoring: "Ziel & Tonalität",
       tailoringHint: "Fügen Sie hier die Stellenanzeige ein, um die Trefferquote freizuschalten.",
       links: "Links (optional)",
+      linkType: "Art des Links",
+      linkAdd: "Weiteren Link hinzufügen",
+      linkRemove: "Diesen Link entfernen",
       linksHint:
-        "Ergänzen Sie, was Sie haben. Für LinkedIn und GitHub genügt der reine Benutzername — die vollständige Adresse bauen wir. Was Sie leer lassen, erscheint einfach nicht im Lebenslauf.",
+        "Wählen Sie die Art des Links und fügen Sie ihn ein. Für LinkedIn und GitHub genügt der reine Benutzername — die vollständige Adresse bauen wir. Alles Übrige läuft unter Sonstiges und wird nach der Website benannt, auf die es zeigt.",
     },
     fields: {
       fullName: { label: "Vollständiger Name", placeholder: "Alex Morgan" },
@@ -894,10 +916,6 @@ export const cvBuilderMessages = defineMessages({
       email: { label: "E-Mail", placeholder: "alex@example.com" },
       phone: { label: "Telefon", placeholder: "+49 151 23456789" },
       location: { label: "Standort", placeholder: "Berlin, Deutschland" },
-      linkedin: { label: "LinkedIn", placeholder: "linkedin.com/in/alexmorgan" },
-      portfolio: { label: "Portfolio oder eigene Website", placeholder: "alexmorgan.dev" },
-      github: { label: "GitHub", placeholder: "github.com/alexmorgan" },
-      links: { label: "Weitere Links", placeholder: "behance.net/alexmorgan, medium.com/@alex" },
       yearsExperience: { label: "Berufsjahre", placeholder: "6" },
       workHistory: {
         label: "Berufserfahrung",
@@ -920,6 +938,18 @@ export const cvBuilderMessages = defineMessages({
       },
       tone: { label: "Tonalität" },
       language: { label: "Sprache des Lebenslaufs" },
+    },
+    linkTypes: {
+      linkedin: "LinkedIn",
+      github: "GitHub",
+      portfolio: "Portfolio",
+      other: "Sonstiges",
+    },
+    linkPlaceholders: {
+      linkedin: "linkedin.com/in/alexmorgan",
+      github: "github.com/alexmorgan",
+      portfolio: "alexmorgan.dev",
+      other: "behance.net/alexmorgan",
     },
     tones: {
       professional: "Professionell",
@@ -1266,18 +1296,17 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "Hawwil mulahazatik ila Sira Dhatiyya jahiza lil-Muwazzifin. Alsiq ilan Al-Wazifa, shahid ayy Al-Mutatallabat ghattaytaha, wa hammil PDF majjani mutawafiq ma anzimat Al-Farz. La nakhtali arbab amal aw tawarikh aw arqam.",
     hero: {
-      badge: "Adat Zaka Istinai Majjaniyya",
-      title: "Munshi Al-Sira Al-Dhatiyya bil-Zaka Al-Istinai",
-      titleHighlight: "alladhi la yakhtali shayan",
+      badge: "Majjani · Bidun Tasjil",
+      title: "Masirak Al-Haqiqi, maktub",
+      titleHighlight: "kama yuriduhu Al-Muwazzif",
       subtitle:
-        "Atina Al-Khutut Al-Aridha li-Masirak Al-Mihani wal-Ilan Al-Ladhi tastahdifuhu. Satahsul ala Sira Dhatiyya mabniyya faqat ala ma faaltahu haqqan, ma darajat mutabaqa ma dhalika Al-Ilan, wa PDF majjani.",
+        "Alsiq mulahazatik Al-Aridha wa-Ilan Al-Wazifa. Satahsul ala Sira Dhatiyya jahiza lil-Muwazzifin mabniyya faqat ala ma faaltahu haqqan — bi-darajat mutabaqa ma dhalika Al-Ilan, wa laka ka-PDF majjani.",
       ctaPrimary: "Anshi Siratee",
-      ctaSecondary: "Shahid Al-Muqarana",
+      ctaSecondary: "Shahid Namudhaj Sira",
       trust: [
-        "PDF majjani — bidun rusum tasdir",
         "La shay makhtalaq",
+        "PDF majjani, bidun rusum tasdir",
         "Amud wahid mutawafiq ma Al-Farz",
-        "6 lughat lil-Sira",
       ],
     },
     stats: [
@@ -1305,9 +1334,12 @@ export const cvBuilderMessages = defineMessages({
       backgroundHint: "Al-Jumal Al-Naqisa wal-Akhta Al-Imlaiyya la tudirr. Al-Tafsil ahamm min Al-Sayagha.",
       tailoring: "Al-Hadaf wal-Uslub",
       tailoringHint: "Alsiq Al-Ilan huna li-fath darajat Al-Mutabaqa.",
-      links: "Al-Rawabit (ikhtiyari)",
+      links: "Rawabit (ikhtiyari)",
+      linkType: "Naw Al-Rabit",
+      linkAdd: "Adif rabitan akhar",
+      linkRemove: "Ihdhif hadha Al-Rabit",
       linksHint:
-        "Adif ma ladayka minha. Yakfi ism Al-Mustakhdim faqat li-LinkedIn wa GitHub — nahnu nabni Al-Unwan Al-Kamil. Ma tatrukuhu farighan la yazhar fi Al-Sira aslan.",
+        "Ikhtar naw Al-Rabit thumma alsiqhu. Yakfi Al-Ism Al-Mustaar faqat li-LinkedIn wa GitHub — nahnu nabni Al-Unwan Al-Kamil. Wa kull ma siwa dhalika yandaraj tahta Ukhra wa yusamma bi-ism Al-Mawqi Al-Ladhi yushir ilayh.",
     },
     fields: {
       fullName: { label: "Al-Ism Al-Kamil", placeholder: "Alex Morgan" },
@@ -1315,10 +1347,6 @@ export const cvBuilderMessages = defineMessages({
       email: { label: "Al-Barid Al-Iliktruni", placeholder: "alex@example.com" },
       phone: { label: "Raqm Al-Hatif", placeholder: "+971 50 123 4567" },
       location: { label: "Al-Mawqi", placeholder: "Dubai, Al-Imarat" },
-      linkedin: { label: "LinkedIn", placeholder: "linkedin.com/in/alexmorgan" },
-      portfolio: { label: "Al-Muallaf aw Al-Mawqi Al-Shakhsi", placeholder: "alexmorgan.dev" },
-      github: { label: "GitHub", placeholder: "github.com/alexmorgan" },
-      links: { label: "Rawabit ukhra", placeholder: "behance.net/alexmorgan, medium.com/@alex" },
       yearsExperience: { label: "Sanawat Al-Khibra", placeholder: "6" },
       workHistory: {
         label: "Al-Khibra Al-Amaliyya",
@@ -1341,6 +1369,18 @@ export const cvBuilderMessages = defineMessages({
       },
       tone: { label: "Al-Uslub" },
       language: { label: "Lughat Al-Sira Al-Dhatiyya" },
+    },
+    linkTypes: {
+      linkedin: "LinkedIn",
+      github: "GitHub",
+      portfolio: "Al-Muallaf",
+      other: "Ukhra",
+    },
+    linkPlaceholders: {
+      linkedin: "linkedin.com/in/alexmorgan",
+      github: "github.com/alexmorgan",
+      portfolio: "alexmorgan.dev",
+      other: "behance.net/alexmorgan",
     },
     tones: {
       professional: "Ihtirafi",
@@ -1686,18 +1726,17 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "এলোমেলো নোট থেকে তৈরি করুন রিক্রুটারের উপযোগী সিভি। চাকরির বিজ্ঞপ্তিটি পেস্ট করুন, দেখুন কোন শর্তগুলো আপনি পূরণ করেছেন, আর বিনামূল্যে ATS-উপযোগী পিডিএফ নামান। আমরা কখনও প্রতিষ্ঠান, তারিখ বা সংখ্যা বানিয়ে লিখি না।",
     hero: {
-      badge: "বিনামূল্যের এআই টুল",
-      title: "এআই সিভি বিল্ডার",
-      titleHighlight: "যা কিছুই বানিয়ে লেখে না",
+      badge: "বিনামূল্যে · সাইন-আপ ছাড়াই",
+      title: "আপনার সত্যিকারের ক্যারিয়ার, লেখা",
+      titleHighlight: "যেভাবে রিক্রুটার চায়",
       subtitle:
-        "আপনার ক্যারিয়ারের এলোমেলো নোট আর যে চাকরিটি খুঁজছেন সেটির বিজ্ঞপ্তি দিন। আপনি পাবেন কেবল আপনার সত্যিকারের কাজ দিয়ে গড়া রিক্রুটার-উপযোগী সিভি, সেই বিজ্ঞপ্তির সাথে মিলের স্কোর, আর বিনামূল্যে পিডিএফ।",
+        "আপনার এলোমেলো নোট আর চাকরির বিজ্ঞপ্তিটি পেস্ট করুন। পাবেন কেবল আপনার সত্যিকারের কাজ দিয়ে গড়া রিক্রুটার-উপযোগী সিভি — সেই বিজ্ঞপ্তির সাথে মিলের স্কোরসহ, আর আপনার নিজের বিনামূল্যের পিডিএফ।",
       ctaPrimary: "আমার সিভি বানান",
-      ctaSecondary: "তুলনাটা দেখুন",
+      ctaSecondary: "নমুনা সিভি দেখুন",
       trust: [
-        "বিনামূল্যে পিডিএফ — কোনো ফি নেই",
         "কিছুই বানানো নয়",
+        "বিনামূল্যে পিডিএফ, কোনো এক্সপোর্ট ফি নেই",
         "ATS-উপযোগী এক কলাম",
-        "৬টি সিভি ভাষা",
       ],
     },
     stats: [
@@ -1726,8 +1765,11 @@ export const cvBuilderMessages = defineMessages({
       tailoring: "লক্ষ্য ও ধরন",
       tailoringHint: "মিলের স্কোর দেখতে এখানে চাকরির বিজ্ঞপ্তিটি পেস্ট করুন।",
       links: "লিংক (ঐচ্ছিক)",
+      linkType: "লিংকের ধরন",
+      linkAdd: "আরেকটি লিংক যোগ করুন",
+      linkRemove: "এই লিংকটি সরান",
       linksHint:
-        "যেগুলো আছে দিন। LinkedIn আর GitHub-এর জন্য শুধু ইউজারনেমই যথেষ্ট — পুরো ঠিকানা আমরা বানিয়ে নেব। যা খালি রাখবেন, তা সিভিতে থাকবে না।",
+        "লিংকটি কী ধরনের বেছে নিন, তারপর পেস্ট করুন। লিংকডইন আর গিটহাবের জন্য শুধু ইউজারনেমই যথেষ্ট — পুরো ঠিকানাটা আমরা বানিয়ে নেব। বাকি সবকিছু অন্যান্য-তে যাবে, আর যে সাইটের লিংক সেটির নামেই দেখাবে।",
     },
     fields: {
       fullName: { label: "পুরো নাম", placeholder: "Alex Morgan" },
@@ -1735,10 +1777,6 @@ export const cvBuilderMessages = defineMessages({
       email: { label: "ইমেইল", placeholder: "alex@example.com" },
       phone: { label: "ফোন", placeholder: "+৮৮ ০১৭ ০০০ ০০০০" },
       location: { label: "অবস্থান", placeholder: "ঢাকা, বাংলাদেশ" },
-      linkedin: { label: "LinkedIn", placeholder: "linkedin.com/in/alexmorgan" },
-      portfolio: { label: "পোর্টফোলিও বা নিজের সাইট", placeholder: "alexmorgan.dev" },
-      github: { label: "GitHub", placeholder: "github.com/alexmorgan" },
-      links: { label: "অন্যান্য লিংক", placeholder: "behance.net/alexmorgan, medium.com/@alex" },
       yearsExperience: { label: "অভিজ্ঞতার বছর", placeholder: "৬" },
       workHistory: {
         label: "কাজের অভিজ্ঞতা",
@@ -1761,6 +1799,18 @@ export const cvBuilderMessages = defineMessages({
       },
       tone: { label: "ধরন" },
       language: { label: "সিভির ভাষা" },
+    },
+    linkTypes: {
+      linkedin: "লিংকডইন",
+      github: "গিটহাব",
+      portfolio: "পোর্টফোলিও",
+      other: "অন্যান্য",
+    },
+    linkPlaceholders: {
+      linkedin: "linkedin.com/in/alexmorgan",
+      github: "github.com/alexmorgan",
+      portfolio: "alexmorgan.dev",
+      other: "behance.net/alexmorgan",
     },
     tones: {
       professional: "পেশাদার",

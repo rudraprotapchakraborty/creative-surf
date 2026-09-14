@@ -13,6 +13,17 @@ export type CvTone = (typeof CV_TONES)[number];
 /** Output languages for the generated CV, independent of the site's UI locale. */
 export const CV_LANGUAGES = ["English", "French", "German", "Arabic", "Spanish", "Bengali"] as const;
 
+/**
+ * The kinds of profile a link row can be, in the order the dropdown lists them.
+ * `other` is the catch-all — it takes its name in the CV from the site it
+ * points to, so the list never has to grow a row per website.
+ */
+export const CV_LINK_TYPES = ["linkedin", "github", "portfolio", "other"] as const;
+export type CvLinkType = (typeof CV_LINK_TYPES)[number];
+
+/** How many links a CV header can carry before it stops being scannable. */
+export const MAX_CV_LINKS = 6;
+
 export const cvInputSchema = z.object({
   fullName: z.string().trim().min(2).max(120),
   jobTitle: z.string().trim().min(2).max(160),
@@ -20,14 +31,27 @@ export const cvInputSchema = z.object({
   phone: z.string().trim().max(60).optional().default(""),
   location: z.string().trim().max(160).optional().default(""),
   /**
-   * The three profiles a recruiter actually looks for, each with its own field
-   * so the candidate never has to guess a separator — and so the URL that
-   * reaches the finished CV is the one they typed. All optional.
+   * The candidate's profile links, as many as they add. Each row carries the
+   * kind of profile it is, so a bare handle is never ambiguous and the URL
+   * that reaches the finished CV is the one they typed.
+   */
+  profileLinks: z
+    .array(
+      z.object({
+        type: z.enum(CV_LINK_TYPES).default("linkedin"),
+        value: z.string().trim().max(300).default(""),
+      })
+    )
+    .max(MAX_CV_LINKS)
+    .optional()
+    .default([]),
+  /**
+   * The fixed link fields this form used before the rows above replaced them.
+   * Still parsed so a CV saved back then loads with its links intact.
    */
   linkedin: z.string().trim().max(300).optional().default(""),
   portfolio: z.string().trim().max(300).optional().default(""),
   github: z.string().trim().max(300).optional().default(""),
-  /** Anything else worth linking: Behance, a GitLab mirror, a write-up. */
   links: z.string().trim().max(600).optional().default(""),
   yearsExperience: z.string().trim().max(40).optional().default(""),
   workHistory: z.string().trim().max(6000).optional().default(""),

@@ -66,6 +66,17 @@ Rules:
 - Write the entire CV in the requested output language, including section-level wording. Keep proper nouns (names, employers, schools, technologies) in their original form.
 - Leave contact.links as an empty array. The candidate's own URLs are attached after you finish, exactly as they typed them.`;
 
+/**
+ * The candidate's links as one readable list. The model never writes these out
+ * — `buildContactLinks` does — but it should know they exist, so it does not
+ * try to fill the gap with a line of its own.
+ */
+function describeLinks(input: CvInput): string {
+  return buildContactLinks(input)
+    .map((link) => `${link.label}: ${link.url}`)
+    .join("\n");
+}
+
 function buildUserPrompt(input: CvInput): string {
   const field = (label: string, value: string) =>
     value?.trim() ? `${label}:\n${value.trim()}\n` : `${label}: (not supplied)\n`;
@@ -80,10 +91,7 @@ ${field("Target role / current title", input.jobTitle)}
 ${field("Email", input.email)}
 ${field("Phone", input.phone)}
 ${field("Location", input.location)}
-${field("LinkedIn", input.linkedin)}
-${field("Portfolio / personal site", input.portfolio)}
-${field("GitHub", input.github)}
-${field("Other links", input.links)}
+${field("Profile links", describeLinks(input))}
 ${field("Years of experience", input.yearsExperience)}
 ${field("Work history", input.workHistory)}
 ${field("Education", input.education)}

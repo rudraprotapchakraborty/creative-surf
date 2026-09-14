@@ -4,21 +4,22 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import Link from "next/link";
 import {
   AlertCircle,
+  AlignLeft,
   BadgeCheck,
   Download,
   Eye,
   FileText,
-  Globe2,
   Loader2,
   Lock,
+  Plus,
   RefreshCw,
   ScanLine,
-  ShieldCheck,
   Sparkles,
   Target,
   Trash2,
   TriangleAlert,
   Wand2,
+  X,
   XCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -38,7 +39,16 @@ import { buildCvHtml, printCvDocument } from "@/lib/cv-document";
 import { scoreCvAgainstJob, type CvMatch } from "@/lib/cv-match";
 import { scoreCvForAts } from "@/lib/cv-ats";
 import { CvPreviewModal } from "@/components/account/cv-preview-modal";
-import { CV_LANGUAGES, CV_TONES, type CvCoverage, type CvTone, type GeneratedCv } from "@/lib/cv-types";
+import {
+  CV_LANGUAGES,
+  CV_LINK_TYPES,
+  CV_TONES,
+  MAX_CV_LINKS,
+  type CvCoverage,
+  type CvLinkType,
+  type CvTone,
+  type GeneratedCv,
+} from "@/lib/cv-types";
 import { trackEvent } from "@/lib/analytics";
 import { formatNumber, useT } from "@/lib/i18n";
 import { cvBuilderMessages } from "@/lib/i18n/messages/cvBuilder";
@@ -47,16 +57,16 @@ import { cvBuilderMessages } from "@/lib/i18n/messages/cvBuilder";
 const PAGE_WIDTH = 794;
 const PAGE_HEIGHT = 1123;
 
+type ProfileLink = { type: CvLinkType; value: string };
+
 const EMPTY_FORM = {
   fullName: "",
   jobTitle: "",
   email: "",
   phone: "",
   location: "",
-  linkedin: "",
-  portfolio: "",
-  github: "",
-  links: "",
+  /** One empty row to start: the "+" below it is how the rest appear. */
+  profileLinks: [{ type: "linkedin", value: "" }] as ProfileLink[],
   yearsExperience: "",
   workHistory: "",
   education: "",
@@ -68,17 +78,16 @@ const EMPTY_FORM = {
 
 type FormState = typeof EMPTY_FORM;
 
-/** The free-text fields the completeness meter counts. Tone and language always have a value. */
+/**
+ * The free-text fields the completeness meter counts. Tone and language always
+ * have a value, and the link rows are counted separately as one item.
+ */
 const PROGRESS_FIELDS = [
   "fullName",
   "jobTitle",
   "email",
   "phone",
   "location",
-  "linkedin",
-  "portfolio",
-  "github",
-  "links",
   "yearsExperience",
   "workHistory",
   "education",
@@ -86,8 +95,38 @@ const PROGRESS_FIELDS = [
   "targetJob",
 ] as const;
 
+/**
+ * The link rows for a stored CV. Anything saved before the rows existed kept
+ * its links in four fixed fields, so those are folded back into rows here
+ * rather than quietly disappearing from the form.
+ */
+function linkRowsFrom(input: Record<string, unknown>): ProfileLink[] {
+  const rows: ProfileLink[] = Array.isArray(input.profileLinks)
+    ? (input.profileLinks as ProfileLink[])
+        .filter((row) => row && typeof row.value === "string")
+        .map((row) => ({
+          type: CV_LINK_TYPES.includes(row.type) ? row.type : "linkedin",
+          value: row.value,
+        }))
+    : [];
+
+  for (const type of ["linkedin", "github", "portfolio"] as const) {
+    const legacy = typeof input[type] === "string" ? (input[type] as string).trim() : "";
+    if (legacy) rows.push({ type, value: legacy });
+  }
+  // The old free-text box held whatever didn't fit the three fixed fields,
+  // which is exactly what an "other" row is for.
+  const loose = typeof input.links === "string" ? input.links : "";
+  for (const entry of loose.split(/[\s,;]+/).filter(Boolean)) {
+    rows.push({ type: "other", value: entry });
+  }
+
+  const capped = rows.slice(0, MAX_CV_LINKS);
+  return capped.length ? capped : [{ type: "linkedin", value: "" }];
+}
+
 /** Icons for the hero's trust row, paired with `hero.trust` by position. */
-const TRUST_ICONS = [Download, ShieldCheck, BadgeCheck, Globe2];
+const TRUST_ICONS = [BadgeCheck, Download, AlignLeft];
 
 type SavedCvSummary = { _id: string; title: string; updatedAt: string };
 
@@ -152,7 +191,11 @@ export default function CvBuilderClient() {
         if (data.cv.inputData) {
           // Merged over the empty form: a CV saved before a field existed
           // would otherwise load that field as undefined.
-          setForm({ ...EMPTY_FORM, ...data.cv.inputData });
+          setForm({
+            ...EMPTY_FORM,
+            ...data.cv.inputData,
+            profileLinks: linkRowsFrom(data.cv.inputData),
+          });
           setScoredAgainst(data.cv.inputData.targetJob || "");
         }
         setCoverage((data.cv.coverage as CvCoverage | null) ?? null);
@@ -175,6 +218,40 @@ export default function CvBuilderClient() {
   const set = useCallback(
     <K extends keyof FormState>(key: K, value: FormState[K]) =>
       setForm((prev) => ({ ...prev, [key]: value })),
+    []
+  );
+
+  const setLink = useCallback(
+    (index: number, patch: Partial<ProfileLink>) =>
+      setForm((prev) => ({
+        ...prev,
+        profileLinks: prev.profileLinks.map((link, i) =>
+          i === index ? { ...link, ...patch } : link
+        ),
+      })),
+    []
+  );
+
+  const addLink = useCallback(
+    () =>
+      setForm((prev) =>
+        prev.profileLinks.length >= MAX_CV_LINKS
+          ? prev
+          : { ...prev, profileLinks: [...prev.profileLinks, { type: "linkedin", value: "" }] }
+      ),
+    []
+  );
+
+  /** Clearing the last row is a reset, not a removal — the form always shows one. */
+  const removeLink = useCallback(
+    (index: number) =>
+      setForm((prev) => {
+        const remaining = prev.profileLinks.filter((_, i) => i !== index);
+        return {
+          ...prev,
+          profileLinks: remaining.length ? remaining : [{ type: "linkedin", value: "" }],
+        };
+      }),
     []
   );
 
@@ -244,8 +321,12 @@ export default function CvBuilderClient() {
    */
   const ats = useMemo(() => (cv ? scoreCvForAts(cv) : null), [cv]);
 
-  const filledCount = PROGRESS_FIELDS.filter((key) => form[key].trim()).length;
-  const progress = Math.round((filledCount / PROGRESS_FIELDS.length) * 100);
+  // The link rows count once between them — filling in three is more detail,
+  // but it is not three times the CV.
+  const hasLink = form.profileLinks.some((link) => link.value.trim());
+  const filledCount =
+    PROGRESS_FIELDS.filter((key) => form[key].trim()).length + (hasLink ? 1 : 0);
+  const progress = Math.round((filledCount / (PROGRESS_FIELDS.length + 1)) * 100);
 
   const isLocked = !isAuthenticated && !isAuthChecking;
 
@@ -332,10 +413,6 @@ export default function CvBuilderClient() {
       | "email"
       | "phone"
       | "location"
-      | "linkedin"
-      | "portfolio"
-      | "github"
-      | "links"
       | "yearsExperience",
     type = "text"
   ) => (
@@ -443,7 +520,7 @@ export default function CvBuilderClient() {
             <Reveal delay={0.15}>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <CtaButton href="#builder">{t("hero.ctaPrimary")}</CtaButton>
-                <CtaButton href="#compare" variant="outline" showIcon={false}>
+                <CtaButton href="#honesty" variant="outline" showIcon={false}>
                   {t("hero.ctaSecondary")}
                 </CtaButton>
               </div>
@@ -576,12 +653,66 @@ export default function CvBuilderClient() {
                     <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-flow-textSoft">
                       {t("sections.links")}
                     </p>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      {field("linkedin", "url")}
-                      {field("portfolio", "url")}
-                      {field("github", "url")}
-                      {field("links")}
+
+                    {/* One row to begin with; the button below is how the rest arrive. */}
+                    <div className="space-y-2.5">
+                      {form.profileLinks.map((link, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <Select
+                            value={link.type}
+                            disabled={isLocked}
+                            onValueChange={(value) => setLink(index, { type: value as CvLinkType })}
+                          >
+                            <SelectTrigger
+                              aria-label={t("sections.linkType")}
+                              className="h-11 w-[7.5rem] shrink-0 rounded-xl border-flow-border bg-flow-surface text-flow-text sm:w-36"
+                            >
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {CV_LINK_TYPES.map((type) => (
+                                <SelectItem key={type} value={type}>
+                                  {t(`linkTypes.${type}`)}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <Input
+                            type="url"
+                            value={link.value}
+                            disabled={isLocked}
+                            aria-label={t(`linkTypes.${link.type}`)}
+                            placeholder={t(`linkPlaceholders.${link.type}`)}
+                            onChange={(e) => setLink(index, { value: e.target.value })}
+                            className="h-11 min-w-0 flex-1 rounded-xl border-flow-border bg-flow-surface text-flow-text"
+                          />
+                          {form.profileLinks.length > 1 && (
+                            <button
+                              type="button"
+                              disabled={isLocked}
+                              onClick={() => removeLink(index)}
+                              aria-label={t("sections.linkRemove")}
+                              className="inline-flex h-11 w-9 shrink-0 items-center justify-center rounded-xl text-flow-textSoft transition-colors hover:text-red-500"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          )}
+                        </div>
+                      ))}
                     </div>
+
+                    {form.profileLinks.length < MAX_CV_LINKS && (
+                      <button
+                        type="button"
+                        onClick={addLink}
+                        disabled={isLocked}
+                        className="inline-flex items-center gap-2 rounded-full border border-flow-border px-3.5 py-1.5 text-xs font-semibold text-flow-text transition-colors hover:border-aurora-1/40 hover:text-aurora-1"
+                      >
+                        <Plus className="h-3.5 w-3.5" />
+                        {t("sections.linkAdd")}
+                      </button>
+                    )}
+
                     <p className="text-xs leading-relaxed text-flow-textSoft">{t("sections.linksHint")}</p>
                   </div>
                 </>
