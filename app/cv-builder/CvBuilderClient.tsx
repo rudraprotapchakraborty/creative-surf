@@ -40,11 +40,9 @@ import { scoreCvForAts } from "@/lib/cv-ats";
 import { CvPreviewModal } from "@/components/account/cv-preview-modal";
 import {
   CV_LANGUAGES,
-  CV_LINK_TYPES,
   CV_TONES,
   MAX_CV_LINKS,
   type CvCoverage,
-  type CvLinkType,
   type CvTone,
   type GeneratedCv,
 } from "@/lib/cv-types";
@@ -56,7 +54,25 @@ import { cvBuilderMessages } from "@/lib/i18n/messages/cvBuilder";
 const PAGE_WIDTH = 794;
 const PAGE_HEIGHT = 1123;
 
-type ProfileLink = { type: CvLinkType; value: string };
+/** A link row is just the URL the candidate typed; the CV names it by host. */
+type ProfileLink = string;
+
+/**
+ * Example links, used as the placeholder of each row in turn. The first row
+ * shows LinkedIn because that is the one recruiters open first.
+ */
+const LINK_PLACEHOLDERS = [
+  "linkedin",
+  "github",
+  "portfolio",
+  "scholar",
+  "orcid",
+  "behance",
+  "researchgate",
+  "kaggle",
+  "leetcode",
+  "medium",
+] as const;
 
 const EMPTY_FORM = {
   fullName: "",
@@ -65,7 +81,7 @@ const EMPTY_FORM = {
   phone: "",
   location: "",
   /** One empty row to start: the "+" below it is how the rest appear. */
-  profileLinks: [{ type: "linkedin", value: "" }] as ProfileLink[],
+  profileLinks: [""] as ProfileLink[],
   yearsExperience: "",
   workHistory: "",
   education: "",
@@ -100,28 +116,25 @@ const PROGRESS_FIELDS = [
  * rather than quietly disappearing from the form.
  */
 function linkRowsFrom(input: Record<string, unknown>): ProfileLink[] {
-  const rows: ProfileLink[] = Array.isArray(input.profileLinks)
-    ? (input.profileLinks as ProfileLink[])
-        .filter((row) => row && typeof row.value === "string")
-        .map((row) => ({
-          type: CV_LINK_TYPES.includes(row.type) ? row.type : "linkedin",
-          value: row.value,
-        }))
-    : [];
+  const rows: ProfileLink[] = [];
 
-  for (const type of ["linkedin", "github", "portfolio"] as const) {
-    const legacy = typeof input[type] === "string" ? (input[type] as string).trim() : "";
-    if (legacy) rows.push({ type, value: legacy });
+  if (Array.isArray(input.profileLinks)) {
+    for (const row of input.profileLinks) {
+      // Rows saved before the form dropped its link-type dropdown are objects.
+      const value = typeof row === "string" ? row : (row as { value?: unknown })?.value;
+      if (typeof value === "string" && value.trim()) rows.push(value);
+    }
   }
-  // The old free-text box held whatever didn't fit the three fixed fields,
-  // which is exactly what an "other" row is for.
+
+  for (const key of ["linkedin", "github", "portfolio"] as const) {
+    const legacy = typeof input[key] === "string" ? (input[key] as string).trim() : "";
+    if (legacy) rows.push(legacy);
+  }
   const loose = typeof input.links === "string" ? input.links : "";
-  for (const entry of loose.split(/[\s,;]+/).filter(Boolean)) {
-    rows.push({ type: "other", value: entry });
-  }
+  for (const entry of loose.split(/[\s,;]+/).filter(Boolean)) rows.push(entry);
 
   const capped = rows.slice(0, MAX_CV_LINKS);
-  return capped.length ? capped : [{ type: "linkedin", value: "" }];
+  return capped.length ? capped : [""];
 }
 
 /** Icons for the hero's trust row, paired with `hero.trust` by position. */
@@ -221,12 +234,10 @@ export default function CvBuilderClient() {
   );
 
   const setLink = useCallback(
-    (index: number, patch: Partial<ProfileLink>) =>
+    (index: number, value: string) =>
       setForm((prev) => ({
         ...prev,
-        profileLinks: prev.profileLinks.map((link, i) =>
-          i === index ? { ...link, ...patch } : link
-        ),
+        profileLinks: prev.profileLinks.map((link, i) => (i === index ? value : link)),
       })),
     []
   );
@@ -236,7 +247,7 @@ export default function CvBuilderClient() {
       setForm((prev) =>
         prev.profileLinks.length >= MAX_CV_LINKS
           ? prev
-          : { ...prev, profileLinks: [...prev.profileLinks, { type: "linkedin", value: "" }] }
+          : { ...prev, profileLinks: [...prev.profileLinks, ""] }
       ),
     []
   );
@@ -248,7 +259,7 @@ export default function CvBuilderClient() {
         const remaining = prev.profileLinks.filter((_, i) => i !== index);
         return {
           ...prev,
-          profileLinks: remaining.length ? remaining : [{ type: "linkedin", value: "" }],
+          profileLinks: remaining.length ? remaining : [""],
         };
       }),
     []
@@ -322,7 +333,7 @@ export default function CvBuilderClient() {
 
   // The link rows count once between them — filling in three is more detail,
   // but it is not three times the CV.
-  const hasLink = form.profileLinks.some((link) => link.value.trim());
+  const hasLink = form.profileLinks.some((link) => link.trim());
   const filledCount =
     PROGRESS_FIELDS.filter((key) => form[key].trim()).length + (hasLink ? 1 : 0);
   const progress = Math.round((filledCount / (PROGRESS_FIELDS.length + 1)) * 100);
@@ -654,32 +665,17 @@ export default function CvBuilderClient() {
                     <div className="space-y-2.5">
                       {form.profileLinks.map((link, index) => (
                         <div key={index} className="flex items-center gap-2">
-                          <Select
-                            value={link.type}
-                            disabled={isLocked}
-                            onValueChange={(value) => setLink(index, { type: value as CvLinkType })}
-                          >
-                            <SelectTrigger
-                              aria-label={t("sections.linkType")}
-                              className="h-11 w-[8.5rem] shrink-0 rounded-xl border-flow-border bg-flow-surface text-flow-text sm:w-44"
-                            >
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {CV_LINK_TYPES.map((type) => (
-                                <SelectItem key={type} value={type}>
-                                  {t(`linkTypes.${type}`)}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
                           <Input
                             type="url"
-                            value={link.value}
+                            value={link}
                             disabled={isLocked}
-                            aria-label={t(`linkTypes.${link.type}`)}
-                            placeholder={t(`linkPlaceholders.${link.type}`)}
-                            onChange={(e) => setLink(index, { value: e.target.value })}
+                            aria-label={t("sections.linkLabel")}
+                            placeholder={t(
+                              `linkPlaceholders.${
+                                LINK_PLACEHOLDERS[index % LINK_PLACEHOLDERS.length]
+                              }`
+                            )}
+                            onChange={(e) => setLink(index, e.target.value)}
                             className="h-11 min-w-0 flex-1 rounded-xl border-flow-border bg-flow-surface text-flow-text"
                           />
                           {form.profileLinks.length > 1 && (

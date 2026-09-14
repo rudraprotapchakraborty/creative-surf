@@ -14,9 +14,9 @@ export type CvTone = (typeof CV_TONES)[number];
 export const CV_LANGUAGES = ["English", "French", "German", "Arabic", "Spanish", "Bengali"] as const;
 
 /**
- * The kinds of profile a link row can be, in the order the dropdown lists them.
- * `other` is the catch-all — it takes its name in the CV from the site it
- * points to, so the list never has to grow a row per website.
+ * The kinds of profile a link row used to be, back when each row carried a
+ * dropdown. Rows are plain URLs now — a link is named after the site it points
+ * to — but the list is still read so a CV saved with typed rows keeps them.
  */
 export const CV_LINK_TYPES = [
   "linkedin",
@@ -43,16 +43,20 @@ export const cvInputSchema = z.object({
   phone: z.string().trim().max(60).optional().default(""),
   location: z.string().trim().max(160).optional().default(""),
   /**
-   * The candidate's profile links, as many as they add. Each row carries the
-   * kind of profile it is, so a bare handle is never ambiguous and the URL
-   * that reaches the finished CV is the one they typed.
+   * The candidate's profile links, as many as they add — one URL per row, in
+   * their own order. The URL that reaches the finished CV is the one they
+   * typed. Older CVs stored each row as a typed object; both shapes are read.
    */
   profileLinks: z
     .array(
-      z.object({
-        type: z.enum(CV_LINK_TYPES).default("linkedin"),
-        value: z.string().trim().max(300).default(""),
-      })
+      z.union([
+        z.string().trim().max(300),
+        // A row saved before the dropdown went away.
+        z.object({
+          type: z.enum(CV_LINK_TYPES).default("linkedin"),
+          value: z.string().trim().max(300).default(""),
+        }),
+      ])
     )
     .max(MAX_CV_LINKS)
     .optional()

@@ -11,7 +11,11 @@ import { MAX_CV_LINKS, type CvInput, type CvLink, type CvLinkType } from "./cv-t
  * and the generated version is discarded.
  */
 
-/** Bare handles are common ("alexmorgan"), so the typed rows know their home. */
+/**
+ * Where a bare handle lives, for the typed rows a CV may still carry from when
+ * the form asked what kind of link each row was. Rows typed today are plain
+ * URLs, so nothing here is guessed at on their behalf.
+ */
 const HANDLE_BASES: Partial<Record<CvLinkType, string>> = {
   linkedin: "https://www.linkedin.com/in/",
   github: "https://github.com/",
@@ -24,9 +28,8 @@ const HANDLE_BASES: Partial<Record<CvLinkType, string>> = {
 };
 
 /**
- * How each row type is named in the finished CV header. `other` has no fixed
- * name — it borrows one from its host, so a Behance link reads "Behance"
- * without the dropdown having to offer Behance.
+ * How an old typed row is named in the finished CV header. `other` has no
+ * fixed name — it borrows one from its host, which is what every row does now.
  */
 const TYPE_LABELS: Record<CvLinkType, string | null> = {
   linkedin: "LinkedIn",
@@ -141,6 +144,8 @@ function splitLoose(value: string): string[] {
  *
  * The rows come first; the fixed fields below them are what the form used to
  * offer, and are still read so a CV saved before the change keeps its links.
+ * A row that isn't recognisably a URL is dropped rather than guessed at — a
+ * link a recruiter can't click is worse than one that isn't there.
  */
 export function buildContactLinks(input: Partial<CvInput>): CvLink[] {
   const links: CvLink[] = [];
@@ -155,10 +160,14 @@ export function buildContactLinks(input: Partial<CvInput>): CvLink[] {
   };
 
   for (const row of input.profileLinks ?? []) {
-    if (!row?.value?.trim()) continue;
-    const type = (row.type ?? "linkedin") as CvLinkType;
-    const url = toUrl(row.value, HANDLE_BASES[type]);
-    if (url) add(TYPE_LABELS[type] ?? labelFor(url), url);
+    // A row is a URL the candidate typed; a typed object is one saved back
+    // when the form asked what each link was, and keeps its name and its base.
+    const value = typeof row === "string" ? row : row?.value;
+    if (!value?.trim()) continue;
+    const type = typeof row === "string" ? null : ((row.type ?? "linkedin") as CvLinkType);
+    const url = toUrl(value, type ? HANDLE_BASES[type] : undefined);
+    if (!url) continue;
+    add((type && TYPE_LABELS[type]) || labelFor(url), url);
   }
 
   const legacy: { label: string; value: string; base?: string }[] = [
