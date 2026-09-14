@@ -207,21 +207,40 @@ body {
     pointer-events: none;
   }
 
-  /* Shine sweep on buttons */
+  /*
+   * Shine sweep on buttons.
+   *
+   * The sweep covers the button exactly and travels by moving its gradient,
+   * not by sliding a box out past the edges. That is the whole point of doing
+   * it this way: the older version sat at `left: -100%` and was only invisible
+   * because the button clipped it, so a button that forgot `overflow-hidden`
+   * dragged a viewport-tall white wedge across the page on hover. Nothing here
+   * can leave the button, so no call site has to remember anything — and the
+   * button keeps its focus ring, which clipping would have cut off.
+   */
+  .shine {
+    position: relative;
+  }
   .shine::after {
     content: "";
     position: absolute;
-    top: 0;
-    left: -100%;
-    width: 60%;
-    height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
-    transform: skewX(-20deg);
-    transition: left 0.7s ease;
+    inset: 0;
+    border-radius: inherit;
+    /* Three button-widths wide, so the band is offscreen at either end. */
+    background: linear-gradient(
+      100deg,
+      rgba(255,255,255,0) 35%,
+      rgba(255,255,255,0.3) 50%,
+      rgba(255,255,255,0) 65%
+    );
+    background-size: 300% 100%;
+    /* 100% parks the band off the left edge; 0% carries it off the right. */
+    background-position: 100% 0;
+    transition: background-position 0.7s ease;
     pointer-events: none;
   }
   .shine:hover::after {
-    left: 130%;
+    background-position: 0 0;
   }
 
   .no-scrollbar::-webkit-scrollbar { display: none; }
