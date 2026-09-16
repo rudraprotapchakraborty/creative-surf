@@ -132,13 +132,18 @@ export function buildCvHtml(cv: GeneratedCv, labels: CvDocumentLabels): string {
 <title>${esc(cv.fullName || "Curriculum Vitae")}</title>
 <style>
   /*
-    Zero page margin on purpose. Chrome prints its own header and footer — the
-    date, the document title and the site URL — inside the @page margin, and
-    the only way to be rid of them without asking the visitor to untick a box
-    in the print dialog is to leave no margin for them to sit in. The page's
-    own breathing room comes from .sheet's padding instead.
+    The vertical margin has to come from @page, because that is the only margin
+    that repeats on every sheet. A padded wrapper pads the flow once — top of
+    the first page, bottom of the last — which left every page break inside a
+    two-page CV butted flat against the paper edge.
+
+    It is kept to 12mm and the sides to zero, so .sheet's own padding still
+    sets the measure. The cost is that Chrome will draw its date/title/URL
+    header in a margin this size when "Headers and footers" is ticked in the
+    print dialog; a zero margin used to hide those, at the price of a CV that
+    ran off the edge of page two.
   */
-  @page { size: A4; margin: 0; }
+  @page { size: A4; margin: 12mm 0; }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: #ffffff; }
   body {
@@ -150,8 +155,8 @@ export function buildCvHtml(cv: GeneratedCv, labels: CvDocumentLabels): string {
     print-color-adjust: exact;
   }
   .sheet { max-width: 180mm; margin: 0 auto; padding: 14mm 15mm; }
-  /* Keeps its padding when printing, since @page no longer supplies a margin. */
-  @media print { .sheet { max-width: none; margin: 0; } }
+  /* @page supplies the vertical margin in print, so only the sides remain. */
+  @media print { .sheet { max-width: none; margin: 0; padding: 0 15mm; } }
 
   header {
     border-bottom: 2px solid #0066a2; padding-bottom: 10px; margin-bottom: 18px;
@@ -174,6 +179,13 @@ export function buildCvHtml(cv: GeneratedCv, labels: CvDocumentLabels): string {
     font-size: 9pt; text-transform: uppercase; letter-spacing: 0.11em;
     color: #0066a2; margin: 0 0 8px; padding-bottom: 3px;
     border-bottom: 1px solid #dde3ea; font-weight: 700;
+    /*
+      A section heading may not be the last thing on a page. Without this the
+      break falls between "PROJECTS" and the projects themselves, because the
+      entries below avoid breaking internally and move down as a unit while
+      the heading stays behind.
+    */
+    break-after: avoid; page-break-after: avoid; break-inside: avoid;
   }
   h3 { font-size: 11pt; margin: 0; font-weight: 650; color: #0f1723; }
   .org { font-weight: 550; color: #33404f; }
@@ -189,6 +201,8 @@ export function buildCvHtml(cv: GeneratedCv, labels: CvDocumentLabels): string {
 
   ul { margin: 6px 0 0; padding-left: 16px; }
   li { margin-bottom: 3px; }
+  /* No single dangling line of a bullet or paragraph across a break. */
+  p, li { orphans: 2; widows: 2; }
   ul.plain { list-style: none; padding-left: 0; margin-top: 0; }
   ul.plain li { padding-left: 14px; position: relative; }
   ul.plain li::before { content: "▸"; position: absolute; left: 0; color: #0066a2; }
