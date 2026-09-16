@@ -34,7 +34,7 @@ const HANDLE_BASES: Partial<Record<CvLinkType, string>> = {
 const TYPE_LABELS: Record<CvLinkType, string | null> = {
   linkedin: "LinkedIn",
   github: "GitHub",
-  portfolio: "Personal website",
+  portfolio: "Portfolio",
   scholar: "Google Scholar",
   orcid: "ORCID",
   behance: "Behance",
@@ -128,6 +128,15 @@ function labelFor(url: string): string {
 }
 
 /**
+ * The fixed name a link kind prints under, or "" for a kind that has none.
+ * The form uses it to keep the name of a row saved under one of the kinds the
+ * dropdown no longer offers.
+ */
+export function nameForLinkType(type: CvLinkType): string {
+  return TYPE_LABELS[type] ?? "";
+}
+
+/**
  * What a row will be called if its name is left empty, for whatever the
  * candidate has typed into the URL field so far. The form shows this as the
  * name field's placeholder, so the name the CV would use is visible while
@@ -154,12 +163,12 @@ function splitLoose(value: string): string[] {
 }
 
 /**
- * One link row, whichever of the three shapes it was saved in.
+ * One link row, whichever of the shapes it was saved in.
  *
- * Today a row is a URL and the name the candidate gave it. A bare string is a
- * row saved before the name field existed; an object with `value` is one saved
- * back when the form asked what kind of link each row was, and that row keeps
- * both its name and the base a bare handle hangs off.
+ * Today a row is a URL and the kind picked beside it. A bare string is a row
+ * from before either field existed; an object with `value` is one from the
+ * first dropdown; an object with `url` and no `type` is one from the spell in
+ * between, when the row was named by hand — and that name is still read.
  */
 function readRow(row: NonNullable<CvInput["profileLinks"]>[number]): {
   value: string;
@@ -170,7 +179,11 @@ function readRow(row: NonNullable<CvInput["profileLinks"]>[number]): {
   if ("value" in row) {
     return { value: row.value ?? "", label: "", type: (row.type ?? "linkedin") as CvLinkType };
   }
-  return { value: row.url ?? "", label: (row.label ?? "").trim(), type: null };
+  return {
+    value: row.url ?? "",
+    label: (row.label ?? "").trim(),
+    type: (row.type as CvLinkType | undefined) ?? null,
+  };
 }
 
 /**
@@ -198,9 +211,13 @@ export function buildContactLinks(input: Partial<CvInput>): CvLink[] {
     if (!value.trim()) continue;
     const url = toUrl(value, type ? HANDLE_BASES[type] : undefined);
     if (!url) continue;
-    // The candidate's own name for the row wins over every guess below it:
-    // they know their site is "Design portfolio" and the host does not.
-    add(label || (type && TYPE_LABELS[type]) || labelFor(url), url);
+    /*
+     * The kind picked in the form names the row. "other" has no name of its
+     * own, so it falls through to whatever the candidate typed back when the
+     * name was a free-text field, and failing that to the site's own name —
+     * which is why an "other" row never needs naming to read well.
+     */
+    add((type && TYPE_LABELS[type]) || label || labelFor(url), url);
   }
 
   const legacy: { label: string; value: string; base?: string }[] = [

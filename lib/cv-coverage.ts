@@ -1,7 +1,12 @@
-import Groq from "groq-sdk";
-import { GoogleGenAI } from "@google/genai";
+import Anthropic from "@anthropic-ai/sdk";
 import { cvPlainText } from "./cv-match";
-import { CV_COVERAGE_JSON_SCHEMA, type CvCoverage, type GeneratedCv } from "./cv-types";
+import Groq from "groq-sdk";
+import {
+  CV_COVERAGE_JSON_SCHEMA,
+  type CvCoverage,
+  type CvEffort,
+  type GeneratedCv,
+} from "./cv-types";
 
 /**
  * Model-graded advert coverage.
@@ -10,8 +15,8 @@ import { CV_COVERAGE_JSON_SCHEMA, type CvCoverage, type GeneratedCv } from "./cv
  * while the CV and the advert are in one language. This pass asks a model
  * instead, so a Bengali CV can be graded honestly against an English advert.
  *
- * Server-only: it holds provider keys. It is also strictly best-effort — every
- * failure path returns null so that a CV is never lost to a grading problem.
+ * Server-only: it holds the provider key. It is also strictly best-effort —
+ * every failure path returns null so a CV is never lost to a grading problem.
  */
 
 /** Below this an advert is too thin to grade, matching the local grader. */
@@ -23,8 +28,9 @@ const MAX_TERMS = 24;
 /** A grading pass is a nicety; it must never eat the request's whole budget. */
 const TIMEOUT_MS = 20_000;
 
+/** The same two models the CV itself is written with, chosen the same way. */
+const CLAUDE_MODEL = "claude-sonnet-5";
 const GROQ_MODEL = "openai/gpt-oss-120b";
-const GEMINI_MODEL = "gemini-3.6-flash";
 
 const SYSTEM_PROMPT = `You grade a finished CV against the job advert it was written for.
 
@@ -91,15 +97,20 @@ function sanitize(raw: unknown): CvCoverage | null {
   };
 }
 
-export async function gradeCoverage(cv: GeneratedCv, advert: string): Promise<CvCoverage | null> {
+export async function gradeCoverage(
+  cv: GeneratedCv,
+  advert: string,
+  /** Follows the CV's own setting, so a cheap draft is graded cheaply too. */
+  effort: CvEffort = "high"
+): Promise<CvCoverage | null> {
   const text = (advert ?? "").trim();
   if (text.split(/\s+/).filter(Boolean).length < MIN_ADVERT_WORDS) return null;
 
-  const groqKey = process.env.GROQ_API_KEY?.trim();
-  const geminiKey = (process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY)?.trim();
   const prompt = buildPrompt(cv, text);
 
-  if (groqKey) {
+  if (effort === "low") {
+    const groqKey = process.env.GROQ_API_KEY?.trim();
+    if (!groqKey) return null;
     try {
       const groq = new Groq({ apiKey: groqKey });
       const completion = await withTimeout(
@@ -118,38 +129,44 @@ ${JSON.stringify(CV_COVERAGE_JSON_SCHEMA)}`,
           temperature: 0,
         })
       );
-
       const content = completion.choices[0]?.message?.content;
-      if (content) {
-        const graded = sanitize(JSON.parse(content));
-        if (graded) return graded;
-      }
+      if (content) return sanitize(JSON.parse(content));
     } catch (err) {
-      // One dead provider hands over to the other, exactly as generation does.
-      console.error("Coverage grading with Groq failed, falling back:", err);
+      console.error("Coverage grading with Groq failed:", err);
     }
+    return null;
   }
 
-  if (geminiKey) {
-    try {
-      const ai = new GoogleGenAI({ apiKey: geminiKey });
-      const response = await withTimeout(
-        ai.models.generateContent({
-          model: GEMINI_MODEL,
-          contents: prompt,
-          config: {
-            systemInstruction: SYSTEM_PROMPT,
-            responseMimeType: "application/json",
-            responseSchema: CV_COVERAGE_JSON_SCHEMA as any,
-            temperature: 0,
-          },
-        })
-      );
+  const anthropicKey = process.env.ANTHROPIC_API_KEY?.trim();
+  if (!anthropicKey) return null;
 
-      if (response.text) return sanitize(JSON.parse(response.text));
-    } catch (err) {
-      console.error("Coverage grading with Gemini failed:", err);
+  try {
+    const anthropic = new Anthropic({ apiKey: anthropicKey });
+    const message = await withTimeout(
+      anthropic.messages.create({
+        model: CLAUDE_MODEL,
+        max_tokens: 4096,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: "user", content: prompt }],
+        thinking: { type: "adaptive" },
+        // Low effort against the timeout above: reading an advert for its
+        // requirements is judgement, but it is not a hard problem, and a grade
+        // that arrives after the deadline is worth exactly as much as no grade.
+        output_config: {
+          effort: "low",
+          format: { type: "json_schema", schema: CV_COVERAGE_JSON_SCHEMA },
+        },
+      })
+    );
+
+    if (message.stop_reason !== "refusal") {
+      const content = message.content.find(
+        (block): block is Anthropic.TextBlock => block.type === "text"
+      )?.text;
+      if (content) return sanitize(JSON.parse(content));
     }
+  } catch (err) {
+    console.error("Coverage grading with Claude failed:", err);
   }
 
   // No grade is a supported outcome: the panel says so rather than guessing.

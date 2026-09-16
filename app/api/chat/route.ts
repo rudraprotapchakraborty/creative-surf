@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import Groq from "groq-sdk";
-import { GoogleGenAI } from "@google/genai";
 import { SITE_KNOWLEDGE } from "@/lib/chat-knowledge";
 import { getAuth } from "@/lib/auth";
 import { saveChatTurn } from "@/lib/chat-db";
@@ -10,9 +9,9 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 /**
- * The same model the CV builder uses. Groq retires models on a rolling basis,
- * so when chat starts 404ing, check https://console.groq.com/docs/models and
- * swap the id here and in app/api/cv/generate/route.ts.
+ * Groq retires models on a rolling basis, so when chat starts 404ing, check
+ * https://console.groq.com/docs/models and swap the id here. The CV builder
+ * is on Claude and no longer shares this id.
  */
 const GROQ_MODEL = "openai/gpt-oss-120b";
 
@@ -88,16 +87,6 @@ function parseMessages(raw: unknown): ChatMessage[] | null {
   return messages;
 }
 
-/** Wraps a string as a one-chunk stream, so a non-streaming provider looks the same to the client. */
-function streamText(text: string): ReadableStream<Uint8Array> {
-  return new ReadableStream({
-    start(controller) {
-      controller.enqueue(new TextEncoder().encode(text));
-      controller.close();
-    },
-  });
-}
-
 /** Trims a browser-supplied identifier to something safe to store and display. */
 function safeId(value: unknown, max = 100): string {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
@@ -112,10 +101,9 @@ const STREAM_HEADERS = {
 
 export async function POST(request: NextRequest) {
   const groqKey = process.env.GROQ_API_KEY?.trim();
-  const geminiKey = (process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY)?.trim();
 
-  if (!groqKey && !geminiKey) {
-    console.error("Chat attempted without GROQ_API_KEY or GEMINI_API_KEY set.");
+  if (!groqKey) {
+    console.error("Chat attempted without GROQ_API_KEY set.");
     return NextResponse.json(
       { error: "The assistant is not configured yet. Please set GROQ_API_KEY in .env.local." },
       { status: 503 }
@@ -186,7 +174,7 @@ export async function POST(request: NextRequest) {
     }
   };
 
-  // Provider 1: Groq Cloud, streamed token by token.
+  // Groq Cloud, streamed token by token.
   if (groqKey) {
     try {
       const groq = new Groq({ apiKey: groqKey });
@@ -211,9 +199,9 @@ export async function POST(request: NextRequest) {
               }
             }
           } catch (err) {
-            // The response has already started, so there is no status code left
-            // to change and no handing over to the other provider. The visitor
-            // keeps whatever arrived; the detail goes to the log.
+            // The response has already started, so there is no status code
+            // left to change. The visitor keeps whatever arrived; the detail
+            // goes to the log.
             console.error("Chat stream from Groq broke mid-response:", err);
           } finally {
             // Recorded here rather than after the response so a conversation cut
@@ -227,39 +215,16 @@ export async function POST(request: NextRequest) {
 
       return new Response(stream, { headers: STREAM_HEADERS });
     } catch (err) {
-      // Nothing has been sent yet, so a dead model or an expired key here can
-      // still hand over to Gemini rather than taking the assistant down.
-      console.error("Chat with Groq failed, falling back:", err);
-    }
-  }
-
-  // Provider 2: Google Gemini.
-  if (geminiKey) {
-    try {
-      const ai = new GoogleGenAI({ apiKey: geminiKey });
-      const response = await ai.models.generateContent({
-        model: "gemini-3.6-flash",
-        contents: messages.map((message) => ({
-          role: message.role === "assistant" ? "model" : "user",
-          parts: [{ text: message.content }],
-        })),
-        config: { systemInstruction: system, temperature: 0.5 },
-      });
-
-      const text = response.text;
-      if (!text) throw new Error("Model returned no text output");
-
-      await record(text);
-      return new Response(streamText(text), { headers: STREAM_HEADERS });
-    } catch (err) {
-      console.error("Chat with Gemini failed:", err);
+      // Nothing has been sent yet, so the visitor still gets a clean 502 below
+      // rather than a half-open stream.
+      console.error("Chat with Groq failed:", err);
     }
   }
 
   /**
-   * Both providers are out. As in the CV route, the visitor is told to try
-   * again and nothing more: the underlying messages carry model ids, key names
-   * and provider status codes. The detail is in the server log above.
+   * Groq is out. As in the CV route, the visitor is told to try again and
+   * nothing more: the underlying messages carry model ids, key names and
+   * provider status codes. The detail is in the server log above.
    */
   return NextResponse.json(
     {

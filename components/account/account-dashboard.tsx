@@ -680,7 +680,7 @@ function SavedCvsSection({
 }: {
   cvs: SavedCvDoc[] | null
   isAdmin: boolean
-  /** Whose CVs may be reopened for editing — an admin's reach stops at delete. */
+  /** Whose CVs are the viewer's own, which is what "open" vs "copy" turns on. */
   currentUserId: string
   formatDate: (iso?: string | null) => string
   onDeleted: (id: string) => void
@@ -756,7 +756,13 @@ function SavedCvsSection({
               key={cv._id}
               cv={cv}
               showUserEmail={isAdmin}
-              canEdit={cv.userId === currentUserId}
+              /*
+               * An admin may reopen anyone's CV, not just their own. It opens
+               * as a copy: generating from it saves a new CV under the admin's
+               * account and never writes back to the one on the card.
+               */
+              canEdit={cv.userId === currentUserId || isAdmin}
+              isOwn={cv.userId === currentUserId}
               formatDate={formatDate}
               onView={setPreviewing}
               onDownload={handleDownload}
@@ -783,6 +789,7 @@ function CvThumbnailCard({
   cv,
   showUserEmail,
   canEdit,
+  isOwn,
   formatDate,
   onView,
   onDownload,
@@ -791,8 +798,10 @@ function CvThumbnailCard({
 }: {
   cv: SavedCvDoc
   showUserEmail?: boolean
-  /** False on someone else's CV, so an admin gets view and delete but not edit. */
+  /** Whether this card offers to reopen the CV in the builder at all. */
   canEdit: boolean
+  /** The viewer's own CV. False means reopening it produces a copy, and says so. */
+  isOwn: boolean
   formatDate: (iso?: string | null) => string
   onView: (cv: SavedCvDoc) => void
   onDownload: (cv: SavedCvDoc) => void
@@ -864,7 +873,7 @@ function CvThumbnailCard({
               style={{ background: "rgb(var(--flow-surface))", border: "1px solid var(--flow-border-strong)" }}
             >
               <Pencil size={13} />
-              {t("openCv")}
+              {isOwn ? t("openCv") : t("openCvCopy")}
             </Link>
           )}
           <button

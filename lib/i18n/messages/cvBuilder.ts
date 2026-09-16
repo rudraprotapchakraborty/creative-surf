@@ -6,6 +6,7 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "Turn rough notes into a recruiter-ready CV. Paste the job advert, see which requirements you have covered, and download a free ATS-safe PDF. We never invent employers, dates or numbers.",
     hero: {
+      badge: "Free · No sign-up",
       title: "Your real career, written",
       titleHighlight: "like a recruiter wants it",
       subtitle:
@@ -23,9 +24,9 @@ export const cvBuilderMessages = defineMessages({
       { value: "0", label: "Paywalls between you and your download" },
       { value: "6", label: "Languages your CV can be written in" },
     ],
-    authRequired: {
-      title: "Sign in to build & save your CV",
-      subtitle: "Please log in or create an account to generate professional CVs with AI and save them to your profile.",
+    guestNotice: {
+      title: "You're building without an account",
+      subtitle: "Build and download your CV without signing in — It won't be filed under an account, so you won't be able to reopen it later. A free account keeps your CVs in one place.",
       login: "Log in",
       register: "Create free account",
     },
@@ -62,12 +63,11 @@ export const cvBuilderMessages = defineMessages({
       languagesHint:
         "Your level goes into the CV exactly as you set it here — we never round it up to suit the advert.",
       linkLabel: "Link",
-      linkName: "Name",
-      linkNamePlaceholder: "LinkedIn",
+      linkType: "Type",
       linkAdd: "Add another link",
       linkRemove: "Remove this link",
       linksHint:
-        "Paste a link — LinkedIn, GitHub, Google Scholar, your own site, anything. Each one is named in your CV after the site it points to, so paste the full address rather than just a username. Type your own name beside it to call it something else.",
+        "Paste a link — LinkedIn, GitHub, your own site, anything. Pick what it is from the list beside it. An “Other” link is named in your CV after the site it points to, so paste the full address rather than just a username.",
     },
     fields: {
       fullName: { label: "Full name", placeholder: "Alex Morgan" },
@@ -97,6 +97,7 @@ export const cvBuilderMessages = defineMessages({
       },
       tone: { label: "Tone" },
       language: { label: "CV language" },
+      effort: { label: "Effort" },
     },
     languageLevels: {
       native: "Native",
@@ -104,6 +105,12 @@ export const cvBuilderMessages = defineMessages({
       professional: "Professional",
       intermediate: "Intermediate",
       basic: "Basic",
+    },
+    linkTypes: {
+      linkedin: "LinkedIn",
+      github: "GitHub",
+      portfolio: "Portfolio",
+      other: "Other",
     },
     linkPlaceholders: {
       linkedin: "linkedin.com/in/alexmorgan",
@@ -117,6 +124,10 @@ export const cvBuilderMessages = defineMessages({
       leetcode: "leetcode.com/u/alexmorgan",
       medium: "medium.com/@alexmorgan",
       other: "dribbble.com/alexmorgan",
+    },
+    efforts: {
+      high: "High",
+      low: "Low",
     },
     tones: {
       professional: "Professional",
@@ -460,6 +471,7 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "Transformez quelques notes en un CV prêt pour les recruteurs. Collez l'annonce, voyez les exigences déjà couvertes et téléchargez un PDF gratuit compatible ATS. Nous n'inventons jamais d'employeur, de date ni de chiffre.",
     hero: {
+      badge: "Gratuit · Sans inscription",
       title: "Votre vrai parcours, écrit",
       titleHighlight: "comme un recruteur l'attend",
       subtitle:
@@ -477,9 +489,9 @@ export const cvBuilderMessages = defineMessages({
       { value: "0", label: "Paiement entre vous et votre téléchargement" },
       { value: "6", label: "Langues possibles pour votre CV" },
     ],
-    authRequired: {
-      title: "Connectez-vous pour créer et enregistrer votre CV",
-      subtitle: "Veuillez vous connecter ou créer un compte pour générer votre CV avec l'IA et l'enregistrer dans votre profil.",
+    guestNotice: {
+      title: "Vous créez sans compte",
+      subtitle: "Créez et téléchargez votre CV sans vous connecter — il ne sera rattaché à aucun compte, vous ne pourrez donc pas le rouvrir plus tard. Un compte gratuit garde vos CV au même endroit.",
       login: "Se connecter",
       register: "Créer un compte gratuit",
     },
@@ -516,12 +528,11 @@ export const cvBuilderMessages = defineMessages({
       languagesHint:
         "Votre niveau figure dans le CV tel que vous l'indiquez ici : nous ne l'arrondissons jamais pour coller à l'annonce.",
       linkLabel: "Lien",
-      linkName: "Nom",
-      linkNamePlaceholder: "LinkedIn",
+      linkType: "Type",
       linkAdd: "Ajouter un autre lien",
       linkRemove: "Supprimer ce lien",
       linksHint:
-        "Collez un lien — LinkedIn, GitHub, Google Scholar, votre propre site, peu importe. Chacun prend dans le CV le nom du site visé, alors collez l'adresse complète plutôt qu'un simple identifiant. Saisissez votre propre nom à côté pour l'intituler autrement.",
+        "Collez un lien — LinkedIn, GitHub, votre propre site, peu importe. Choisissez de quoi il s'agit dans la liste à côté. Un lien « Autre » prend dans le CV le nom du site visé, alors collez l'adresse complète plutôt qu'un simple identifiant.",
     },
     fields: {
       fullName: { label: "Nom complet", placeholder: "Alex Morgan" },
@@ -551,6 +562,7 @@ export const cvBuilderMessages = defineMessages({
       },
       tone: { label: "Ton" },
       language: { label: "Langue du CV" },
+      effort: { label: "Effort" },
     },
     languageLevels: {
       native: "Langue maternelle",
@@ -558,6 +570,12 @@ export const cvBuilderMessages = defineMessages({
       professional: "Professionnel",
       intermediate: "Intermédiaire",
       basic: "Notions",
+    },
+    linkTypes: {
+      linkedin: "LinkedIn",
+      github: "GitHub",
+      portfolio: "Portfolio",
+      other: "Autre",
     },
     linkPlaceholders: {
       linkedin: "linkedin.com/in/alexmorgan",
@@ -571,6 +589,10 @@ export const cvBuilderMessages = defineMessages({
       leetcode: "leetcode.com/u/alexmorgan",
       medium: "medium.com/@alexmorgan",
       other: "dribbble.com/alexmorgan",
+    },
+    efforts: {
+      high: "Élevé",
+      low: "Faible",
     },
     tones: {
       professional: "Professionnel",
@@ -917,6 +939,7 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "Aus Stichpunkten wird ein Lebenslauf, den Recruiter lesen wollen. Stellenanzeige einfügen, offene Anforderungen sehen und ein kostenloses ATS-sicheres PDF laden. Wir erfinden keine Arbeitgeber, Daten oder Zahlen.",
     hero: {
+      badge: "Kostenlos · Ohne Anmeldung",
       title: "Ihr echter Werdegang, geschrieben",
       titleHighlight: "wie Recruiter ihn lesen wollen",
       subtitle:
@@ -934,9 +957,9 @@ export const cvBuilderMessages = defineMessages({
       { value: "0", label: "Bezahlschranken vor dem Download" },
       { value: "6", label: "Sprachen für Ihren Lebenslauf" },
     ],
-    authRequired: {
-      title: "Melden Sie sich an, um Ihren Lebenslauf zu erstellen und zu speichern",
-      subtitle: "Bitte melden Sie sich an oder erstellen Sie ein Konto, um Ihren Lebenslauf mit KI zu erstellen.",
+    guestNotice: {
+      title: "Sie erstellen ohne Konto",
+      subtitle: "Erstellen und laden Sie Ihren Lebenslauf ohne Anmeldung herunter — er gehört dann zu keinem Konto, Sie können ihn später also nicht erneut öffnen. Ein kostenloses Konto behält Ihre Lebensläufe an einem Ort.",
       login: "Anmelden",
       register: "Kostenloses Konto erstellen",
     },
@@ -973,12 +996,11 @@ export const cvBuilderMessages = defineMessages({
       languagesHint:
         "Ihr Niveau steht im Lebenslauf genau so, wie Sie es hier angeben — wir runden es nie zugunsten der Ausschreibung auf.",
       linkLabel: "Link",
-      linkName: "Name",
-      linkNamePlaceholder: "LinkedIn",
+      linkType: "Typ",
       linkAdd: "Weiteren Link hinzufügen",
       linkRemove: "Diesen Link entfernen",
       linksHint:
-        "Fügen Sie einen Link ein — LinkedIn, GitHub, Google Scholar, Ihre eigene Website, was immer Sie möchten. Jeder wird im Lebenslauf nach der Website benannt, auf die er zeigt; fügen Sie deshalb die vollständige Adresse ein und nicht nur den Benutzernamen. Möchten Sie einen anderen Namen, tragen Sie ihn daneben ein.",
+        "Fügen Sie einen Link ein — LinkedIn, GitHub, Ihre eigene Website, was immer Sie möchten. Wählen Sie daneben aus, worum es sich handelt. Ein „Andere“-Link wird im Lebenslauf nach der Website benannt, auf die er zeigt — fügen Sie deshalb die vollständige Adresse ein und nicht nur den Benutzernamen.",
     },
     fields: {
       fullName: { label: "Vollständiger Name", placeholder: "Alex Morgan" },
@@ -1008,6 +1030,7 @@ export const cvBuilderMessages = defineMessages({
       },
       tone: { label: "Tonalität" },
       language: { label: "Sprache des Lebenslaufs" },
+      effort: { label: "Aufwand" },
     },
     languageLevels: {
       native: "Muttersprache",
@@ -1015,6 +1038,12 @@ export const cvBuilderMessages = defineMessages({
       professional: "Verhandlungssicher",
       intermediate: "Mittelstufe",
       basic: "Grundkenntnisse",
+    },
+    linkTypes: {
+      linkedin: "LinkedIn",
+      github: "GitHub",
+      portfolio: "Portfolio",
+      other: "Andere",
     },
     linkPlaceholders: {
       linkedin: "linkedin.com/in/alexmorgan",
@@ -1028,6 +1057,10 @@ export const cvBuilderMessages = defineMessages({
       leetcode: "leetcode.com/u/alexmorgan",
       medium: "medium.com/@alexmorgan",
       other: "dribbble.com/alexmorgan",
+    },
+    efforts: {
+      high: "Hoch",
+      low: "Niedrig",
     },
     tones: {
       professional: "Professionell",
@@ -1374,6 +1407,7 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "Hawwil mulahazatik ila Sira Dhatiyya jahiza lil-Muwazzifin. Alsiq ilan Al-Wazifa, shahid ayy Al-Mutatallabat ghattaytaha, wa hammil PDF majjani mutawafiq ma anzimat Al-Farz. La nakhtali arbab amal aw tawarikh aw arqam.",
     hero: {
+      badge: "Majjani · Bidun Tasjil",
       title: "Masirak Al-Haqiqi, maktub",
       titleHighlight: "kama yuriduhu Al-Muwazzif",
       subtitle:
@@ -1391,9 +1425,9 @@ export const cvBuilderMessages = defineMessages({
       { value: "0", label: "Hawajiz dafi bainaka wa bayn Al-Tahmil" },
       { value: "6", label: "Lughat yumkin kitabat Siratik biha" },
     ],
-    authRequired: {
-      title: "Sajjil dukhulak li-insha wa hifz Siratik Al-Dhatiyya",
-      subtitle: "Al-Raja al-dukhul aw insha hisab li-tahmil Siratik wal-wusul ilaiha fi ayy waqt.",
+    guestNotice: {
+      title: "Anta tunshi bidun hisab",
+      subtitle: "Anshi wa hammil Siratik Al-Dhatiyya bidun tasjil dukhul — lan tartabit bi-ayy hisab, fa-lan tastati'a fathaha lahiqan. Al-hisab al-majjani yubqi Siratik fi makan wahid.",
       login: "Tasjil Al-Dukhul",
       register: "Insha hisab majjani",
     },
@@ -1430,12 +1464,11 @@ export const cvBuilderMessages = defineMessages({
       languagesHint:
         "Mustawak yazhar fi As-Sira kama haddadtahu huna bi-l-dabt — la narfa'uhu abadan li-yunasib Al-I'lan.",
       linkLabel: "Rabit",
-      linkName: "Al-Ism",
-      linkNamePlaceholder: "LinkedIn",
+      linkType: "Naw'",
       linkAdd: "Adif rabitan akhar",
       linkRemove: "Ihdhif hadha Al-Rabit",
       linksHint:
-        "Alsiq ayy rabit — LinkedIn aw GitHub aw Google Scholar aw mawqiaka Al-Shakhsi. Kull rabit yusamma fi As-Sira bi-ism Al-Mawqi Al-Ladhi yushir ilayh, fa-alsiq Al-Unwan Al-Kamil la Al-Ism Al-Mustaar faqat. Wa idha aradta isman akhar, uktubhu fi Al-Khana Al-Mujawira.",
+        "Alsiq ayy rabit — LinkedIn aw GitHub aw mawqiaka Al-Shakhsi. Ikhtar nawahu min Al-Qaima Al-Mujawira. Rabit “Ukhra” yusamma fi As-Sira bi-ism Al-Mawqi Al-Ladhi yushir ilayh, fa-alsiq Al-Unwan Al-Kamil la Al-Ism Al-Mustaar faqat.",
     },
     fields: {
       fullName: { label: "Al-Ism Al-Kamil", placeholder: "Alex Morgan" },
@@ -1465,6 +1498,7 @@ export const cvBuilderMessages = defineMessages({
       },
       tone: { label: "Al-Uslub" },
       language: { label: "Lughat Al-Sira Al-Dhatiyya" },
+      effort: { label: "Al-Juhd" },
     },
     languageLevels: {
       native: "Lugha Umm",
@@ -1472,6 +1506,12 @@ export const cvBuilderMessages = defineMessages({
       professional: "Mihani",
       intermediate: "Mutawassit",
       basic: "Mubtadi",
+    },
+    linkTypes: {
+      linkedin: "LinkedIn",
+      github: "GitHub",
+      portfolio: "Portfolio",
+      other: "Ukhra",
     },
     linkPlaceholders: {
       linkedin: "linkedin.com/in/alexmorgan",
@@ -1485,6 +1525,10 @@ export const cvBuilderMessages = defineMessages({
       leetcode: "leetcode.com/u/alexmorgan",
       medium: "medium.com/@alexmorgan",
       other: "dribbble.com/alexmorgan",
+    },
+    efforts: {
+      high: "Ali",
+      low: "Munkhafid",
     },
     tones: {
       professional: "Ihtirafi",
@@ -1830,6 +1874,7 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "এলোমেলো নোট থেকে তৈরি করুন রিক্রুটারের উপযোগী সিভি। চাকরির বিজ্ঞপ্তিটি পেস্ট করুন, দেখুন কোন শর্তগুলো আপনি পূরণ করেছেন, আর বিনামূল্যে ATS-উপযোগী পিডিএফ নামান। আমরা কখনও প্রতিষ্ঠান, তারিখ বা সংখ্যা বানিয়ে লিখি না।",
     hero: {
+      badge: "বিনামূল্যে · সাইন-আপ ছাড়াই",
       title: "আপনার সত্যিকারের ক্যারিয়ার, লেখা",
       titleHighlight: "যেভাবে রিক্রুটার চায়",
       subtitle:
@@ -1847,9 +1892,9 @@ export const cvBuilderMessages = defineMessages({
       { value: "০", label: "ডাউনলোডের পথে কোনো পেওয়াল নেই" },
       { value: "৬", label: "যত ভাষায় আপনার সিভি লেখা যায়" },
     ],
-    authRequired: {
-      title: "সিভি বানাতে ও সংরক্ষণ করতে সাইন ইন করুন",
-      subtitle: "এআই দিয়ে পেশাদার সিভি বানাতে আর প্রোফাইলে সংরক্ষণ করতে লগ ইন করুন বা একটি অ্যাকাউন্ট খুলুন।",
+    guestNotice: {
+      title: "অ্যাকাউন্ট ছাড়াই বানাচ্ছেন",
+      subtitle: "সাইন ইন না করেও সিভি বানাতে ও ডাউনলোড করতে পারবেন — তবে সেটি কোনো অ্যাকাউন্টের সঙ্গে যুক্ত থাকবে না, তাই পরে আর খুলতে পারবেন না। বিনামূল্যে অ্যাকাউন্ট খুললে সব সিভি এক জায়গায় থাকবে।",
       login: "লগ ইন",
       register: "বিনামূল্যে অ্যাকাউন্ট খুলুন",
     },
@@ -1886,12 +1931,11 @@ export const cvBuilderMessages = defineMessages({
       languagesHint:
         "আপনি এখানে যে স্তর দেবেন, সিভিতে ঠিক সেটিই যাবে — বিজ্ঞাপনের সঙ্গে মেলাতে আমরা কখনো বাড়িয়ে লিখি না।",
       linkLabel: "লিংক",
-      linkName: "নাম",
-      linkNamePlaceholder: "LinkedIn",
+      linkType: "ধরন",
       linkAdd: "আরেকটি লিংক যোগ করুন",
       linkRemove: "এই লিংকটি সরান",
       linksHint:
-        "যেকোনো লিংক পেস্ট করুন — লিংকডইন, গিটহাব, গুগল স্কলার, নিজের ওয়েবসাইট, যা-ই হোক। সিভিতে প্রতিটি লিংক যে সাইটের, সেটির নামেই দেখাবে, তাই শুধু ইউজারনেম নয়, পুরো ঠিকানাটা পেস্ট করুন। অন্য নামে দেখাতে চাইলে পাশের ঘরে নিজের নামটি লিখুন।",
+        "যেকোনো লিংক পেস্ট করুন — লিংকডইন, গিটহাব, নিজের ওয়েবসাইট, যা-ই হোক। পাশের তালিকা থেকে সেটি কী বেছে নিন। “অন্যান্য” লিংক সিভিতে যে সাইটের, সেটির নামেই দেখাবে, তাই শুধু ইউজারনেম নয়, পুরো ঠিকানাটা পেস্ট করুন।",
     },
     fields: {
       fullName: { label: "পুরো নাম", placeholder: "Alex Morgan" },
@@ -1921,6 +1965,7 @@ export const cvBuilderMessages = defineMessages({
       },
       tone: { label: "ধরন" },
       language: { label: "সিভির ভাষা" },
+      effort: { label: "এফর্ট" },
     },
     languageLevels: {
       native: "মাতৃভাষা",
@@ -1928,6 +1973,12 @@ export const cvBuilderMessages = defineMessages({
       professional: "পেশাগত",
       intermediate: "মাধ্যমিক",
       basic: "প্রাথমিক",
+    },
+    linkTypes: {
+      linkedin: "LinkedIn",
+      github: "GitHub",
+      portfolio: "পোর্টফোলিও",
+      other: "অন্যান্য",
     },
     linkPlaceholders: {
       linkedin: "linkedin.com/in/alexmorgan",
@@ -1941,6 +1992,10 @@ export const cvBuilderMessages = defineMessages({
       leetcode: "leetcode.com/u/alexmorgan",
       medium: "medium.com/@alexmorgan",
       other: "dribbble.com/alexmorgan",
+    },
+    efforts: {
+      high: "হাই",
+      low: "লো",
     },
     tones: {
       professional: "পেশাদার",

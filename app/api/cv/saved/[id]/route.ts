@@ -19,10 +19,10 @@ export async function GET(
   }
 
   try {
-    // Owner-only, admins included: this is the read that reopens a CV in the
-    // builder, and a CV is its author's document to edit. Admins review the
-    // whole collection through /api/cv/saved and can delete below.
-    const cv = await getCvById(id, auth.sub);
+    // An admin may reopen any CV from the admin list; a member only their own.
+    // Reopening copies into the builder — generating from it saves a new CV to
+    // the caller's own account and leaves this one untouched.
+    const cv = await getCvById(id, auth.sub, isAdmin(auth));
     if (!cv) {
       return NextResponse.json({ error: "CV not found" }, { status: 404 });
     }

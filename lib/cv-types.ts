@@ -10,6 +10,18 @@ import { z } from "zod";
 export const CV_TONES = ["professional", "concise", "impact"] as const;
 export type CvTone = (typeof CV_TONES)[number];
 
+/**
+ * How much the CV is worth spending on.
+ *
+ * "high" writes with Claude, which is the tier the prompt and the schema were
+ * tuned against. "low" writes with Groq, which is faster and far cheaper and
+ * good enough for a draft. It is a provider switch, so it decides the grading
+ * pass too — a low-effort run that quietly billed Claude to grade itself would
+ * not be a low-effort run.
+ */
+export const CV_EFFORTS = ["high", "low"] as const;
+export type CvEffort = (typeof CV_EFFORTS)[number];
+
 /** Output languages for the generated CV, independent of the site's UI locale. */
 export const CV_LANGUAGES = ["English", "French", "German", "Arabic", "Spanish", "Bengali"] as const;
 
@@ -32,6 +44,17 @@ export const CV_LINK_TYPES = [
   "other",
 ] as const;
 export type CvLinkType = (typeof CV_LINK_TYPES)[number];
+
+/**
+ * The kinds a link row may be set to in the form today.
+ *
+ * `CV_LINK_TYPES` stays long because CVs saved when the form offered every one
+ * of them still carry those values and still have to load; this is the short
+ * list a row can be *given*. "other" carries no fixed name — it is named after
+ * the site it points to, which reads well and can never be wrong.
+ */
+export const CV_LINK_TYPE_CHOICES = ["linkedin", "github", "portfolio", "other"] as const;
+export type CvLinkTypeChoice = (typeof CV_LINK_TYPE_CHOICES)[number];
 
 /**
  * How well the candidate speaks a language, from the only five rungs a
@@ -91,7 +114,13 @@ export const cvInputSchema = z.object({
       z.union([
         z.object({
           url: z.string().trim().max(300),
+          /** What the row is, as picked from the dropdown beside the URL. */
+          type: z.enum(CV_LINK_TYPES).optional().default("other"),
           /**
+           * No longer typed in — the dropdown names the row now. It is still
+           * read and still honoured for an "other" row, so a CV saved when the
+           * name was a free-text field keeps the name its author gave it.
+           *
            * Trimmed to length rather than rejected. A name too long is the one
            * thing here that must not fail: the row would fall through to the
            * shape below, which accepts any object at all, and the candidate
@@ -123,6 +152,8 @@ export const cvInputSchema = z.object({
    * US and Canada. Whether to include one is the candidate's call.
    */
   photo: z.string().trim().max(500).optional().default(""),
+  /** Defaulted rather than required, so a CV saved before the choice existed still loads. */
+  effort: z.enum(CV_EFFORTS).optional().default("high"),
   /**
    * A photo chosen but not yet hosted, as a base64 data URL.
    *

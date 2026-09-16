@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import Anthropic from "@anthropic-ai/sdk";
 import Groq from "groq-sdk";
-import { GoogleGenAI } from "@google/genai";
 import { getAuth } from "@/lib/auth";
-import { saveCv } from "@/lib/cv-db";
+import { ANONYMOUS_USER_ID, saveCv } from "@/lib/cv-db";
 import { CV_JSON_SCHEMA, cvInputSchema, type CvInput, type GeneratedCv } from "@/lib/cv-types";
 import { buildContactLinks } from "@/lib/cv-links";
 import { buildLanguageList } from "@/lib/cv-languages";
@@ -39,9 +39,17 @@ function rateLimited(ip: string): boolean {
 }
 
 /**
- * Groq retires models on a rolling basis, and the id is the thing that breaks
- * when they do. Kept here so a swap is one line — check the current list at
- * https://console.groq.com/docs/models when generation starts 404ing.
+ * Sonnet is the tier this job wants: a CV is a long, structured rewrite of
+ * someone's notes rather than a reasoning problem, and the schema does the
+ * work a larger model would otherwise be paid to do. Kept here so a swap is
+ * one line — https://docs.anthropic.com/en/docs/models-overview.
+ */
+const CLAUDE_MODEL = "claude-sonnet-5";
+
+/**
+ * The low-effort writer. Groq retires models on a rolling basis and the id is
+ * the thing that breaks when they do — check https://console.groq.com/docs/models
+ * when a low-effort generation starts 404ing.
  */
 const GROQ_MODEL = "openai/gpt-oss-120b";
 
@@ -103,24 +111,14 @@ ${field("Target job description to tailor towards", input.targetJob)}`;
 }
 
 export async function POST(request: NextRequest) {
+  /*
+   * Signing in is optional here. A visitor who is signed in gets the CV filed
+   * under their account, to reopen and delete at will; a signed-out one gets
+   * exactly the same CV, saved under `ANONYMOUS_USER_ID`, which no account can
+   * later claim. The throttle below is what stands between this endpoint and
+   * its bill, since there is no longer an account to hold anyone to.
+   */
   const auth = getAuth(request);
-  if (!auth) {
-    return NextResponse.json(
-      { error: "You must be signed in to create and save a CV." },
-      { status: 401 }
-    );
-  }
-
-  const groqKey = process.env.GROQ_API_KEY?.trim();
-  const geminiKey = (process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY)?.trim();
-
-  if (!groqKey && !geminiKey) {
-    console.error("CV generation attempted without GROQ_API_KEY or GEMINI_API_KEY set.");
-    return NextResponse.json(
-      { error: "The CV generator is not configured yet. Please set GROQ_API_KEY or GEMINI_API_KEY in .env.local." },
-      { status: 503 }
-    );
-  }
 
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
@@ -146,6 +144,26 @@ export async function POST(request: NextRequest) {
     input = parsed.data;
   } catch {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+  }
+
+  /*
+   * The effort picked in the form chooses the writer outright. There is no
+   * falling back from one to the other: a visitor who asked for the cheap
+   * draft should not be handed a Claude bill because Groq was down, and one
+   * who asked for the good one should not be given a draft without being told.
+   */
+  const lowEffort = input.effort === "low";
+  const anthropicKey = process.env.ANTHROPIC_API_KEY?.trim();
+  const groqKey = process.env.GROQ_API_KEY?.trim();
+  const key = lowEffort ? groqKey : anthropicKey;
+
+  if (!key) {
+    const needed = lowEffort ? "GROQ_API_KEY" : "ANTHROPIC_API_KEY";
+    console.error(`CV generation attempted without ${needed} set.`);
+    return NextResponse.json(
+      { error: `The CV generator is not configured yet. Please set ${needed} in .env.local.` },
+      { status: 503 }
+    );
   }
 
   /**
@@ -199,24 +217,23 @@ export async function POST(request: NextRequest) {
      * as "not graded" in the panel, which beats a keyword score that reads a
      * good CV as 17% purely because the two are in different alphabets.
      */
-    const coverage = await gradeCoverage(cv, input.targetJob);
+    const coverage = await gradeCoverage(cv, input.targetJob, input.effort);
 
     let cvId = "";
     try {
       // The photo is stored as the URL it now lives at; the base64 the browser
       // sent was a carrier for one request and has no business in a document.
       const saved: CvInput = { ...input, photo: photoUrl, photoData: "" };
-      cvId = await saveCv(auth.sub, auth.email || "", saved, cv, coverage);
+      cvId = await saveCv(auth?.sub ?? ANONYMOUS_USER_ID, auth?.email || "", saved, cv, coverage);
     } catch (saveErr) {
       console.error("Failed to auto-save CV to MongoDB:", saveErr);
     }
     return NextResponse.json({ cv, coverage, cvId });
   };
 
-  // Provider 1: Groq Cloud
-  if (groqKey) {
+  if (lowEffort) {
     try {
-      const groq = new Groq({ apiKey: groqKey });
+      const groq = new Groq({ apiKey: key });
       const completion = await groq.chat.completions.create({
         model: GROQ_MODEL,
         response_format: { type: "json_object" },
@@ -237,40 +254,58 @@ ${JSON.stringify(CV_JSON_SCHEMA)}`,
 
       return await respond(JSON.parse(content) as GeneratedCv);
     } catch (err) {
-      // Deliberately not returned: a dead model or an expired key on one
-      // provider should hand over to the other, not take the tool down.
-      console.error("CV generation with Groq failed, falling back:", err);
+      console.error("CV generation with Groq failed:", err);
+      return NextResponse.json(
+        { error: "We couldn't write your CV just now. Please try again in a moment." },
+        { status: 502 }
+      );
     }
   }
 
-  // Provider 2: Google Gemini API
-  if (geminiKey) {
-    try {
-      const ai = new GoogleGenAI({ apiKey: geminiKey });
-      const response = await ai.models.generateContent({
-        model: "gemini-3.6-flash",
-        contents: buildUserPrompt(input),
-        config: {
-          systemInstruction: SYSTEM_PROMPT,
-          responseMimeType: "application/json",
-          responseSchema: CV_JSON_SCHEMA as any,
-        },
-      });
+  try {
+    const anthropic = new Anthropic({ apiKey: key });
+    /*
+     * The schema is enforced by the API rather than by us: a structured output
+     * can only come back in the shape CV_JSON_SCHEMA describes, so the parse
+     * below has no malformed-JSON case to defend against and the renderer has
+     * no missing field to defend against.
+     */
+    const message = await anthropic.messages.create({
+      model: CLAUDE_MODEL,
+      max_tokens: 16000,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: "user", content: buildUserPrompt(input) }],
+      thinking: { type: "adaptive" },
+      // Medium, not the default high: the CV has to come back inside this
+      // route's 60s ceiling, and the thinking this job needs is modest.
+      output_config: {
+        effort: "medium",
+        format: { type: "json_schema", schema: CV_JSON_SCHEMA },
+      },
+    });
 
-      const text = response.text;
-      if (!text) throw new Error("Model returned no text output");
-
-      return await respond(JSON.parse(text) as GeneratedCv);
-    } catch (err) {
-      console.error("CV generation with Gemini failed:", err);
+    if (message.stop_reason === "refusal") {
+      throw new Error("Claude declined to write this CV");
     }
+
+    // Adaptive thinking puts a thinking block ahead of the answer, so the text
+    // block is found by type rather than taken from the front of the list.
+    const text = message.content.find(
+      (block): block is Anthropic.TextBlock => block.type === "text"
+    )?.text;
+    if (!text) throw new Error("Claude returned no text output");
+
+    return await respond(JSON.parse(text) as GeneratedCv);
+  } catch (err) {
+    // Deliberately not returned: the message below is what the candidate sees.
+    console.error("CV generation with Claude failed:", err);
   }
 
   /**
-   * Both providers are out. The candidate is told to try again and nothing
-   * more: the underlying messages carry model ids, key names and provider
-   * status codes, which mean nothing to them and everything to an attacker.
-   * The detail is in the server log above.
+   * Generation is out. The candidate is told to try again and nothing more:
+   * the underlying messages carry model ids, key names and provider status
+   * codes, which mean nothing to them and everything to an attacker. The
+   * detail is in the server log above.
    */
   return NextResponse.json(
     { error: "We couldn't write your CV just now. Please try again in a moment." },

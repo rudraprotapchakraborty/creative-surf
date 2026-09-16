@@ -18,11 +18,12 @@ import {
   Eye,
   FileText,
   ImagePlus,
+  Info,
   Loader2,
-  Lock,
   Plus,
   RefreshCw,
   ScanLine,
+  Sparkles,
   Target,
   Trash2,
   TriangleAlert,
@@ -46,19 +47,24 @@ import CvBuilderSections from "./CvBuilderSections";
 import { buildCvHtml, printCvDocument } from "@/lib/cv-document";
 import { scoreCvAgainstJob, type CvMatch } from "@/lib/cv-match";
 import { scoreCvForAts } from "@/lib/cv-ats";
-import { autoLinkLabel } from "@/lib/cv-links";
+import { nameForLinkType } from "@/lib/cv-links";
 import { CvPreviewModal } from "@/components/account/cv-preview-modal";
 import { compressImageFile } from "@/components/ui/ImageUpload";
 import {
+  CV_EFFORTS,
   CV_LANGUAGES,
   CV_TONES,
   CV_LANGUAGE_LEVELS,
   MAX_CV_LANGUAGES,
   MAX_CV_LINKS,
-  MAX_CV_LINK_LABEL,
   MAX_CV_PHOTO_DATA_URL,
+  CV_LINK_TYPES,
+  CV_LINK_TYPE_CHOICES,
   type CvCoverage,
+  type CvEffort,
   type CvLanguageLevel,
+  type CvLinkType,
+  type CvLinkTypeChoice,
   type CvTone,
   type GeneratedCv,
 } from "@/lib/cv-types";
@@ -75,30 +81,17 @@ const PAGE_HEIGHT = 1123;
  * empty name is the ordinary case — the CV then names the link after the site
  * it points to, which is what the name field's placeholder shows.
  */
-type ProfileLink = { url: string; label: string };
+type ProfileLink = { url: string; label: string; type: CvLinkTypeChoice };
 
 /** A fresh row, and what the form falls back to rather than showing no rows. */
-const EMPTY_LINK: ProfileLink = { url: "", label: "" };
+/*
+ * The first row is a LinkedIn row until told otherwise — it is the link very
+ * nearly every candidate has, and the one a recruiter looks for first.
+ */
+const EMPTY_LINK: ProfileLink = { url: "", label: "", type: "linkedin" };
 
 /** A language the candidate speaks, and how well they will claim to speak it. */
 type SpokenLanguage = { name: string; level: CvLanguageLevel };
-
-/**
- * Example links, used as the placeholder of each row in turn. The first row
- * shows LinkedIn because that is the one recruiters open first.
- */
-const LINK_PLACEHOLDERS = [
-  "linkedin",
-  "github",
-  "portfolio",
-  "scholar",
-  "orcid",
-  "behance",
-  "researchgate",
-  "kaggle",
-  "leetcode",
-  "medium",
-] as const;
 
 const EMPTY_FORM = {
   fullName: "",
@@ -125,6 +118,8 @@ const EMPTY_FORM = {
   targetJob: "",
   tone: "professional" as CvTone,
   language: "English",
+  /** The good writer by default; "low" is the cheap draft. */
+  effort: "high" as CvEffort,
 };
 
 type FormState = typeof EMPTY_FORM;
@@ -154,27 +149,50 @@ const PROGRESS_FIELDS = [
 function linkRowsFrom(input: Record<string, unknown>): ProfileLink[] {
   const rows: ProfileLink[] = [];
 
+  /**
+   * The dropdown value for a kind saved under an older form.
+   *
+   * The four it offers pass through. The seven it no longer offers become
+   * "other" and hand their fixed name to `label`, which is what an "other" row
+   * prints — so a Google Scholar row still reads "Google Scholar" rather than
+   * losing its name to a list it is no longer on.
+   */
+  const asChoice = (type: unknown): { type: CvLinkTypeChoice; label: string } => {
+    const known = CV_LINK_TYPE_CHOICES.find((choice) => choice === type);
+    if (known) return { type: known, label: "" };
+    const legacyName = CV_LINK_TYPES.includes(type as CvLinkType)
+      ? nameForLinkType(type as CvLinkType)
+      : "";
+    return { type: "other", label: legacyName };
+  };
+
   if (Array.isArray(input.profileLinks)) {
     for (const row of input.profileLinks) {
       if (typeof row === "string") {
-        if (row.trim()) rows.push({ url: row, label: "" });
+        if (row.trim()) rows.push({ url: row, label: "", type: "other" });
         continue;
       }
-      // A row carries `url` today; one saved before the form dropped its
+      // A row carries `url` today; one saved before the form dropped its first
       // link-type dropdown carries `value` instead, and no name of its own.
-      const saved = row as { url?: unknown; label?: unknown; value?: unknown };
+      const saved = row as { url?: unknown; label?: unknown; value?: unknown; type?: unknown };
       const url = typeof saved.url === "string" ? saved.url : saved.value;
       if (typeof url !== "string" || !url.trim()) continue;
-      rows.push({ url, label: typeof saved.label === "string" ? saved.label : "" });
+      const { type, label } = asChoice(saved.type);
+      // A name typed by hand, back when the second field was free text, wins
+      // over the one recovered from a legacy kind.
+      const typed = typeof saved.label === "string" ? saved.label : "";
+      rows.push({ url, label: typed || label, type });
     }
   }
 
   for (const key of ["linkedin", "github", "portfolio"] as const) {
     const legacy = typeof input[key] === "string" ? (input[key] as string).trim() : "";
-    if (legacy) rows.push({ url: legacy, label: "" });
+    if (legacy) rows.push({ url: legacy, label: "", type: key });
   }
   const loose = typeof input.links === "string" ? input.links : "";
-  for (const entry of loose.split(/[\s,;]+/).filter(Boolean)) rows.push({ url: entry, label: "" });
+  for (const entry of loose.split(/[\s,;]+/).filter(Boolean)) {
+    rows.push({ url: entry, label: "", type: "other" });
+  }
 
   const capped = rows.slice(0, MAX_CV_LINKS);
   return capped.length ? capped : [EMPTY_LINK];
@@ -206,7 +224,17 @@ function languageRowsFrom(input: Record<string, unknown>): SpokenLanguage[] {
 /** Icons for the hero's trust row, paired with `hero.trust` by position. */
 const TRUST_ICONS = [BadgeCheck, Download, AlignLeft];
 
-type SavedCvSummary = { _id: string; title: string; updatedAt: string };
+type SavedCvSummary = {
+  _id: string;
+  title: string;
+  updatedAt: string;
+  /** The generated CV itself, so the card can show the page rather than name it. */
+  cvData: GeneratedCv;
+};
+
+/** Thumbnail width; the height follows from the A4 ratio the preview uses. */
+const THUMB_WIDTH = 132;
+const THUMB_SCALE = THUMB_WIDTH / PAGE_WIDTH;
 
 /** Where a coverage score stops being a worry and starts being a green light. */
 const STRONG_MATCH = 75;
@@ -248,13 +276,16 @@ export default function CvBuilderClient() {
   }, []);
 
   const refreshSaved = useCallback(() => {
+    // Signed out there is nothing to list: a guest's CV is saved, but it is
+    // filed under no account, so /api/cv/saved would 401 and rightly so.
+    if (!isAuthenticated) return;
     fetch("/api/cv/saved")
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (Array.isArray(data?.cvs)) setSavedCvs(data.cvs as SavedCvSummary[]);
       })
       .catch(() => {});
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (isAuthenticated) refreshSaved();
@@ -383,11 +414,18 @@ export default function CvBuilderClient() {
 
   const addLink = useCallback(
     () =>
-      setForm((prev) =>
-        prev.profileLinks.length >= MAX_CV_LINKS
-          ? prev
-          : { ...prev, profileLinks: [...prev.profileLinks, EMPTY_LINK] }
-      ),
+      setForm((prev) => {
+        if (prev.profileLinks.length >= MAX_CV_LINKS) return prev;
+        /*
+         * A new row opens on the first kind not already used, so the usual
+         * LinkedIn → GitHub → Portfolio run needs no touches of the dropdown
+         * at all. Once they are spent, "other" — which names itself after
+         * whatever is pasted into it.
+         */
+        const used = new Set(prev.profileLinks.map((link) => link.type));
+        const next = CV_LINK_TYPE_CHOICES.find((choice) => !used.has(choice)) ?? "other";
+        return { ...prev, profileLinks: [...prev.profileLinks, { ...EMPTY_LINK, type: next }] };
+      }),
     []
   );
 
@@ -436,6 +474,23 @@ export default function CvBuilderClient() {
   );
 
   /**
+   * The thumbnail strip's documents, built once per list rather than on every
+   * render — each one is a whole HTML page, and there is a card for every CV
+   * the account holds.
+   */
+  const savedHtml = useMemo(
+    () =>
+      new Map(
+        savedCvs
+          // A CV stored without its document would throw here and take the whole
+          // strip with it; that row simply shows an empty page instead.
+          .filter((item) => item.cvData)
+          .map((item) => [item._id, buildCvHtml(item.cvData, cvLabels)])
+      ),
+    [savedCvs, cvLabels]
+  );
+
+  /**
    * Keyword overlap against the advert the CV was written from, so the number
    * can't drift. Null whenever overlap cannot answer the question — most often
    * because the CV and the advert are in different alphabets.
@@ -477,7 +532,12 @@ export default function CvBuilderClient() {
     PROGRESS_FIELDS.filter((key) => form[key].trim()).length + (hasLink ? 1 : 0);
   const progress = Math.round((filledCount / (PROGRESS_FIELDS.length + 1)) * 100);
 
-  const isLocked = !isAuthenticated && !isAuthChecking;
+  /**
+   * Signed out, and we know it — the auth check has come back. Drives an
+   * explanatory notice and nothing else: the builder itself is open to
+   * everyone, and a guest's CV is saved just like anyone else's.
+   */
+  const isGuest = !isAuthenticated && !isAuthChecking;
 
   const validate = (): string | null => {
     if (!form.fullName.trim() || !form.jobTitle.trim() || !form.email.trim()) {
@@ -576,7 +636,6 @@ export default function CvBuilderClient() {
         id={key}
         type={type}
         value={form[key]}
-        disabled={isLocked}
         placeholder={t(`fields.${key}.placeholder`)}
         onChange={(e) => set(key, e.target.value)}
         className="h-11 rounded-xl border-flow-border bg-flow-surface text-flow-text"
@@ -597,7 +656,6 @@ export default function CvBuilderClient() {
         id={key}
         rows={rows}
         value={form[key]}
-        disabled={isLocked}
         placeholder={t(`fields.${key}.placeholder`)}
         onChange={(e) => set(key, e.target.value)}
         className="resize-y rounded-xl border-flow-border bg-flow-surface text-flow-text"
@@ -652,9 +710,12 @@ export default function CvBuilderClient() {
 
         <div className="relative z-10 mx-auto w-[95%] max-w-7xl">
           <div className="max-w-3xl">
+            <Reveal>
+              <Eyebrow icon={Sparkles}>{t("hero.badge")}</Eyebrow>
+            </Reveal>
             <Reveal delay={0.05}>
               <h1
-                className="font-heading font-extrabold leading-[1.08] tracking-tight text-flow-text"
+                className="mt-6 font-heading font-extrabold leading-[1.08] tracking-tight text-flow-text"
                 style={{ fontSize: "clamp(2.25rem, 5vw, 3.75rem)" }}
               >
                 {t("hero.title")}{" "}
@@ -727,40 +788,42 @@ export default function CvBuilderClient() {
         <div className="mt-12 grid gap-8 lg:grid-cols-12">
           {/* FORM ------------------------------------------------------- */}
           <div className="space-y-6 lg:col-span-7">
-            {isLocked && (
-              <div className="rounded-3xl border border-flow-border bg-flow-card p-6 text-center backdrop-blur-md md:p-8">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-aurora-1/30 bg-aurora-soft">
-                  <Lock className="h-6 w-6 text-aurora-1" />
-                </div>
-                <h3 className="mt-5 font-heading text-xl font-bold text-flow-text">
-                  {t("authRequired.title")}
-                </h3>
-                <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-flow-textSoft">
-                  {t("authRequired.subtitle")}
-                </p>
-                <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-                  <Link href="/login?from=/cv-builder">
-                    <Button className="shine rounded-full bg-aurora-grad px-6 font-semibold text-white shadow-aurora">
-                      {t("authRequired.login")}
-                    </Button>
-                  </Link>
-                  <Link href="/register?from=/cv-builder">
-                    <Button
-                      variant="outline"
-                      className="rounded-full border-flow-border font-semibold text-flow-text"
-                    >
-                      {t("authRequired.register")}
-                    </Button>
-                  </Link>
+            {isGuest && (
+              <div className="rounded-2xl border border-flow-border bg-flow-surface p-5">
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-aurora-1/30 bg-aurora-soft">
+                    <Info className="h-4 w-4 text-aurora-1" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-sm font-bold text-flow-text">{t("guestNotice.title")}</h3>
+                    <p className="mt-1 text-xs leading-relaxed text-flow-textSoft">
+                      {t("guestNotice.subtitle")}
+                    </p>
+                    <div className="mt-3 flex flex-wrap items-center gap-2">
+                      <Link href="/login?from=/cv-builder">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="rounded-full border-flow-border text-xs font-semibold text-flow-text"
+                        >
+                          {t("guestNotice.login")}
+                        </Button>
+                      </Link>
+                      <Link href="/register?from=/cv-builder">
+                        <Button
+                          size="sm"
+                          className="shine rounded-full bg-aurora-grad text-xs font-semibold text-white shadow-aurora"
+                        >
+                          {t("guestNotice.register")}
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
 
-            <div
-              className={`space-y-6 transition-all duration-300 ${
-                isLocked ? "pointer-events-none select-none opacity-50 blur-[1px]" : ""
-              }`}
-            >
+            <div className="space-y-6">
               {/* Completeness meter — a nudge towards detail, not a gate. */}
               <div className="rounded-2xl border border-flow-border bg-flow-surface px-5 py-4">
                 <div className="flex items-baseline justify-between gap-4">
@@ -818,7 +881,7 @@ export default function CvBuilderClient() {
                       <div className="flex flex-wrap items-center gap-2">
                         <button
                           type="button"
-                          disabled={isLocked || photoBusy}
+                          disabled={photoBusy}
                           onClick={() => photoInputRef.current?.click()}
                           className="inline-flex items-center gap-2 rounded-xl border border-flow-border px-3 py-2 text-sm font-semibold text-flow-text transition-colors hover:border-flow-accent disabled:opacity-60"
                         >
@@ -832,8 +895,7 @@ export default function CvBuilderClient() {
                         {photoPreview && !photoBusy && (
                           <button
                             type="button"
-                            disabled={isLocked}
-                            onClick={() => {
+                                                onClick={() => {
                               setPhotoError(null);
                               setForm((prev) => ({ ...prev, photo: "", photoData: "" }));
                             }}
@@ -863,53 +925,49 @@ export default function CvBuilderClient() {
                     {/* One row to begin with; the button below is how the rest arrive. */}
                     <div className="space-y-2.5">
                       {form.profileLinks.map((link, index) => {
-                        const example = t(
-                          `linkPlaceholders.${
-                            LINK_PLACEHOLDERS[index % LINK_PLACEHOLDERS.length]
-                          }`
-                        );
                         /*
-                         * Left empty, a link is named after its host — so the name
-                         * field shows exactly what the CV would print: the name for
-                         * the URL typed so far, or failing that the name the example
-                         * beside it would get. Both are the real answer rather than
-                         * a generic label, which is what makes the field read as an
-                         * override rather than another blank to fill in. The last
-                         * fallback covers the one example that isn't a URL.
+                         * The example follows the kind rather than the row's
+                         * position, so a row set to GitHub is shown a GitHub URL.
                          */
-                        const nameHint =
-                          autoLinkLabel(link.url) ||
-                          autoLinkLabel(example) ||
-                          t("sections.linkNamePlaceholder");
+                        const example = t(`linkPlaceholders.${link.type}`);
 
                         return (
                         <div key={index} className="flex items-center gap-2">
-                          {/* URL and name stack on a narrow screen rather than squeezing. */}
+                          {/* URL and kind stack on a narrow screen rather than squeezing. */}
                           <div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center">
                             <Input
                               type="url"
                               value={link.url}
-                              disabled={isLocked}
-                              aria-label={t("sections.linkLabel")}
+                                                    aria-label={t("sections.linkLabel")}
                               placeholder={example}
                               onChange={(e) => setLink(index, { url: e.target.value })}
                               className="h-11 min-w-0 flex-1 rounded-xl border-flow-border bg-flow-surface text-flow-text"
                             />
-                            <Input
-                              value={link.label}
-                              disabled={isLocked}
-                              maxLength={MAX_CV_LINK_LABEL}
-                              aria-label={t("sections.linkName")}
-                              placeholder={nameHint}
-                              onChange={(e) => setLink(index, { label: e.target.value })}
-                              className="h-11 min-w-0 rounded-xl border-flow-border bg-flow-surface text-flow-text sm:w-44"
-                            />
+                            <Select
+                              value={link.type}
+                              onValueChange={(value) =>
+                                setLink(index, { type: value as CvLinkTypeChoice })
+                              }
+                            >
+                              <SelectTrigger
+                                aria-label={t("sections.linkType")}
+                                className="h-11 shrink-0 rounded-xl border-flow-border bg-flow-surface text-flow-text sm:w-44"
+                              >
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {CV_LINK_TYPE_CHOICES.map((choice) => (
+                                  <SelectItem key={choice} value={choice}>
+                                    {t(`linkTypes.${choice}`)}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </div>
                           {form.profileLinks.length > 1 && (
                             <button
                               type="button"
-                              disabled={isLocked}
-                              onClick={() => removeLink(index)}
+                                                    onClick={() => removeLink(index)}
                               aria-label={t("sections.linkRemove")}
                               className="inline-flex h-11 w-9 shrink-0 items-center justify-center rounded-xl text-flow-textSoft transition-colors hover:text-red-500"
                             >
@@ -925,8 +983,7 @@ export default function CvBuilderClient() {
                       <button
                         type="button"
                         onClick={addLink}
-                        disabled={isLocked}
-                        className="inline-flex items-center gap-2 rounded-full border border-flow-border px-3.5 py-1.5 text-xs font-semibold text-flow-text transition-colors hover:border-aurora-1/40 hover:text-aurora-1"
+                                        className="inline-flex items-center gap-2 rounded-full border border-flow-border px-3.5 py-1.5 text-xs font-semibold text-flow-text transition-colors hover:border-aurora-1/40 hover:text-aurora-1"
                       >
                         <Plus className="h-3.5 w-3.5" />
                         {t("sections.linkAdd")}
@@ -948,16 +1005,14 @@ export default function CvBuilderClient() {
                           <div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center">
                             <Input
                               value={row.name}
-                              disabled={isLocked}
-                              aria-label={t("sections.languageName")}
+                                                    aria-label={t("sections.languageName")}
                               placeholder={t("sections.languagePlaceholder")}
                               onChange={(e) => setLanguage(index, { name: e.target.value })}
                               className="h-11 min-w-0 flex-1 rounded-xl border-flow-border bg-flow-surface text-flow-text"
                             />
                             <Select
                               value={row.level}
-                              disabled={isLocked}
-                              onValueChange={(value) =>
+                                                    onValueChange={(value) =>
                                 setLanguage(index, { level: value as CvLanguageLevel })
                               }
                             >
@@ -979,30 +1034,28 @@ export default function CvBuilderClient() {
                           {form.languages.length > 1 && (
                             <button
                               type="button"
-                              disabled={isLocked}
-                              onClick={() => removeLanguage(index)}
+                                                    onClick={() => removeLanguage(index)}
                               aria-label={t("sections.languageRemove")}
                               className="inline-flex h-11 w-9 shrink-0 items-center justify-center rounded-xl text-flow-textSoft transition-colors hover:text-red-500"
                             >
                               <X className="h-4 w-4" />
                             </button>
                           )}
-                          {/* The "+" sits on the last row, where the next one will appear. */}
-                          {index === form.languages.length - 1 &&
-                            form.languages.length < MAX_CV_LANGUAGES && (
-                              <button
-                                type="button"
-                                disabled={isLocked}
-                                onClick={addLanguage}
-                                aria-label={t("sections.languageAdd")}
-                                className="inline-flex h-11 w-9 shrink-0 items-center justify-center rounded-xl border border-flow-border text-flow-text transition-colors hover:border-aurora-1/40 hover:text-aurora-1"
-                              >
-                                <Plus className="h-4 w-4" />
-                              </button>
-                            )}
                         </div>
                       ))}
                     </div>
+
+                    {/* Named and below the rows, exactly as the links section adds one. */}
+                    {form.languages.length < MAX_CV_LANGUAGES && (
+                      <button
+                        type="button"
+                        onClick={addLanguage}
+                        className="inline-flex items-center gap-2 rounded-full border border-flow-border px-3.5 py-1.5 text-xs font-semibold text-flow-text transition-colors hover:border-aurora-1/40 hover:text-aurora-1"
+                      >
+                        <Plus className="h-3.5 w-3.5" />
+                        {t("sections.languageAdd")}
+                      </button>
+                    )}
 
                     <p className="text-xs leading-relaxed text-flow-textSoft">{t("sections.languagesHint")}</p>
                   </div>
@@ -1026,15 +1079,14 @@ export default function CvBuilderClient() {
                 t("sections.tailoringHint"),
                 <>
                   {textarea("targetJob", 5, true)}
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-4 sm:grid-cols-3">
                     <div className="space-y-1.5">
                       <Label className="text-xs font-semibold text-flow-text">
                         {t("fields.tone.label")}
                       </Label>
                       <Select
                         value={form.tone}
-                        disabled={isLocked}
-                        onValueChange={(value) => set("tone", value as CvTone)}
+                                        onValueChange={(value) => set("tone", value as CvTone)}
                       >
                         <SelectTrigger className="h-11 rounded-xl border-flow-border bg-flow-surface text-flow-text">
                           <SelectValue />
@@ -1054,8 +1106,7 @@ export default function CvBuilderClient() {
                       </Label>
                       <Select
                         value={form.language}
-                        disabled={isLocked}
-                        onValueChange={(value) => set("language", value)}
+                                        onValueChange={(value) => set("language", value)}
                       >
                         <SelectTrigger className="h-11 rounded-xl border-flow-border bg-flow-surface text-flow-text">
                           <SelectValue />
@@ -1064,6 +1115,26 @@ export default function CvBuilderClient() {
                           {CV_LANGUAGES.map((language) => (
                             <SelectItem key={language} value={language}>
                               {language}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-semibold text-flow-text">
+                        {t("fields.effort.label")}
+                      </Label>
+                      <Select
+                        value={form.effort}
+                        onValueChange={(value) => set("effort", value as CvEffort)}
+                      >
+                        <SelectTrigger className="h-11 rounded-xl border-flow-border bg-flow-surface text-flow-text">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {CV_EFFORTS.map((level) => (
+                            <SelectItem key={level} value={level}>
+                              {t(`efforts.${level}`)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -1086,7 +1157,7 @@ export default function CvBuilderClient() {
               <div className="flex flex-wrap items-center gap-3">
                 <Button
                   onClick={handleGenerate}
-                  disabled={isLoading || isLocked}
+                  disabled={isLoading}
                   className="shine h-12 rounded-full bg-aurora-grad px-7 font-semibold text-white shadow-aurora"
                 >
                   {isLoading ? (
@@ -1104,7 +1175,7 @@ export default function CvBuilderClient() {
                 <Button
                   variant="ghost"
                   onClick={handleReset}
-                  disabled={isLoading || isLocked}
+                  disabled={isLoading}
                   className="rounded-full text-flow-textSoft"
                 >
                   <RefreshCw className="mr-2 h-4 w-4" />
@@ -1134,31 +1205,60 @@ export default function CvBuilderClient() {
                   {savedCvs.length === 0 ? (
                     <p className="mt-4 text-sm text-flow-textSoft">{t("saved.empty")}</p>
                   ) : (
-                    <ul className="mt-4 space-y-2">
+                    /*
+                     * A strip rather than a stack: these are pages, and a page is
+                     * recognised by its shape long before its title is read — most
+                     * of which are the same job title anyway. Scrolls sideways so
+                     * a long history costs the form no vertical room.
+                     */
+                    <ul className="-mx-1 mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-2">
                       {savedCvs.map((item) => (
-                        <li
-                          key={item._id}
-                          className="flex items-center gap-3 rounded-xl border border-flow-border bg-flow-card px-4 py-2.5"
-                        >
-                          <span className="min-w-0 flex-1 truncate text-sm font-medium text-flow-text">
-                            {item.title}
-                          </span>
+                        <li key={item._id} className="shrink-0 snap-start" style={{ width: THUMB_WIDTH }}>
                           <button
                             type="button"
                             onClick={() => openSaved(item._id)}
-                            className="focus-ring shrink-0 rounded-full px-3 py-1 text-xs font-semibold text-aurora-1 hover:bg-aurora-1/10"
+                            title={item.title}
+                            aria-label={`${t("saved.load")} — ${item.title}`}
+                            className="focus-ring group block w-full overflow-hidden rounded-lg border border-flow-border bg-white transition-colors hover:border-aurora-1/50"
+                            style={{ height: PAGE_HEIGHT * THUMB_SCALE }}
                           >
-                            {t("saved.load")}
+                            <div
+                              style={{
+                                width: PAGE_WIDTH,
+                                height: PAGE_HEIGHT,
+                                transform: `scale(${THUMB_SCALE})`,
+                                transformOrigin: "top left",
+                              }}
+                            >
+                              {/* Inert on purpose: the card is the control, not the page. */}
+                              <iframe
+                                title={item.title}
+                                srcDoc={savedHtml.get(item._id) ?? ""}
+                                sandbox=""
+                                scrolling="no"
+                                tabIndex={-1}
+                                className="pointer-events-none border-0 bg-white"
+                                style={{ width: PAGE_WIDTH, height: PAGE_HEIGHT }}
+                              />
+                            </div>
                           </button>
-                          <button
-                            type="button"
-                            onClick={() => handleDelete(item._id)}
-                            aria-label={t("saved.remove")}
-                            title={t("saved.remove")}
-                            className="focus-ring shrink-0 rounded-full p-1.5 text-flow-textSoft hover:text-red-500"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </button>
+                          <div className="mt-1.5 flex items-start gap-1">
+                            <span
+                              className="min-w-0 flex-1 truncate text-[11px] font-medium text-flow-text"
+                              title={item.title}
+                            >
+                              {item.title}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleDelete(item._id)}
+                              aria-label={t("saved.remove")}
+                              title={t("saved.remove")}
+                              className="focus-ring -mt-0.5 shrink-0 rounded-full p-1 text-flow-textSoft hover:text-red-500"
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </button>
+                          </div>
                         </li>
                       ))}
                     </ul>
