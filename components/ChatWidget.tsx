@@ -454,7 +454,13 @@ export function ChatWidget() {
         </AnimatePresence>
       </motion.button>
 
-      {/* Panel */}
+      {/*
+        Panel. It is anchored to the launcher at bottom-24 (6rem), so its top
+        edge lands at 100vh minus 6rem minus its height. The 12rem in the
+        height clamp is what keeps that edge at 6rem on a short screen — clear
+        of the navbar, which runs to NAVBAR_PANEL_TOP (4.5rem). Lower the
+        subtrahend and the conversation slides under the header.
+      */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -464,7 +470,7 @@ export function ChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.96 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed bottom-24 right-4 sm:right-6 z-[4000] flex flex-col w-[min(24rem,calc(100vw-2rem))] h-[min(32rem,calc(100vh-9rem))] rounded-3xl glass-strong border border-flow-border shadow-soft overflow-hidden"
+            className="fixed bottom-24 right-4 sm:right-6 z-[4000] flex flex-col w-[min(21rem,calc(100vw-2rem))] h-[min(26rem,calc(100vh-12rem))] rounded-3xl glass-strong border border-flow-border shadow-soft overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-center gap-3 px-4 py-3 border-b border-flow-border">
