@@ -1,20 +1,20 @@
 import type { Metadata } from "next"
 import { generateMetadata as buildMetadata } from "@/lib/metadata"
-import Link from "next/link"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { ArrowRight, CheckCircle } from "lucide-react"
 import { getTranslator } from "@/lib/i18n/server"
 import { serviceCategoriesMessages } from "@/lib/i18n/messages/serviceCategories"
 import { commonMessages } from "@/lib/i18n/messages/common"
+import { kitMessages } from "@/lib/i18n/messages/kit"
+import { liveHref } from "@/lib/routes"
+import { CardGrid, PageHero, PageShell, Section, type IconName } from "@/app/components/kit"
+import { ContactCta, ProcessSection, RelatedServices } from "@/app/components/kit-sections"
 
-const SERVICE_HREFS = [
-  "/seo-lead-generation/digital-advertising/ppc-management",
-  "/seo-lead-generation/digital-advertising/enterprise-ppc",
-  "/seo-lead-generation/digital-advertising/social-media-advertising",
-  "/seo-lead-generation/digital-advertising/enterprise-social-media",
-  "/seo-lead-generation/digital-advertising/programmatic-advertising",
-  "/seo-lead-generation/digital-advertising/geofencing",
+const SERVICES: { href: string; icon: IconName }[] = [
+  { href: "/seo-lead-generation/digital-advertising/ppc-management", icon: "pointer" },
+  { href: "/seo-lead-generation/digital-advertising/enterprise-ppc", icon: "briefcase" },
+  { href: "/seo-lead-generation/digital-advertising/social-media-advertising", icon: "users" },
+  { href: "/seo-lead-generation/digital-advertising/enterprise-social-media", icon: "globe" },
+  { href: "/seo-lead-generation/digital-advertising/programmatic-advertising", icon: "zap" },
+  { href: "/seo-lead-generation/digital-advertising/geofencing", icon: "pin" },
 ]
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -29,80 +29,46 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function DigitalAdvertisingPage() {
   const t = await getTranslator(serviceCategoriesMessages)
   const c = await getTranslator(commonMessages)
+  const k = await getTranslator(kitMessages)
 
   const services = t
     .raw<{ title: string; body: string }[]>("digitalAdvertising.services", [])
-    .map((service, i) => ({ ...service, href: SERVICE_HREFS[i] ?? "#" }))
+    .map((service, i) => ({
+      title: service.title,
+      description: service.body,
+      icon: SERVICES[i]?.icon,
+      href: liveHref(SERVICES[i]?.href),
+    }))
 
   return (
-    <div className="bg-flow-bg min-h-screen py-16">
-      <div className="container mx-auto px-4">
-        {/* Breadcrumb */}
-        <div className="flex items-center text-sm text-flow-textSoft mb-8">
-          <Link href="/" className="hover:text-blue-600">
-            {c("breadcrumb.home")}
-          </Link>
-          <span className="mx-2">/</span>
-          <Link href="/seo-lead-generation" className="hover:text-blue-600">
-            {c("breadcrumb.seoLeadGen")}
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-flow-textSoft">{t("digitalAdvertising.breadcrumbCurrent")}</span>
-        </div>
+    <PageShell>
+      <PageHero
+        crumbs={[
+          { label: c("breadcrumb.home"), href: "/" },
+          { label: c("breadcrumb.seoLeadGen"), href: "/seo-lead-generation" },
+          { label: t("digitalAdvertising.breadcrumbCurrent") },
+        ]}
+        kicker={c("breadcrumb.seoLeadGen")}
+        title={t("digitalAdvertising.title")}
+        subtitle={t("digitalAdvertising.intro")}
+        highlights={t.list("digitalAdvertising.highlights")}
+        primary={{ label: t("consultation"), href: "/contact" }}
+        secondary={{ label: k("explore"), href: "#services" }}
+        icon="megaphone"
+        chips={services.slice(0, 3).map((s) => s.title)}
+      />
 
-        <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">{t("digitalAdvertising.title")}</h1>
-            <p className="text-xl text-flow-textSoft mb-6">{t("digitalAdvertising.intro")}</p>
-            <div className="space-y-4 mb-8">
-              {t.list("digitalAdvertising.highlights").map((highlight) => (
-                <div key={highlight} className="flex items-start">
-                  <CheckCircle className="h-6 w-6 text-blue-600 mr-2 flex-shrink-0 mt-1" />
-                  <p className="text-flow-textSoft">{highlight}</p>
-                </div>
-              ))}
-            </div>
-            <Button asChild className="bg-blue-600 hover:bg-blue-700">
-              <Link href="/contact">{t("consultation")}</Link>
-            </Button>
-          </div>
-          <div className="relative h-[400px] rounded-xl overflow-hidden shadow-xl">
-            <Image
-              src="/placeholder.svg?height=800&width=600&text=Digital+Advertising"
-              alt={t("digitalAdvertising.imageAlt")}
-              fill
-              className="object-cover"
-            />
-          </div>
-        </div>
+      <Section id="services" kicker={k("areasKicker")} title={t("digitalAdvertising.servicesTitle")}>
+        <CardGrid items={services} cta={t("learnMore")} columns={3} />
+      </Section>
 
-        {/* Services Grid */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-center">{t("digitalAdvertising.servicesTitle")}</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service) => (
-              <Link key={service.href} href={service.href} className="group">
-                <div className="bg-flow-surface rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                  <h3 className="text-xl font-bold mb-3 group-hover:text-blue-600">{service.title}</h3>
-                  <p className="text-flow-textSoft mb-4">{service.body}</p>
-                  <div className="text-blue-600 flex items-center group-hover:underline">
-                    {t("learnMore")} <ArrowRight className="ml-2 h-4 w-4" />
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* CTA Section */}
-        <div className="bg-blue-600 text-white rounded-xl p-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">{t("digitalAdvertising.ctaTitle")}</h2>
-          <p className="text-xl mb-6 max-w-2xl mx-auto">{t("digitalAdvertising.ctaBody")}</p>
-          <Button asChild variant="outline" size="lg" className="bg-white text-blue-600 hover:bg-flow-card">
-            <Link href="/contact">{t("getStarted")}</Link>
-          </Button>
-        </div>
-      </div>
-    </div>
+      <ProcessSection />
+      <RelatedServices slugs={["social-media-management", "digital-marketing", "content-creation"]} />
+      <ContactCta
+        title={t("digitalAdvertising.ctaTitle")}
+        body={t("digitalAdvertising.ctaBody")}
+        button={t("getStarted")}
+      />
+    </PageShell>
   )
 }

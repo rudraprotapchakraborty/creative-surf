@@ -1,43 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import {
-  ArrowRight,
-  Search,
-  Download,
-  Copy,
-  CheckCircle2,
-  Info,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { AnimatePresence, motion } from "framer-motion";
+import { CheckCircle2, Copy, Download, Info, Search, Sparkles } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import { useT } from "@/lib/i18n";
 import { keywordToolMessages } from "@/lib/i18n/messages/keywordTool";
+import { commonMessages } from "@/lib/i18n/messages/common";
+import {
+  CardGrid,
+  ClosingCta,
+  FaqSection,
+  PageHero,
+  PageShell,
+  Section,
+  Timeline,
+} from "@/app/components/kit";
+import { EASE } from "@/app/components/home/shared";
+
+type KeywordRow = { keyword: string; volume: number; difficulty: number; cpc: number };
 
 // Sample keyword data - in a real implementation, this would come from an API
-const sampleKeywords = {
+const sampleKeywords: Record<string, KeywordRow[]> = {
   "digital marketing": [
     {
       keyword: "digital marketing agency",
@@ -180,19 +164,35 @@ const popularSearches = [
   "email marketing",
 ];
 
+type Filter = "all" | "low" | "medium" | "high";
+
+const FILTERS: Filter[] = ["all", "low", "medium", "high"];
+
+/** Difficulty bands: easy under 45, moderate under 65, hard above. */
+const band = (difficulty: number): Exclude<Filter, "all"> =>
+  difficulty < 45 ? "low" : difficulty < 65 ? "medium" : "high";
+
+const BAND_COLOR: Record<Exclude<Filter, "all">, string> = {
+  low: "#10B981",
+  medium: "#F59E0B",
+  high: "#EF4444",
+};
+
 export default function KeywordSuggestionTool() {
   const t = useT(keywordToolMessages);
+  const c = useT(commonMessages);
   const [keyword, setKeyword] = useState("");
-  const [results, setResults] = useState<any[]>([]);
+  const [searched, setSearched] = useState("");
+  const [results, setResults] = useState<KeywordRow[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("all");
+  const [filter, setFilter] = useState<Filter>("all");
   const [copied, setCopied] = useState(false);
-  const [searchPerformed, setSearchPerformed] = useState(false);
 
   const handleSearch = (searchTerm = keyword) => {
     if (!searchTerm) return;
 
     setIsLoading(true);
+    setFilter("all");
     trackEvent("tool_use", "keyword_suggestion", `Search: ${searchTerm}`);
 
     // Simulate API call with setTimeout
@@ -200,19 +200,13 @@ export default function KeywordSuggestionTool() {
       // Check if we have sample data for this keyword
       const normalizedKeyword = searchTerm.toLowerCase().trim();
       const matchedKeyword = Object.keys(sampleKeywords).find(
-        (key) =>
-          normalizedKeyword.includes(key) || key.includes(normalizedKeyword)
+        (key) => normalizedKeyword.includes(key) || key.includes(normalizedKeyword)
       );
 
-      if (matchedKeyword) {
-        setResults(sampleKeywords[matchedKeyword]);
-      } else {
-        // If no direct match, use digital marketing as fallback
-        setResults(sampleKeywords["digital marketing"]);
-      }
-
+      // If no direct match, use digital marketing as fallback
+      setResults(sampleKeywords[matchedKeyword ?? "digital marketing"]);
+      setSearched(searchTerm);
       setIsLoading(false);
-      setSearchPerformed(true);
     }, 1500);
   };
 
@@ -221,24 +215,10 @@ export default function KeywordSuggestionTool() {
     handleSearch(term);
   };
 
-  const filteredResults =
-    activeTab === "all"
-      ? results
-      : results.filter((item) => {
-          if (activeTab === "low" && item.difficulty < 45) return true;
-          if (
-            activeTab === "medium" &&
-            item.difficulty >= 45 &&
-            item.difficulty < 65
-          )
-            return true;
-          if (activeTab === "high" && item.difficulty >= 65) return true;
-          return false;
-        });
+  const filtered = filter === "all" ? results : results.filter((item) => band(item.difficulty) === filter);
 
   const handleCopyToClipboard = () => {
-    const keywordsText = results.map((item) => item.keyword).join("\n");
-    navigator.clipboard.writeText(keywordsText);
+    navigator.clipboard.writeText(results.map((item) => item.keyword).join("\n"));
     setCopied(true);
     trackEvent("tool_action", "keyword_suggestion", "Copy to clipboard");
     setTimeout(() => setCopied(false), 2000);
@@ -248,305 +228,237 @@ export default function KeywordSuggestionTool() {
     const headers = t.list("results.csvHeaders");
     const csvContent = [
       headers.join(","),
-      ...results.map((item) =>
-        [item.keyword, item.volume, item.difficulty, item.cpc].join(",")
-      ),
+      ...results.map((item) => [item.keyword, item.volume, item.difficulty, item.cpc].join(",")),
     ].join("\n");
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute(
-      "download",
-      `keyword-suggestions-${keyword.replace(/\s+/g, "-")}.csv`
-    );
+    link.setAttribute("download", `keyword-suggestions-${searched.replace(/\s+/g, "-")}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
     trackEvent("tool_action", "keyword_suggestion", "Download CSV");
   };
 
-  const getDifficultyColor = (difficulty: number) => {
-    if (difficulty < 45) return "bg-green-100 text-green-800";
-    if (difficulty < 65) return "bg-yellow-100 text-yellow-800";
-    return "bg-red-100 text-red-800";
-  };
+  const howTo = t.raw<{ title: string; body: string }[]>("howTo.steps", []);
+  const features = t
+    .raw<{ title: string; body: string }[]>("features.items", [])
+    .map((f, i) => ({ title: f.title, description: f.body, icon: (["search", "chart", "zap"] as const)[i] }));
+  const faq = t
+    .raw<{ question: string; answer: string }[]>("faq.items", [])
+    .map((item) => ({ q: item.question, a: item.answer }));
+
+  const header = (label: string, tip?: string) => (
+    <th className="px-5 py-3 text-left micro text-[10px] text-flow-textSoft">
+      <span className="inline-flex items-center gap-1.5">
+        {label}
+        {tip && (
+          <span className="group/tip relative">
+            <Info className="w-3.5 h-3.5 opacity-60" aria-label={tip} />
+            <span className="pointer-events-none absolute left-1/2 top-6 z-20 w-60 -translate-x-1/2 rounded-lg border border-flow-border bg-flow-bg p-3 text-[11px] normal-case tracking-normal font-normal text-flow-textSoft opacity-0 shadow-soft transition-opacity group-hover/tip:opacity-100">
+              {tip}
+            </span>
+          </span>
+        )}
+      </span>
+    </th>
+  );
 
   return (
-    <div className="min-h-screen bg-flow-bg">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-700 to-blue-900 text-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">{t("hero.title")}</h1>
-            <p className="text-xl mb-8">{t("hero.subtitle")}</p>
+    <PageShell>
+      <PageHero
+        crumbs={[{ label: c("breadcrumb.home"), href: "/" }, { label: c("breadcrumb.tools") }, { label: t("hero.title") }]}
+        kicker={c("breadcrumb.tools")}
+        title={t("hero.title")}
+        subtitle={t("hero.subtitle")}
+      />
 
-            <div className="bg-flow-surface p-6 rounded-lg shadow-lg">
-              <div className="relative">
-                <Input
-                  type="text"
-                  placeholder={t("hero.placeholder")}
-                  value={keyword}
-                  onChange={(e) => setKeyword(e.target.value)}
-                  className="pr-12 text-flow-text text-lg"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handleSearch();
-                  }}
-                />
-                <Button
-                  className="absolute right-0 top-0 bottom-0 rounded-l-none"
-                  onClick={() => handleSearch()}
-                  disabled={isLoading || !keyword}
-                >
-                  {isLoading ? t("hero.searching") : <Search className="h-5 w-5" />}
-                </Button>
-              </div>
-
-              <div className="mt-4 flex flex-wrap gap-2">
-                <span className="text-flow-textSoft mr-1">{t("hero.popularSearches")}</span>
-                {popularSearches.slice(0, 4).map((term) => (
-                  <Badge
-                    key={term}
-                    variant="outline"
-                    className="cursor-pointer hover:bg-flow-card text-flow-textSoft"
-                    onClick={() => handlePopularSearch(term)}
-                  >
-                    {term}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Results Section */}
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          {searchPerformed && (
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-2">
-                {t("results.heading", { keyword })}
-              </h2>
-              <p className="text-flow-textSoft">
-                {t("results.found", { count: results.length })}
-              </p>
-            </div>
-          )}
-
-          {searchPerformed && (
-            <div className="bg-flow-surface rounded-lg shadow-md overflow-hidden">
-              <div className="p-4 border-b flex justify-between items-center">
-                <Tabs
-                  defaultValue="all"
-                  className="w-full"
-                  onValueChange={setActiveTab}
-                >
-                  <TabsList>
-                    <TabsTrigger value="all">{t("results.tabs.all")}</TabsTrigger>
-                    <TabsTrigger value="low">{t("results.tabs.low")}</TabsTrigger>
-                    <TabsTrigger value="medium">{t("results.tabs.medium")}</TabsTrigger>
-                    <TabsTrigger value="high">{t("results.tabs.high")}</TabsTrigger>
-                  </TabsList>
-                </Tabs>
-
-                <div className="flex space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleCopyToClipboard}
-                  >
-                    {copied ? (
-                      <CheckCircle2 className="h-4 w-4 mr-1" />
-                    ) : (
-                      <Copy className="h-4 w-4 mr-1" />
-                    )}
-                    {copied ? t("results.copied") : t("results.copy")}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleDownloadCSV}
-                  >
-                    <Download className="h-4 w-4 mr-1" /> {t("results.csv")}
-                  </Button>
-                </div>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="bg-flow-bg">
-                      <th className="px-4 py-3 text-left text-sm font-medium text-flow-textSoft uppercase tracking-wider">
-                        {t("results.columns.keyword")}
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-flow-textSoft uppercase tracking-wider">
-                        {t("results.columns.volume")}
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Info className="h-4 w-4 inline-block ml-1 text-flow-textSoft" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p className="w-64">{t("results.tooltips.volume")}</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-flow-textSoft uppercase tracking-wider">
-                        {t("results.columns.difficulty")}
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Info className="h-4 w-4 inline-block ml-1 text-flow-textSoft" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p className="w-64">{t("results.tooltips.difficulty")}</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-flow-textSoft uppercase tracking-wider">
-                        {t("results.columns.cpc")}
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Info className="h-4 w-4 inline-block ml-1 text-flow-textSoft" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p className="w-64">{t("results.tooltips.cpc")}</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {filteredResults.map((item, index) => (
-                      <tr key={index} className="hover:bg-flow-bg">
-                        <td className="px-4 py-3 text-sm font-medium text-flow-text">
-                          {item.keyword}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-flow-textSoft">
-                          {item.volume.toLocaleString()}
-                        </td>
-                        <td className="px-4 py-3 text-sm">
-                          <Badge
-                            className={getDifficultyColor(item.difficulty)}
-                          >
-                            {item.difficulty}/100
-                          </Badge>
-                        </td>
-                        <td className="px-4 py-3 text-sm text-flow-textSoft">
-                          ${item.cpc.toFixed(2)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {filteredResults.length === 0 && (
-                <div className="p-8 text-center">
-                  <p className="text-flow-textSoft">{t("results.empty")}</p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {!searchPerformed && (
-            <div className="max-w-3xl mx-auto">
-              <Card>
-                <CardHeader>
-                  <CardTitle>{t("howTo.title")}</CardTitle>
-                  <CardDescription>{t("howTo.description")}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    {t
-                      .raw<{ title: string; body: string }[]>("howTo.steps", [])
-                      .map((step, index) => (
-                        <div key={step.title} className="flex items-start gap-4">
-                          <div className="bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
-                            {index + 1}
-                          </div>
-                          <div>
-                            <h3 className="font-medium">{step.title}</h3>
-                            <p className="text-flow-textSoft">{step.body}</p>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-12 bg-flow-surface">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">{t("features.title")}</h2>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {t
-              .raw<{ title: string; body: string }[]>("features.items", [])
-              .map((feature) => (
-                <Card key={feature.title}>
-                  <CardHeader>
-                    <CardTitle>{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-flow-textSoft">{feature.body}</p>
-                  </CardContent>
-                </Card>
-              ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-12 bg-flow-bg">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">{t("faq.title")}</h2>
-
-          <div className="max-w-3xl mx-auto">
-            <Accordion
-              type="single"
-              collapsible
-              className="bg-flow-surface rounded-lg shadow-md"
-            >
-              {t
-                .raw<{ question: string; answer: string }[]>("faq.items", [])
-                .map((item, index) => (
-                  <AccordionItem key={index} value={`item-${index + 1}`}>
-                    <AccordionTrigger className="px-6 py-4">{item.question}</AccordionTrigger>
-                    <AccordionContent className="px-6 pb-4">{item.answer}</AccordionContent>
-                  </AccordionItem>
-                ))}
-            </Accordion>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-700 to-blue-900 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">{t("cta.title")}</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">{t("cta.body")}</p>
-          <Button
-            size="lg"
-            className="bg-white text-blue-800 hover:bg-flow-card"
-            asChild
+      {/* Search */}
+      <section className="section-px bg-flow-bg -mt-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: EASE, delay: 0.6 }}
+          className="mx-auto max-w-3xl"
+        >
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSearch();
+            }}
+            className="relative flex items-center gap-2 rounded-2xl glass-strong border border-flow-border p-2 shadow-soft focus-within:border-aurora-1/50"
           >
-            <a href="/contact">
-              {t("cta.button")} <ArrowRight className="ml-2 h-5 w-5" />
-            </a>
-          </Button>
+            <Search className="ml-3 w-5 h-5 flex-shrink-0 text-flow-textSoft" />
+            <input
+              type="text"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              placeholder={t("hero.placeholder")}
+              aria-label={t("hero.placeholder")}
+              className="min-w-0 flex-1 bg-transparent px-2 py-3 text-base text-flow-text outline-none placeholder:text-flow-textSoft/70"
+            />
+            <button
+              type="submit"
+              disabled={isLoading || !keyword}
+              className="focus-ring inline-flex items-center gap-2 rounded-xl bg-aurora-grad px-5 py-3 micro text-white shadow-aurora transition-opacity disabled:opacity-50 disabled:shadow-none"
+            >
+              {isLoading ? (
+                <motion.span animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
+                  <Sparkles className="w-4 h-4" />
+                </motion.span>
+              ) : (
+                <Search className="w-4 h-4" />
+              )}
+              <span className="hidden sm:inline">{isLoading ? t("hero.searching") : c("labels.search")}</span>
+            </button>
+          </form>
+
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="text-xs text-flow-textSoft">{t("hero.popularSearches")}</span>
+            {popularSearches.slice(0, 6).map((term) => (
+              <button
+                key={term}
+                type="button"
+                onClick={() => handlePopularSearch(term)}
+                className="focus-ring rounded-full border border-flow-border px-3 py-1 text-xs text-flow-textSoft transition-colors hover:border-aurora-1/40 hover:text-flow-text"
+              >
+                {term}
+              </button>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Results */}
+      <section className="section-px pt-12 pb-8 bg-flow-bg">
+        <div className="mx-auto max-w-5xl">
+          <AnimatePresence mode="wait">
+            {isLoading ? (
+              <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="hairline-card p-6 space-y-3">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="relative h-11 overflow-hidden rounded-lg bg-flow-text/[0.04]">
+                    <motion.span
+                      className="absolute inset-y-0 w-1/3"
+                      style={{ background: "linear-gradient(90deg, transparent, rgb(var(--accent-1) / 0.12), transparent)" }}
+                      animate={{ x: ["-100%", "300%"] }}
+                      transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut", delay: i * 0.08 }}
+                    />
+                  </div>
+                ))}
+              </motion.div>
+            ) : searched ? (
+              <motion.div key={`results-${searched}`} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.5, ease: EASE }}>
+                <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+                  <div>
+                    <h2 className="display-sm text-2xl text-flow-text">{t("results.heading", { keyword: searched })}</h2>
+                    <p className="mt-1 text-sm text-flow-textSoft">{t("results.found", { count: results.length })}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={handleCopyToClipboard}
+                      className="focus-ring inline-flex items-center gap-2 rounded-xl border border-flow-border px-4 py-2.5 micro text-[10px] text-flow-text hover:border-aurora-1/40"
+                    >
+                      {copied ? <CheckCircle2 className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                      {copied ? t("results.copied") : t("results.copy")}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleDownloadCSV}
+                      className="focus-ring inline-flex items-center gap-2 rounded-xl border border-flow-border px-4 py-2.5 micro text-[10px] text-flow-text hover:border-aurora-1/40"
+                    >
+                      <Download className="w-4 h-4" />
+                      {t("results.csv")}
+                    </button>
+                  </div>
+                </div>
+
+                <div role="tablist" className="mb-4 flex w-fit flex-wrap gap-1 rounded-2xl glass border border-flow-border p-1">
+                  {FILTERS.map((f) => (
+                    <button
+                      key={f}
+                      type="button"
+                      role="tab"
+                      aria-selected={filter === f}
+                      onClick={() => setFilter(f)}
+                      className={`focus-ring relative rounded-xl px-4 py-2 text-xs font-semibold transition-colors ${
+                        filter === f ? "text-white" : "text-flow-textSoft hover:text-flow-text"
+                      }`}
+                    >
+                      {filter === f && (
+                        <motion.span layoutId="kw-filter" className="absolute inset-0 rounded-xl bg-aurora-grad" transition={{ type: "spring", stiffness: 380, damping: 32 }} />
+                      )}
+                      <span className="relative">{t(`results.tabs.${f}`)}</span>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="hairline-card overflow-x-auto">
+                  <table className="w-full min-w-[36rem]">
+                    <thead className="border-b border-flow-border">
+                      <tr>
+                        {header(t("results.columns.keyword"))}
+                        {header(t("results.columns.volume"), t("results.tooltips.volume"))}
+                        {header(t("results.columns.difficulty"), t("results.tooltips.difficulty"))}
+                        {header(t("results.columns.cpc"), t("results.tooltips.cpc"))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filtered.map((item, i) => {
+                        const level = band(item.difficulty);
+                        return (
+                          <motion.tr
+                            key={`${filter}-${item.keyword}`}
+                            initial={{ opacity: 0, x: -12 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.4, ease: EASE, delay: i * 0.04 }}
+                            className="border-b border-flow-border last:border-0 transition-colors hover:bg-flow-text/[0.03]"
+                          >
+                            <td className="px-5 py-3.5 text-sm font-medium text-flow-text">{item.keyword}</td>
+                            <td className="px-5 py-3.5 text-sm tabular-nums text-flow-textSoft">{item.volume.toLocaleString("en-US")}</td>
+                            <td className="px-5 py-3.5">
+                              <div className="flex items-center gap-3">
+                                <div className="h-1.5 w-24 overflow-hidden rounded-full bg-flow-text/[0.07]">
+                                  <motion.div
+                                    className="h-full rounded-full"
+                                    style={{ background: BAND_COLOR[level] }}
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${item.difficulty}%` }}
+                                    transition={{ duration: 0.8, ease: EASE, delay: 0.1 + i * 0.04 }}
+                                  />
+                                </div>
+                                <span className="text-xs tabular-nums text-flow-textSoft">{item.difficulty}/100</span>
+                              </div>
+                            </td>
+                            <td className="px-5 py-3.5 text-sm tabular-nums text-flow-textSoft">${item.cpc.toFixed(2)}</td>
+                          </motion.tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                  {filtered.length === 0 && <p className="p-8 text-center text-sm text-flow-textSoft">{t("results.empty")}</p>}
+                </div>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
         </div>
       </section>
-    </div>
+
+      {!searched && !isLoading && (
+        <Section title={t("howTo.title")} subline={t("howTo.description")}>
+          <Timeline items={howTo.map((step) => ({ title: step.title, body: step.body }))} />
+        </Section>
+      )}
+
+      <Section grid title={t("features.title")}>
+        <CardGrid items={features} columns={3} />
+      </Section>
+
+      <FaqSection title={t("faq.title")} items={faq} idPrefix="keyword-tool" />
+      <ClosingCta title={t("cta.title")} body={t("cta.body")} button={t("cta.button")} />
+    </PageShell>
   );
 }

@@ -1,537 +1,183 @@
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
-import type { Metadata } from "next";
-import { generateMetadata as buildMetadata } from "@/lib/metadata";
-import { getTranslator } from "@/lib/i18n/server";
-import { sitemapMessages } from "@/lib/i18n/messages/sitemap";
-import { commonMessages } from "@/lib/i18n/messages/common";
+import type { Metadata } from "next"
+import { generateMetadata as buildMetadata } from "@/lib/metadata"
+import { getTranslator } from "@/lib/i18n/server"
+import { sitemapMessages } from "@/lib/i18n/messages/sitemap"
+import { commonMessages } from "@/lib/i18n/messages/common"
+import { navMessages } from "@/lib/i18n/messages/nav"
+import { servicesMessages } from "@/lib/i18n/messages/services"
+import { digitalIntelligenceMessages } from "@/lib/i18n/messages/digitalIntelligence"
+import { serviceCategoriesMessages } from "@/lib/i18n/messages/serviceCategories"
+import { serviceHubsMessages } from "@/lib/i18n/messages/serviceHubs"
+import { seoServicesMessages } from "@/lib/i18n/messages/seoServices"
+import { designMessages } from "@/lib/i18n/messages/design"
+import { aboutApproachMessages } from "@/lib/i18n/messages/aboutApproach"
+import { aboutHistoryMessages } from "@/lib/i18n/messages/aboutHistory"
+import { aboutValuesMessages } from "@/lib/i18n/messages/aboutValues"
+import { aboutAwardsMessages } from "@/lib/i18n/messages/aboutAwards"
+import { aboutCareersMessages } from "@/lib/i18n/messages/aboutCareers"
+import { aboutReviewsMessages } from "@/lib/i18n/messages/aboutReviews"
+import { websiteCostMessages } from "@/lib/i18n/messages/websiteCost"
+import { fixFunnelMessages } from "@/lib/i18n/messages/fixFunnel"
+import { keywordToolMessages } from "@/lib/i18n/messages/keywordTool"
+import { legalPrivacyMessages } from "@/lib/i18n/messages/legalPrivacy"
+import { legalPrivacyTermsMessages } from "@/lib/i18n/messages/legalPrivacyTerms"
+import { legalTermsMessages } from "@/lib/i18n/messages/legalTerms"
+import { SERVICES } from "@/app/services/catalog"
+import { isLiveRoute } from "@/lib/routes"
+import { LinkDirectory, PageHero, PageShell, Section, type DirectoryGroup } from "@/app/components/kit"
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslator(sitemapMessages);
+  const t = await getTranslator(sitemapMessages)
   return buildMetadata({
     title: t("metaTitle"),
     description: t("metaDescription"),
     path: "/sitemap",
-  });
+  })
 }
 
-// Navigation structure based on the navbar component
-const navigationStructure = [
-  {
-    title: "Digital Marketing",
-    href: "/digital-marketing",
-    sections: [
-      {
-        title: "Digital Intelligence",
-        href: "/digital-marketing/digital-intelligence",
-        items: [
-          {
-            name: "Web Channel Call Tracking",
-            href: "/digital-marketing/digital-intelligence/web-channel-call-tracking",
-          },
-          {
-            name: "SEO Reporting & Forecasting",
-            href: "/digital-marketing/digital-intelligence/seo-reporting",
-          },
-          {
-            name: "Channel Attribution & Forecasting",
-            href: "/digital-marketing/digital-intelligence/channel-attribution",
-          },
-          {
-            name: "Digital Marketing Competitor Analysis",
-            href: "/digital-marketing/digital-intelligence/competitor-analysis",
-          },
-          {
-            name: "Private Equity Due Diligence",
-            href: "/digital-marketing/digital-intelligence/private-equity",
-          },
-          {
-            name: "Revenue Operations",
-            href: "/digital-marketing/digital-intelligence/revenue-operations",
-          },
-        ],
-      },
-      {
-        title: "Conversion",
-        href: "/digital-marketing/conversion",
-        items: [
-          {
-            name: "Conversion Rate Optimization",
-            href: "/digital-marketing/conversion/cro",
-          },
-          {
-            name: "User Experience Testing",
-            href: "/digital-marketing/conversion/ux-testing",
-          },
-          {
-            name: "Landing Pages & Funnels",
-            href: "/digital-marketing/conversion/landing-pages",
-          },
-          {
-            name: "Online Review Acceleration",
-            href: "/digital-marketing/conversion/online-reviews",
-          },
-          {
-            name: "Channel Partner Sales Pipeline Management",
-            href: "/digital-marketing/conversion/channel-partner",
-          },
-          {
-            name: "Website Personalization",
-            href: "/digital-marketing/conversion/website-personalization",
-          },
-        ],
-      },
-      {
-        title: "Marketing Automation",
-        href: "/digital-marketing/marketing-automation",
-        items: [
-          {
-            name: "Account-Based Marketing Services",
-            href: "/digital-marketing/marketing-automation/abm",
-          },
-          {
-            name: "Lead Nurture Email Marketing",
-            href: "/digital-marketing/marketing-automation/lead-nurture",
-          },
-          {
-            name: "Email Marketing Management",
-            href: "/digital-marketing/marketing-automation/email-marketing",
-          },
-          {
-            name: "Salesforce Marketing Automation",
-            href: "/digital-marketing/marketing-automation/salesforce",
-          },
-        ],
-      },
-      {
-        title: "Commerce Platforms",
-        href: "/digital-marketing/commerce-platforms",
-        items: [
-          {
-            name: "SEO for Amazon",
-            href: "/digital-marketing/commerce-platforms/amazon-seo",
-          },
-          {
-            name: "Advertising Management for Amazon",
-            href: "/digital-marketing/commerce-platforms/amazon-advertising",
-          },
-          {
-            name: "Shopify Optimization Services",
-            href: "/digital-marketing/commerce-platforms/shopify",
-          },
-          {
-            name: "Facebook Marketplace for Business",
-            href: "/digital-marketing/commerce-platforms/facebook-marketplace",
-          },
-          {
-            name: "Influencer Marketing Services",
-            href: "/digital-marketing/commerce-platforms/influencer-marketing",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    title: "SEO & Lead Generation",
-    href: "/seo-lead-generation",
-    sections: [
-      {
-        title: "Organic Search",
-        href: "/seo-lead-generation/organic-search",
-        items: [
-          {
-            name: "SEO Services",
-            href: "/seo-lead-generation/organic-search/seo-services",
-          },
-          {
-            name: "Enterprise SEO Services",
-            href: "/seo-lead-generation/organic-search/enterprise-seo",
-          },
-          {
-            name: "Digital Marketing Services",
-            href: "/seo-lead-generation/organic-search/digital-marketing",
-          },
-          {
-            name: "Local SEO Services",
-            href: "/seo-lead-generation/organic-search/local-seo",
-          },
-          {
-            name: "Google Local Services Ads Management",
-            href: "/seo-lead-generation/organic-search/google-local-services",
-          },
-          {
-            name: "SEO Audits",
-            href: "/seo-lead-generation/organic-search/seo-audits",
-          },
-          {
-            name: "Generative Engine & Chat Optimization",
-            href: "/seo-lead-generation/organic-search/generative-engine-optimization",
-          },
-        ],
-      },
-      {
-        title: "Digital Advertising",
-        href: "/seo-lead-generation/digital-advertising",
-        items: [
-          {
-            name: "PPC Management Services",
-            href: "/seo-lead-generation/digital-advertising/ppc-management",
-          },
-          {
-            name: "Enterprise PPC Management Services",
-            href: "/seo-lead-generation/digital-advertising/enterprise-ppc",
-          },
-          {
-            name: "Social Media Advertising",
-            href: "/seo-lead-generation/digital-advertising/social-media-advertising",
-          },
-          {
-            name: "Enterprise Social Media Advertising",
-            href: "/seo-lead-generation/digital-advertising/enterprise-social-media",
-          },
-          {
-            name: "Programmatic Advertising Services",
-            href: "/seo-lead-generation/digital-advertising/programmatic-advertising",
-          },
-          {
-            name: "Addressable Geofencing Services",
-            href: "/seo-lead-generation/digital-advertising/geofencing",
-          },
-        ],
-      },
-      {
-        title: "Ecommerce",
-        href: "/seo-lead-generation/ecommerce",
-        items: [
-          {
-            name: "Ecommerce SEO Services",
-            href: "/seo-lead-generation/ecommerce/ecommerce-seo",
-          },
-          {
-            name: "Ecommerce PPC Services",
-            href: "/seo-lead-generation/ecommerce/ecommerce-ppc",
-          },
-          {
-            name: "Ecommerce Social Media Advertising",
-            href: "/seo-lead-generation/ecommerce/ecommerce-social-media",
-          },
-          {
-            name: "B2B Ecommerce Enablement",
-            href: "/seo-lead-generation/ecommerce/b2b-ecommerce",
-          },
-          {
-            name: "Shopping Feed Automation",
-            href: "/seo-lead-generation/ecommerce/shopping-feed",
-          },
-          {
-            name: "Ecommerce Digital Marketing Services",
-            href: "/seo-lead-generation/ecommerce/ecommerce-digital-marketing",
-          },
-        ],
-      },
-      {
-        title: "Learn",
-        href: "/seo-lead-generation/learn",
-        items: [
-          {
-            name: "Our SEO Results",
-            href: "/seo-lead-generation/learn/seo-results",
-          },
-          {
-            name: "Our SEO Case Studies",
-            href: "/seo-lead-generation/learn/seo-case-studies",
-          },
-          {
-            name: "What Is an SEO Company?",
-            href: "/seo-lead-generation/learn/what-is-an-seo-company",
-          },
-          {
-            name: "Who Are the Best SEO Companies?",
-            href: "/seo-lead-generation/learn/best-seo-companies",
-          },
-          {
-            name: "SEO Guide for Marketing Managers",
-            href: "/seo-lead-generation/learn/seo-guide",
-          },
-          {
-            name: "What Is Digital Marketing?",
-            href: "/seo-lead-generation/learn/what-is-digital-marketing",
-          },
-          {
-            name: "Best Digital Marketing Tools",
-            href: "/seo-lead-generation/learn/digital-marketing-tools",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    title: "UX & Interactive",
-    href: "/ux-interactive",
-    sections: [
-      {
-        title: "Design",
-        href: "/ux-interactive/design",
-        items: [
-          {
-            name: "Website Design",
-            href: "/ux-interactive/design/website-design",
-          },
-          {
-            name: "Website Redesign",
-            href: "/ux-interactive/design/website-redesign",
-          },
-          {
-            name: "Rapid Web Design",
-            href: "/ux-interactive/design/rapid-web-design",
-          },
-          {
-            name: "Social Media Design",
-            href: "/ux-interactive/design/social-media-design",
-          },
-          {
-            name: "Ecommerce Website Design",
-            href: "/ux-interactive/design/ecommerce-design",
-          },
-          {
-            name: "Email Marketing Testing & Design",
-            href: "/ux-interactive/design/email-design",
-          },
-        ],
-      },
-      {
-        title: "Content Marketing",
-        href: "/ux-interactive/content-marketing",
-        items: [
-          {
-            name: "SEO Copywriting",
-            href: "/ux-interactive/content-marketing/seo-copywriting",
-          },
-          {
-            name: "Content Marketing Services",
-            href: "/ux-interactive/content-marketing/content-services",
-          },
-          {
-            name: "Social Media Management",
-            href: "/ux-interactive/content-marketing/social-media-management",
-          },
-          {
-            name: "Infographics & Motion Graphics",
-            href: "/ux-interactive/content-marketing/infographics",
-          },
-          {
-            name: "Web Video Production Services",
-            href: "/ux-interactive/content-marketing/video-production",
-          },
-          {
-            name: "YouTube Advertising",
-            href: "/ux-interactive/content-marketing/youtube-advertising",
-          },
-        ],
-      },
-      {
-        title: "Development",
-        href: "/ux-interactive/development",
-        items: [
-          {
-            name: "Digital Experience Development",
-            href: "/ux-interactive/development/digital-experience",
-          },
-          {
-            name: "Shopify Ecommerce Development",
-            href: "/ux-interactive/development/shopify",
-          },
-          {
-            name: "Web Infrastructure & Maintenance",
-            href: "/ux-interactive/development/web-infrastructure",
-          },
-          {
-            name: "Content Management Systems",
-            href: "/ux-interactive/development/cms",
-          },
-          {
-            name: "AI & GPT Integration",
-            href: "/ux-interactive/development/ai-integration",
-          },
-        ],
-      },
-      {
-        title: "Challenges We Solve",
-        href: "/ux-interactive/challenges",
-        items: [
-          {
-            name: "My Website Doesn't Drive Leads",
-            href: "/ux-interactive/challenges/website-leads",
-          },
-          {
-            name: "My Website Traffic Is Going Down",
-            href: "/ux-interactive/challenges/traffic-decline",
-          },
-          {
-            name: "My Website Doesn't Convert",
-            href: "/ux-interactive/challenges/conversion-issues",
-          },
-          {
-            name: "My Website Isn't Driving ROI",
-            href: "/ux-interactive/challenges/roi-problems",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    title: "Who We Are",
-    href: "/about",
-    sections: [
-      {
-        title: "Who We Are",
-        href: "/about",
-        items: [
-          { name: "Our Approach", href: "/about/approach" },
-          { name: "About Us", href: "/about" },
-          { name: "Careers (We Are Hiring!)", href: "/about/careers" },
-          { name: "Contact Info", href: "/contact" },
-          { name: "WebFX Reviews", href: "/about/reviews" },
-          { name: "Awards", href: "/about/awards" },
-        ],
-      },
-      {
-        title: "Community Impact",
-        href: "/about/community-impact",
-        items: [
-          { name: "Company Values", href: "/about/values" },
-          { name: "Community Impact", href: "/about/community-impact" },
-          { name: "FXBuilds", href: "/about/fx-builds" },
-          { name: "Equality at WebFX", href: "/about/equality" },
-          { name: "STEMFX Program", href: "/about/stem-program" },
-          { name: "WebFX History", href: "/about/history" },
-        ],
-      },
-      {
-        title: "Pricing Guides",
-        href: "/about/pricing",
-        items: [
-          {
-            name: "How Much Should a Website Cost?",
-            href: "/about/pricing/website-cost",
-          },
-          { name: "How Much Does PPC Cost?", href: "/about/pricing/ppc-cost" },
-          {
-            name: "Email Marketing Pricing",
-            href: "/about/pricing/email-marketing",
-          },
-          { name: "Social Media Pricing", href: "/about/pricing/social-media" },
-          { name: "How Much Does SEO Cost?", href: "/about/pricing/seo-cost" },
-          { name: "Local SEO Pricing", href: "/about/pricing/local-seo" },
-        ],
-      },
-      {
-        title: "Content Library",
-        href: "/blog",
-        items: [
-          { name: "Our Blog", href: "/blog" },
-          { name: "SEO Checker Report", href: "/tools/seo-checker" },
-          {
-            name: "Free Keyword Suggestion Tool",
-            href: "/tools/keyword-suggestion",
-          },
-          { name: "Fix Your Funnel", href: "/tools/fix-funnel" },
-          { name: "FAQFox", href: "/tools/faq-fox" },
-          { name: "View All Tools", href: "/tools" },
-        ],
-      },
-    ],
-  },
-];
-
-// Main pages that don't fit into the navigation structure
-const mainPages = [
-  { name: "Home", href: "/" },
-  { name: "Contact", href: "/contact" },
-  { name: "Blog", href: "/blog" },
-  { name: "Case Studies", href: "/case-studies" },
-  { name: "Get a Proposal", href: "/contact" },
-  { name: "Privacy Policy", href: "/privacy-policy" },
-  { name: "Terms of Service", href: "/terms" },
-  { name: "Sitemap", href: "/sitemap" },
-];
-
+/**
+ * Every page that exists, grouped by section. Labels come from each page's
+ * own translations, so the sitemap reads correctly in every locale without a
+ * parallel list of names to keep in sync.
+ */
 export default async function SitemapPage() {
-  const t = await getTranslator(sitemapMessages);
-  const c = await getTranslator(commonMessages);
-  const labels = t.raw<Record<string, string>>("labels", {});
-  const label = (name: string) => labels[name] ?? name;
+  const [t, c, nav, services, di, cat, hubs, seo, design, approach, history, values, awards, careers, reviews, cost, funnel, keywords, privacy, privacyTerms, terms] =
+    await Promise.all([
+      getTranslator(sitemapMessages),
+      getTranslator(commonMessages),
+      getTranslator(navMessages),
+      getTranslator(servicesMessages),
+      getTranslator(digitalIntelligenceMessages),
+      getTranslator(serviceCategoriesMessages),
+      getTranslator(serviceHubsMessages),
+      getTranslator(seoServicesMessages),
+      getTranslator(designMessages),
+      getTranslator(aboutApproachMessages),
+      getTranslator(aboutHistoryMessages),
+      getTranslator(aboutValuesMessages),
+      getTranslator(aboutAwardsMessages),
+      getTranslator(aboutCareersMessages),
+      getTranslator(aboutReviewsMessages),
+      getTranslator(websiteCostMessages),
+      getTranslator(fixFunnelMessages),
+      getTranslator(keywordToolMessages),
+      getTranslator(legalPrivacyMessages),
+      getTranslator(legalPrivacyTermsMessages),
+      getTranslator(legalTermsMessages),
+    ])
+
+  const serviceTitles = services.raw<{ title: string }[]>("items", [])
+
+  const groups: DirectoryGroup[] = [
+    {
+      title: t("mainPages"),
+      icon: "compass",
+      links: [
+        { label: nav("links.home"), href: "/" },
+        { label: nav("links.services"), href: "/services" },
+        { label: nav("links.blogs"), href: "/blogs" },
+        { label: nav("links.team"), href: "/team" },
+        { label: nav("links.cvBuilder"), href: "/cv-builder" },
+        { label: nav("links.contact"), href: "/contact" },
+      ],
+    },
+    {
+      title: nav("links.services"),
+      href: "/services",
+      icon: "sparkles",
+      links: SERVICES.map((service, i) => ({ label: serviceTitles[i]?.title ?? service.slug, href: `/services/${service.slug}` })),
+    },
+    {
+      title: c("breadcrumb.digitalMarketing"),
+      href: "/digital-marketing",
+      icon: "megaphone",
+      links: [
+        { label: c("breadcrumb.digitalIntelligence"), href: "/digital-marketing/digital-intelligence" },
+        { label: di("seoReporting.breadcrumbCurrent"), href: "/digital-marketing/digital-intelligence/seo-reporting" },
+        { label: di("callTracking.breadcrumbCurrent"), href: "/digital-marketing/digital-intelligence/web-channel-call-tracking" },
+      ],
+    },
+    {
+      title: c("breadcrumb.seoLeadGen"),
+      href: "/seo-lead-generation",
+      icon: "search",
+      links: [
+        { label: c("breadcrumb.organicSearch"), href: "/seo-lead-generation/organic-search" },
+        { label: seo("breadcrumbCurrent"), href: "/seo-lead-generation/organic-search/seo-services" },
+        { label: cat("organicSearch.services.3.title"), href: "/seo-lead-generation/organic-search/local-seo" },
+        { label: c("breadcrumb.digitalAdvertising"), href: "/seo-lead-generation/digital-advertising" },
+        { label: hubs("seo.featured.2.title"), href: "/seo-lead-generation/ecommerce/ecommerce-seo" },
+      ],
+    },
+    {
+      title: c("breadcrumb.uxInteractive"),
+      href: "/ux-interactive",
+      icon: "monitor",
+      links: [
+        { label: design("websiteDesign.breadcrumbCurrent"), href: "/ux-interactive/design/website-design" },
+        { label: design("ecommerceDesign.metaTitle"), href: "/ux-interactive/design/ecommerce-design" },
+      ],
+    },
+    {
+      title: nav("links.about"),
+      href: "/about",
+      icon: "heart",
+      links: [
+        { label: approach("hero.title"), href: "/about/approach" },
+        { label: history("hero.title"), href: "/about/history" },
+        { label: values("hero.title"), href: "/about/values" },
+        { label: awards("hero.title"), href: "/about/awards" },
+        { label: careers("hero.title"), href: "/about/careers" },
+        { label: reviews("hero.title"), href: "/about/reviews" },
+        { label: cost("breadcrumb.current"), href: "/about/pricing/website-cost" },
+      ],
+    },
+    {
+      title: c("breadcrumb.tools"),
+      icon: "wrench",
+      links: [
+        { label: funnel("hero.title"), href: "/tools/fix-funnel" },
+        { label: keywords("hero.title"), href: "/tools/keyword-suggestion" },
+      ],
+    },
+    {
+      title: c("breadcrumb.realEstate"),
+      href: "/real-estate",
+      icon: "pin",
+      links: [
+        { label: c("breadcrumb.projects"), href: "/real-estate/projects" },
+        { label: nav("links.blogs"), href: "/real-estate/blogs" },
+      ],
+    },
+    {
+      title: privacyTerms("title"),
+      icon: "shield",
+      links: [
+        { label: privacy("breadcrumbCurrent"), href: "/privacy-policy" },
+        { label: terms("breadcrumbCurrent"), href: "/terms" },
+        { label: privacyTerms("breadcrumbCurrent"), href: "/privacy-terms" },
+      ],
+    },
+  ]
+
+  // Belt and braces: if a page is ever removed, it drops out of the sitemap
+  // as soon as it leaves the route list.
+  const live = groups.map((group) => ({
+    ...group,
+    href: group.href && isLiveRoute(group.href) ? group.href : undefined,
+    links: group.links.filter((link) => isLiveRoute(link.href)),
+  }))
 
   return (
-    <div className="bg-flow-bg min-h-screen py-16">
-      <div className="container mx-auto px-4">
-        {/* Breadcrumb */}
-        <div className="flex items-center text-sm text-flow-textSoft mb-8">
-          <Link href="/" className="hover:text-blue-600">
-            {c("breadcrumb.home")}
-          </Link>
-          <ChevronRight className="h-4 w-4 mx-2" />
-          <span className="text-flow-textSoft font-medium">{t("breadcrumbCurrent")}</span>
-        </div>
-
-        <h1 className="text-4xl font-bold mb-12 text-center">{t("title")}</h1>
-
-        <div className="bg-flow-surface rounded-xl shadow-md p-8 mb-16">
-          {/* Main Pages */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold mb-6 text-blue-600 border-b pb-2">
-              {t("mainPages")}
-            </h2>
-            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-2">
-              {mainPages.map((page) => (
-                <li key={page.href}>
-                  <Link
-                    href={page.href}
-                    className="text-flow-textSoft hover:text-blue-600"
-                  >
-                    {label(page.name)}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Navigation Structure */}
-          {navigationStructure.map((section) => (
-            <div key={section.href} className="mb-12">
-              <h2 className="text-2xl font-bold mb-6 text-blue-600 border-b pb-2">
-                {label(section.title)}
-              </h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {section.sections.map((subsection) => (
-                  <div key={subsection.href} className="mb-6">
-                    <h3 className="text-xl font-semibold mb-3">
-                      <Link
-                        href={subsection.href}
-                        className="text-flow-text hover:text-blue-600"
-                      >
-                        {label(subsection.title)}
-                      </Link>
-                    </h3>
-                    <ul className="space-y-2 ml-4">
-                      {subsection.items.map((item) => (
-                        <li key={item.href}>
-                          <Link
-                            href={item.href}
-                            className="text-flow-textSoft hover:text-blue-600"
-                          >
-                            {label(item.name)}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+    <PageShell>
+      <PageHero
+        crumbs={[{ label: c("breadcrumb.home"), href: "/" }, { label: t("breadcrumbCurrent") }]}
+        title={t("title")}
+        subtitle={t("metaDescription")}
+      />
+      <Section>
+        <LinkDirectory groups={live} />
+      </Section>
+    </PageShell>
+  )
 }

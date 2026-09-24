@@ -1,107 +1,102 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  PenTool, FileText, Video, Globe, Search, Target, Users, ArrowUpRight,
-} from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { useT } from "@/lib/i18n";
 import { homeMessages } from "@/lib/i18n/messages/home";
+import { servicesMessages } from "@/lib/i18n/messages/services";
+import { SERVICES } from "@/app/services/catalog";
 import { EASE, SectionHead } from "./shared";
-
-const SERVICE_ICONS = [PenTool, FileText, Video, Globe, Search, Target, Users];
-
-/** Bento spans, keyed by index — index 0 is the hero card of the grid. */
-const SPANS = [
-  "lg:col-span-2 lg:row-span-2",
-  "lg:col-span-2",
-  "lg:col-span-1",
-  "lg:col-span-1",
-  "lg:col-span-2",
-  "lg:col-span-1",
-  "lg:col-span-1",
-];
 
 type ServiceCopy = { title: string; description: string; tags: string[] };
 
+/**
+ * A compact index of what we do. The /services page carries the full cards;
+ * here each service is a single slim row, so the homepage points the way
+ * rather than repeating that page. The list and copy come from the services
+ * messages, so the two can never advertise different services.
+ */
 export default function Services() {
   const t = useT(homeMessages);
+  const ts = useT(servicesMessages);
 
-  const services = t
-    .raw<ServiceCopy[]>("services.items", [])
-    .map((service, i) => ({ ...service, icon: SERVICE_ICONS[i] ?? PenTool, span: SPANS[i] ?? "lg:col-span-1" }));
+  const services = ts
+    .raw<ServiceCopy[]>("items", [])
+    .slice(0, SERVICES.length)
+    .map((service, i) => ({ ...service, ...SERVICES[i] }));
 
   return (
     <section id="services" className="relative section-py section-px bg-flow-bg text-flow-text overflow-hidden">
-      <div className="absolute inset-0 bg-grid-fine mask-radial pointer-events-none opacity-25" />
-
-      <div className="relative z-10 mx-auto max-w-7xl">
+      <div className="relative z-10 mx-auto max-w-6xl">
         <SectionHead
-          className="mb-16 sm:mb-20"
+          className="mb-12 sm:mb-14"
           label={t("services.badge")}
           heading={t("services.headingLine1")}
           accent={t("services.headingAccent")}
         />
 
-        {/* Bento grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-[minmax(15rem,auto)] lg:auto-rows-[minmax(13rem,auto)] gap-4 sm:gap-5">
-          {services.map(({ title, description, icon: Icon, tags, span }, i) => {
-            const featured = i === 0;
-            return (
-              <motion.div
-                key={title}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.6, ease: EASE, delay: (i % 4) * 0.06 }}
-                className={`group relative overflow-hidden hairline-card p-6 sm:p-8 flex flex-col justify-between ${span} ${
-                  featured ? "bg-aurora-soft" : ""
-                }`}
+        <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-10 border-t border-flow-border md:border-t-0">
+          {services.map(({ title, tags, icon: Icon, slug }, i) => (
+            <motion.li
+              key={slug}
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5, ease: EASE, delay: (i % 3) * 0.06 }}
+              className={`border-b border-flow-border ${i < 2 ? "md:border-t" : ""}`}
+            >
+              <Link
+                href={`/services/${slug}`}
+                className="focus-ring group relative flex items-center gap-4 overflow-hidden px-2 sm:px-3 py-4 rounded-lg"
               >
-                {/* Index, set as a quiet micro-label rather than a watermark —
-                    the card's weight should come from its copy, not its number. */}
-                <span className="absolute top-6 right-7 micro text-flow-textSoft/50 select-none pointer-events-none">
+                {/* Hover wash — sweeps in from the left behind the row. */}
+                <span
+                  aria-hidden
+                  className="absolute inset-0 origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100"
+                  style={{ background: "linear-gradient(90deg, rgb(var(--accent-1) / 0.08), transparent)" }}
+                />
+
+                <span className="relative micro w-6 text-flow-textSoft/50 tabular-nums">
                   {String(i + 1).padStart(2, "0")}
                 </span>
 
-                <div
-                  className={`relative flex-shrink-0 rounded-xl flex items-center justify-center ${
-                    featured ? "w-12 h-12" : "w-10 h-10"
-                  }`}
-                  style={{ background: "rgb(var(--accent-1) / 0.1)", border: "1px solid rgb(var(--accent-1) / 0.2)" }}
+                <span
+                  className="relative grid place-items-center w-9 h-9 flex-shrink-0 rounded-lg transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110"
+                  style={{ background: "rgb(var(--accent-1) / 0.1)" }}
                 >
-                  <Icon className={featured ? "w-5 h-5" : "w-4 h-4"} style={{ color: "rgb(var(--accent-1))" }} />
-                </div>
+                  <Icon className="w-4 h-4" style={{ color: "rgb(var(--accent-1))" }} />
+                </span>
 
-                <div className="relative mt-auto">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h3
-                      className="display-sm text-flow-text group-hover:text-aurora-1 transition-colors duration-300"
-                      style={{ fontSize: featured ? "1.6rem" : "1.15rem" }}
-                    >
-                      {title}
-                    </h3>
-                    <ArrowUpRight className="w-4 h-4 text-aurora-1 opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300" />
-                  </div>
-                  <p className={`text-flow-textSoft leading-relaxed ${featured ? "text-sm sm:text-[0.95rem] max-w-sm" : "text-xs sm:text-sm line-clamp-2"}`}>
-                    {description}
-                  </p>
-                  <div className="flex flex-wrap gap-1.5 mt-3">
-                    {tags.slice(0, featured ? 3 : 2).map((tag) => (
-                      <span
-                        key={tag}
-                        className="micro text-[10px] px-2.5 py-1 rounded-md"
-                        style={{ background: "rgb(var(--accent-1) / 0.07)", color: "rgb(var(--accent-2))" }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
+                <span className="relative min-w-0 flex-1">
+                  <span className="block display-sm text-[0.98rem] sm:text-base text-flow-text transition-colors duration-300 group-hover:text-aurora-1 truncate">
+                    {title}
+                  </span>
+                  <span className="block text-xs text-flow-textSoft truncate">{tags.join(" · ")}</span>
+                </span>
+
+                <ArrowUpRight className="relative w-4 h-4 flex-shrink-0 text-flow-textSoft transition-all duration-300 group-hover:text-aurora-1 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
+            </motion.li>
+          ))}
+        </ul>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: EASE, delay: 0.2 }}
+          className="mt-8 flex justify-center"
+        >
+          <Link
+            href="/services"
+            className="focus-ring group inline-flex items-center gap-2 micro text-flow-text hover:text-aurora-1 transition-colors"
+          >
+            {ts("viewAll")}
+            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

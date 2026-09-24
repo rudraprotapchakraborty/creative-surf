@@ -31,27 +31,6 @@ export const aboutMessages = defineMessages({
         { title: "Impact", description: "We measure our success by the results we deliver for our clients." },
       ],
     },
-    team: {
-      title: "Meet Our Team",
-      members: [
-        {
-          role: "Founder & Creative Director",
-          bio: "With over 15 years of experience in design and branding, Alex founded Creative Surf with a vision to help brands make meaningful connections.",
-        },
-        {
-          role: "Head of Digital Strategy",
-          bio: "Sarah brings her expertise in digital marketing and analytics to develop data-driven strategies that deliver measurable results.",
-        },
-        {
-          role: "Lead Web Developer",
-          bio: "Marcus combines technical expertise with creative problem-solving to build websites that are both beautiful and functional.",
-        },
-        {
-          role: "Content Strategist",
-          bio: "Priya crafts compelling narratives that resonate with audiences and strengthen brand identities across all platforms.",
-        },
-      ],
-    },
     cta: {
       title: "Let's Create Something Amazing Together",
       body: "Ready to take your brand to the next level? We'd love to hear about your project.",
@@ -87,27 +66,6 @@ export const aboutMessages = defineMessages({
         { title: "Authenticité", description: "Nous valorisons l'honnêteté et la transparence dans toutes nos relations." },
         { title: "Progression", description: "Nous nous engageons à apprendre et à nous améliorer en continu." },
         { title: "Impact", description: "Nous mesurons notre succès aux résultats que nous livrons à nos clients." },
-      ],
-    },
-    team: {
-      title: "Notre équipe",
-      members: [
-        {
-          role: "Fondateur & directeur créatif",
-          bio: "Fort de plus de 15 ans d'expérience en design et branding, Alex a fondé Creative Surf avec l'ambition d'aider les marques à créer des liens qui comptent.",
-        },
-        {
-          role: "Responsable stratégie digitale",
-          bio: "Sarah met son expertise du marketing digital et de l'analytics au service de stratégies pilotées par la donnée et aux résultats mesurables.",
-        },
-        {
-          role: "Développeur web principal",
-          bio: "Marcus associe expertise technique et résolution créative de problèmes pour construire des sites à la fois beaux et fonctionnels.",
-        },
-        {
-          role: "Stratège de contenu",
-          bio: "Priya façonne des récits captivants qui résonnent auprès des audiences et renforcent l'identité des marques sur toutes les plateformes.",
-        },
       ],
     },
     cta: {
@@ -147,27 +105,6 @@ export const aboutMessages = defineMessages({
         { title: "Wirkung", description: "Wir messen unseren Erfolg an den Ergebnissen, die wir für unsere Kunden liefern." },
       ],
     },
-    team: {
-      title: "Unser Team",
-      members: [
-        {
-          role: "Gründer & Creative Director",
-          bio: "Mit über 15 Jahren Erfahrung in Design und Branding gründete Alex Creative Surf mit dem Ziel, Marken zu echten Verbindungen zu verhelfen.",
-        },
-        {
-          role: "Leitung Digitalstrategie",
-          bio: "Sarah bringt ihre Expertise in Digitalmarketing und Analytics ein, um datengetriebene Strategien mit messbaren Ergebnissen zu entwickeln.",
-        },
-        {
-          role: "Lead Web Developer",
-          bio: "Marcus verbindet technische Expertise mit kreativer Problemlösung und baut Websites, die schön und funktional sind.",
-        },
-        {
-          role: "Content-Strategin",
-          bio: "Priya entwickelt überzeugende Geschichten, die Zielgruppen ansprechen und Markenidentitäten über alle Plattformen stärken.",
-        },
-      ],
-    },
     cta: {
       title: "Lassen Sie uns gemeinsam Großes schaffen",
       body: "Bereit, Ihre Marke auf das nächste Level zu bringen? Erzählen Sie uns von Ihrem Projekt.",
@@ -201,27 +138,6 @@ export const aboutMessages = defineMessages({
         { title: "Al-Asala", description: "Nuqaddir Al-Sidq wal-shafafiyya fi jami alaqatina." },
         { title: "Al-Numuww", description: "Naltazim bil-taallum wal-tahsin Al-Mustamirr." },
         { title: "Al-Athar", description: "Naqis najahana bil-nataij allati nuqaddimuha li-umalaina." },
-      ],
-    },
-    team: {
-      title: "Tarraf ala Fariqina",
-      members: [
-        {
-          role: "Al-Muassis wal-Mudir Al-Ibdai",
-          bio: "Bi-khibra tafuq 15 aman fil-tasmim wa bina Al-Alamat, assasa Alex sharikat Creative Surf bi-ru'ya li-musaadat Al-Alamat ala bina silat haqiqiyya.",
-        },
-        {
-          role: "Ra'isat Al-Istratijiyya Al-Raqmiyya",
-          bio: "Tuwazzif Sarah khibrataha fil-taswiq Al-Raqmi wal-tahlilat li-tatwir istratijiyyat mabniyya ala Al-Bayanat tuhaqqiq nataij qabila lil-qiyas.",
-        },
-        {
-          role: "Kabir Mutawwiri Al-Wib",
-          bio: "Yajma Marcus bayn Al-Khibra Al-Tiqniyya wal-hall Al-Ibdai lil-mushkilat li-bina mawaqi jamila wa amaliyya fi an wahid.",
-        },
-        {
-          role: "Istratijiyyat Al-Muhtawa",
-          bio: "Tasugh Priya sardiyyat jadhdhaba tulamis Al-Jumhur wa tuazzir hawiyyat Al-Alamat abr jami Al-Manassat.",
-        },
       ],
     },
     cta: {
@@ -258,27 +174,6 @@ export const aboutMessages = defineMessages({
         { title: "সততা", description: "সব সম্পর্কেই আমরা সততা আর স্বচ্ছতাকে মূল্য দিই।" },
         { title: "বিকাশ", description: "আমরা নিরন্তর শেখা আর উন্নতির প্রতি প্রতিশ্রুতিবদ্ধ।" },
         { title: "প্রভাব", description: "ক্লায়েন্টদের জন্য আনা ফলাফল দিয়েই আমরা নিজেদের সাফল্য মাপি।" },
-      ],
-    },
-    team: {
-      title: "আমাদের টিম",
-      members: [
-        {
-          role: "প্রতিষ্ঠাতা ও ক্রিয়েটিভ ডিরেক্টর",
-          bio: "ডিজাইন ও ব্র্যান্ডিংয়ে ১৫ বছরের বেশি অভিজ্ঞতা নিয়ে Alex Creative Surf গড়ে তোলেন, যাতে ব্র্যান্ডরা অর্থপূর্ণ সংযোগ তৈরি করতে পারে।",
-        },
-        {
-          role: "হেড অব ডিজিটাল স্ট্র্যাটেজি",
-          bio: "ডিজিটাল মার্কেটিং ও অ্যানালিটিক্সে নিজের দক্ষতা কাজে লাগিয়ে Sarah এমন ডেটাভিত্তিক কৌশল সাজান যার ফল মাপা যায়।",
-        },
-        {
-          role: "লিড ওয়েব ডেভেলপার",
-          bio: "কারিগরি দক্ষতার সাথে সৃজনশীল সমস্যা সমাধান মিলিয়ে Marcus এমন ওয়েবসাইট বানান যা দেখতেও সুন্দর, কাজেও দারুণ।",
-        },
-        {
-          role: "কনটেন্ট স্ট্র্যাটেজিস্ট",
-          bio: "Priya এমন গল্প সাজান যা দর্শকের মন ছোঁয় আর সব প্ল্যাটফর্মে ব্র্যান্ডের পরিচয়কে শক্ত করে।",
-        },
       ],
     },
     cta: {

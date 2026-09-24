@@ -30,51 +30,6 @@ export const homeMessages = defineMessages({
       badge: "Our Expertise",
       headingLine1: "What we do",
       headingAccent: "exceptionally well.",
-      intro: "Seven disciplines. One integrated team. Every service built to compound your growth.",
-      items: [
-        {
-          title: "Graphics Design",
-          description:
-            "High-impact visuals blending art direction with precision — brand identity, campaign assets, and everything in between.",
-          tags: ["Brand Identity", "Print", "Digital"],
-        },
-        {
-          title: "Content Marketing",
-          description:
-            "Strategic storytelling that builds authority, drives organic traffic, and converts browsers into loyal buyers.",
-          tags: ["Strategy", "Copywriting", "Distribution"],
-        },
-        {
-          title: "Video Editing",
-          description:
-            "Cinematic edits with seamless motion and narrative clarity — from short-form reels to full brand films.",
-          tags: ["Reels", "Ad Films", "Brand Videos"],
-        },
-        {
-          title: "Website Development",
-          description:
-            "High-performance web experiences engineered for conversion and built to scale as your business grows.",
-          tags: ["Next.js", "React", "E-commerce"],
-        },
-        {
-          title: "SEO & Social Media",
-          description:
-            "Precision SEO and social campaigns that compound your visibility and bring high-intent audiences directly to you.",
-          tags: ["SEO", "Paid Social", "Analytics"],
-        },
-        {
-          title: "Media Buying",
-          description:
-            "Optimised ad spend across every channel — making every dollar work harder so your ROI compounds over time.",
-          tags: ["Google Ads", "Meta", "Programmatic"],
-        },
-        {
-          title: "Digital Branding",
-          description:
-            "Cohesive digital identities for lasting impressions — visual systems, brand voice, and positioning that stick.",
-          tags: ["Strategy", "Visual Identity", "Voice"],
-        },
-      ],
     },
 
     realEstate: {
@@ -165,52 +120,6 @@ export const homeMessages = defineMessages({
       badge: "Notre expertise",
       headingLine1: "Ce que nous faisons",
       headingAccent: "exceptionnellement bien.",
-      intro:
-        "Sept disciplines. Une équipe intégrée. Chaque service conçu pour démultiplier votre croissance.",
-      items: [
-        {
-          title: "Design graphique",
-          description:
-            "Des visuels à fort impact qui allient direction artistique et précision — identité de marque, supports de campagne et tout le reste.",
-          tags: ["Identité de marque", "Print", "Digital"],
-        },
-        {
-          title: "Marketing de contenu",
-          description:
-            "Un storytelling stratégique qui installe votre autorité, génère du trafic organique et transforme les visiteurs en clients fidèles.",
-          tags: ["Stratégie", "Rédaction", "Diffusion"],
-        },
-        {
-          title: "Montage vidéo",
-          description:
-            "Des montages cinématographiques au mouvement fluide et au récit limpide — du format court au film de marque.",
-          tags: ["Reels", "Films publicitaires", "Vidéos de marque"],
-        },
-        {
-          title: "Développement web",
-          description:
-            "Des expériences web performantes, pensées pour la conversion et conçues pour évoluer avec votre entreprise.",
-          tags: ["Next.js", "React", "E-commerce"],
-        },
-        {
-          title: "SEO & réseaux sociaux",
-          description:
-            "Des campagnes SEO et sociales précises qui font croître votre visibilité et attirent des audiences à forte intention.",
-          tags: ["SEO", "Social payant", "Analytics"],
-        },
-        {
-          title: "Achat média",
-          description:
-            "Un budget publicitaire optimisé sur tous les canaux — chaque euro travaille plus pour un ROI qui s'accumule.",
-          tags: ["Google Ads", "Meta", "Programmatique"],
-        },
-        {
-          title: "Branding digital",
-          description:
-            "Des identités digitales cohérentes qui marquent durablement — systèmes visuels, voix de marque et positionnement.",
-          tags: ["Stratégie", "Identité visuelle", "Voix"],
-        },
-      ],
     },
 
     realEstate: {
@@ -301,52 +210,6 @@ export const homeMessages = defineMessages({
       badge: "Unsere Expertise",
       headingLine1: "Was wir",
       headingAccent: "außergewöhnlich gut können.",
-      intro:
-        "Sieben Disziplinen. Ein integriertes Team. Jede Leistung darauf ausgelegt, Ihr Wachstum zu vervielfachen.",
-      items: [
-        {
-          title: "Grafikdesign",
-          description:
-            "Wirkungsvolle Visuals, die Art Direction und Präzision verbinden — Markenidentität, Kampagnen-Assets und alles dazwischen.",
-          tags: ["Markenidentität", "Print", "Digital"],
-        },
-        {
-          title: "Content-Marketing",
-          description:
-            "Strategisches Storytelling, das Autorität aufbaut, organischen Traffic bringt und Besucher zu treuen Kunden macht.",
-          tags: ["Strategie", "Texterstellung", "Distribution"],
-        },
-        {
-          title: "Videobearbeitung",
-          description:
-            "Cinematische Schnitte mit fließender Bewegung und klarer Erzählung — von Short-Form-Reels bis zum Markenfilm.",
-          tags: ["Reels", "Werbefilme", "Markenvideos"],
-        },
-        {
-          title: "Webentwicklung",
-          description:
-            "Performante Web-Erlebnisse, auf Conversion ausgelegt und gebaut, um mit Ihrem Unternehmen zu skalieren.",
-          tags: ["Next.js", "React", "E-Commerce"],
-        },
-        {
-          title: "SEO & Social Media",
-          description:
-            "Präzise SEO- und Social-Kampagnen, die Ihre Sichtbarkeit steigern und kaufbereite Zielgruppen direkt zu Ihnen bringen.",
-          tags: ["SEO", "Paid Social", "Analytics"],
-        },
-        {
-          title: "Mediaeinkauf",
-          description:
-            "Optimiertes Werbebudget über alle Kanäle — jeder Euro arbeitet härter, damit Ihr ROI stetig wächst.",
-          tags: ["Google Ads", "Meta", "Programmatic"],
-        },
-        {
-          title: "Digitales Branding",
-          description:
-            "Stimmige digitale Identitäten für nachhaltigen Eindruck — visuelle Systeme, Markenstimme und Positionierung.",
-          tags: ["Strategie", "Visuelle Identität", "Markenstimme"],
-        },
-      ],
     },
 
     realEstate: {
@@ -437,51 +300,6 @@ export const homeMessages = defineMessages({
       badge: "Khibratuna",
       headingLine1: "Ma naqum bihi",
       headingAccent: "bi-shakl istithnai.",
-      intro: "Sabaa takhassusat. Fariq wahid mutakamil. Kull khidma masmuma li-mudaafat numuwwik.",
-      items: [
-        {
-          title: "Tasmim Jirafik",
-          description:
-            "Masahid basariyya qawiyyat Al-Athar tajma bayn Al-Ikhraj Al-Fanni wal-diqqa — hawiyyat Al-Alama wa mawadd Al-Hamalat wa kull ma baynahuma.",
-          tags: ["Hawiyyat Al-Alama", "Tibaa", "Raqmi"],
-        },
-        {
-          title: "Taswiq Al-Muhtawa",
-          description:
-            "Sard istratiji yabni Al-Marjaiyya wa yajlib zayaran tabiiyyin wa yuhawwil Al-Zuwwar ila umala awfiya.",
-          tags: ["Istratijiyya", "Kitaba Ilaniyya", "Tawzi"],
-        },
-        {
-          title: "Muntaj Al-Fidyu",
-          description:
-            "Muntaja sinimaiyya bi-haraka salisa wa sard wadih — min Al-Riilz Al-Qasira ila aflam Al-Alama Al-Kamila.",
-          tags: ["Riilz", "Aflam Ilaniyya", "Fidyuhat Al-Alama"],
-        },
-        {
-          title: "Tatwir Al-Mawaqi",
-          description:
-            "Tajarib wib aliyat Al-Ada masmuma lil-tahwil wa mabniyya lil-tawassu ma numuww amalik.",
-          tags: ["Next.js", "React", "Tijara Iliktruniyya"],
-        },
-        {
-          title: "SEO wa Wasail Al-Tawasul",
-          description:
-            "Hamalat SEO wa ijtimaiyya daqiqa tudaif zuhurak wa tajlib jumhuran shadid Al-Ihtimam mubasharatan ilayk.",
-          tags: ["SEO", "Ilanat Ijtimaiyya", "Tahlilat"],
-        },
-        {
-          title: "Shira Al-Masahat Al-Ilaniyya",
-          description:
-            "Infaq ilani muhassan abr jami Al-Qanawat — kull dular yamal bi-jidd akbar li-yatadaaf aidak.",
-          tags: ["Google Ads", "Meta", "Barmaji"],
-        },
-        {
-          title: "Bina Al-Alama Al-Raqmiyya",
-          description:
-            "Hawiyyat raqmiyya mutanasiqa tatruk athran daiman — anzima basariyya wa sawt alama wa tamawdu rasikh.",
-          tags: ["Istratijiyya", "Hawiyya Basariyya", "Sawt Al-Alama"],
-        },
-      ],
     },
 
     realEstate: {
@@ -572,51 +390,6 @@ export const homeMessages = defineMessages({
       badge: "আমাদের দক্ষতা",
       headingLine1: "যা আমরা করি",
       headingAccent: "অসাধারণভাবে।",
-      intro: "সাতটি ক্ষেত্র। এক টিম। প্রতিটি সেবা সাজানো আপনার বৃদ্ধিকে এগিয়ে নিতে।",
-      items: [
-        {
-          title: "গ্রাফিক্স ডিজাইন",
-          description:
-            "আর্ট ডিরেকশন আর নিখুঁততা মিলিয়ে জোরালো ভিজ্যুয়াল — ব্র্যান্ড আইডেন্টিটি, ক্যাম্পেইন অ্যাসেট আর এর মাঝের সবকিছু।",
-          tags: ["ব্র্যান্ড আইডেন্টিটি", "প্রিন্ট", "ডিজিটাল"],
-        },
-        {
-          title: "কনটেন্ট মার্কেটিং",
-          description:
-            "কৌশলী গল্প বলা, যা কর্তৃত্ব গড়ে, অর্গানিক ট্রাফিক আনে আর দর্শককে অনুগত ক্রেতায় পরিণত করে।",
-          tags: ["কৌশল", "কপিরাইটিং", "বিতরণ"],
-        },
-        {
-          title: "ভিডিও এডিটিং",
-          description:
-            "মসৃণ মোশন আর স্পষ্ট গল্পসহ সিনেম্যাটিক এডিট — ছোট রিল থেকে পূর্ণ ব্র্যান্ড ফিল্ম পর্যন্ত।",
-          tags: ["রিল", "অ্যাড ফিল্ম", "ব্র্যান্ড ভিডিও"],
-        },
-        {
-          title: "ওয়েবসাইট ডেভেলপমেন্ট",
-          description:
-            "কনভার্শনের জন্য তৈরি দ্রুতগতির ওয়েব অভিজ্ঞতা, যা আপনার ব্যবসার সাথে বেড়ে ওঠার মতো করে বানানো।",
-          tags: ["Next.js", "React", "ই-কমার্স"],
-        },
-        {
-          title: "এসইও ও সোশ্যাল মিডিয়া",
-          description:
-            "নিখুঁত এসইও আর সোশ্যাল ক্যাম্পেইন, যা আপনার দৃশ্যমানতা বাড়ায় আর আগ্রহী দর্শককে সরাসরি আপনার কাছে আনে।",
-          tags: ["এসইও", "পেইড সোশ্যাল", "অ্যানালিটিক্স"],
-        },
-        {
-          title: "মিডিয়া বায়িং",
-          description:
-            "সব চ্যানেলে সাজানো বিজ্ঞাপন খরচ — প্রতিটি টাকা যাতে আরও বেশি কাজ করে আর সময়ের সাথে আরওআই বাড়ে।",
-          tags: ["Google Ads", "Meta", "প্রোগ্রাম্যাটিক"],
-        },
-        {
-          title: "ডিজিটাল ব্র্যান্ডিং",
-          description:
-            "দীর্ঘস্থায়ী ছাপ রাখার মতো সুসংহত ডিজিটাল পরিচয় — ভিজ্যুয়াল সিস্টেম, ব্র্যান্ড ভয়েস আর মনে থাকার মতো অবস্থান।",
-          tags: ["কৌশল", "ভিজ্যুয়াল আইডেন্টিটি", "ভয়েস"],
-        },
-      ],
     },
 
     realEstate: {

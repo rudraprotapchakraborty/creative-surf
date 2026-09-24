@@ -1,16 +1,23 @@
 import type { Metadata } from "next"
 import { generateMetadata as buildMetadata } from "@/lib/metadata"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
 import { getTranslator } from "@/lib/i18n/server"
 import { serviceHubsMessages } from "@/lib/i18n/messages/serviceHubs"
+import { commonMessages } from "@/lib/i18n/messages/common"
+import { kitMessages } from "@/lib/i18n/messages/kit"
+import { servicesMessages } from "@/lib/i18n/messages/services"
+import { liveHref } from "@/lib/routes"
+import { CardGrid, PageHero, PageShell, Section, type IconName } from "@/app/components/kit"
+import { ContactCta, ProcessSection, RelatedServices } from "@/app/components/kit-sections"
 
-const CARD_HREFS = [
-  "/ux-interactive/design",
-  "/ux-interactive/content-marketing",
-  "/ux-interactive/development",
-  "/ux-interactive/challenges",
+/**
+ * "Design" has no hub page of its own yet, so it points at its main child —
+ * website design — rather than at nothing.
+ */
+const CARDS: { href: string; icon: IconName }[] = [
+  { href: "/ux-interactive/design/website-design", icon: "monitor" },
+  { href: "/ux-interactive/content-marketing", icon: "pen" },
+  { href: "/ux-interactive/development", icon: "code" },
+  { href: "/ux-interactive/challenges", icon: "wrench" },
 ]
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -24,38 +31,37 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function UXInteractivePage() {
   const t = await getTranslator(serviceHubsMessages)
+  const c = await getTranslator(commonMessages)
+  const k = await getTranslator(kitMessages)
+  const s = await getTranslator(servicesMessages)
 
   const cards = t
     .raw<{ title: string; body: string }[]>("ux.cards", [])
-    .map((card, i) => ({ ...card, href: CARD_HREFS[i] ?? "#" }))
+    .map((card, i) => ({
+      title: card.title,
+      description: card.body,
+      icon: CARDS[i]?.icon,
+      href: liveHref(CARDS[i]?.href),
+    }))
 
   return (
-    <div className="bg-flow-bg min-h-screen py-16">
-      <div className="container mx-auto px-4">
-        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-center">{t("ux.title")}</h1>
-        <p className="text-xl text-flow-textSoft mb-12 text-center max-w-3xl mx-auto">{t("ux.subtitle")}</p>
+    <PageShell>
+      <PageHero
+        crumbs={[{ label: c("breadcrumb.home"), href: "/" }, { label: c("breadcrumb.uxInteractive") }]}
+        kicker={c("breadcrumb.uxInteractive")}
+        title={t("ux.title")}
+        subtitle={t("ux.subtitle")}
+        primary={{ label: s("hero.ctaPrimary"), href: "/contact" }}
+        secondary={{ label: k("explore"), href: "#areas" }}
+      />
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          {cards.map((card) => (
-            <Link key={card.href} href={card.href} className="group">
-              <div className="bg-flow-surface rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                <h2 className="text-2xl font-bold mb-4 group-hover:text-blue-600">{card.title}</h2>
-                <p className="text-flow-textSoft mb-4">{card.body}</p>
-                <Button variant="link" className="p-0 group-hover:text-blue-600">
-                  {t("learnMore")} <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </Link>
-          ))}
-        </div>
+      <Section id="areas" kicker={k("areasKicker")} title={k("areasTitle")} accent={k("areasAccent")}>
+        <CardGrid items={cards} cta={t("learnMore")} columns={4} />
+      </Section>
 
-        <div className="text-center">
-          <p className="text-flow-textSoft mb-6">{t("ux.closing")}</p>
-          <Button asChild className="bg-blue-600 hover:bg-blue-700">
-            <Link href="/contact">{t("ux.ctaButton")}</Link>
-          </Button>
-        </div>
-      </div>
-    </div>
+      <ProcessSection />
+      <RelatedServices slugs={["web-design-development", "brand-strategy", "content-creation"]} />
+      <ContactCta body={t("ux.closing")} button={t("ux.ctaButton")} />
+    </PageShell>
   )
 }

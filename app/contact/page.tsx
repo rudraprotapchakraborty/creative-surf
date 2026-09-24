@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import type { Metadata } from "next"
 import ContactContent from "./ContactContent"
 import { getTranslator } from "@/lib/i18n/server"
@@ -12,5 +13,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function ContactPage() {
-  return <ContactContent />
+  // ContactContent reads the query string (?subject=, ?package=) to pre-fill
+  // the enquiry, which needs a Suspense boundary.
+  return (
+    <Suspense fallback={null}>
+      <ContactContent />
+    </Suspense>
+  )
 }

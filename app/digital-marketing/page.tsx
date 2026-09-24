@@ -1,16 +1,19 @@
 import type { Metadata } from "next"
 import { generateMetadata as buildMetadata } from "@/lib/metadata"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
 import { getTranslator } from "@/lib/i18n/server"
 import { serviceHubsMessages } from "@/lib/i18n/messages/serviceHubs"
+import { commonMessages } from "@/lib/i18n/messages/common"
+import { kitMessages } from "@/lib/i18n/messages/kit"
+import { servicesMessages } from "@/lib/i18n/messages/services"
+import { liveHref } from "@/lib/routes"
+import { CardGrid, PageHero, PageShell, Section, type IconName } from "@/app/components/kit"
+import { ContactCta, ProcessSection, RelatedServices } from "@/app/components/kit-sections"
 
-const CARD_HREFS = [
-  "/digital-marketing/digital-intelligence",
-  "/digital-marketing/conversion",
-  "/digital-marketing/marketing-automation",
-  "/digital-marketing/commerce-platforms",
+const CARDS: { href: string; icon: IconName }[] = [
+  { href: "/digital-marketing/digital-intelligence", icon: "lineChart" },
+  { href: "/digital-marketing/conversion", icon: "pointer" },
+  { href: "/digital-marketing/marketing-automation", icon: "zap" },
+  { href: "/digital-marketing/commerce-platforms", icon: "cart" },
 ]
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -24,40 +27,37 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function DigitalMarketingPage() {
   const t = await getTranslator(serviceHubsMessages)
+  const c = await getTranslator(commonMessages)
+  const k = await getTranslator(kitMessages)
+  const s = await getTranslator(servicesMessages)
 
   const cards = t
     .raw<{ title: string; body: string }[]>("digitalMarketing.cards", [])
-    .map((card, i) => ({ ...card, href: CARD_HREFS[i] ?? "#" }))
+    .map((card, i) => ({
+      title: card.title,
+      description: card.body,
+      icon: CARDS[i]?.icon,
+      href: liveHref(CARDS[i]?.href),
+    }))
 
   return (
-    <div className="bg-flow-bg min-h-screen py-16">
-      <div className="container mx-auto px-4">
-        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-center">{t("digitalMarketing.title")}</h1>
-        <p className="text-xl text-flow-textSoft mb-12 text-center max-w-3xl mx-auto">
-          {t("digitalMarketing.subtitle")}
-        </p>
+    <PageShell>
+      <PageHero
+        crumbs={[{ label: c("breadcrumb.home"), href: "/" }, { label: c("breadcrumb.digitalMarketing") }]}
+        kicker={c("breadcrumb.digitalMarketing")}
+        title={t("digitalMarketing.title")}
+        subtitle={t("digitalMarketing.subtitle")}
+        primary={{ label: s("hero.ctaPrimary"), href: "/contact" }}
+        secondary={{ label: k("explore"), href: "#areas" }}
+      />
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          {cards.map((card) => (
-            <Link key={card.href} href={card.href} className="group">
-              <div className="bg-flow-surface rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                <h2 className="text-2xl font-bold mb-4 group-hover:text-blue-600">{card.title}</h2>
-                <p className="text-flow-textSoft mb-4">{card.body}</p>
-                <Button variant="link" className="p-0 group-hover:text-blue-600">
-                  {t("learnMore")} <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </Link>
-          ))}
-        </div>
+      <Section id="areas" kicker={k("areasKicker")} title={k("areasTitle")} accent={k("areasAccent")}>
+        <CardGrid items={cards} cta={t("learnMore")} columns={4} />
+      </Section>
 
-        <div className="text-center">
-          <p className="text-flow-textSoft mb-6">{t("digitalMarketing.closing")}</p>
-          <Button asChild className="bg-blue-600 hover:bg-blue-700">
-            <Link href="/contact">{t("digitalMarketing.ctaButton")}</Link>
-          </Button>
-        </div>
-      </div>
-    </div>
+      <ProcessSection />
+      <RelatedServices slugs={["digital-marketing", "seo", "social-media-management"]} />
+      <ContactCta body={t("digitalMarketing.closing")} button={t("digitalMarketing.ctaButton")} />
+    </PageShell>
   )
 }
