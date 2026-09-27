@@ -30,6 +30,7 @@ import { Avatar } from "@/components/auth/user-menu"
 import { Panel } from "@/components/account/panel"
 import { ChatTranscriptsSection, useChatTranscripts } from "@/components/account/chat-transcripts"
 import { CvPreviewModal } from "@/components/account/cv-preview-modal"
+import { LogoSpinner } from "@/components/ui/LogoSpinner"
 
 interface Directory {
   admins: DirectoryEntry[]
@@ -725,7 +726,7 @@ function SavedCvsSection({
     >
       {cvs === null ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-6 w-6 animate-spin" style={{ color: "rgb(var(--accent-1))" }} />
+          <LogoSpinner size={40} />
         </div>
       ) : cvs.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-3 px-4 py-12 text-center">

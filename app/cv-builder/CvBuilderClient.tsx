@@ -71,6 +71,7 @@ import {
 import { trackEvent } from "@/lib/analytics";
 import { formatNumber, useT } from "@/lib/i18n";
 import { cvBuilderMessages } from "@/lib/i18n/messages/cvBuilder";
+import { LogoSpinner } from "@/components/ui/LogoSpinner";
 
 /** A4 at 96dpi — the preview iframe renders at this width and is scaled to fit. */
 const PAGE_WIDTH = 794;
@@ -1499,7 +1500,7 @@ export default function CvBuilderClient() {
                   </div>
                 ) : isLoading ? (
                   <div className="flex min-h-[420px] flex-col items-center justify-center gap-3 p-8 text-center">
-                    <Loader2 className="h-8 w-8 animate-spin text-aurora-1" />
+                    <LogoSpinner size={48} label="" />
                     <p className="text-sm text-flow-textSoft">{t("preview.loading")}</p>
                   </div>
                 ) : (

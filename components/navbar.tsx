@@ -172,7 +172,7 @@ export function Navbar() {
         >
           {/* LOGO */}
           <Link href={isRE ? "/real-estate" : "/"} className="flex items-center gap-3 group">
-            <div className="relative">
+            <div className="relative shrink-0">
               <div className="absolute inset-0 bg-aurora-grad rounded-full blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-500" />
               <img
                 src={isRE ? "/logo2.png" : "/logo.png"}

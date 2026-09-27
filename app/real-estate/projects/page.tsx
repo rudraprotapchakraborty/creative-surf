@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import { Plus, Pencil, Trash2, MapPin, Building2, LogOut } from "lucide-react"
 import { useT } from "@/lib/i18n"
 import { realEstateProjectsMessages } from "@/lib/i18n/messages/realEstateProjects"
+import { LogoSpinner } from "@/components/ui/LogoSpinner"
 
 interface Project {
   _id: string
@@ -180,7 +181,7 @@ export default function ProjectsPage() {
         {/* ─── Loading ─── */}
         {loading && (
           <div className="flex justify-center py-24">
-            <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: "rgba(0,102,162,0.2)", borderTopColor: "#0066A2" }} />
+            <LogoSpinner size={48} src="/logo2.png" />
           </div>
         )}
 

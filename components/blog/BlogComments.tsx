@@ -8,6 +8,7 @@ import { useT, useLocale, formatDateForLocale } from "@/lib/i18n"
 import { blogsMessages } from "@/lib/i18n/messages/blogs"
 import { useAuthUser } from "@/components/auth/use-auth-user"
 import { MAX_COMMENT_LENGTH, type BlogComment } from "@/lib/blog-engagement-shared"
+import { LogoSpinner } from "@/components/ui/LogoSpinner"
 
 interface BlogCommentsProps {
   blogId: string
@@ -377,7 +378,7 @@ export default function BlogComments({
 
       {comments === null && (
         <div className="flex justify-center py-6">
-          <div className="w-6 h-6 border-2 rounded-full animate-spin" style={{ borderColor: "rgb(var(--accent-1) / 0.2)", borderTopColor: "rgb(var(--accent-1))" }} />
+          <LogoSpinner size={32} />
         </div>
       )}
 

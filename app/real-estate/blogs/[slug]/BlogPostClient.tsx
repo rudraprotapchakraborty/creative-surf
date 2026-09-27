@@ -14,6 +14,7 @@ import type { BlogRecord } from "@/lib/blog-db"
 import { ArrowLeft, Clock, Calendar, User, Tag, Pencil, Trash2 } from "lucide-react"
 import { useT , useLocale, formatDateForLocale, type Locale } from "@/lib/i18n"
 import { blogPostMessages } from "@/lib/i18n/messages/blogPost"
+import { LogoSpinner } from "@/components/ui/LogoSpinner"
 
 const CATEGORY_COLOR = "#B8892A"
 
@@ -75,7 +76,7 @@ export default function BlogPostClient({
   if (loading) {
     return (
       <div className="min-h-screen bg-flow-bg flex items-center justify-center">
-        <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: "rgba(184,137,42,0.2)", borderTopColor: "#B8892A" }} />
+        <LogoSpinner size={56} src="/logo2.png" />
       </div>
     )
   }

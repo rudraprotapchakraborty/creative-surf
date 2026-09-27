@@ -11,9 +11,12 @@ import {
   useTransform,
 } from 'framer-motion';
 
+/** The Creative Surf mark (public/logo.png), revealed by the progress sweep. */
+const LOGO = '/logo.png';
+
 /* ------------------------------------------------------------------ *
- * The mark — a vector rebuild of the brand logo (public/logo.png): a
- * crescent "C" wrapped around a breaking-wave "S". Drawn in a 100-unit box.
+ * The real-estate mark — a vector rebuild of public/logo2.png: a crescent
+ * "C" with rising bars and an arrow off the curve. Drawn in a 100-unit box.
  * ------------------------------------------------------------------ */
 
 /**
@@ -23,10 +26,7 @@ import {
 const CRESCENT =
   'M4 50a46 46 0 1 0 92 0a46 46 0 1 0 -92 0Z M18 48a38 38 0 1 0 76 0a38 38 0 1 0 -76 0Z';
 
-/** The inner wave: lip curling over at the top, sweeping down into an S. */
-const WAVE_S = 'M73 37C71 26 52 21 45 31C38 41 49 49 58 53C68 58 71 71 59 77C52 81 44 80 37 75';
-
-/** Real-estate mark (public/logo2.png): rising bars and an arrow off the curve. */
+/** Rising bars and an arrow off the curve. */
 const BARS = [
   { x: 40, y: 55, h: 12 },
   { x: 52, y: 45, h: 22 },
@@ -59,11 +59,15 @@ export default function PageLoader() {
   // first paint before the effect below can switch it off.
   const [loading, setLoading] = useState(enabled);
 
-  // One progress value drives the crescent sweep, its glowing tip and the
-  // counter, so they can never drift out of step.
+  // One progress value drives the sweep (crescent or logo), its glowing tip
+  // and the counter, so they can never drift out of step.
   const progress = useMotionValue(0);
   const percent = useTransform(progress, (v) => `${Math.round(v)}`);
   const sweep = useTransform(progress, [0, 100], [0, 1]);
+  const reveal = useTransform(
+    progress,
+    (v) => `conic-gradient(#000 ${v * 3.6}deg, transparent ${v * 3.6}deg)`,
+  );
   const tipRotate = useTransform(progress, [0, 100], [0, 360]);
   const tipOpacity = useTransform(progress, [0, 4, 94, 100], [0, 1, 1, 0]);
 
@@ -115,6 +119,7 @@ export default function PageLoader() {
     sweepMask: `ld-sm-${uid}`,
     crescentClip: `ld-cc-${uid}`,
     glint: `ld-gl-${uid}`,
+    ringGrad: `ld-rg-${uid}`,
   };
 
   const title = 'Creative Surf';
@@ -203,155 +208,188 @@ export default function PageLoader() {
                 transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
               />
 
-              <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full overflow-visible">
-                <defs>
-                  {/* Deep on the heavy left, lifting to light on the hairline right. */}
-                  <linearGradient id={ids.crescentGrad} x1="0" y1="0.2" x2="1" y2="0.8">
-                    <stop offset="0%" stopColor={theme.deep} />
-                    <stop offset="60%" stopColor={theme.mid} />
-                    <stop offset="100%" stopColor={theme.light} />
-                  </linearGradient>
-                  <linearGradient id={ids.innerGrad} x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor={theme.light} />
-                    <stop offset="100%" stopColor={theme.mid} />
-                  </linearGradient>
-                  <linearGradient id={ids.glint} x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#fff" stopOpacity="0" />
-                    <stop offset="50%" stopColor="#fff" stopOpacity="0.75" />
-                    <stop offset="100%" stopColor="#fff" stopOpacity="0" />
-                  </linearGradient>
+              {realEstate ? (
+                <>
+                  <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full overflow-visible">
+                    <defs>
+                      {/* Deep on the heavy left, lifting to light on the hairline right. */}
+                      <linearGradient id={ids.crescentGrad} x1="0" y1="0.2" x2="1" y2="0.8">
+                        <stop offset="0%" stopColor={theme.deep} />
+                        <stop offset="60%" stopColor={theme.mid} />
+                        <stop offset="100%" stopColor={theme.light} />
+                      </linearGradient>
+                      <linearGradient id={ids.innerGrad} x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stopColor={theme.light} />
+                        <stop offset="100%" stopColor={theme.mid} />
+                      </linearGradient>
+                      <linearGradient id={ids.glint} x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor="#fff" stopOpacity="0" />
+                        <stop offset="50%" stopColor="#fff" stopOpacity="0.75" />
+                        <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+                      </linearGradient>
 
-                  {/* The crescent is revealed by a thick stroke sweeping round
-                      the circle — progress is literally the logo being drawn. */}
-                  <mask id={ids.sweepMask} maskUnits="userSpaceOnUse" x="-10" y="-10" width="120" height="120">
+                      {/* The crescent is revealed by a thick stroke sweeping round
+                          the circle — progress is literally the logo being drawn. */}
+                      <mask id={ids.sweepMask} maskUnits="userSpaceOnUse" x="-10" y="-10" width="120" height="120">
+                        <g transform="rotate(-90 50 50)">
+                          <motion.circle cx="50" cy="50" r="42" fill="none" stroke="#fff" strokeWidth="22" style={{ pathLength: sweep }} />
+                        </g>
+                      </mask>
+                      <clipPath id={ids.crescentClip}>
+                        <path d={CRESCENT} clipRule="evenodd" />
+                      </clipPath>
+                    </defs>
+
+                    {/* Faint full crescent as a track for the sweep */}
+                    <path d={CRESCENT} fillRule="evenodd" fill={theme.track} />
+
+                    {/* The crescent, swept in, with a glint passing over it at the end */}
+                    <g mask={`url(#${ids.sweepMask})`}>
+                      <path d={CRESCENT} fillRule="evenodd" fill={`url(#${ids.crescentGrad})`} />
+                    </g>
+                    {!still && (
+                      <g clipPath={`url(#${ids.crescentClip})`}>
+                        <g transform="rotate(20 50 50)">
+                        <motion.rect
+                          x="-30"
+                          y="-10"
+                          width="24"
+                          height="120"
+                          fill={`url(#${ids.glint})`}
+                          initial={{ x: -20 }}
+                          animate={{ x: 150 }}
+                          transition={{ duration: 0.8, ease: 'easeInOut', delay: 1.05 }}
+                        />
+                        </g>
+                      </g>
+                    )}
+
+                      {/* Bars rise like towers, then the arrow shoots out of the curve. */}
+                      {BARS.map((bar, i) => (
+                        <motion.rect
+                          key={bar.x}
+                          x={bar.x}
+                          y={bar.y}
+                          width="8"
+                          height={bar.h}
+                          rx="1.5"
+                          fill={`url(#${ids.crescentGrad})`}
+                          style={{ originX: 0.5, originY: 1 }}
+                          initial={{ scaleY: still ? 1 : 0 }}
+                          animate={{ scaleY: 1 }}
+                          transition={{ duration: 0.6, ease: EASE, delay: 0.25 + i * 0.12 }}
+                        />
+                      ))}
+                      <motion.path
+                        d={ARROW}
+                        fill="none"
+                        stroke={`url(#${ids.innerGrad})`}
+                        strokeWidth="5"
+                        strokeLinecap="round"
+                        initial={{ pathLength: still ? 1 : 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 0.7, ease: DRAW_EASE, delay: 0.55 }}
+                      />
+                      <motion.path
+                        d={ARROW_HEAD}
+                        fill="none"
+                        stroke={theme.light}
+                        strokeWidth="5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        initial={{ opacity: still ? 1 : 0, scale: still ? 1 : 0.4 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        style={{ originX: 1, originY: 0 }}
+                        transition={{ duration: 0.35, ease: EASE, delay: 1.15 }}
+                      />
+                  </svg>
+
+                  {/* Glowing tip riding the leading edge of the crescent sweep */}
+                  {!still && (
+                    <motion.div aria-hidden className="absolute inset-0" style={{ rotate: tipRotate, opacity: tipOpacity }}>
+                      <span
+                        className="absolute left-1/2 top-[6%] -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full"
+                        style={{ background: '#fff', boxShadow: `0 0 10px 3px ${theme.light}, 0 0 22px 6px ${theme.mid}` }}
+                      />
+                    </motion.div>
+                  )}
+                </>
+              ) : (
+                <>
+                  {/* Progress ring round the mark: a faint track, then the arc. */}
+                  <svg viewBox="0 0 100 100" aria-hidden className="absolute inset-0 w-full h-full overflow-visible">
+                    <defs>
+                      <linearGradient id={ids.ringGrad} x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stopColor={theme.light} />
+                        <stop offset="55%" stopColor={theme.mid} />
+                        <stop offset="100%" stopColor={theme.deep} />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="50" r="47" fill="none" stroke={theme.track} strokeWidth="2" />
                     <g transform="rotate(-90 50 50)">
-                      <motion.circle cx="50" cy="50" r="42" fill="none" stroke="#fff" strokeWidth="22" style={{ pathLength: sweep }} />
-                    </g>
-                  </mask>
-                  <clipPath id={ids.crescentClip}>
-                    <path d={CRESCENT} clipRule="evenodd" />
-                  </clipPath>
-                </defs>
-
-                {/* Faint full crescent as a track for the sweep */}
-                <path d={CRESCENT} fillRule="evenodd" fill={theme.track} />
-
-                {/* The crescent, swept in, with a glint passing over it at the end */}
-                <g mask={`url(#${ids.sweepMask})`}>
-                  <path d={CRESCENT} fillRule="evenodd" fill={`url(#${ids.crescentGrad})`} />
-                </g>
-                {!still && (
-                  <g clipPath={`url(#${ids.crescentClip})`}>
-                    <g transform="rotate(20 50 50)">
-                    <motion.rect
-                      x="-30"
-                      y="-10"
-                      width="24"
-                      height="120"
-                      fill={`url(#${ids.glint})`}
-                      initial={{ x: -20 }}
-                      animate={{ x: 150 }}
-                      transition={{ duration: 0.8, ease: 'easeInOut', delay: 1.05 }}
-                    />
-                    </g>
-                  </g>
-                )}
-
-                {realEstate ? (
-                  <>
-                    {/* Bars rise like towers, then the arrow shoots out of the curve. */}
-                    {BARS.map((bar, i) => (
-                      <motion.rect
-                        key={bar.x}
-                        x={bar.x}
-                        y={bar.y}
-                        width="8"
-                        height={bar.h}
-                        rx="1.5"
-                        fill={`url(#${ids.crescentGrad})`}
-                        style={{ originX: 0.5, originY: 1 }}
-                        initial={{ scaleY: still ? 1 : 0 }}
-                        animate={{ scaleY: 1 }}
-                        transition={{ duration: 0.6, ease: EASE, delay: 0.25 + i * 0.12 }}
-                      />
-                    ))}
-                    <motion.path
-                      d={ARROW}
-                      fill="none"
-                      stroke={`url(#${ids.innerGrad})`}
-                      strokeWidth="5"
-                      strokeLinecap="round"
-                      initial={{ pathLength: still ? 1 : 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ duration: 0.7, ease: DRAW_EASE, delay: 0.55 }}
-                    />
-                    <motion.path
-                      d={ARROW_HEAD}
-                      fill="none"
-                      stroke={theme.light}
-                      strokeWidth="5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      initial={{ opacity: still ? 1 : 0, scale: still ? 1 : 0.4 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      style={{ originX: 1, originY: 0 }}
-                      transition={{ duration: 0.35, ease: EASE, delay: 1.15 }}
-                    />
-                  </>
-                ) : (
-                  <>
-                    {/* The S — a soft wide underlay for body, a crisp line on top. */}
-                    <motion.path
-                      d={WAVE_S}
-                      fill="none"
-                      stroke={theme.light}
-                      strokeOpacity="0.35"
-                      strokeWidth="13"
-                      strokeLinecap="round"
-                      initial={{ pathLength: still ? 1 : 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ duration: 0.9, ease: DRAW_EASE, delay: 0.3 }}
-                    />
-                    <motion.path
-                      d={WAVE_S}
-                      fill="none"
-                      stroke={`url(#${ids.innerGrad})`}
-                      strokeWidth="7.5"
-                      strokeLinecap="round"
-                      initial={{ pathLength: still ? 1 : 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ duration: 0.9, ease: DRAW_EASE, delay: 0.3 }}
-                    />
-                    {/* Spray off the lip once the wave has formed */}
-                    {[
-                      { cx: 80, cy: 31, r: 1.8, d: 1.0 },
-                      { cx: 84, cy: 38, r: 1.2, d: 1.08 },
-                      { cx: 78, cy: 24, r: 1, d: 1.14 },
-                    ].map((drop) => (
                       <motion.circle
-                        key={`${drop.cx}-${drop.cy}`}
-                        cx={drop.cx}
-                        cy={drop.cy}
-                        r={drop.r}
-                        fill={theme.light}
-                        initial={{ opacity: 0, scale: 0 }}
-                        animate={still ? { opacity: 1, scale: 1 } : { opacity: [0, 1, 0.8], scale: [0, 1.3, 1] }}
-                        style={{ originX: 0.5, originY: 0.5 }}
-                        transition={{ duration: 0.5, ease: EASE, delay: drop.d }}
+                        cx="50"
+                        cy="50"
+                        r="47"
+                        fill="none"
+                        stroke={`url(#${ids.ringGrad})`}
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        style={{ pathLength: sweep }}
                       />
-                    ))}
-                  </>
-                )}
-              </svg>
+                    </g>
+                  </svg>
 
-              {/* Glowing tip riding the leading edge of the crescent sweep */}
-              {!still && (
-                <motion.div aria-hidden className="absolute inset-0" style={{ rotate: tipRotate, opacity: tipOpacity }}>
-                  <span
-                    className="absolute left-1/2 top-[6%] -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full"
-                    style={{ background: '#fff', boxShadow: `0 0 10px 3px ${theme.light}, 0 0 22px 6px ${theme.mid}` }}
-                  />
-                </motion.div>
+                  {/* The logo — a ghost as the track, then the real thing swept in
+                      clockwise with the ring, so progress is the logo arriving. */}
+                  <div className="absolute inset-[15%]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={LOGO} alt="" aria-hidden draggable={false} className="absolute inset-0 w-full h-full object-contain opacity-[0.12]" />
+                    <motion.img
+                      src={LOGO}
+                      alt=""
+                      aria-hidden
+                      draggable={false}
+                      className="absolute inset-0 w-full h-full object-contain"
+                      style={{ maskImage: reveal, WebkitMaskImage: reveal }}
+                    />
+                    {/* A glint passes over the finished mark, clipped to its shape. */}
+                    {!still && (
+                      <div
+                        aria-hidden
+                        className="absolute inset-0 overflow-hidden"
+                        style={{
+                          maskImage: `url(${LOGO})`,
+                          WebkitMaskImage: `url(${LOGO})`,
+                          maskSize: 'contain',
+                          WebkitMaskSize: 'contain',
+                          maskRepeat: 'no-repeat',
+                          WebkitMaskRepeat: 'no-repeat',
+                          maskPosition: 'center',
+                          WebkitMaskPosition: 'center',
+                        }}
+                      >
+                        <motion.div
+                          className="absolute -top-1/4 h-[150%] w-1/4 rotate-[20deg]"
+                          style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent)' }}
+                          initial={{ left: '-40%' }}
+                          animate={{ left: '120%' }}
+                          transition={{ duration: 0.8, ease: 'easeInOut', delay: 1.05 }}
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Glowing tip riding the leading edge of the ring */}
+                  {!still && (
+                    <motion.div aria-hidden className="absolute inset-0" style={{ rotate: tipRotate, opacity: tipOpacity }}>
+                      <span
+                        className="absolute left-1/2 top-[3%] -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full"
+                        style={{ background: '#fff', boxShadow: `0 0 10px 3px ${theme.light}, 0 0 22px 6px ${theme.mid}` }}
+                      />
+                    </motion.div>
+                  )}
+                </>
               )}
             </div>
 

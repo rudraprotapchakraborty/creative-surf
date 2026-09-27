@@ -8,6 +8,7 @@ import { ArrowLeft, Save, X, Plus, Trash2, MapPin, ExternalLink, UploadCloud, Lo
 import { useT } from "@/lib/i18n"
 import { projectEditorMessages } from "@/lib/i18n/messages/projectEditor"
 import ImageUpload, { uploadImageFile } from "@/components/ui/ImageUpload"
+import { LogoSpinner } from "@/components/ui/LogoSpinner"
 
 interface ProjectForm {
   name: string
@@ -273,7 +274,7 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
   if (loading) {
     return (
       <div className="min-h-screen bg-flow-bg flex items-center justify-center">
-        <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: "rgb(var(--accent-1) / 0.2)", borderTopColor: "rgb(var(--accent-1))" }} />
+        <LogoSpinner size={56} src="/logo2.png" />
       </div>
     )
   }

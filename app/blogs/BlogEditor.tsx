@@ -25,6 +25,7 @@ import {
   sanitizeBlogSeoLinks,
   type BlogSeoFields,
 } from "@/lib/blog-types"
+import { LogoSpinner } from "@/components/ui/LogoSpinner"
 
 interface BlogForm {
   title: string
@@ -253,7 +254,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
   if (loading) {
     return (
       <div className="min-h-screen bg-flow-bg flex items-center justify-center">
-        <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: "rgb(var(--accent-1) / 0.2)", borderTopColor: "rgb(var(--accent-1))" }} />
+        <LogoSpinner size={56} />
       </div>
     )
   }

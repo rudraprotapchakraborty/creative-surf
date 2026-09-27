@@ -7,6 +7,7 @@ import { useParams, useRouter } from "next/navigation"
 import { ArrowLeft, MapPin, Building2, Home, Users, Layers, Clock, Calendar, User, Pencil, Trash2, ChevronLeft, ChevronRight, X } from "lucide-react"
 import { useT , useLocale, formatDateForLocale, type Locale } from "@/lib/i18n"
 import { realEstateProjectDetailMessages } from "@/lib/i18n/messages/realEstateProjectDetail"
+import { LogoSpinner } from "@/components/ui/LogoSpinner"
 
 interface Project {
   _id: string
@@ -121,7 +122,7 @@ export default function ProjectDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-flow-bg flex items-center justify-center">
-        <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: "rgba(0,102,162,0.2)", borderTopColor: "#0066A2" }} />
+        <LogoSpinner size={56} src="/logo2.png" />
       </div>
     )
   }

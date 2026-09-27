@@ -16,12 +16,12 @@ export default function Page() {
     <div className="flex flex-col min-h-screen" style={{ fontFamily: "var(--font-jakarta)" }}>
       <NoSSR>
         <Hero />
+        <TrustedBy />
         <Services />
         <WebDev />
         <Work />
         <Process />
         <Testimonials />
-        <TrustedBy />
         <CTA />
       </NoSSR>
     </div>

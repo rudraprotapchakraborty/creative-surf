@@ -500,6 +500,14 @@ html {
   100% { background-position: 250% 0; }
 }
 
+/* LogoSpinner: the ring sweeps round while the mark breathes inside it. */
+@keyframes logo-breathe {
+  0%, 100% { transform: scale(0.94); opacity: 0.85; }
+  50%      { transform: scale(1);    opacity: 1; }
+}
+.animate-logo-ring   { animation: spin-slow 0.9s linear infinite; }
+.animate-logo-breathe{ animation: logo-breathe 1.6s ease-in-out infinite; }
+
 .animate-mesh        { animation: mesh-pan 24s ease-in-out infinite; }
 .animate-float-y     { animation: float-y 7s ease-in-out infinite; }
 .animate-float-y-slow{ animation: float-y-slow 9s ease-in-out infinite; }
@@ -508,7 +516,10 @@ html {
   html { scroll-behavior: auto; }
   .animate-mesh, .animate-float-y, .animate-float-y-slow,
   .animate-aurora, .animate-aurora-alt, .animate-float-slow,
-  .animate-text-shimmer, .animate-spin-slow { animation: none !important; }
+  .animate-text-shimmer, .animate-spin-slow,
+  .animate-logo-breathe { animation: none !important; }
+  /* A loader still has to read as "working", so the ring slows rather than stops. */
+  .animate-logo-ring { animation-duration: 2.4s !important; }
 }
 
 @layer utilities {
@@ -788,18 +799,4 @@ html.re-active::-webkit-scrollbar-thumb:hover {
 .blog-rich-editor .ProseMirror .ProseMirror-selectednode .blog-editor-image-block > div {
   outline: 2px solid rgb(var(--accent-1));
   outline-offset: 2px;
-}
-
-/* Hide the native cursor on fine pointers so the custom one shows */
-@media (pointer: fine) {
-  html.re-active,
-  html.re-active a,
-  html.re-active button,
-  html.re-active [role="button"],
-  html.re-active input,
-  html.re-active select,
-  html.re-active textarea,
-  html.re-active label {
-    cursor: none !important;
-  }
 }

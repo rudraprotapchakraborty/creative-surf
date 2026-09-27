@@ -8,6 +8,7 @@ import { useT } from "@/lib/i18n"
 import { authMessages } from "@/lib/i18n/messages/auth"
 import { Panel } from "@/components/account/panel"
 import type { ChatTranscript } from "@/lib/chat-types"
+import { LogoSpinner } from "@/components/ui/LogoSpinner"
 
 /**
  * Every conversation visitors have had with the site assistant.
@@ -94,7 +95,7 @@ export function ChatTranscriptsSection({
     >
       {chats === null && !failed ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-6 w-6 animate-spin" style={{ color: "rgb(var(--accent-1))" }} />
+          <LogoSpinner size={40} />
         </div>
       ) : failed ? (
         <p className="py-8 text-center text-sm" style={{ color: "rgb(239 68 68)" }}>
