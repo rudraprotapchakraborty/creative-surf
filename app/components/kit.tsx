@@ -1199,6 +1199,89 @@ export function FaqSection({
 }
 
 /* -------------------------------------------------------------------------- */
+/* CtaPanel — the dark closing panel's chrome, shared by every page's ending.   */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * A slow comet of light runs round the border, the glow inside follows the
+ * pointer, and the logo sits large and faint in the corner — enough life to
+ * end a page on without competing with the one action inside it.
+ */
+export function CtaPanel({ children }: { children: React.ReactNode }) {
+  const mx = useMotionValue(-600);
+  const my = useMotionValue(-600);
+  const spotlight = useMotionTemplate`radial-gradient(520px circle at ${mx}px ${my}px, rgb(var(--accent-2) / 0.22), transparent 70%)`;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.8, ease: EASE }}
+      className="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] p-px"
+      style={{ background: "rgb(var(--accent-1) / 0.18)" }}
+    >
+      {/* Border comet: a conic sweep turning behind a 1px inset. The outer
+          span centres a square big enough to cover the panel's corners at any
+          angle; the inner one does the turning, so the two transforms never
+          fight. */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-1/2 aspect-square w-[160%] -translate-x-1/2 -translate-y-1/2"
+      >
+        <span
+          className="absolute inset-0 animate-spin-slow"
+          style={{
+            background:
+              "conic-gradient(from 0deg, transparent 0deg, transparent 250deg, rgb(var(--accent-1) / 0.9) 310deg, rgb(var(--accent-3)) 340deg, transparent 360deg)",
+            animationDuration: "9s",
+          }}
+        />
+      </span>
+
+      <div
+        onPointerMove={(e) => {
+          const r = e.currentTarget.getBoundingClientRect();
+          mx.set(e.clientX - r.left);
+          my.set(e.clientY - r.top);
+        }}
+        onPointerLeave={() => {
+          mx.set(-600);
+          my.set(-600);
+        }}
+        className="relative overflow-hidden rounded-[calc(2rem-1px)] sm:rounded-[calc(2.5rem-1px)] bg-flow-text px-6 sm:px-14 py-16 sm:py-24 text-center"
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[70vw] h-[70vw] max-w-[900px] max-h-[900px] rounded-full opacity-30"
+          style={{ background: "radial-gradient(circle, rgb(var(--accent-2)) 0%, transparent 65%)" }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-60"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgb(var(--accent-3)/0.05) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--accent-3)/0.05) 1px, transparent 1px)",
+            backgroundSize: "64px 64px",
+          }}
+        />
+        <motion.div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: spotlight }} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/logo.png"
+          alt=""
+          aria-hidden
+          draggable={false}
+          className="pointer-events-none absolute -right-16 -bottom-24 w-72 sm:w-96 opacity-[0.08] -rotate-12 select-none"
+        />
+
+        <div className="relative z-10 flex flex-col items-center">{children}</div>
+      </div>
+    </motion.div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
 /* ClosingCta — the dark panel every page ends on.                              */
 /* -------------------------------------------------------------------------- */
 
@@ -1222,47 +1305,25 @@ export function ClosingCta({
   return (
     <section className="relative section-px pt-6 pb-16 sm:pb-20 bg-flow-bg">
       <div className="mx-auto max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0, y: 30, scale: 0.98 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.9, ease: EASE }}
-          className="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] bg-flow-text px-6 sm:px-14 py-16 sm:py-24 text-center"
-        >
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[70vw] h-[70vw] max-w-[900px] max-h-[900px] rounded-full opacity-30 animate-pulse-glow"
-            style={{ background: "radial-gradient(circle, rgb(var(--accent-2)) 0%, transparent 65%)" }}
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-60"
-            style={{
-              backgroundImage:
-                "linear-gradient(rgb(var(--accent-3)/0.05) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--accent-3)/0.05) 1px, transparent 1px)",
-              backgroundSize: "64px 64px",
-            }}
-          />
-          <div className="relative z-10 flex flex-col items-center">
-            <SectionHead onDark label={kicker} heading={title} accent={accent} subline={body} className="mb-10" />
-            <div className="flex flex-wrap items-center justify-center gap-4">
-              <Magnetic>
-                <Link href={href} className="focus-ring inline-block rounded-xl">
-                  <ActionButton onDark>{button}</ActionButton>
-                </Link>
-              </Magnetic>
-              {secondary && (
-                <Link
-                  href={secondary.href}
-                  className="focus-ring inline-flex items-center gap-2 px-7 py-3.5 rounded-xl micro text-flow-bg border border-flow-bg/20 hover:border-flow-bg/45 transition-colors"
-                >
-                  {secondary.label}
-                  <ArrowUpRight className="w-4 h-4" />
-                </Link>
-              )}
-            </div>
+        <CtaPanel>
+          <SectionHead onDark label={kicker} heading={title} accent={accent} subline={body} className="mb-10" />
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Magnetic>
+              <Link href={href} className="focus-ring inline-block rounded-xl">
+                <ActionButton onDark>{button}</ActionButton>
+              </Link>
+            </Magnetic>
+            {secondary && (
+              <Link
+                href={secondary.href}
+                className="focus-ring inline-flex items-center gap-2 px-7 py-3.5 rounded-xl micro text-flow-bg border border-flow-bg/20 hover:border-flow-bg/45 transition-colors"
+              >
+                {secondary.label}
+                <ArrowUpRight className="w-4 h-4" />
+              </Link>
+            )}
           </div>
-        </motion.div>
+        </CtaPanel>
       </div>
     </section>
   );

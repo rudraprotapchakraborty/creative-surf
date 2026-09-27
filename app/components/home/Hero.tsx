@@ -305,7 +305,7 @@ export default function Hero() {
 
           <Magnetic>
             <Link
-              href="#services"
+              href="#projects"
               className="focus-ring group inline-flex items-center gap-2 rounded-xl px-8 py-4 text-[13px] font-semibold uppercase tracking-[0.12em] backdrop-blur-md transition-colors"
               style={{
                 color: "var(--hero-ink)",

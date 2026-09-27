@@ -500,6 +500,36 @@ html {
   100% { background-position: 250% 0; }
 }
 
+/* Logo marquee: the track holds two copies of the row, so sliding it by half
+   its width lands exactly where it started. Hovering the band pauses it. */
+@keyframes marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+.marquee-track { animation: marquee var(--marquee-duration, 40s) linear infinite; }
+.marquee-track[data-reverse] { animation-direction: reverse; }
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track { animation-play-state: paused; }
+
+/* A bar that fills once, left to right. The testimonials use its end as their
+   autoplay tick, so the bar and the slide change can never disagree. */
+@keyframes fill-x {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+.animate-fill-x {
+  transform-origin: left;
+  animation: fill-x var(--fill-duration, 6s) linear forwards;
+}
+.animate-fill-x[data-paused] { animation-play-state: paused; }
+
+/* Service orbit: the ring turns one way while each icon counter-turns, so the
+   icons travel round without tipping over. Pointing at it holds it still. */
+.orbit-spin    { animation: spin-slow var(--orbit-duration, 60s) linear infinite; }
+.orbit-counter { animation: spin-slow var(--orbit-duration, 60s) linear infinite reverse; }
+.orbit:hover .orbit-spin, .orbit:hover .orbit-counter,
+.orbit:focus-within .orbit-spin, .orbit:focus-within .orbit-counter { animation-play-state: paused; }
+
 /* LogoSpinner: the ring sweeps round while the mark breathes inside it. */
 @keyframes logo-breathe {
   0%, 100% { transform: scale(0.94); opacity: 0.85; }
@@ -517,7 +547,8 @@ html {
   .animate-mesh, .animate-float-y, .animate-float-y-slow,
   .animate-aurora, .animate-aurora-alt, .animate-float-slow,
   .animate-text-shimmer, .animate-spin-slow,
-  .animate-logo-breathe { animation: none !important; }
+  .animate-logo-breathe, .marquee-track,
+  .animate-fill-x, .orbit-spin, .orbit-counter { animation: none !important; }
   /* A loader still has to read as "working", so the ring slows rather than stops. */
   .animate-logo-ring { animation-duration: 2.4s !important; }
 }

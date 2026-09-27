@@ -1,7 +1,8 @@
 import { defineMessages } from "../types";
 
 /**
- * Copy for the newer homepage sections (process, closing CTA).
+ * Copy for the newer homepage sections (web projects, process, testimonial
+ * controls, closing CTA).
  * English-only for now — the translator falls back to `en` per-key, so
  * fr/de/ar visitors see this in English until it's translated.
  */
@@ -56,6 +57,12 @@ export const homeExtraMessages = defineMessages({
           description: "We launch, measure, and iterate — turning real data into compounding, long-term results.",
         },
       ],
+    },
+
+    reviews: {
+      prev: "Previous testimonial",
+      next: "Next testimonial",
+      showFrom: "Show testimonial from {name}",
     },
 
     cta: {

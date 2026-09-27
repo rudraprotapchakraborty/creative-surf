@@ -1,7 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useMemo, useRef, useState } from "react";
-import { motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from "framer-motion";
+import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { animate, motion, useInView, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
 export const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -36,7 +36,7 @@ export function KineticHeading({
           {line.text.split(" ").map((word, wi) => {
             const i = wordIndex++;
             return (
-              <span key={wi} className="inline-block overflow-hidden py-1 mr-[0.28em]">
+              <span key={wi} className="inline-block overflow-hidden pt-1 pb-[0.16em] -mb-[0.1em] mr-[0.28em]">
                 <motion.span
                   className={`inline-block ${line.accent ? "text-aurora" : ""}`}
                   initial={{ y: "115%" }}
@@ -248,12 +248,20 @@ export function Beam({ className = "" }: { className?: string }) {
   );
 }
 
-/** Centred section opener: beam → label → display heading → subline. */
+/**
+ * Section opener: beam → label → display heading → subline.
+ *
+ * `split` sets the heading on the left and the subline (plus any `aside`) on
+ * the right, bottom-aligned. Alternating it with the centred opener keeps a
+ * long page from reading as the same block eight times over.
+ */
 export function SectionHead({
   label,
   heading,
   accent,
   subline,
+  aside,
+  align = "center",
   onDark = false,
   className = "",
 }: {
@@ -262,10 +270,56 @@ export function SectionHead({
   /** Second line, rendered in the brand gradient. */
   accent?: React.ReactNode;
   subline?: React.ReactNode;
+  /** Extra content under the subline — split layout only. */
+  aside?: React.ReactNode;
+  align?: "center" | "split";
   /** Flips the label and subline colours for use on a dark panel. */
   onDark?: boolean;
   className?: string;
 }) {
+  if (align === "split") {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.7, ease: EASE }}
+        // With nothing to set beside it, the heading takes the full width.
+        className={`grid gap-8 lg:items-end lg:gap-16 ${subline || aside ? "lg:grid-cols-[1.25fr_1fr]" : ""} ${className}`}
+      >
+        <div className="flex flex-col items-start">
+          <Beam className="!mx-0 max-w-[12rem] mb-8" />
+          {label && (
+            <span className={`micro mb-5 ${onDark ? "text-flow-bg/55" : "text-flow-textSoft"}`}>{label}</span>
+          )}
+          <h2
+            className={`display ${onDark ? "text-flow-bg" : "text-flow-text"}`}
+            style={{ fontSize: "clamp(2.1rem, 5vw, 4rem)" }}
+          >
+            {heading}
+            {accent && (
+              <>
+                <br />
+                <span className={onDark ? "text-aurora-shimmer" : "text-aurora"}>{accent}</span>
+              </>
+            )}
+          </h2>
+        </div>
+
+        {(subline || aside) && (
+          <div className="flex flex-col items-start gap-6 lg:pb-2">
+            {subline && (
+              <p className={`max-w-md text-base leading-relaxed ${onDark ? "text-flow-bg/60" : "text-flow-textSoft"}`}>
+                {subline}
+              </p>
+            )}
+            {aside}
+          </div>
+        )}
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -336,6 +390,50 @@ export function ActionButton({
         className={`grid place-items-center w-[3.25rem] rounded-xl transition-transform duration-300 group-hover:-translate-y-0.5 ${face}`}
       >
         <ArrowUpRight className="w-4 h-4" />
+      </span>
+    </span>
+  );
+}
+
+/**
+ * A stat like "2,400+" or "94%" that counts up from zero the first time it
+ * scrolls into view. The number is parsed out of the string, so the copy stays
+ * the single source of truth; anything unparseable renders as-is.
+ */
+export function CountUp({ value, duration = 1.6 }: { value: string; duration?: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const still = useReducedMotion() ?? false;
+  const match = value.match(/^(\D*)([\d,.]+)(.*)$/);
+  const target = match ? parseFloat(match[2].replace(/,/g, "")) : NaN;
+  const decimals = match && match[2].includes(".") ? match[2].split(".")[1].length : 0;
+  const grouped = !!match && match[2].includes(",");
+  const [shown, setShown] = useState(0);
+
+  useEffect(() => {
+    if (!inView || Number.isNaN(target)) return;
+    if (still) {
+      setShown(target);
+      return;
+    }
+    const controls = animate(0, target, { duration, ease: EASE, onUpdate: setShown });
+    return () => controls.stop();
+  }, [inView, target, duration, still]);
+
+  if (!match || Number.isNaN(target)) return <span>{value}</span>;
+
+  const text = shown.toLocaleString("en-US", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+    useGrouping: grouped,
+  });
+
+  return (
+    <span ref={ref} aria-label={value}>
+      <span aria-hidden>
+        {match[1]}
+        {text}
+        {match[3]}
       </span>
     </span>
   );

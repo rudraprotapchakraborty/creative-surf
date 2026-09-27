@@ -8,7 +8,7 @@ import { Building2, Users, TrendingUp, MapPin } from "lucide-react";
 
 import { useT } from "@/lib/i18n";
 import { homeMessages } from "@/lib/i18n/messages/home";
-import { ActionButton, Beam, EASE } from "./shared";
+import { ActionButton, Beam, CountUp, EASE } from "./shared";
 
 const PILL_ICONS = [MapPin, Building2, Users];
 
@@ -104,7 +104,7 @@ export default function Work() {
                   <div key={label} className="flex flex-col items-start gap-1">
                     <Icon className="w-4 h-4 mb-1 text-aurora-3" />
                     <span className="display text-flow-bg tabular-nums" style={{ fontSize: "2.4rem" }}>
-                      {value}
+                      <CountUp value={value} />
                     </span>
                     <span className="text-xs text-flow-bg/55 leading-tight">{label}</span>
                   </div>
@@ -126,8 +126,8 @@ export default function Work() {
             >
               <div className="relative h-[420px] sm:h-[480px] lg:h-full lg:min-h-[480px] flex gap-3">
                 <motion.div style={{ y: yValues[0] }} className="flex-1 flex flex-col justify-end">
-                  <div className="relative h-[75%] rounded-2xl overflow-hidden shadow-2xl">
-                    <Image src={images[0].src} alt={images[0].alt} fill className="object-cover object-center" sizes="(max-width:768px) 50vw, 25vw" />
+                  <div className="group/tile relative h-[75%] rounded-2xl overflow-hidden shadow-2xl">
+                    <Image src={images[0].src} alt={images[0].alt} fill className="object-cover object-center transition-transform duration-[1.2s] ease-out group-hover/tile:scale-[1.06]" sizes="(max-width:768px) 50vw, 25vw" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                     <div className="absolute bottom-3 left-3 right-3 flex items-center gap-1.5">
                       <MapPin className="w-3 h-3 text-white/80 flex-shrink-0" />
@@ -138,8 +138,8 @@ export default function Work() {
 
                 <div className="flex-1 flex flex-col gap-3">
                   <motion.div style={{ y: yValues[1] }} className="flex-1">
-                    <div className="relative h-full rounded-2xl overflow-hidden shadow-2xl">
-                      <Image src={images[1].src} alt={images[1].alt} fill className="object-cover object-center" sizes="(max-width:768px) 50vw, 25vw" />
+                    <div className="group/tile relative h-full rounded-2xl overflow-hidden shadow-2xl">
+                      <Image src={images[1].src} alt={images[1].alt} fill className="object-cover object-center transition-transform duration-[1.2s] ease-out group-hover/tile:scale-[1.06]" sizes="(max-width:768px) 50vw, 25vw" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
                       <div className="absolute bottom-3 left-3 right-3">
                         <span className="text-white/90 text-xs font-medium">{images[1].caption}</span>
@@ -147,8 +147,8 @@ export default function Work() {
                     </div>
                   </motion.div>
                   <motion.div style={{ y: yValues[2] }} className="flex-1">
-                    <div className="relative h-full rounded-2xl overflow-hidden shadow-2xl">
-                      <Image src={images[2].src} alt={images[2].alt} fill className="object-cover object-top" sizes="(max-width:768px) 50vw, 25vw" />
+                    <div className="group/tile relative h-full rounded-2xl overflow-hidden shadow-2xl">
+                      <Image src={images[2].src} alt={images[2].alt} fill className="object-cover object-top transition-transform duration-[1.2s] ease-out group-hover/tile:scale-[1.06]" sizes="(max-width:768px) 50vw, 25vw" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
                       <div className="absolute bottom-3 left-3 right-3">
                         <span className="text-white/90 text-xs font-medium">{images[2].caption}</span>
