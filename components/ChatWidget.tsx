@@ -391,17 +391,18 @@ export function ChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.9 }}
             transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1], delay: 0.6 }}
-            className="fixed bottom-[5.25rem] right-5 sm:bottom-24 sm:right-6 z-[4000] rounded-full px-3.5 py-2 text-xs font-semibold text-flow-text shadow-soft"
+            className="fixed bottom-[5.25rem] right-5 sm:bottom-24 sm:right-6 [.wa-fab_&]:bottom-8 [.wa-fab_&]:right-[5.5rem] sm:[.wa-fab_&]:bottom-9 sm:[.wa-fab_&]:right-[5.75rem] z-[4000] rounded-full px-3.5 py-2 text-xs font-semibold text-flow-text shadow-soft"
             style={{
               background: "var(--flow-card-solid)",
               border: "1px solid var(--flow-border-strong)",
             }}
           >
             {t("bubble")}
-            {/* Tail, pointing down at the face. */}
+            {/* Tail, pointing down at the face — or right at it when a
+                WhatsApp button (html.wa-fab) has taken the spot above. */}
             <span
               aria-hidden
-              className="absolute right-5 -bottom-1 h-2.5 w-2.5 rotate-45"
+              className="absolute right-5 -bottom-1 h-2.5 w-2.5 rotate-45 [.wa-fab_&]:right-[-0.3rem] [.wa-fab_&]:bottom-auto [.wa-fab_&]:top-1/2 [.wa-fab_&]:-mt-[0.3125rem] [.wa-fab_&]:-rotate-45"
               style={{
                 background: "var(--flow-card-solid)",
                 borderRight: "1px solid var(--flow-border-strong)",

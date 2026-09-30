@@ -7,7 +7,9 @@ import { useParams, useRouter } from "next/navigation"
 import { ArrowLeft, MapPin, Building2, Home, Users, Layers, Clock, Calendar, User, Pencil, Trash2, ChevronLeft, ChevronRight, X } from "lucide-react"
 import { useT , useLocale, formatDateForLocale, type Locale } from "@/lib/i18n"
 import { realEstateProjectDetailMessages } from "@/lib/i18n/messages/realEstateProjectDetail"
+import { realEstateWhatsAppMessages } from "@/lib/i18n/messages/realEstateWhatsApp"
 import { LogoSpinner } from "@/components/ui/LogoSpinner"
+import { FloatingWhatsApp, projectUrl } from "../../WhatsApp"
 
 interface Project {
   _id: string
@@ -69,6 +71,7 @@ const SPEC_ICONS: Record<string, React.ElementType> = {
 
 export default function ProjectDetailPage() {
   const t = useT(realEstateProjectDetailMessages)
+  const tw = useT(realEstateWhatsAppMessages)
   const locale = useLocale()
   const { id } = useParams<{ id: string }>()
   const router = useRouter()
@@ -140,6 +143,8 @@ export default function ProjectDetailPage() {
     .filter(k => project[k])
 
   const allImages = [project.coverImage, ...(project.images ?? [])].filter(Boolean)
+
+  const enquiryText = tw("prefill.project", { name: project.name, url: projectUrl(project.slug) })
 
   const relatedBlogs = blogs.filter(blog => {
     const nameMatch = project.name && (
@@ -599,6 +604,8 @@ export default function ProjectDetailPage() {
           )}
         </div>
       )}
+
+      <FloatingWhatsApp text={enquiryText} />
     </main>
   )
 }

@@ -1,6 +1,7 @@
 import { Plus_Jakarta_Sans, Fraunces } from "next/font/google"
 import RealEstateFooter from "./RealEstateFooter"
 import RealEstateChrome from "./RealEstateChrome"
+import { RealEstateWhatsApp } from "./WhatsApp"
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -39,6 +40,7 @@ export default function RealEstateLayout({ children }: { children: React.ReactNo
           so the tall footer never rides up under the navbar on short pages. */}
       <div className="min-h-screen">{children}</div>
       <RealEstateFooter />
+      <RealEstateWhatsApp />
     </div>
   )
 }
