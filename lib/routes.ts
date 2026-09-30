@@ -45,6 +45,9 @@ const LIVE_ROUTES = new Set([
   "/ux-interactive/design/website-design",
 ]);
 
+/** The live routes as a list, for app/sitemap.ts. */
+export const LIVE_PATHS: readonly string[] = [...LIVE_ROUTES];
+
 /** Sections whose children are generated from data (posts, services, projects). */
 const LIVE_PREFIXES = ["/services/", "/blogs/", "/real-estate/blogs/", "/real-estate/projects/"];
 
