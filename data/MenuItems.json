@@ -463,26 +463,6 @@
               {
                 "name": "Our Blog",
                 "href": "/blog"
-              },
-              {
-                "name": "SEO Checker Report",
-                "href": "/tools/seo-checker"
-              },
-              {
-                "name": "Free Keyword Suggestion Tool",
-                "href": "/tools/keyword-suggestion"
-              },
-              {
-                "name": "Fix Your Funnel",
-                "href": "/tools/fix-funnel"
-              },
-              {
-                "name": "FAQFox",
-                "href": "/tools/faq-fox"
-              },
-              {
-                "name": "View All Tools",
-                "href": "/tools"
               }
             ]
           }

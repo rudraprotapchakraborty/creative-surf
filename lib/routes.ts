@@ -38,8 +38,6 @@ const LIVE_ROUTES = new Set([
   "/sitemap",
   "/team",
   "/terms",
-  "/tools/fix-funnel",
-  "/tools/keyword-suggestion",
   "/ux-interactive",
   "/ux-interactive/design/ecommerce-design",
   "/ux-interactive/design/website-design",

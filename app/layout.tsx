@@ -1,15 +1,21 @@
 import type React from "react";
 import type { Metadata } from "next";
-import { generateMetadata } from "@/lib/metadata";
+import { generateMetadata as buildMetadata } from "@/lib/metadata";
+import { getTranslator } from "@/lib/i18n/server";
+import { pageMetaMessages } from "@/lib/i18n/messages/pageMeta";
 import Client from "./client";
 import "./globals.css";
 
-export const metadata: Metadata = generateMetadata({
-  title: "Creative Surf",
-  description:
-    "Creative Surf is a leading digital marketing agency specializing in SEO, content marketing, and social media strategies to drive revenue growth for businesses.",
-  path: "/",
-});
+// The homepage is a client component, so its title lives here. Every other
+// route sets its own; this is only the fallback for one that forgets.
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslator(pageMetaMessages);
+  return buildMetadata({
+    title: t("home.title"),
+    description: t("home.description"),
+    path: "/",
+  });
+}
 
 export default function RootLayout({
   children,

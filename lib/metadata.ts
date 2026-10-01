@@ -22,7 +22,13 @@ export function generateMetadata({
   const defaultImage = "/og-image.jpg" // Replace with your default OG image
   const baseUrl = "https://www.creativesurf.agency"
 
-  const metaTitle = title ? `${title} | ${siteName}` : defaultTitle
+  // Titles that already carry the brand are used as-is, so passing
+  // "Creative Surf" can never come out as "Creative Surf | Creative Surf".
+  const metaTitle = title
+    ? title.includes(siteName)
+      ? title
+      : `${title} | ${siteName}`
+    : defaultTitle
   const metaDescription = description || defaultDescription
   const metaImage = image || defaultImage
   const url = path ? `${baseUrl}${path}` : baseUrl

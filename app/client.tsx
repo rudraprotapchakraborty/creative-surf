@@ -3,7 +3,6 @@ import { Navbar } from "@/components/navbar"
 import { ConditionalFooter } from "@/components/ConditionalFooter"
 import { LoadingBarProvider } from "@/components/LoadingBarContext"
 import { ChatWidget } from "@/components/ChatWidget"
-import type { Metadata } from "next"
 import { Plus_Jakarta_Sans } from "next/font/google"
 import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -53,14 +52,6 @@ document.documentElement.insertBefore(document.createComment(${JSON.stringify(
 console.log("%c" + ${JSON.stringify(SIGN_OFF)},
 "color:#9b9b9b;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.05");
 }catch(e){}`
-
-export const metadata: Metadata = {
-  title: "Creative Surf",
-  description: "Creative Surf is a leading digital marketing agency...",
-  icons: {
-    icon: "/favicon.ico",
-  },
-}
 
 export default async function RootLayout({
   children,

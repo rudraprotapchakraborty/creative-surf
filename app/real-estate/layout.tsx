@@ -1,7 +1,13 @@
+import type { Metadata } from "next"
 import { Plus_Jakarta_Sans, Fraunces } from "next/font/google"
+import { pageMetadata } from "@/lib/page-metadata"
 import RealEstateFooter from "./RealEstateFooter"
 import RealEstateChrome from "./RealEstateChrome"
 import { RealEstateWhatsApp } from "./WhatsApp"
+
+export function generateMetadata(): Promise<Metadata> {
+  return pageMetadata("realEstate", "/real-estate")
+}
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],

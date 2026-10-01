@@ -22,10 +22,8 @@ Contact:
 - Phone / WhatsApp: +880 1988-467099
 - Contact form: /contact
 
-Free tools on the site anyone can use:
+A free tool on the site anyone can use:
 - /cv-builder — an AI CV builder that turns rough notes into a recruiter-ready CV (sign-in required to generate and save).
-- /tools/keyword-suggestion — keyword ideas for a topic or page.
-- /tools/fix-funnel — a diagnostic for where a marketing funnel is leaking.
 
 Other useful pages:
 - /services — the full service overview

@@ -17,8 +17,6 @@ import { aboutAwardsMessages } from "@/lib/i18n/messages/aboutAwards"
 import { aboutCareersMessages } from "@/lib/i18n/messages/aboutCareers"
 import { aboutReviewsMessages } from "@/lib/i18n/messages/aboutReviews"
 import { websiteCostMessages } from "@/lib/i18n/messages/websiteCost"
-import { fixFunnelMessages } from "@/lib/i18n/messages/fixFunnel"
-import { keywordToolMessages } from "@/lib/i18n/messages/keywordTool"
 import { legalPrivacyMessages } from "@/lib/i18n/messages/legalPrivacy"
 import { legalPrivacyTermsMessages } from "@/lib/i18n/messages/legalPrivacyTerms"
 import { legalTermsMessages } from "@/lib/i18n/messages/legalTerms"
@@ -41,7 +39,7 @@ export async function generateMetadata(): Promise<Metadata> {
  * parallel list of names to keep in sync.
  */
 export default async function SitemapPage() {
-  const [t, c, nav, services, di, cat, hubs, seo, design, approach, history, values, awards, careers, reviews, cost, funnel, keywords, privacy, privacyTerms, terms] =
+  const [t, c, nav, services, di, cat, hubs, seo, design, approach, history, values, awards, careers, reviews, cost, privacy, privacyTerms, terms] =
     await Promise.all([
       getTranslator(sitemapMessages),
       getTranslator(commonMessages),
@@ -59,8 +57,6 @@ export default async function SitemapPage() {
       getTranslator(aboutCareersMessages),
       getTranslator(aboutReviewsMessages),
       getTranslator(websiteCostMessages),
-      getTranslator(fixFunnelMessages),
-      getTranslator(keywordToolMessages),
       getTranslator(legalPrivacyMessages),
       getTranslator(legalPrivacyTermsMessages),
       getTranslator(legalTermsMessages),
@@ -130,14 +126,6 @@ export default async function SitemapPage() {
         { label: careers("hero.title"), href: "/about/careers" },
         { label: reviews("hero.title"), href: "/about/reviews" },
         { label: cost("breadcrumb.current"), href: "/about/pricing/website-cost" },
-      ],
-    },
-    {
-      title: c("breadcrumb.tools"),
-      icon: "wrench",
-      links: [
-        { label: funnel("hero.title"), href: "/tools/fix-funnel" },
-        { label: keywords("hero.title"), href: "/tools/keyword-suggestion" },
       ],
     },
     {
