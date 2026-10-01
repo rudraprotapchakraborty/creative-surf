@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { generateMetadata as buildMetadata } from "@/lib/metadata"
 import { getTranslator } from "@/lib/i18n/server"
 import { aboutApproachMessages } from "@/lib/i18n/messages/aboutApproach"
 import { commonMessages } from "@/lib/i18n/messages/common"
@@ -15,8 +16,11 @@ type CaseStudy = { category: string; title: string; body: string }
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslator(aboutApproachMessages)
   return {
-    title: t("metaTitle"),
-    description: t("metaDescription"),
+    ...buildMetadata({
+      title: t("metaTitle"),
+      description: t("metaDescription"),
+      path: "/about/approach",
+    }),
   }
 }
 

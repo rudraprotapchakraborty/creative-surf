@@ -6,7 +6,7 @@ import { defineMessages } from "../types";
  */
 export const teamMessages = defineMessages({
   en: {
-    metaTitle: "Our Team",
+    metaTitle: "Our Team | Creative Surf",
     metaDescription:
       "Meet the people behind Creative Surf — the team building our strategy, products and stories.",
     hero: {
@@ -40,7 +40,7 @@ export const teamMessages = defineMessages({
     },
   },
   fr: {
-    metaTitle: "Notre équipe",
+    metaTitle: "Notre équipe | Creative Surf",
     metaDescription:
       "Rencontrez les personnes derrière Creative Surf — l'équipe qui construit notre stratégie, nos produits et nos histoires.",
     hero: {
@@ -74,7 +74,7 @@ export const teamMessages = defineMessages({
     },
   },
   de: {
-    metaTitle: "Unser Team",
+    metaTitle: "Unser Team | Creative Surf",
     metaDescription:
       "Lernen Sie die Menschen hinter Creative Surf kennen — das Team hinter Strategie, Produkten und Geschichten.",
     hero: {
@@ -108,7 +108,7 @@ export const teamMessages = defineMessages({
     },
   },
   ar: {
-    metaTitle: "Fariquna",
+    metaTitle: "Fariquna | Creative Surf",
     metaDescription:
       "Taarraf ala al-ashkhas khalfa Creative Surf — al-fariq alladhi yabni al-istratijiyya wal-muntajat wal-qisas.",
     hero: {
@@ -142,7 +142,7 @@ export const teamMessages = defineMessages({
     },
   },
   bn: {
-    metaTitle: "আমাদের টিম",
+    metaTitle: "আমাদের টিম | Creative Surf",
     metaDescription:
       "Creative Surf-এর পেছনের মানুষদের সাথে পরিচিত হোন — যারা আমাদের কৌশল, পণ্য আর গল্প গড়ে তোলেন।",
     hero: {

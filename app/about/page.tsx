@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { generateMetadata as buildMetadata } from "@/lib/metadata"
 import { getTranslator } from "@/lib/i18n/server"
 import { aboutMessages } from "@/lib/i18n/messages/about"
 import { aboutApproachMessages } from "@/lib/i18n/messages/aboutApproach"
@@ -27,8 +28,11 @@ const VALUE_ICONS: IconName[] = ["lightbulb", "handshake", "star", "heart", "tre
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslator(aboutMessages)
   return {
-    title: t("metaTitle"),
-    description: t("metaDescription"),
+    ...buildMetadata({
+      title: t("metaTitle"),
+      description: t("metaDescription"),
+      path: "/about",
+    }),
   }
 }
 

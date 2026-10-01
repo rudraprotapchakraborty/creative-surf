@@ -2,7 +2,7 @@ import { defineMessages } from "../types";
 
 export const cvBuilderMessages = defineMessages({
   en: {
-    metaTitle: "AI CV Builder — Free, ATS-Safe, Never Invents Facts",
+    metaTitle: "Free AI CV Builder — ATS-Friendly | Creative Surf",
     metaDescription:
       "Turn rough notes into a recruiter-ready CV. Paste the job advert, see which requirements you have covered, and download a free ATS-safe PDF. We never invent employers, dates or numbers.",
     hero: {
@@ -467,7 +467,7 @@ export const cvBuilderMessages = defineMessages({
   },
 
   fr: {
-    metaTitle: "Générateur de CV par IA — gratuit, compatible ATS, sans invention",
+    metaTitle: "Générateur de CV IA gratuit — compatible ATS | Creative Surf",
     metaDescription:
       "Transformez quelques notes en un CV prêt pour les recruteurs. Collez l'annonce, voyez les exigences déjà couvertes et téléchargez un PDF gratuit compatible ATS. Nous n'inventons jamais d'employeur, de date ni de chiffre.",
     hero: {
@@ -935,7 +935,7 @@ export const cvBuilderMessages = defineMessages({
   },
 
   de: {
-    metaTitle: "KI-Lebenslauf-Generator — kostenlos, ATS-sicher, ohne Erfindungen",
+    metaTitle: "Kostenloser KI-Lebenslauf-Generator — ATS-sicher | Creative Surf",
     metaDescription:
       "Aus Stichpunkten wird ein Lebenslauf, den Recruiter lesen wollen. Stellenanzeige einfügen, offene Anforderungen sehen und ein kostenloses ATS-sicheres PDF laden. Wir erfinden keine Arbeitgeber, Daten oder Zahlen.",
     hero: {
@@ -1403,7 +1403,7 @@ export const cvBuilderMessages = defineMessages({
   },
 
   ar: {
-    metaTitle: "Munshi Al-Sira Al-Dhatiyya bil-Zaka Al-Istinai — Majjani wa Bidun Ikhtilaq",
+    metaTitle: "Munshi Al-Sira Al-Dhatiyya bil-Zaka Al-Istinai — Majjani | Creative Surf",
     metaDescription:
       "Hawwil mulahazatik ila Sira Dhatiyya jahiza lil-Muwazzifin. Alsiq ilan Al-Wazifa, shahid ayy Al-Mutatallabat ghattaytaha, wa hammil PDF majjani mutawafiq ma anzimat Al-Farz. La nakhtali arbab amal aw tawarikh aw arqam.",
     hero: {
@@ -1870,7 +1870,7 @@ export const cvBuilderMessages = defineMessages({
   },
 
   bn: {
-    metaTitle: "এআই সিভি বিল্ডার — বিনামূল্যে, ATS-উপযোগী, কিছুই বানিয়ে লেখে না",
+    metaTitle: "ফ্রি এআই সিভি বিল্ডার — ATS-উপযোগী | Creative Surf",
     metaDescription:
       "এলোমেলো নোট থেকে তৈরি করুন রিক্রুটারের উপযোগী সিভি। চাকরির বিজ্ঞপ্তিটি পেস্ট করুন, দেখুন কোন শর্তগুলো আপনি পূরণ করেছেন, আর বিনামূল্যে ATS-উপযোগী পিডিএফ নামান। আমরা কখনও প্রতিষ্ঠান, তারিখ বা সংখ্যা বানিয়ে লিখি না।",
     hero: {

@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { generateMetadata as buildMetadata } from "@/lib/metadata"
 import { notFound } from "next/navigation"
 import ServiceDetail from "./ServiceDetail"
 import { SERVICES, serviceIndex } from "../catalog"
@@ -23,8 +24,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const t = await getTranslator(servicesMessages)
   const td = await getTranslator(serviceDetailsMessages)
   return {
-    title: `${t(`items.${index}.title`)} | Creative Surf`,
-    description: td(`services.${slug}.intro`),
+    ...buildMetadata({
+      title: `${t(`items.${index}.title`)} | Creative Surf`,
+      description: td(`services.${slug}.intro`),
+      path: `/services/${slug}`,
+    }),
   }
 }
 

@@ -2,7 +2,7 @@ import { defineMessages } from "../types";
 
 export const aboutHistoryMessages = defineMessages({
   en: {
-    metaTitle: "CreativeSurf History",
+    metaTitle: "Our History",
     metaDescription:
       "Learn about the journey and milestones of CreativeSurf from its founding to becoming a leading digital marketing agency.",
     breadcrumbCurrent: "CreativeSurf History",
@@ -79,7 +79,7 @@ export const aboutHistoryMessages = defineMessages({
   },
 
   fr: {
-    metaTitle: "L'histoire de CreativeSurf",
+    metaTitle: "Notre histoire",
     metaDescription:
       "Découvrez le parcours et les étapes clés de CreativeSurf, de sa création à son statut d'agence de marketing digital de référence.",
     breadcrumbCurrent: "L'histoire de CreativeSurf",
@@ -156,7 +156,7 @@ export const aboutHistoryMessages = defineMessages({
   },
 
   de: {
-    metaTitle: "Die Geschichte von CreativeSurf",
+    metaTitle: "Unsere Geschichte",
     metaDescription:
       "Erfahren Sie mehr über den Weg und die Meilensteine von CreativeSurf — von der Gründung bis zur führenden Digitalmarketing-Agentur.",
     breadcrumbCurrent: "Die Geschichte von CreativeSurf",
@@ -232,7 +232,7 @@ export const aboutHistoryMessages = defineMessages({
     },
   },
   ar: {
-    metaTitle: "Tarikh CreativeSurf",
+    metaTitle: "Tarikhuna",
     metaDescription:
       "Tarraf ala masirat CreativeSurf wa mahattatiha min Al-Tasis hatta an asbahat wakalat taswiq raqmi raida.",
     breadcrumbCurrent: "Tarikh CreativeSurf",
@@ -298,7 +298,7 @@ export const aboutHistoryMessages = defineMessages({
     },
   },
   bn: {
-    metaTitle: "CreativeSurf-এর ইতিহাস",
+    metaTitle: "আমাদের ইতিহাস",
     metaDescription:
       "প্রতিষ্ঠা থেকে শুরু করে শীর্ষস্থানীয় ডিজিটাল মার্কেটিং এজেন্সি হয়ে ওঠা পর্যন্ত CreativeSurf-এর যাত্রা ও মাইলফলকগুলো জানুন।",
     breadcrumbCurrent: "CreativeSurf-এর ইতিহাস",

@@ -2,7 +2,7 @@ import { defineMessages } from "../types";
 
 export const aboutCareersMessages = defineMessages({
   en: {
-    metaTitle: "Career Opportunities at Creative Surf",
+    metaTitle: "Careers",
     metaDescription:
       "Explore exciting career opportunities at Creative Surf. Join our team of digital marketing experts and help shape the future of digital innovation.",
     breadcrumbCurrent: "Career",
@@ -178,7 +178,7 @@ export const aboutCareersMessages = defineMessages({
   },
 
   fr: {
-    metaTitle: "Carrières chez Creative Surf",
+    metaTitle: "Carrières",
     metaDescription:
       "Découvrez les opportunités de carrière chez Creative Surf. Rejoignez notre équipe d'experts du marketing digital et façonnez l'avenir du digital.",
     breadcrumbCurrent: "Carrières",
@@ -356,7 +356,7 @@ export const aboutCareersMessages = defineMessages({
   },
 
   de: {
-    metaTitle: "Karriere bei Creative Surf",
+    metaTitle: "Karriere",
     metaDescription:
       "Entdecken Sie Karrierechancen bei Creative Surf. Werden Sie Teil unseres Teams aus Digitalmarketing-Experten und gestalten Sie die digitale Zukunft mit.",
     breadcrumbCurrent: "Karriere",
@@ -533,7 +533,7 @@ export const aboutCareersMessages = defineMessages({
     },
   },
   ar: {
-    metaTitle: "Furas Amal fi Creative Surf",
+    metaTitle: "Furas al-Amal",
     metaDescription:
       "Istakshif furas Al-Amal Al-Mumayyaza fi Creative Surf. Indamm ila fariqina min khubara Al-Taswiq Al-Raqmi wa sahim fi sunn mustaqbal Al-Ibtikar Al-Raqmi.",
     breadcrumbCurrent: "Al-Wazaif",
@@ -658,7 +658,7 @@ export const aboutCareersMessages = defineMessages({
   },
 
   bn: {
-    metaTitle: "Creative Surf-এ ক্যারিয়ারের সুযোগ",
+    metaTitle: "ক্যারিয়ার",
     metaDescription:
       "Creative Surf-এ ক্যারিয়ারের দারুণ সুযোগগুলো দেখুন। আমাদের ডিজিটাল মার্কেটিং বিশেষজ্ঞদের দলে যোগ দিয়ে ডিজিটাল উদ্ভাবনের ভবিষ্যৎ গড়তে সাহায্য করুন।",
     breadcrumbCurrent: "ক্যারিয়ার",

@@ -2,8 +2,11 @@ import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { COOKIE_NAME, verifyToken } from "@/lib/auth"
 import { AccountDashboard } from "@/components/account/account-dashboard"
+import { pageMetadata } from "@/lib/page-metadata"
 
-export const metadata = { title: "Dashboard · Creative Surf" }
+export function generateMetadata() {
+  return pageMetadata("account", "/account", { noIndex: true })
+}
 
 /** Every signed-in account lands here; the dashboard adds admin sections by role. */
 export default async function AccountPage() {

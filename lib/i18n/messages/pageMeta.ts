@@ -6,6 +6,26 @@ import { defineMessages } from "../types";
  */
 export const pageMetaMessages = defineMessages({
   en: {
+    account: {
+      title: "My Account | Creative Surf",
+      description: "Manage your Creative Surf account, saved CVs and chats.",
+    },
+    newPost: {
+      title: "New Blog Post | Creative Surf",
+      description: "Write a new blog post.",
+    },
+    editPost: {
+      title: "Edit Blog Post | Creative Surf",
+      description: "Edit a blog post.",
+    },
+    newRealEstatePost: {
+      title: "New Blog Post | Creative Surf Real Estate",
+      description: "Write a new real estate blog post.",
+    },
+    editRealEstatePost: {
+      title: "Edit Blog Post | Creative Surf Real Estate",
+      description: "Edit a real estate blog post.",
+    },
     home: {
       title: "Creative Surf | Digital Marketing Agency",
       description:
@@ -43,6 +63,26 @@ export const pageMetaMessages = defineMessages({
     },
   },
   fr: {
+    account: {
+      title: "Mon compte | Creative Surf",
+      description: "Gérez votre compte Creative Surf, vos CV et vos conversations.",
+    },
+    newPost: {
+      title: "Nouvel article | Creative Surf",
+      description: "Rédigez un nouvel article de blog.",
+    },
+    editPost: {
+      title: "Modifier l'article | Creative Surf",
+      description: "Modifiez un article de blog.",
+    },
+    newRealEstatePost: {
+      title: "Nouvel article | Creative Surf Real Estate",
+      description: "Rédigez un nouvel article immobilier.",
+    },
+    editRealEstatePost: {
+      title: "Modifier l'article | Creative Surf Real Estate",
+      description: "Modifiez un article immobilier.",
+    },
     home: {
       title: "Creative Surf | Agence de marketing digital",
       description:
@@ -79,6 +119,26 @@ export const pageMetaMessages = defineMessages({
     },
   },
   de: {
+    account: {
+      title: "Mein Konto | Creative Surf",
+      description: "Verwalten Sie Ihr Creative-Surf-Konto, Lebensläufe und Chats.",
+    },
+    newPost: {
+      title: "Neuer Blogbeitrag | Creative Surf",
+      description: "Schreiben Sie einen neuen Blogbeitrag.",
+    },
+    editPost: {
+      title: "Blogbeitrag bearbeiten | Creative Surf",
+      description: "Bearbeiten Sie einen Blogbeitrag.",
+    },
+    newRealEstatePost: {
+      title: "Neuer Blogbeitrag | Creative Surf Real Estate",
+      description: "Schreiben Sie einen neuen Immobilien-Blogbeitrag.",
+    },
+    editRealEstatePost: {
+      title: "Blogbeitrag bearbeiten | Creative Surf Real Estate",
+      description: "Bearbeiten Sie einen Immobilien-Blogbeitrag.",
+    },
     home: {
       title: "Creative Surf | Agentur für digitales Marketing",
       description:
@@ -115,6 +175,26 @@ export const pageMetaMessages = defineMessages({
     },
   },
   ar: {
+    account: {
+      title: "Hisabi | Creative Surf",
+      description: "Adir hisabak fi Creative Surf wa siyarak al-dhatiya wa muhadathatak.",
+    },
+    newPost: {
+      title: "Maqal jadid | Creative Surf",
+      description: "Uktub maqalan jadidan.",
+    },
+    editPost: {
+      title: "Ta'dil al-maqal | Creative Surf",
+      description: "'Addil maqalan.",
+    },
+    newRealEstatePost: {
+      title: "Maqal jadid | Creative Surf Real Estate",
+      description: "Uktub maqalan 'aqariyan jadidan.",
+    },
+    editRealEstatePost: {
+      title: "Ta'dil al-maqal | Creative Surf Real Estate",
+      description: "'Addil maqalan 'aqariyan.",
+    },
     home: {
       title: "Creative Surf | Wakalat al-taswiq al-raqami",
       description:
@@ -151,6 +231,26 @@ export const pageMetaMessages = defineMessages({
     },
   },
   bn: {
+    account: {
+      title: "আমার অ্যাকাউন্ট | Creative Surf",
+      description: "আপনার Creative Surf অ্যাকাউন্ট, সিভি ও চ্যাট পরিচালনা করুন।",
+    },
+    newPost: {
+      title: "নতুন ব্লগ পোস্ট | Creative Surf",
+      description: "নতুন একটি ব্লগ পোস্ট লিখুন।",
+    },
+    editPost: {
+      title: "ব্লগ পোস্ট সম্পাদনা | Creative Surf",
+      description: "একটি ব্লগ পোস্ট সম্পাদনা করুন।",
+    },
+    newRealEstatePost: {
+      title: "নতুন ব্লগ পোস্ট | Creative Surf Real Estate",
+      description: "নতুন একটি রিয়েল এস্টেট ব্লগ পোস্ট লিখুন।",
+    },
+    editRealEstatePost: {
+      title: "ব্লগ পোস্ট সম্পাদনা | Creative Surf Real Estate",
+      description: "একটি রিয়েল এস্টেট ব্লগ পোস্ট সম্পাদনা করুন।",
+    },
     home: {
       title: "Creative Surf | ডিজিটাল মার্কেটিং এজেন্সি",
       description:
