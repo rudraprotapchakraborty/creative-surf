@@ -13,7 +13,7 @@ export const aboutMessages = defineMessages({
     story: {
       title: "Our Story",
       p1:
-        "Founded in 2015, Creative Surf began with a simple mission: to create authentic brand experiences that resonate with audiences and drive meaningful results.",
+        "Creative Surf began with a simple mission: to create authentic brand experiences that resonate with audiences and drive meaningful results.",
       p2:
         "What started as a small team of three has grown into a diverse collective of strategists, designers, developers, and content creators united by our passion for creative excellence.",
       p3:
@@ -50,7 +50,7 @@ export const aboutMessages = defineMessages({
     story: {
       title: "Notre histoire",
       p1:
-        "Fondée en 2015, Creative Surf est née d'une mission simple : créer des expériences de marque authentiques qui touchent les audiences et génèrent de vrais résultats.",
+        "Creative Surf est née d'une mission simple : créer des expériences de marque authentiques qui touchent les audiences et génèrent de vrais résultats.",
       p2:
         "Ce qui a commencé par une équipe de trois personnes est devenu un collectif diversifié de stratèges, designers, développeurs et créateurs de contenu, réunis par la même passion de l'excellence créative.",
       p3:
@@ -87,7 +87,7 @@ export const aboutMessages = defineMessages({
     story: {
       title: "Unsere Geschichte",
       p1:
-        "Creative Surf wurde 2015 mit einer einfachen Mission gegründet: authentische Markenerlebnisse zu schaffen, die Menschen erreichen und echte Ergebnisse bringen.",
+        "Creative Surf wurde mit einer einfachen Mission gegründet: authentische Markenerlebnisse zu schaffen, die Menschen erreichen und echte Ergebnisse bringen.",
       p2:
         "Was als Team von drei Personen begann, ist heute ein vielfältiges Kollektiv aus Strategen, Designern, Entwicklern und Content-Creators — verbunden durch die Leidenschaft für kreative Exzellenz.",
       p3:
@@ -122,7 +122,7 @@ export const aboutMessages = defineMessages({
     story: {
       title: "Qissatuna",
       p1:
-        "Tassasat Creative Surf am 2015 bi-risala basita: khalq tajarib alama asila tulamis Al-Jumhur wa tuhaqqiq nataij haqiqiyya.",
+        "Tassasat Creative Surf bi-risala basita: khalq tajarib alama asila tulamis Al-Jumhur wa tuhaqqiq nataij haqiqiyya.",
       p2:
         "Ma bada bi-fariq min thalathat ashkhas asbaha tajammuan mutanawwian min Al-Istratijiyyin wal-musammimin wal-mutawwirin wa suna Al-Muhtawa, yajmauhum shaghaf wahid bil-tamayyuz Al-Ibdai.",
       p3:
@@ -158,7 +158,7 @@ export const aboutMessages = defineMessages({
     story: {
       title: "আমাদের গল্প",
       p1:
-        "২০১৫ সালে যাত্রা শুরু করা Creative Surf-এর লক্ষ্য ছিল সহজ: এমন খাঁটি ব্র্যান্ড অভিজ্ঞতা তৈরি করা যা মানুষের মনে দাগ কাটে আর সত্যিকারের ফল এনে দেয়।",
+        "Creative Surf-এর যাত্রার শুরু থেকেই লক্ষ্য ছিল সহজ: এমন খাঁটি ব্র্যান্ড অভিজ্ঞতা তৈরি করা যা মানুষের মনে দাগ কাটে আর সত্যিকারের ফল এনে দেয়।",
       p2:
         "তিনজনের ছোট একটি দল থেকে শুরু করে আজ আমরা স্ট্র্যাটেজিস্ট, ডিজাইনার, ডেভেলপার আর কনটেন্ট নির্মাতাদের এক বৈচিত্র্যময় দল — সবাইকে এক সুতোয় বাঁধে সৃজনশীল উৎকর্ষের প্রতি ভালোবাসা।",
       p3:

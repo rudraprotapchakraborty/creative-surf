@@ -12,6 +12,7 @@ export const serviceDetailsMessages = defineMessages({
       of: "of",
       heroCta: "Start a project",
       deeper: "Go deeper",
+      specLabel: "What it covers",
       includesKicker: "What's included",
       includesTitle: "Everything it takes,",
       includesAccent: "handled for you.",

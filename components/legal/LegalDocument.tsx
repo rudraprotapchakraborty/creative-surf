@@ -1,15 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, useScroll, useSpring } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 
-import { PageHero, PageShell } from "@/app/components/kit";
-import { EASE } from "@/app/components/home/shared";
+import { useT } from "@/lib/i18n";
+import { footerMessages } from "@/lib/i18n/messages/footer";
+import { cn } from "@/lib/utils";
+import { Masthead, TextLink } from "@/app/components/editorial";
 
 /**
  * Renders a legal document (terms, privacy policy) from translated content so
- * the same layout serves every locale: a sticky contents list that tracks the
- * section being read, and a reading-progress bar across the top.
+ * the same layout serves every locale. It is set for reading: a numbered
+ * contents list in the rail that follows along, the text at a comfortable
+ * measure beside it, and a thin progress line across the top of the window.
  */
 
 export type LegalBlock =
@@ -26,26 +32,32 @@ export type LegalSection = {
 function Block({ block }: { block: LegalBlock }) {
   switch (block.type) {
     case "h3":
-      return <h3 className="display-sm text-lg text-flow-text mt-7 mb-2">{block.text}</h3>;
+      return <h3 className="mb-2 mt-9 text-[1.1875rem] font-semibold tracking-[-0.02em] text-cs-ink">{block.text}</h3>;
     case "strong":
-      return <p className="leading-relaxed mt-4 font-semibold text-flow-text">{block.text}</p>;
+      return <p className="mt-5 font-semibold text-cs-ink">{block.text}</p>;
     case "ul":
       return (
-        <ul className="mt-3 space-y-2">
+        <ul className="mt-4 space-y-2.5">
           {block.items.map((item) => (
-            <li key={item} className="flex gap-3">
-              <span className="mt-[0.6rem] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-aurora-1" />
+            <li key={item} className="grid grid-cols-[1.25rem_1fr]">
+              <span aria-hidden className="mt-[0.7rem] h-px w-2.5 bg-cs-ink3" />
               <span>{item}</span>
             </li>
           ))}
         </ul>
       );
     default:
-      return <p className="leading-relaxed mt-3">{block.text}</p>;
+      return <p className="mt-4">{block.text}</p>;
   }
 }
 
 const sectionId = (i: number) => `legal-section-${i + 1}`;
+const pad = (n: number) => String(n).padStart(2, "0");
+
+const DOCUMENTS = [
+  { href: "/terms", key: "terms" },
+  { href: "/privacy-policy", key: "privacy" },
+] as const;
 
 export default function LegalDocument({
   breadcrumbHome,
@@ -60,6 +72,8 @@ export default function LegalDocument({
   lastUpdatedLabel: string;
   sections: LegalSection[];
 }) {
+  const t = useT(footerMessages);
+  const pathname = usePathname();
   const [active, setActive] = useState(0);
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 26, mass: 0.3 });
@@ -79,65 +93,123 @@ export default function LegalDocument({
     return () => observer.disconnect();
   }, [sections]);
 
+  // Headed sections are numbered in reading order; an unheaded preamble isn't.
+  let n = 0;
+  const numbered = sections.map((section) => (section.heading ? ++n : 0));
   const headed = sections.map((section, i) => ({ heading: section.heading, i })).filter((s) => s.heading);
+  const others = DOCUMENTS.filter((d) => d.href !== pathname);
 
   return (
-    <PageShell>
+    <div className="bg-cs-bg text-cs-ink">
       <motion.div
         aria-hidden
-        className="fixed left-0 right-0 top-0 z-[4999] h-[3px] origin-left bg-aurora-grad"
+        className="fixed left-0 right-0 top-0 z-[5001] h-[2px] origin-left bg-cs-cyan"
         style={{ scaleX: progress }}
       />
 
-      <PageHero
-        crumbs={[{ label: breadcrumbHome, href: "/" }, { label: breadcrumbCurrent }]}
-        kicker={lastUpdatedLabel}
+      <Masthead
+        dateline={
+          <nav aria-label="Breadcrumb">
+            <Link href="/" className="cs-focus rounded-sm text-cs-ink transition-colors hover:text-cs-blue">
+              {breadcrumbHome}
+            </Link>
+            <span aria-hidden className="mx-2 opacity-50">/</span>
+            <span aria-current="page">{breadcrumbCurrent}</span>
+          </nav>
+        }
+        datelineAside={lastUpdatedLabel}
+        index="01"
+        label={t("legal.label")}
         title={title}
+        titleSize="clamp(2.5rem, 5.6vw, 5rem)"
       />
 
-      <section className="relative section-px pb-24 bg-flow-bg text-flow-text">
-        <div className="mx-auto max-w-6xl grid gap-12 lg:grid-cols-[16rem_minmax(0,1fr)]">
-          {headed.length > 0 && (
-            <nav aria-label={title} className="hidden lg:block">
-              <ol className="sticky top-32 space-y-1 border-l border-flow-border">
+      <div className="cs-container grid gap-y-12 pb-24 lg:grid-cols-12 lg:gap-x-8 lg:pb-32">
+        {/* Contents */}
+        {headed.length > 0 && (
+          <nav aria-label={t("legal.contents")} className="hidden lg:col-span-3 lg:block">
+            <div className="sticky top-24">
+              <p className="cs-meta border-b border-cs-ink/10 pb-3 text-cs-ink">{t("legal.contents")}</p>
+              <ol>
                 {headed.map(({ heading, i }) => (
-                  <li key={i}>
+                  <li key={i} className="border-b border-cs-ink/10">
                     <a
                       href={`#${sectionId(i)}`}
-                      className={`focus-ring relative -ml-px block border-l py-1.5 pl-4 text-sm transition-colors ${
-                        active === i
-                          ? "border-aurora-1 text-flow-text font-medium"
-                          : "border-transparent text-flow-textSoft hover:text-flow-text"
-                      }`}
+                      aria-current={active === i ? "location" : undefined}
+                      className={cn(
+                        "cs-focus grid grid-cols-[1.75rem_1fr] rounded-sm py-2.5 text-[13.5px] leading-snug transition-colors duration-200",
+                        active === i ? "font-medium text-cs-ink" : "text-cs-ink3 hover:text-cs-ink"
+                      )}
                     >
-                      {heading}
+                      <span className={cn("cs-meta pt-[0.15rem] tabular-nums", active === i ? "text-cs-cyan" : "")}>
+                        {pad(numbered[i])}
+                      </span>
+                      <span>{heading}</span>
                     </a>
                   </li>
                 ))}
               </ol>
-            </nav>
-          )}
+            </div>
+          </nav>
+        )}
 
-          <div className="hairline-card p-7 sm:p-12 text-[0.95rem] text-flow-textSoft">
-            {sections.map((section, i) => (
-              <motion.div
-                key={section.heading ?? i}
-                id={sectionId(i)}
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.5, ease: EASE }}
-                className={`scroll-mt-32 ${i > 0 ? "mt-10 pt-10 border-t border-flow-border" : ""}`}
-              >
-                {section.heading && <h2 className="display-sm text-xl sm:text-2xl text-flow-text mb-3">{section.heading}</h2>}
+        {/* The document */}
+        <article className={cn("min-w-0 text-[1.0625rem] leading-[1.75] text-cs-ink2", headed.length > 0 ? "lg:col-span-7 lg:col-start-5" : "lg:col-span-8 lg:col-start-4")}>
+          {sections.map((section, i) => (
+            <section
+              key={section.heading ?? i}
+              id={sectionId(i)}
+              aria-labelledby={section.heading ? `${sectionId(i)}-h` : undefined}
+              className={cn("scroll-mt-24 border-t border-cs-ink/10 py-10 first:pt-0 first:border-t-0 sm:py-12")}
+            >
+              {section.heading && (
+                <h2 id={`${sectionId(i)}-h`} className="grid grid-cols-[2.5rem_1fr] items-baseline sm:grid-cols-[3rem_1fr]">
+                  <span aria-hidden className="cs-accent text-cs-cyan" style={{ fontSize: "1.75rem", lineHeight: 1 }}>
+                    {pad(numbered[i])}
+                  </span>
+                  <span className="text-[1.5rem] font-medium leading-tight tracking-[-0.03em] text-cs-ink sm:text-[1.75rem]">
+                    {section.heading}
+                  </span>
+                </h2>
+              )}
+              <div className={section.heading ? "mt-2 sm:pl-12" : ""}>
                 {section.blocks.map((block, j) => (
                   <Block key={j} block={block} />
                 ))}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-    </PageShell>
+              </div>
+            </section>
+          ))}
+
+          {/* After the last word: someone to ask, and the other documents. */}
+          <footer className="mt-4 grid gap-10 border-t border-cs-ink/10 pt-10 sm:grid-cols-2">
+            <div>
+              <p className="text-[1.25rem] font-medium tracking-[-0.025em] text-cs-ink">{t("legal.questions")}</p>
+              <p className="mt-2 text-[15px] leading-relaxed">{t("legal.questionsBody")}</p>
+              <div className="mt-5">
+                <TextLink href="/contact">{t("links.contact")}</TextLink>
+              </div>
+            </div>
+            {others.length > 0 && (
+              <div>
+                <p className="cs-meta border-b border-cs-ink/10 pb-3 text-cs-ink">{t("legal.others")}</p>
+                <ul>
+                  {others.map((doc) => (
+                    <li key={doc.href} className="border-b border-cs-ink/10">
+                      <Link
+                        href={doc.href}
+                        className="cs-focus group flex items-center justify-between rounded-sm py-3 text-[15px] font-medium text-cs-ink transition-colors hover:text-cs-blue"
+                      >
+                        {t(doc.key)}
+                        <ArrowUpRight aria-hidden className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </footer>
+        </article>
+      </div>
+    </div>
   );
 }

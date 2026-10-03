@@ -8,13 +8,15 @@ import { MAX_KEY_TAKEAWAYS } from "@/lib/blog-types"
 interface BlogKeyTakeawaysPanelProps {
   value: string[]
   onChange: (takeaways: string[]) => void
+  /** "ruled" drops the box for a hairline — the main blog writer's editorial frame. */
+  frame?: "card" | "ruled"
 }
 
 /**
  * Editor for the key-takeaways card. Blank rows are allowed while writing —
  * they are stripped on save by `normalizeKeyTakeaways`.
  */
-export default function BlogKeyTakeawaysPanel({ value, onChange }: BlogKeyTakeawaysPanelProps) {
+export default function BlogKeyTakeawaysPanel({ value, onChange, frame = "card" }: BlogKeyTakeawaysPanelProps) {
   const t = useT(editorUiMessages)
   const atLimit = value.length >= MAX_KEY_TAKEAWAYS
 
@@ -35,7 +37,10 @@ export default function BlogKeyTakeawaysPanel({ value, onChange }: BlogKeyTakeaw
   }
 
   return (
-    <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
+    <div
+      className={frame === "ruled" ? "border-t border-cs-ink/10 pt-5" : "glass rounded-xl p-4"}
+      style={frame === "ruled" ? undefined : { border: "1px solid var(--flow-border)" }}
+    >
       <div className="flex items-center gap-2 mb-2">
         <Sparkles size={13} style={{ color: "rgb(var(--flow-text-soft))" }} />
         <label

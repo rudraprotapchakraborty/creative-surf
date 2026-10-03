@@ -1,39 +1,52 @@
+import { LogoMark } from "@/components/brand/LogoMark"
+
 /**
- * The brand loading indicator: the Creative Surf mark breathing inside a ring
- * that sweeps round it in the logo's own blues. Use it wherever a page or
- * panel is waiting on data; tiny in-button "saving" dots stay plain spinners.
+ * The brand loading indicator. On the main site it is the vector mark itself
+ * at work — the three bars rise and settle in turn while a light runs up the
+ * arrow — so waiting looks like the logo doing what it promises. Use it
+ * wherever a page or panel is waiting on data; tiny in-button "saving" dots
+ * stay plain spinners.
+ *
+ * The real-estate section passes its own raster mark as `src`, which keeps
+ * the ring-and-breathe treatment: that logo has no vector yet.
  */
 export function LogoSpinner({
   size = 40,
-  src = "/logo.webp",
+  src,
   label = "Loading",
   className = "",
 }: {
-  /** Outer diameter in px. */
+  /** Width in px; the mark keeps its own proportions. */
   size?: number
-  /** The mark in the middle; the real-estate section passes its own logo. */
+  /** A raster mark to spin instead of the vector one (real-estate pages). */
   src?: string
   /** Accessible name; pass an empty string when the parent already announces it. */
   label?: string
   className?: string
 }) {
+  const a11y = {
+    role: label ? ("status" as const) : undefined,
+    "aria-label": label || undefined,
+    "aria-hidden": label ? undefined : true,
+  }
+
+  if (!src) {
+    return (
+      <span {...a11y} className={`inline-flex shrink-0 ${className}`} style={{ width: size }}>
+        <LogoMark variant="spinner" className="h-auto w-full" />
+      </span>
+    )
+  }
+
   const ring = Math.max(2, Math.round(size / 18))
 
   return (
-    <span
-      role={label ? "status" : undefined}
-      aria-label={label || undefined}
-      aria-hidden={label ? undefined : true}
-      className={`relative inline-flex shrink-0 ${className}`}
-      style={{ width: size, height: size }}
-    >
+    <span {...a11y} className={`relative inline-flex shrink-0 ${className}`} style={{ width: size, height: size }}>
       {/* Faint track, then the sweeping arc — a conic fade masked down to a ring. */}
       <span
         aria-hidden
         className="absolute inset-0 rounded-full"
-        style={{
-          boxShadow: `inset 0 0 0 ${ring}px rgba(5, 96, 176, 0.12)`,
-        }}
+        style={{ boxShadow: `inset 0 0 0 ${ring}px rgba(5, 96, 176, 0.12)` }}
       />
       <span
         aria-hidden

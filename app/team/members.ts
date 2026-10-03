@@ -1,12 +1,11 @@
-import { Clapperboard, Code2, Film, Megaphone, PenLine } from "lucide-react";
-
 /**
  * Names, cities and emails are proper nouns and stay in code; the role label,
  * bio and accent are looked up per member so the page follows the visitor's
  * language.
  *
  * `photo` is null for anyone who has not sent one in; those cards keep the
- * initials on the accent, so a half-photographed team still looks deliberate.
+ * initials instead (on the accent, on /about), so a half-photographed team
+ * still looks deliberate.
  */
 export const TEAM = [
   {
@@ -17,7 +16,6 @@ export const TEAM = [
     email: "creativesurfagency@gmail.com",
     roleKey: "roles.marketingLead",
     bioKey: "bios.marketingLead",
-    icon: Megaphone,
     accent: "linear-gradient(135deg,#B8892A,#D4A843)",
   },
   {
@@ -28,7 +26,6 @@ export const TEAM = [
     email: "rudra@rudraprotapchakraborty.com",
     roleKey: "roles.webDeveloper",
     bioKey: "bios.webDeveloper",
-    icon: Code2,
     accent: "linear-gradient(135deg,#0066A2,#0EA5E9)",
   },
   {
@@ -39,7 +36,6 @@ export const TEAM = [
     email: "sharifastronaut@gmail.com",
     roleKey: "roles.contentStrategist",
     bioKey: "bios.contentStrategist",
-    icon: PenLine,
     accent: "linear-gradient(135deg,#7C3AED,#C084FC)",
   },
   {
@@ -50,7 +46,6 @@ export const TEAM = [
     email: "shahmahbood@gmail.com",
     roleKey: "roles.visualiser",
     bioKey: "bios.visualiser",
-    icon: Clapperboard,
     accent: "linear-gradient(135deg,#0F766E,#2DD4BF)",
   },
   {
@@ -61,7 +56,6 @@ export const TEAM = [
     email: "iftekhararnob4@gmail.com",
     roleKey: "roles.visualiser",
     bioKey: "bios.editor",
-    icon: Film,
     accent: "linear-gradient(135deg,#BE123C,#FB7185)",
   },
 ] as const;

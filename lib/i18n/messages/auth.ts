@@ -44,6 +44,21 @@ export const authMessages = defineMessages({
     resent: "A new code is on its way.",
     changeEmail: "Use a different email",
 
+    // Editorial panel beside the form
+    panel: {
+      label: "Your account",
+      headline: "One account for",
+      headlineAccent: "everything we make.",
+      perks: [
+        "Keep every CV you build and reopen it any time",
+        "Write and manage your own posts on the blog",
+        "Join the conversation under any article",
+      ],
+      steps: { signIn: "Sign in", register: "Create account", verify: "Confirm email" },
+    },
+    showPassword: "Show password",
+    hidePassword: "Hide password",
+
     // Google
     googleContinue: "Continue with Google",
     orDivider: "or",

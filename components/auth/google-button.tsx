@@ -10,12 +10,7 @@ export function GoogleButton({ label, from }: { label: string; from?: string }) 
   return (
     <a
       href={href}
-      className="w-full flex items-center justify-center gap-3 py-3 rounded-xl text-sm font-semibold transition-all duration-200 hover:opacity-85"
-      style={{
-        background: "rgb(var(--flow-surface) / 0.8)",
-        border: "1px solid var(--flow-border-strong)",
-        color: "rgb(var(--flow-text))",
-      }}
+      className="cs-focus flex h-12 w-full items-center justify-center gap-3 rounded-[10px] bg-cs-surface text-[15px] font-semibold tracking-[-0.01em] text-cs-ink ring-1 ring-inset ring-cs-ink/15 transition-[box-shadow,background-color] duration-200 hover:bg-cs-ink/[0.02] hover:ring-cs-ink/35"
     >
       <GoogleMark />
       {label}
@@ -50,12 +45,10 @@ function GoogleMark() {
 /** "──── or ────" separator between the Google button and the password form. */
 export function AuthDivider({ label }: { label: string }) {
   return (
-    <div className="flex items-center gap-3 my-6">
-      <span className="h-px flex-1" style={{ background: "var(--flow-border-strong)" }} />
-      <span className="text-xs uppercase tracking-widest" style={{ color: "rgb(var(--flow-text-soft))" }}>
-        {label}
-      </span>
-      <span className="h-px flex-1" style={{ background: "var(--flow-border-strong)" }} />
+    <div className="my-7 flex items-center gap-4" role="separator" aria-label={label}>
+      <span aria-hidden className="h-px flex-1 bg-cs-ink/10" />
+      <span aria-hidden className="cs-meta text-cs-ink3">{label}</span>
+      <span aria-hidden className="h-px flex-1 bg-cs-ink/10" />
     </div>
   )
 }

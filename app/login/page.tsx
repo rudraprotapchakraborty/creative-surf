@@ -3,7 +3,6 @@
 import { useState, Suspense } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Lock, Mail } from "lucide-react"
 import { useT } from "@/lib/i18n"
 import { authMessages } from "@/lib/i18n/messages/auth"
 import { AuthError, AuthShell, AuthSubmit } from "@/components/auth/auth-shell"
@@ -60,7 +59,7 @@ function LoginForm() {
 
   return (
     <AuthShell
-      brand={t("brand")}
+      step={t("panel.steps.signIn")}
       title={t("loginTitle")}
       subtitle={t("loginSubtitle")}
       footer={
@@ -68,8 +67,7 @@ function LoginForm() {
           {t("noAccount")}{" "}
           <Link
             href={`/register${redirect !== "/account" ? `?from=${encodeURIComponent(redirect)}` : ""}`}
-            className="font-semibold hover:underline"
-            style={{ color: "rgb(var(--accent-1))" }}
+            className="cs-focus cs-underline rounded-sm font-semibold text-cs-blue"
           >
             {t("createOne")}
           </Link>
@@ -86,7 +84,6 @@ function LoginForm() {
           onChange={setIdentifier}
           placeholder={t("identifierPlaceholder")}
           autoComplete="username"
-          icon={Mail}
         />
         <AuthField
           label={t("password")}
@@ -95,7 +92,6 @@ function LoginForm() {
           type="password"
           placeholder={t("passwordPlaceholder")}
           autoComplete="current-password"
-          icon={Lock}
         />
 
         <AuthError message={error || (googleErrorKey ? t(googleErrorKey) : "")} />

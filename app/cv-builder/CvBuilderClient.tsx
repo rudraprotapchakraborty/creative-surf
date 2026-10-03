@@ -43,7 +43,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CtaButton, Eyebrow, Reveal } from "@/components/premium";
+import { ButtonLink, Masthead, SectionIntro, TextLink } from "@/app/components/editorial";
 import CvBuilderSections from "./CvBuilderSections";
 import { buildCvHtml, printCvDocument } from "@/lib/cv-document";
 import { scoreCvAgainstJob, type CvMatch } from "@/lib/cv-match";
@@ -72,6 +72,7 @@ import {
 import { trackEvent } from "@/lib/analytics";
 import { formatNumber, useT } from "@/lib/i18n";
 import { cvBuilderMessages } from "@/lib/i18n/messages/cvBuilder";
+import { navMessages } from "@/lib/i18n/messages/nav";
 import { LogoSpinner } from "@/components/ui/LogoSpinner";
 
 /** A4 at 96dpi — the preview iframe renders at this width and is scaled to fit. */
@@ -244,6 +245,7 @@ const DECENT_MATCH = 50;
 
 export default function CvBuilderClient() {
   const t = useT(cvBuilderMessages);
+  const tNav = useT(navMessages);
 
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [cv, setCv] = useState<GeneratedCv | null>(null);
@@ -724,7 +726,7 @@ export default function CvBuilderClient() {
     type = "text"
   ) => (
     <div className="space-y-1.5">
-      <Label htmlFor={key} className="text-xs font-semibold text-flow-text">
+      <Label htmlFor={key} className="text-[13px] font-semibold text-cs-ink">
         {t(`fields.${key}.label`)}
       </Label>
       <Input
@@ -733,7 +735,7 @@ export default function CvBuilderClient() {
         value={form[key]}
         placeholder={t(`fields.${key}.placeholder`)}
         onChange={(e) => set(key, e.target.value)}
-        className="h-11 rounded-xl border-flow-border bg-flow-surface text-flow-text"
+        className="h-11 rounded-[10px] border-cs-ink/15 bg-cs-surface text-[15px] text-cs-ink focus-visible:ring-2 focus-visible:ring-cs-blue focus-visible:ring-offset-0"
       />
     </div>
   );
@@ -744,7 +746,7 @@ export default function CvBuilderClient() {
     hint?: boolean
   ) => (
     <div className="space-y-1.5">
-      <Label htmlFor={key} className="text-xs font-semibold text-flow-text">
+      <Label htmlFor={key} className="text-[13px] font-semibold text-cs-ink">
         {t(`fields.${key}.label`)}
       </Label>
       <Textarea
@@ -753,22 +755,22 @@ export default function CvBuilderClient() {
         value={form[key]}
         placeholder={t(`fields.${key}.placeholder`)}
         onChange={(e) => set(key, e.target.value)}
-        className="resize-y rounded-xl border-flow-border bg-flow-surface text-flow-text"
+        className="resize-y rounded-[10px] border-cs-ink/15 bg-cs-surface text-[15px] text-cs-ink focus-visible:ring-2 focus-visible:ring-cs-blue focus-visible:ring-offset-0"
       />
-      {hint && <p className="text-xs leading-relaxed text-flow-textSoft">{t(`fields.${key}.hint`)}</p>}
+      {hint && <p className="text-xs leading-relaxed text-cs-ink2">{t(`fields.${key}.hint`)}</p>}
     </div>
   );
 
   /** A numbered form step. The number is what turns three cards into a sequence. */
   const step = (index: number, title: string, hint: string, children: ReactNode) => (
-    <section className="rounded-3xl border border-flow-border bg-flow-card p-5 backdrop-blur-md sm:p-7">
-      <header className="mb-6 flex items-start gap-4">
-        <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-aurora-grad text-sm font-bold text-white shadow-aurora">
-          {index}
+    <section className="border-t border-cs-ink/10 pt-8">
+      <header className="mb-7 grid grid-cols-[2.75rem_1fr] gap-x-3">
+        <span aria-hidden className="cs-accent text-cs-cyan" style={{ fontSize: "2.25rem", lineHeight: 0.9 }}>
+          {String(index).padStart(2, "0")}
         </span>
         <div>
-          <h2 className="font-heading text-lg font-bold leading-tight text-flow-text">{title}</h2>
-          <p className="mt-1 text-xs leading-relaxed text-flow-textSoft">{hint}</p>
+          <h3 className="text-[1.375rem] font-medium leading-tight tracking-[-0.03em] text-cs-ink">{title}</h3>
+          <p className="mt-1.5 text-sm leading-relaxed text-cs-ink2">{hint}</p>
         </div>
       </header>
       <div className="space-y-5">{children}</div>
@@ -796,102 +798,79 @@ export default function CvBuilderClient() {
           : "weak";
 
   return (
-    <div className="min-h-screen bg-flow-bg">
-      {/* HERO ------------------------------------------------------------ */}
-      <section className="relative overflow-hidden border-b border-flow-border pb-16 pt-32 sm:pt-36 md:pt-40">
-        <div className="pointer-events-none absolute inset-0 bg-aurora-mesh opacity-70 animate-mesh" aria-hidden />
-        <div className="pointer-events-none absolute inset-0 bg-grid mask-radial opacity-30" aria-hidden />
-        <div className="pointer-events-none absolute inset-0 bg-grain opacity-[0.04] mix-blend-overlay" aria-hidden />
-
-        <div className="relative z-10 mx-auto w-[95%] max-w-7xl">
-          <div className="max-w-3xl">
-            <Reveal>
-              <Eyebrow icon={Sparkles}>{t("hero.badge")}</Eyebrow>
-            </Reveal>
-            <Reveal delay={0.05}>
-              <h1
-                className="mt-6 font-heading font-extrabold leading-[1.08] tracking-tight text-flow-text"
-                style={{ fontSize: "clamp(2.25rem, 5vw, 3.75rem)" }}
-              >
-                {t("hero.title")}{" "}
-                <span className="text-aurora">{t("hero.titleHighlight")}</span>
-              </h1>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <p className="mt-6 max-w-2xl text-base leading-relaxed text-flow-textSoft sm:text-lg">
-                {t("hero.subtitle")}
-              </p>
-            </Reveal>
-            <Reveal delay={0.15}>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <CtaButton href="#builder">{t("hero.ctaPrimary")}</CtaButton>
-                <CtaButton href="#honesty" variant="outline" showIcon={false}>
-                  {t("hero.ctaSecondary")}
-                </CtaButton>
-              </div>
-            </Reveal>
-          </div>
-
-          {/* Trust row — the four claims the rest of the page has to earn. */}
-          <Reveal delay={0.2}>
-            <ul className="mt-10 flex flex-wrap gap-2.5">
+    <div className="min-h-screen bg-cs-bg">
+      {/* MASTHEAD ---------------------------------------------------- */}
+      <Masthead
+        dateline={
+          <>
+            <span className="text-cs-ink">Creative Surf</span>
+            <span aria-hidden className="mx-2 opacity-50">/</span>
+            {tNav("links.cvBuilder")}
+          </>
+        }
+        index="01"
+        label={t("hero.badge")}
+        title={t("hero.title")}
+        accent={t("hero.titleHighlight")}
+        lede={t("hero.subtitle")}
+        actions={
+          <>
+            <ButtonLink href="#builder">{t("hero.ctaPrimary")}</ButtonLink>
+            <TextLink href="#honesty">{t("hero.ctaSecondary")}</TextLink>
+          </>
+        }
+        side={
+          <div>
+            {/* The claims the rest of the page has to earn, then the numbers. */}
+            <ul className="border-t border-cs-ink/10">
               {t.list("hero.trust").map((claim, index) => {
                 const Icon = TRUST_ICONS[index] ?? BadgeCheck;
                 return (
-                  <li
-                    key={claim}
-                    className="glass inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-flow-text"
-                  >
-                    <Icon className="h-3.5 w-3.5 text-aurora-1" />
+                  <li key={claim} className="flex items-center gap-3 border-b border-cs-ink/10 py-3 text-[15px] font-medium text-cs-ink">
+                    <Icon aria-hidden className="h-4 w-4 shrink-0 text-cs-blue" />
                     {claim}
                   </li>
                 );
               })}
             </ul>
-          </Reveal>
-
-          <Reveal delay={0.25}>
-            <dl className="mt-12 grid max-w-2xl grid-cols-3 gap-6 border-t border-flow-border pt-8">
+            <dl className="mt-8 grid grid-cols-3 gap-4">
               {t.raw<{ value: string; label: string }[]>("stats", []).map((stat) => (
                 <div key={stat.label} className="flex flex-col">
-                  <dt className="order-2 mt-2 text-xs leading-snug text-flow-textSoft">{stat.label}</dt>
-                  <dd className="order-1 text-2xl font-extrabold leading-none text-flow-text tabular-nums sm:text-3xl">
+                  <dt className="order-2 mt-2 text-[12px] leading-snug text-cs-ink3">{stat.label}</dt>
+                  <dd className="order-1 text-[1.75rem] font-medium leading-none tracking-[-0.04em] text-cs-ink tabular-nums">
                     {stat.value}
                   </dd>
                 </div>
               ))}
             </dl>
-          </Reveal>
-        </div>
-      </section>
+          </div>
+        }
+        titleSize="clamp(2.75rem, 6.4vw, 6rem)"
+      />
 
       {/* BUILDER --------------------------------------------------------- */}
-      <section id="builder" className="mx-auto w-[95%] max-w-7xl scroll-mt-28 py-16 sm:py-20">
-        <div className="max-w-2xl">
-          <Eyebrow>{t("builder.eyebrow")}</Eyebrow>
-          <h2
-            className="mt-5 font-heading font-bold leading-[1.12] text-flow-text"
-            style={{ fontSize: "clamp(1.75rem, 3vw, 2.5rem)" }}
-          >
-            {t("builder.title")} <span className="text-aurora">{t("builder.highlight")}</span>
-          </h2>
-          <p className="mt-4 text-base leading-relaxed text-flow-textSoft">
-            {t("builder.description")}
-          </p>
-        </div>
+      <section id="builder" aria-labelledby="builder-title" className="cs-container scroll-mt-16 pb-20 pt-6 md:pb-28 md:pt-10">
+        <SectionIntro
+          id="builder-title"
+          index="02"
+          label={t("builder.eyebrow")}
+          line={t("builder.title")}
+          accent={t("builder.highlight")}
+          lede={t("builder.description")}
+        />
 
-        <div className="mt-12 grid gap-8 lg:grid-cols-12">
+        <div className="mt-14 grid gap-12 sm:mt-16 lg:grid-cols-12 lg:gap-8">
           {/* FORM ------------------------------------------------------- */}
           <div className="space-y-6 lg:col-span-7">
             {isGuest && (
-              <div className="rounded-2xl border border-flow-border bg-flow-surface p-5">
+              <div className="rounded-xl bg-cs-surface ring-1 ring-inset ring-cs-ink/10 p-5">
                 <div className="flex items-start gap-3">
-                  <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-aurora-1/30 bg-aurora-soft">
-                    <Info className="h-4 w-4 text-aurora-1" />
+                  <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cs-blue/10">
+                    <Info className="h-4 w-4 text-cs-blue" />
                   </div>
                   <div className="min-w-0">
-                    <h3 className="text-sm font-bold text-flow-text">{t("guestNotice.title")}</h3>
-                    <p className="mt-1 text-xs leading-relaxed text-flow-textSoft">
+                    <h3 className="text-sm font-bold text-cs-ink">{t("guestNotice.title")}</h3>
+                    <p className="mt-1 text-xs leading-relaxed text-cs-ink2">
                       {t("guestNotice.subtitle")}
                     </p>
                     <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -899,7 +878,7 @@ export default function CvBuilderClient() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="rounded-full border-flow-border text-xs font-semibold text-flow-text"
+                          className="h-9 rounded-[10px] border-cs-ink/15 bg-transparent px-3.5 text-[13px] font-semibold text-cs-ink hover:bg-cs-ink/[0.04]"
                         >
                           {t("guestNotice.login")}
                         </Button>
@@ -907,7 +886,7 @@ export default function CvBuilderClient() {
                       <Link href="/register?from=/cv-builder">
                         <Button
                           size="sm"
-                          className="shine rounded-full bg-aurora-grad text-xs font-semibold text-white shadow-aurora"
+                          className="h-9 rounded-[10px] bg-cs-blue px-3.5 text-[13px] font-semibold text-cs-onBlue hover:bg-cs-blueHover"
                         >
                           {t("guestNotice.register")}
                         </Button>
@@ -920,15 +899,15 @@ export default function CvBuilderClient() {
 
             <div className="space-y-6">
               {/* Import an existing CV — fills the form so the candidate only edits. */}
-              <div className="rounded-2xl border border-dashed border-aurora-1/40 bg-aurora-soft p-5">
+              <div className="rounded-xl bg-cs-blue/[0.05] p-5 ring-1 ring-inset ring-cs-blue/25">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-start gap-3">
-                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-aurora-grad text-white shadow-aurora">
+                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cs-blue text-cs-onBlue">
                       <Upload className="h-4 w-4" />
                     </div>
                     <div className="min-w-0">
-                      <h3 className="text-sm font-bold text-flow-text">{t("import.title")}</h3>
-                      <p className="mt-1 text-xs leading-relaxed text-flow-textSoft">{t("import.subtitle")}</p>
+                      <h3 className="text-sm font-bold text-cs-ink">{t("import.title")}</h3>
+                      <p className="mt-1 text-xs leading-relaxed text-cs-ink2">{t("import.subtitle")}</p>
                     </div>
                   </div>
                   <input
@@ -943,7 +922,7 @@ export default function CvBuilderClient() {
                     size="sm"
                     disabled={importBusy}
                     onClick={() => importInputRef.current?.click()}
-                    className="shine shrink-0 rounded-full bg-aurora-grad text-xs font-semibold text-white shadow-aurora"
+                    className="h-10 shrink-0 rounded-[10px] bg-cs-blue px-4 text-[13px] font-semibold text-cs-onBlue hover:bg-cs-blueHover"
                   >
                     {importBusy ? (
                       <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
@@ -973,15 +952,15 @@ export default function CvBuilderClient() {
               </div>
 
               {/* Completeness meter — a nudge towards detail, not a gate. */}
-              <div className="rounded-2xl border border-flow-border bg-flow-surface px-5 py-4">
+              <div className="rounded-xl bg-cs-surface ring-1 ring-inset ring-cs-ink/10 px-5 py-4">
                 <div className="flex items-baseline justify-between gap-4">
-                  <span className="text-xs font-bold uppercase tracking-[0.14em] text-flow-textSoft">
+                  <span className="cs-meta text-cs-ink3">
                     {t("progress.label")}
                   </span>
-                  <span className="text-sm font-bold text-flow-text tabular-nums">{formatNumber(progress, t.locale)}%</span>
+                  <span className="text-sm font-bold text-cs-ink tabular-nums">{formatNumber(progress, t.locale)}%</span>
                 </div>
                 <div
-                  className="mt-3 h-1.5 overflow-hidden rounded-full bg-flow-text/10"
+                  className="mt-3 h-1.5 overflow-hidden rounded-full bg-cs-ink/10"
                   role="progressbar"
                   aria-valuenow={progress}
                   aria-valuemin={0}
@@ -989,11 +968,11 @@ export default function CvBuilderClient() {
                   aria-label={t("progress.label")}
                 >
                   <div
-                    className="h-full rounded-full bg-aurora-grad transition-all duration-500"
+                    className="h-full rounded-full bg-cs-cyan transition-all duration-500"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
-                <p className="mt-2.5 text-xs text-flow-textSoft">{t("progress.hint")}</p>
+                <p className="mt-2.5 text-xs text-cs-ink2">{t("progress.hint")}</p>
               </div>
 
               {step(
@@ -1009,8 +988,8 @@ export default function CvBuilderClient() {
                     {field("location")}
                     {field("yearsExperience")}
                   </div>
-                  <div className="space-y-3 rounded-2xl border border-flow-border bg-flow-surface p-4">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-flow-textSoft">
+                  <div className="space-y-3 rounded-xl bg-cs-surface ring-1 ring-inset ring-cs-ink/10 p-4">
+                    <p className="cs-meta text-cs-ink3">
                       {t("sections.photo")}
                     </p>
                     <div className="flex items-center gap-3">
@@ -1019,10 +998,10 @@ export default function CvBuilderClient() {
                         <img
                           src={photoPreview}
                           alt=""
-                          className="h-16 w-16 shrink-0 rounded-xl border border-flow-border object-cover"
+                          className="h-16 w-16 shrink-0 rounded-xl border border-cs-ink/10 object-cover"
                         />
                       ) : (
-                        <div className="grid h-16 w-16 shrink-0 place-items-center rounded-xl border border-dashed border-flow-border text-flow-textSoft">
+                        <div className="grid h-16 w-16 shrink-0 place-items-center rounded-xl border border-dashed border-cs-ink/10 text-cs-ink2">
                           <ImagePlus className="h-5 w-5" />
                         </div>
                       )}
@@ -1031,7 +1010,7 @@ export default function CvBuilderClient() {
                           type="button"
                           disabled={photoBusy}
                           onClick={() => photoInputRef.current?.click()}
-                          className="inline-flex items-center gap-2 rounded-xl border border-flow-border px-3 py-2 text-sm font-semibold text-flow-text transition-colors hover:border-flow-accent disabled:opacity-60"
+                          className="inline-flex items-center gap-2 rounded-xl border border-cs-ink/10 px-3 py-2 text-sm font-semibold text-cs-ink transition-colors hover:border-cs-blue/40 disabled:opacity-60"
                         >
                           {photoBusy && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                           {photoBusy
@@ -1047,14 +1026,14 @@ export default function CvBuilderClient() {
                               setPhotoError(null);
                               setForm((prev) => ({ ...prev, photo: "", photoData: "" }));
                             }}
-                            className="rounded-xl px-2 py-2 text-sm font-semibold text-flow-textSoft transition-colors hover:text-red-500"
+                            className="rounded-xl px-2 py-2 text-sm font-semibold text-cs-ink2 transition-colors hover:text-red-500"
                           >
                             {t("sections.photoRemove")}
                           </button>
                         )}
                       </div>
                     </div>
-                    <p className="text-xs leading-relaxed text-flow-textSoft">{t("sections.photoHint")}</p>
+                    <p className="text-xs leading-relaxed text-cs-ink2">{t("sections.photoHint")}</p>
                     {photoError && <p className="text-xs font-medium text-red-500">{photoError}</p>}
                     <input
                       ref={photoInputRef}
@@ -1065,8 +1044,8 @@ export default function CvBuilderClient() {
                     />
                   </div>
 
-                  <div className="space-y-4 rounded-2xl border border-flow-border bg-flow-surface p-4">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-flow-textSoft">
+                  <div className="space-y-4 rounded-xl bg-cs-surface ring-1 ring-inset ring-cs-ink/10 p-4">
+                    <p className="cs-meta text-cs-ink3">
                       {t("sections.links")}
                     </p>
 
@@ -1089,7 +1068,7 @@ export default function CvBuilderClient() {
                                                     aria-label={t("sections.linkLabel")}
                               placeholder={example}
                               onChange={(e) => setLink(index, { url: e.target.value })}
-                              className="h-11 min-w-0 flex-1 rounded-xl border-flow-border bg-flow-surface text-flow-text"
+                              className="h-11 min-w-0 flex-1 rounded-[10px] border-cs-ink/15 bg-cs-surface text-[15px] text-cs-ink focus-visible:ring-2 focus-visible:ring-cs-blue focus-visible:ring-offset-0"
                             />
                             <Select
                               value={link.type}
@@ -1099,7 +1078,7 @@ export default function CvBuilderClient() {
                             >
                               <SelectTrigger
                                 aria-label={t("sections.linkType")}
-                                className="h-11 shrink-0 rounded-xl border-flow-border bg-flow-surface text-flow-text sm:w-44"
+                                className="h-11 shrink-0 rounded-[10px] border-cs-ink/15 bg-cs-surface text-[15px] text-cs-ink focus-visible:ring-2 focus-visible:ring-cs-blue focus-visible:ring-offset-0 sm:w-44"
                               >
                                 <SelectValue />
                               </SelectTrigger>
@@ -1117,7 +1096,7 @@ export default function CvBuilderClient() {
                               type="button"
                                                     onClick={() => removeLink(index)}
                               aria-label={t("sections.linkRemove")}
-                              className="inline-flex h-11 w-9 shrink-0 items-center justify-center rounded-xl text-flow-textSoft transition-colors hover:text-red-500"
+                              className="inline-flex h-11 w-9 shrink-0 items-center justify-center rounded-xl text-cs-ink2 transition-colors hover:text-red-500"
                             >
                               <X className="h-4 w-4" />
                             </button>
@@ -1131,18 +1110,18 @@ export default function CvBuilderClient() {
                       <button
                         type="button"
                         onClick={addLink}
-                                        className="inline-flex items-center gap-2 rounded-full border border-flow-border px-3.5 py-1.5 text-xs font-semibold text-flow-text transition-colors hover:border-aurora-1/40 hover:text-aurora-1"
+                                        className="inline-flex items-center gap-2 rounded-[10px] px-3.5 py-2 text-[13px] font-semibold text-cs-ink ring-1 ring-inset ring-cs-ink/15 transition-colors hover:text-cs-blue hover:ring-cs-blue/40"
                       >
                         <Plus className="h-3.5 w-3.5" />
                         {t("sections.linkAdd")}
                       </button>
                     )}
 
-                    <p className="text-xs leading-relaxed text-flow-textSoft">{t("sections.linksHint")}</p>
+                    <p className="text-xs leading-relaxed text-cs-ink2">{t("sections.linksHint")}</p>
                   </div>
 
-                  <div className="space-y-4 rounded-2xl border border-flow-border bg-flow-surface p-4">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-flow-textSoft">
+                  <div className="space-y-4 rounded-xl bg-cs-surface ring-1 ring-inset ring-cs-ink/10 p-4">
+                    <p className="cs-meta text-cs-ink3">
                       {t("sections.languages")}
                     </p>
 
@@ -1156,7 +1135,7 @@ export default function CvBuilderClient() {
                                                     aria-label={t("sections.languageName")}
                               placeholder={t("sections.languagePlaceholder")}
                               onChange={(e) => setLanguage(index, { name: e.target.value })}
-                              className="h-11 min-w-0 flex-1 rounded-xl border-flow-border bg-flow-surface text-flow-text"
+                              className="h-11 min-w-0 flex-1 rounded-[10px] border-cs-ink/15 bg-cs-surface text-[15px] text-cs-ink focus-visible:ring-2 focus-visible:ring-cs-blue focus-visible:ring-offset-0"
                             />
                             <Select
                               value={row.level}
@@ -1166,7 +1145,7 @@ export default function CvBuilderClient() {
                             >
                               <SelectTrigger
                                 aria-label={t("sections.languageLevel")}
-                                className="h-11 shrink-0 rounded-xl border-flow-border bg-flow-surface text-flow-text sm:w-44"
+                                className="h-11 shrink-0 rounded-[10px] border-cs-ink/15 bg-cs-surface text-[15px] text-cs-ink focus-visible:ring-2 focus-visible:ring-cs-blue focus-visible:ring-offset-0 sm:w-44"
                               >
                                 <SelectValue />
                               </SelectTrigger>
@@ -1184,7 +1163,7 @@ export default function CvBuilderClient() {
                               type="button"
                                                     onClick={() => removeLanguage(index)}
                               aria-label={t("sections.languageRemove")}
-                              className="inline-flex h-11 w-9 shrink-0 items-center justify-center rounded-xl text-flow-textSoft transition-colors hover:text-red-500"
+                              className="inline-flex h-11 w-9 shrink-0 items-center justify-center rounded-xl text-cs-ink2 transition-colors hover:text-red-500"
                             >
                               <X className="h-4 w-4" />
                             </button>
@@ -1198,14 +1177,14 @@ export default function CvBuilderClient() {
                       <button
                         type="button"
                         onClick={addLanguage}
-                        className="inline-flex items-center gap-2 rounded-full border border-flow-border px-3.5 py-1.5 text-xs font-semibold text-flow-text transition-colors hover:border-aurora-1/40 hover:text-aurora-1"
+                        className="inline-flex items-center gap-2 rounded-[10px] px-3.5 py-2 text-[13px] font-semibold text-cs-ink ring-1 ring-inset ring-cs-ink/15 transition-colors hover:text-cs-blue hover:ring-cs-blue/40"
                       >
                         <Plus className="h-3.5 w-3.5" />
                         {t("sections.languageAdd")}
                       </button>
                     )}
 
-                    <p className="text-xs leading-relaxed text-flow-textSoft">{t("sections.languagesHint")}</p>
+                    <p className="text-xs leading-relaxed text-cs-ink2">{t("sections.languagesHint")}</p>
                   </div>
                 </>
               )}
@@ -1229,14 +1208,14 @@ export default function CvBuilderClient() {
                   {textarea("targetJob", 5, true)}
                   <div className="grid gap-4 sm:grid-cols-3">
                     <div className="space-y-1.5">
-                      <Label className="text-xs font-semibold text-flow-text">
+                      <Label className="text-[13px] font-semibold text-cs-ink">
                         {t("fields.tone.label")}
                       </Label>
                       <Select
                         value={form.tone}
                                         onValueChange={(value) => set("tone", value as CvTone)}
                       >
-                        <SelectTrigger className="h-11 rounded-xl border-flow-border bg-flow-surface text-flow-text">
+                        <SelectTrigger className="h-11 rounded-[10px] border-cs-ink/15 bg-cs-surface text-[15px] text-cs-ink focus-visible:ring-2 focus-visible:ring-cs-blue focus-visible:ring-offset-0">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -1249,14 +1228,14 @@ export default function CvBuilderClient() {
                       </Select>
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-xs font-semibold text-flow-text">
+                      <Label className="text-[13px] font-semibold text-cs-ink">
                         {t("fields.language.label")}
                       </Label>
                       <Select
                         value={form.language}
                                         onValueChange={(value) => set("language", value)}
                       >
-                        <SelectTrigger className="h-11 rounded-xl border-flow-border bg-flow-surface text-flow-text">
+                        <SelectTrigger className="h-11 rounded-[10px] border-cs-ink/15 bg-cs-surface text-[15px] text-cs-ink focus-visible:ring-2 focus-visible:ring-cs-blue focus-visible:ring-offset-0">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -1269,14 +1248,14 @@ export default function CvBuilderClient() {
                       </Select>
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-xs font-semibold text-flow-text">
+                      <Label className="text-[13px] font-semibold text-cs-ink">
                         {t("fields.effort.label")}
                       </Label>
                       <Select
                         value={form.effort}
                         onValueChange={(value) => set("effort", value as CvEffort)}
                       >
-                        <SelectTrigger className="h-11 rounded-xl border-flow-border bg-flow-surface text-flow-text">
+                        <SelectTrigger className="h-11 rounded-[10px] border-cs-ink/15 bg-cs-surface text-[15px] text-cs-ink focus-visible:ring-2 focus-visible:ring-cs-blue focus-visible:ring-offset-0">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -1295,7 +1274,7 @@ export default function CvBuilderClient() {
               {error && (
                 <div
                   role="alert"
-                  className="flex items-start gap-2 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-600 dark:text-red-400"
+                  className="flex items-start gap-2 rounded-[10px] bg-red-500/[0.08] p-4 ring-1 ring-inset ring-red-500/20 text-sm text-red-600 dark:text-red-400"
                 >
                   <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
                   <span>{error}</span>
@@ -1306,7 +1285,7 @@ export default function CvBuilderClient() {
                 <Button
                   onClick={handleGenerate}
                   disabled={isLoading}
-                  className="shine h-12 rounded-full bg-aurora-grad px-7 font-semibold text-white shadow-aurora"
+                  className="h-12 rounded-[10px] bg-cs-blue px-6 text-[15px] font-semibold text-cs-onBlue hover:bg-cs-blueHover"
                 >
                   {isLoading ? (
                     <>
@@ -1324,19 +1303,19 @@ export default function CvBuilderClient() {
                   variant="ghost"
                   onClick={handleReset}
                   disabled={isLoading}
-                  className="rounded-full text-flow-textSoft"
+                  className="h-12 rounded-[10px] text-cs-ink2 hover:bg-cs-ink/[0.04] hover:text-cs-ink"
                 >
                   <RefreshCw className="mr-2 h-4 w-4" />
                   {t("actions.startOver")}
                 </Button>
               </div>
 
-              <div className="rounded-2xl border border-flow-border bg-flow-surface p-5">
-                <h3 className="text-sm font-bold text-flow-text">{t("tips.title")}</h3>
+              <div className="rounded-xl bg-cs-surface ring-1 ring-inset ring-cs-ink/10 p-5">
+                <h3 className="text-sm font-bold text-cs-ink">{t("tips.title")}</h3>
                 <ul className="mt-3 space-y-2">
                   {t.list("tips.items").map((tip) => (
-                    <li key={tip} className="flex gap-2.5 text-sm leading-relaxed text-flow-textSoft">
-                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-aurora-1" aria-hidden />
+                    <li key={tip} className="flex gap-2.5 text-sm leading-relaxed text-cs-ink2">
+                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-cs-blue" aria-hidden />
                       {tip}
                     </li>
                   ))}
@@ -1345,13 +1324,13 @@ export default function CvBuilderClient() {
 
               {/* Saved CVs — one version per application, kept where you built it. */}
               {isAuthenticated && (
-                <div className="rounded-2xl border border-flow-border bg-flow-surface p-5">
-                  <h3 className="text-sm font-bold text-flow-text">{t("saved.title")}</h3>
-                  <p className="mt-1 text-xs leading-relaxed text-flow-textSoft">
+                <div className="rounded-xl bg-cs-surface ring-1 ring-inset ring-cs-ink/10 p-5">
+                  <h3 className="text-sm font-bold text-cs-ink">{t("saved.title")}</h3>
+                  <p className="mt-1 text-xs leading-relaxed text-cs-ink2">
                     {t("saved.subtitle")}
                   </p>
                   {savedCvs.length === 0 ? (
-                    <p className="mt-4 text-sm text-flow-textSoft">{t("saved.empty")}</p>
+                    <p className="mt-4 text-sm text-cs-ink2">{t("saved.empty")}</p>
                   ) : (
                     /*
                      * A strip rather than a stack: these are pages, and a page is
@@ -1367,7 +1346,7 @@ export default function CvBuilderClient() {
                             onClick={() => openSaved(item._id)}
                             title={item.title}
                             aria-label={`${t("saved.load")} — ${item.title}`}
-                            className="focus-ring group block w-full overflow-hidden rounded-lg border border-flow-border bg-white transition-colors hover:border-aurora-1/50"
+                            className="focus-ring group block w-full overflow-hidden rounded-lg border border-cs-ink/10 bg-white transition-colors hover:border-cs-blue/50"
                             style={{ height: PAGE_HEIGHT * THUMB_SCALE }}
                           >
                             <div
@@ -1392,7 +1371,7 @@ export default function CvBuilderClient() {
                           </button>
                           <div className="mt-1.5 flex items-start gap-1">
                             <span
-                              className="min-w-0 flex-1 truncate text-[11px] font-medium text-flow-text"
+                              className="min-w-0 flex-1 truncate text-[11px] font-medium text-cs-ink"
                               title={item.title}
                             >
                               {item.title}
@@ -1402,7 +1381,7 @@ export default function CvBuilderClient() {
                               onClick={() => handleDelete(item._id)}
                               aria-label={t("saved.remove")}
                               title={t("saved.remove")}
-                              className="focus-ring -mt-0.5 shrink-0 rounded-full p-1 text-flow-textSoft hover:text-red-500"
+                              className="focus-ring -mt-0.5 shrink-0 rounded-full p-1 text-cs-ink2 hover:text-red-500"
                             >
                               <Trash2 className="h-3 w-3" />
                             </button>
@@ -1420,9 +1399,9 @@ export default function CvBuilderClient() {
           <div ref={resultRef} className="lg:col-span-5">
             <div className="space-y-4 lg:sticky lg:top-28">
               <div className="flex items-center justify-between gap-3">
-                <h2 className="font-heading text-lg font-bold text-flow-text">
+                <h3 className="text-[1.375rem] font-medium tracking-[-0.03em] text-cs-ink">
                   {t("preview.title")}
-                </h2>
+                </h3>
                 {cv && (
                   <div className="flex shrink-0 items-center gap-2">
                     {/* The inline preview is a scaled-down page; this opens it
@@ -1431,7 +1410,7 @@ export default function CvBuilderClient() {
                       onClick={() => setIsReading(true)}
                       size="sm"
                       variant="outline"
-                      className="rounded-full border-flow-border font-semibold text-flow-text"
+                      className="rounded-[10px] border-cs-ink/15 bg-transparent font-semibold text-cs-ink hover:bg-cs-ink/[0.04]"
                     >
                       <Eye className="mr-2 h-4 w-4" />
                       {t("actions.view")}
@@ -1439,7 +1418,7 @@ export default function CvBuilderClient() {
                     <Button
                       onClick={handleDownload}
                       size="sm"
-                      className="shine rounded-full bg-aurora-grad font-semibold text-white shadow-aurora"
+                      className="rounded-[10px] bg-cs-blue font-semibold text-cs-onBlue hover:bg-cs-blueHover"
                     >
                       <Download className="mr-2 h-4 w-4" />
                       {t("actions.download")}
@@ -1450,19 +1429,19 @@ export default function CvBuilderClient() {
 
               {/* ATS readiness: whether a machine can read this before a person does. */}
               {cv && ats && (
-                <div className="rounded-2xl border border-flow-border bg-flow-card p-5 backdrop-blur-md">
+                <div className="rounded-xl bg-cs-surface p-5 ring-1 ring-inset ring-cs-ink/10">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <h3 className="flex items-center gap-2 text-sm font-bold text-flow-text">
-                        <ScanLine className="h-4 w-4 text-aurora-1" />
+                      <h3 className="flex items-center gap-2 text-sm font-bold text-cs-ink">
+                        <ScanLine className="h-4 w-4 text-cs-blue" />
                         {t("ats.title")}
                       </h3>
-                      <p className="mt-1 text-xs text-flow-textSoft">
+                      <p className="mt-1 text-xs text-cs-ink2">
                         {t("ats.caption", { passed: ats.passed, total: ats.total })}
                       </p>
                     </div>
                     <div className="text-right">
-                      <span className="block text-3xl font-extrabold leading-none text-flow-text tabular-nums">
+                      <span className="block text-[2rem] font-medium leading-none tracking-[-0.04em] text-cs-ink tabular-nums">
                         {formatNumber(ats.score, t.locale)}%
                       </span>
                       <span
@@ -1473,14 +1452,14 @@ export default function CvBuilderClient() {
                     </div>
                   </div>
 
-                  <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-flow-text/10">
+                  <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-cs-ink/10">
                     <div
                       className={`h-full rounded-full transition-all duration-700 ${tierBar(ats.tier)}`}
                       style={{ width: `${ats.score}%` }}
                     />
                   </div>
 
-                  <p className="mt-4 text-xs leading-relaxed text-flow-textSoft">
+                  <p className="mt-4 text-xs leading-relaxed text-cs-ink2">
                     {t(`ats.tierHints.${ats.tier}`)}
                   </p>
 
@@ -1506,14 +1485,14 @@ export default function CvBuilderClient() {
                           <div>
                             <p
                               className={`text-xs font-semibold ${
-                                check.status === "pass" ? "text-flow-textSoft" : "text-flow-text"
+                                check.status === "pass" ? "text-cs-ink2" : "text-cs-ink"
                               }`}
                             >
                               {t(`ats.checks.${check.id}.label`)}
                             </p>
                             {/* A cleared check needs no advice — only the misses earn a line. */}
                             {check.status !== "pass" && (
-                              <p className="mt-0.5 text-xs leading-relaxed text-flow-textSoft">
+                              <p className="mt-0.5 text-xs leading-relaxed text-cs-ink2">
                                 {t(`ats.checks.${check.id}.fix`)}
                               </p>
                             )}
@@ -1523,7 +1502,7 @@ export default function CvBuilderClient() {
                     })}
                   </ul>
 
-                  <p className="mt-4 border-t border-flow-border pt-3 text-xs leading-relaxed text-flow-textSoft">
+                  <p className="mt-4 border-t border-cs-ink/10 pt-3 text-xs leading-relaxed text-cs-ink2">
                     {t("ats.note")}
                   </p>
                 </div>
@@ -1532,19 +1511,19 @@ export default function CvBuilderClient() {
               {/* Advert match: the check nobody else runs for you. */}
               {cv &&
                 (match && matchTier ? (
-                  <div className="rounded-2xl border border-flow-border bg-flow-card p-5 backdrop-blur-md">
+                  <div className="rounded-xl bg-cs-surface p-5 ring-1 ring-inset ring-cs-ink/10">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <h3 className="flex items-center gap-2 text-sm font-bold text-flow-text">
-                          <Target className="h-4 w-4 text-aurora-1" />
+                        <h3 className="flex items-center gap-2 text-sm font-bold text-cs-ink">
+                          <Target className="h-4 w-4 text-cs-blue" />
                           {t("match.title")}
                         </h3>
-                        <p className="mt-1 text-xs text-flow-textSoft">
+                        <p className="mt-1 text-xs text-cs-ink2">
                           {t("match.caption", { matched: match.matched.length, total: match.total })}
                         </p>
                       </div>
                       <div className="text-right">
-                        <span className="block text-3xl font-extrabold leading-none text-flow-text tabular-nums">
+                        <span className="block text-[2rem] font-medium leading-none tracking-[-0.04em] text-cs-ink tabular-nums">
                           {formatNumber(match.score, t.locale)}%
                         </span>
                         <span
@@ -1555,20 +1534,20 @@ export default function CvBuilderClient() {
                       </div>
                     </div>
 
-                    <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-flow-text/10">
+                    <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-cs-ink/10">
                       <div
                         className={`h-full rounded-full transition-all duration-700 ${tierBar(matchTier)}`}
                         style={{ width: `${match.score}%` }}
                       />
                     </div>
 
-                    <p className="mt-4 text-xs leading-relaxed text-flow-textSoft">
+                    <p className="mt-4 text-xs leading-relaxed text-cs-ink2">
                       {t(`match.tierHints.${matchTier}`)}
                     </p>
 
                     {match.missing.length > 0 && (
                       <div className="mt-4">
-                        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-flow-textSoft">
+                        <p className="cs-meta text-cs-ink3">
                           {t("match.missingLabel")}
                         </p>
                         <ul className="mt-2 flex flex-wrap gap-1.5">
@@ -1586,14 +1565,14 @@ export default function CvBuilderClient() {
 
                     {match.matched.length > 0 && (
                       <div className="mt-4">
-                        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-flow-textSoft">
+                        <p className="cs-meta text-cs-ink3">
                           {t("match.matchedLabel")}
                         </p>
                         <ul className="mt-2 flex flex-wrap gap-1.5">
                           {match.matched.slice(0, 10).map((term) => (
                             <li
                               key={term}
-                              className="rounded-full border border-flow-border bg-flow-surface px-2.5 py-1 text-xs font-medium text-flow-textSoft"
+                              className="rounded-full border border-cs-ink/10 bg-cs-surface px-2.5 py-1 text-xs font-medium text-cs-ink2"
                             >
                               {term}
                             </li>
@@ -1602,7 +1581,7 @@ export default function CvBuilderClient() {
                       </div>
                     )}
 
-                    <p className="mt-4 border-t border-flow-border pt-3 text-xs leading-relaxed text-flow-textSoft">
+                    <p className="mt-4 border-t border-cs-ink/10 pt-3 text-xs leading-relaxed text-cs-ink2">
                       {t("match.honestNote")}
                     </p>
                   </div>
@@ -1613,12 +1592,12 @@ export default function CvBuilderClient() {
                    * asked and could not answer, and saying so is better than
                    * printing a score we know to be wrong.
                    */
-                  <div className="rounded-2xl border border-dashed border-flow-border bg-flow-surface p-5">
-                    <h3 className="flex items-center gap-2 text-sm font-bold text-flow-text">
-                      <Target className="h-4 w-4 text-flow-textSoft" />
+                  <div className="rounded-xl p-5 ring-1 ring-inset ring-cs-ink/15 [background:repeating-linear-gradient(135deg,transparent,transparent_8px,rgb(var(--cs-ink)/0.02)_8px,rgb(var(--cs-ink)/0.02)_16px)]">
+                    <h3 className="flex items-center gap-2 text-sm font-bold text-cs-ink">
+                      <Target className="h-4 w-4 text-cs-ink2" />
                       {t(scoredAgainst.trim() ? "match.ungradedTitle" : "match.lockedTitle")}
                     </h3>
-                    <p className="mt-2 text-xs leading-relaxed text-flow-textSoft">
+                    <p className="mt-2 text-xs leading-relaxed text-cs-ink2">
                       {t(scoredAgainst.trim() ? "match.ungradedBody" : "match.lockedBody")}
                     </p>
                   </div>
@@ -1626,7 +1605,7 @@ export default function CvBuilderClient() {
 
               <div
                 ref={previewBoxRef}
-                className="overflow-hidden rounded-2xl border border-flow-border bg-flow-card shadow-premium"
+                className="overflow-hidden rounded-xl bg-cs-surface shadow-[0_1px_0_rgb(var(--cs-ink)/0.04),0_30px_60px_-30px_rgb(var(--cs-ink)/0.3)] ring-1 ring-cs-ink/10"
               >
                 {cv ? (
                   <div style={{ height: PAGE_HEIGHT * scale }}>
@@ -1648,18 +1627,18 @@ export default function CvBuilderClient() {
                 ) : isLoading ? (
                   <div className="flex min-h-[420px] flex-col items-center justify-center gap-3 p-8 text-center">
                     <LogoSpinner size={48} label="" />
-                    <p className="text-sm text-flow-textSoft">{t("preview.loading")}</p>
+                    <p className="text-sm text-cs-ink2">{t("preview.loading")}</p>
                   </div>
                 ) : (
                   <div className="flex min-h-[460px] flex-col items-center justify-center gap-4 p-8 text-center">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-aurora-1/20 bg-aurora-soft">
-                      <FileText className="h-7 w-7 text-aurora-1" />
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-cs-blue/10">
+                      <FileText className="h-7 w-7 text-cs-blue" />
                     </div>
                     <div className="max-w-xs space-y-1.5">
-                      <h3 className="font-heading text-base font-bold text-flow-text">
+                      <h3 className="text-lg font-medium tracking-[-0.025em] text-cs-ink">
                         {t("preview.placeholderTitle")}
                       </h3>
-                      <p className="text-xs leading-relaxed text-flow-textSoft">
+                      <p className="text-xs leading-relaxed text-cs-ink2">
                         {t("preview.placeholderSubtitle")}
                       </p>
                     </div>
@@ -1668,7 +1647,7 @@ export default function CvBuilderClient() {
               </div>
 
               {cv && (
-                <p className="text-xs leading-relaxed text-flow-textSoft">
+                <p className="text-xs leading-relaxed text-cs-ink2">
                   {t("preview.downloadHint")}
                 </p>
               )}

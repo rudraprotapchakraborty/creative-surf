@@ -839,3 +839,200 @@ html.re-active::-webkit-scrollbar-thumb:hover {
   outline: 2px solid rgb(var(--accent-1));
   outline-offset: 2px;
 }
+
+/* ============================================================
+   EDITORIAL LAYER — homepage, navbar, footer
+   ------------------------------------------------------------
+   Colour is assigned by role so it can carry hierarchy:
+     blue  — the one interactive colour (actions, links, focus)
+     cyan  — data and water: the swell, live readings, the "Surf"
+     gold  — the real-estate side only, matching its own brand
+     ink   — three steps of text weight; lines are ink at low alpha
+   Surfaces step by tone (bg → sunken → surface, plus `deep` for
+   the one dark band) rather than by shadow.
+   ============================================================ */
+@layer base {
+  :root {
+    --cs-bg: 247 250 253;
+    --cs-surface: 255 255 255;
+    --cs-sunken: 236 242 247;
+    --cs-ink: 7 22 39;
+    --cs-ink-2: 62 80 102;
+    --cs-ink-3: 92 108 128;
+    --cs-blue: 11 87 196;
+    --cs-blue-hover: 8 70 160;
+    --cs-on-blue: 255 255 255;
+    --cs-cyan: 8 148 201;
+    --cs-gold: 196 148 52;
+    --cs-deep: 6 19 36;
+    --cs-deep-ink: 228 236 246;
+
+    --cs-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --cs-ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .dark {
+    --cs-bg: 4 11 24;
+    --cs-surface: 11 23 41;
+    --cs-sunken: 7 17 32;
+    --cs-ink: 230 238 248;
+    --cs-ink-2: 165 182 203;
+    --cs-ink-3: 126 145 169;
+    --cs-blue: 96 172 255;
+    --cs-blue-hover: 132 190 255;
+    --cs-on-blue: 4 15 30;
+    --cs-cyan: 94 224 255;
+    --cs-gold: 214 170 70;
+    --cs-deep: 9 22 41;
+    --cs-deep-ink: 228 236 246;
+  }
+}
+
+@layer utilities {
+  /* The page grid. One max width and one gutter for every section, the nav
+     and the footer, so edges line up all the way down the page. */
+  .cs-container {
+    width: 100%;
+    max-width: 86rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 640px) { .cs-container { padding-inline: 2rem; } }
+  @media (min-width: 1024px) { .cs-container { padding-inline: 3rem; } }
+
+  /* Section rhythm: generous but not cavernous, and tighter on phones where
+     a screen of empty space reads as a broken page. */
+  .cs-section { padding-block: 5.5rem; }
+  @media (min-width: 768px) { .cs-section { padding-block: 8rem; } }
+  @media (min-width: 1280px) { .cs-section { padding-block: 9.5rem; } }
+
+  /* Display type: medium weight, tight tracking. The size carries the
+     emphasis, so the weight doesn't have to shout. */
+  .cs-display {
+    font-weight: 500;
+    letter-spacing: -0.042em;
+    line-height: 0.98;
+    text-wrap: balance;
+  }
+  .cs-h2 {
+    font-size: clamp(2.35rem, 5.2vw, 4.75rem);
+    font-weight: 500;
+    letter-spacing: -0.045em;
+    line-height: 0.98;
+    text-wrap: balance;
+  }
+  .cs-h3 {
+    font-size: clamp(1.375rem, 2vw, 1.75rem);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+
+  /* Accent words inside a heading: the serif italic. Optically it sits small
+     next to the grotesk at the same size, so it is scaled up a touch, and its
+     tracking is relaxed because italics crowd. */
+  .cs-accent {
+    font-family: var(--font-serif), Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.08em;
+    letter-spacing: -0.015em;
+    line-height: 0.9;
+  }
+
+  /* Instrument labels: the mono, small and tracked. */
+  .cs-meta {
+    font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .cs-lede {
+    font-size: clamp(1.0625rem, 1.25vw, 1.1875rem);
+    line-height: 1.6;
+    letter-spacing: -0.005em;
+    text-wrap: pretty;
+  }
+
+  /* One focus treatment for every control in the layer. An outline rather
+     than a ring so it follows the element's own radius and never clips. */
+  .cs-focus:focus-visible {
+    outline: 2px solid rgb(var(--cs-blue));
+    outline-offset: 3px;
+  }
+  .cs-focus:focus:not(:focus-visible) { outline: none; }
+
+  /* Hairline underline that draws in from the left on hover. */
+  .cs-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.45s var(--cs-ease);
+  }
+  .cs-underline:hover, .cs-underline:focus-visible { background-size: 100% 1px; }
+}
+
+/* The client shoreline: one long row of logos drifting left. The list is
+   doubled so the loop is seamless; hover or focus holds it still. */
+@keyframes cs-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+.cs-marquee { animation: cs-marquee 60s linear infinite; }
+.cs-marquee-wrap:hover .cs-marquee,
+.cs-marquee-wrap:focus-within .cs-marquee { animation-play-state: paused; }
+
+/* The background swell behind the hero chart: a long wave sliding sideways,
+   so the water reads as moving without the data line ever moving. */
+@keyframes cs-swell {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+.cs-swell { animation: cs-swell 18s linear infinite; }
+.cs-swell-slow { animation: cs-swell 31s linear infinite; }
+
+@keyframes cs-pulse {
+  0%   { transform: scale(1); opacity: 0.55; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+.cs-pulse { animation: cs-pulse 2.4s var(--cs-ease) infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-marquee, .cs-swell, .cs-swell-slow, .cs-pulse { animation: none !important; }
+  .cs-underline { transition: none; }
+}
+
+/* Where the homepage's horizon line runs into the footer, it *is* the edge —
+   the footer's own hairline would just double it. */
+main:has(.cs-horizon) + footer { border-top-color: transparent; }
+
+/* LogoMark spinner: the bars rise and settle in turn like a signal meter,
+   while a light travels the arrow. Transform and opacity only. */
+@keyframes cs-logo-bar {
+  0%, 100% { transform: scaleY(0.38); }
+  40%      { transform: scaleY(1); }
+  70%      { transform: scaleY(0.92); }
+}
+@keyframes cs-logo-bar-still {
+  0%, 100% { opacity: 0.4; }
+  40%      { opacity: 1; }
+}
+@keyframes cs-logo-travel {
+  from { transform: translateX(0); }
+  to   { transform: translateX(1400px); }
+}
+.cs-logo-bar {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: cs-logo-bar 1.35s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  animation-delay: calc(var(--bar, 0) * 0.16s);
+}
+.cs-logo-travel { animation: cs-logo-travel 1.35s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .cs-logo-bar { animation-name: cs-logo-bar-still; animation-duration: 2.4s; }
+  .cs-logo-travel { animation: none; }
+}

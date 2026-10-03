@@ -3,7 +3,6 @@
 import { useEffect, useState, Suspense } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Lock, Mail, User } from "lucide-react"
 import { useT } from "@/lib/i18n"
 import { authMessages } from "@/lib/i18n/messages/auth"
 import { AuthError, AuthNotice, AuthShell, AuthSubmit } from "@/components/auth/auth-shell"
@@ -123,7 +122,7 @@ function RegisterFlow() {
   if (step === "code") {
     return (
       <AuthShell
-        brand={t("brand")}
+        step={t("panel.steps.verify")}
         title={t("otpTitle")}
         subtitle={t("otpSubtitle", { email })}
         footer={
@@ -135,7 +134,7 @@ function RegisterFlow() {
               setError("")
               setNotice("")
             }}
-            className="hover:underline"
+            className="cs-focus cs-underline rounded-sm font-semibold text-cs-ink transition-colors hover:text-cs-blue"
           >
             {t("changeEmail")}
           </button>
@@ -143,25 +142,17 @@ function RegisterFlow() {
       >
         <form onSubmit={handleVerify} className="space-y-5">
           <div>
-            <label
-              className="block text-xs font-semibold uppercase tracking-widest mb-3 text-center"
-              style={{ color: "rgb(var(--flow-text-soft))" }}
-            >
+            <label htmlFor="otp-code" className="mb-3 block text-[13px] font-semibold tracking-[-0.005em] text-cs-ink">
               {t("otpLabel")}
             </label>
-            <div className="flex justify-center">
-              <InputOTP maxLength={6} value={code} onChange={setCode} autoFocus>
-                <InputOTPGroup className="gap-2">
+            <div>
+              <InputOTP id="otp-code" maxLength={6} value={code} onChange={setCode} autoFocus>
+                <InputOTPGroup className="gap-2 sm:gap-2.5">
                   {[0, 1, 2, 3, 4, 5].map(index => (
                     <InputOTPSlot
                       key={index}
                       index={index}
-                      className="w-11 h-12 text-lg rounded-xl border"
-                      style={{
-                        background: "rgb(var(--flow-surface) / 0.8)",
-                        borderColor: "var(--flow-border-strong)",
-                        color: "rgb(var(--flow-text))",
-                      }}
+                      className="h-14 w-12 rounded-[10px] border border-cs-ink/15 bg-cs-surface text-xl font-semibold tabular-nums text-cs-ink ring-cs-blue ring-offset-0 first:rounded-[10px] first:border-l last:rounded-[10px] sm:w-[3.25rem]"
                     />
                   ))}
                 </InputOTPGroup>
@@ -178,8 +169,7 @@ function RegisterFlow() {
             type="button"
             onClick={handleResend}
             disabled={cooldown > 0}
-            className="w-full text-xs hover:underline disabled:no-underline disabled:opacity-50"
-            style={{ color: "rgb(var(--flow-text-soft))" }}
+            className="cs-focus mx-auto block rounded-sm text-sm font-semibold text-cs-ink2 transition-colors hover:text-cs-blue disabled:cursor-default disabled:text-cs-ink3 disabled:hover:text-cs-ink3"
           >
             {cooldown > 0 ? t("resendIn", { seconds: cooldown }) : t("resend")}
           </button>
@@ -190,7 +180,7 @@ function RegisterFlow() {
 
   return (
     <AuthShell
-      brand={t("brand")}
+      step={t("panel.steps.register")}
       title={t("registerTitle")}
       subtitle={t("registerSubtitle")}
       footer={
@@ -198,8 +188,7 @@ function RegisterFlow() {
           {t("haveAccount")}{" "}
           <Link
             href={`/login${redirect !== "/account" ? `?from=${encodeURIComponent(redirect)}` : ""}`}
-            className="font-semibold hover:underline"
-            style={{ color: "rgb(var(--accent-1))" }}
+            className="cs-focus cs-underline rounded-sm font-semibold text-cs-blue"
           >
             {t("signInLink")}
           </Link>
@@ -217,7 +206,6 @@ function RegisterFlow() {
           placeholder={t("namePlaceholder")}
           autoComplete="name"
           required={false}
-          icon={User}
         />
         <AuthField
           label={t("email")}
@@ -226,7 +214,6 @@ function RegisterFlow() {
           type="email"
           placeholder={t("emailPlaceholder")}
           autoComplete="email"
-          icon={Mail}
         />
         <AuthField
           label={t("choosePassword")}
@@ -236,7 +223,6 @@ function RegisterFlow() {
           placeholder={t("choosePasswordPlaceholder")}
           autoComplete="new-password"
           hint={t("passwordHint")}
-          icon={Lock}
         />
 
         <AuthError message={error} />

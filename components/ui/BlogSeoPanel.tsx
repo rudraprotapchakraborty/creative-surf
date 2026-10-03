@@ -14,6 +14,8 @@ interface BlogSeoPanelProps {
   inboundUrlPlaceholder?: string
   inboundHint?: string
   outboundHint?: string
+  /** "ruled" drops the box for a hairline — the main blog writer's editorial frame. */
+  frame?: "card" | "ruled"
 }
 
 function emptyLink(): BlogSeoLink {
@@ -162,6 +164,7 @@ export default function BlogSeoPanel({
   inboundUrlPlaceholder = "https://www.creativesurf.agency/seo-lead-generation",
   inboundHint,
   outboundHint,
+  frame = "card",
 }: BlogSeoPanelProps) {
   const t = useT(editorUiMessages)
   const linkErrors = getBlogLinkFieldErrors(value.inboundLinks, value.outboundLinks)
@@ -170,7 +173,10 @@ export default function BlogSeoPanel({
     metaLength === 0 ? "optional" : metaLength <= 160 ? "good" : "long"
 
   return (
-    <div className="glass rounded-xl p-4 space-y-5" style={{ border: "1px solid var(--flow-border)" }}>
+    <div
+      className={frame === "ruled" ? "space-y-5 border-t border-cs-ink/10 pt-5" : "glass rounded-xl p-4 space-y-5"}
+      style={frame === "ruled" ? undefined : { border: "1px solid var(--flow-border)" }}
+    >
       <div>
         <div className="flex items-center gap-2 mb-2">
           <Link2 size={13} style={{ color: "rgb(var(--flow-text-soft))" }} />

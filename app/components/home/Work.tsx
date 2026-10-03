@@ -1,184 +1,164 @@
 "use client";
 
-import { useRef } from "react";
+import * as React from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { Building2, Users, TrendingUp, MapPin } from "lucide-react";
-
+import { ArrowUpRight } from "lucide-react";
 import { useT } from "@/lib/i18n";
-import { homeMessages } from "@/lib/i18n/messages/home";
-import { ActionButton, Beam, CountUp, EASE } from "./shared";
+import { homeExtraMessages } from "@/lib/i18n/messages/homeExtra";
+import { cn } from "@/lib/utils";
+import { Reveal, SectionIntro } from "@/app/components/editorial";
 
-const PILL_ICONS = [MapPin, Building2, Users];
+/** Live URLs and screenshots are facts, not copy — only category/description translate. */
+const PROJECTS = [
+  { name: "Bee Team Studios", domain: "beeteamltd.com", url: "https://www.beeteamltd.com/", image: "/work-beeteam.webp" },
+  { name: "Sirius A Marketing", domain: "sirius-a-marketing.vercel.app", url: "https://sirius-a-marketing.vercel.app/", image: "/work-sirius.webp" },
+  { name: "Nami Moon", domain: "nami-moon.vercel.app", url: "https://nami-moon.vercel.app/", image: "/work-namimoon.webp" },
+  { name: "Spring Field Developments", domain: "springfield-developments.vercel.app", url: "https://springfield-developments.vercel.app/", image: "/work-springfield.webp" },
+];
 
-export default function Work() {
-  const t = useT(homeMessages);
+/**
+ * Placement on the 12-column grid, by index: big–small, then small–big, each
+ * pair stepped down, so the eye zigzags through the spread rather than
+ * scanning four equal tiles. Every frame keeps the screenshots' own 16:10 —
+ * cropping a website to portrait cuts its type off and reads as a bug.
+ */
+const LAYOUT = [
+  { cell: "lg:col-span-7", sizes: "(min-width: 1024px) 56vw, 85vw" },
+  { cell: "lg:col-span-5 lg:col-start-8 lg:mt-32", sizes: "(min-width: 1024px) 40vw, 85vw" },
+  { cell: "lg:col-span-5 lg:mt-16", sizes: "(min-width: 1024px) 40vw, 85vw" },
+  { cell: "lg:col-span-7 lg:col-start-6 lg:mt-40", sizes: "(min-width: 1024px) 56vw, 85vw" },
+];
 
-  const stats = [
-    { icon: Building2, label: t("realEstate.stats.projects"), value: "50+" },
-    { icon: Users, label: t("realEstate.stats.leads"), value: "2,400+" },
-    { icon: TrendingUp, label: t("realEstate.stats.quality"), value: "94%" },
-  ];
+type Project = (typeof PROJECTS)[number] & { category: string; description: string };
 
-  const images = [
-    { src: "/1.webp", alt: t("realEstate.images.alt1"), caption: t("realEstate.images.caption1") },
-    { src: "/2.webp", alt: t("realEstate.images.alt2"), caption: t("realEstate.images.caption2") },
-    { src: "/3.webp", alt: t("realEstate.images.alt3"), caption: t("realEstate.images.caption3") },
-  ];
+/**
+ * One project. On a mouse, a "Visit" tag follows the cursor over the image
+ * so the whole picture reads as the link. It is positioned with CSS custom
+ * properties written straight to the element, so tracking the pointer never
+ * re-renders React.
+ */
+function ProjectFigure({
+  project,
+  index,
+  layout,
+  ctaLabel,
+}: {
+  project: Project;
+  index: number;
+  layout: (typeof LAYOUT)[number];
+  ctaLabel: string;
+}) {
+  const frameRef = React.useRef<HTMLSpanElement>(null);
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] });
-  const y1 = useTransform(scrollYProgress, [0, 1], [30, -30]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [-16, 30]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [46, -16]);
-  const yValues = [y1, y2, y3];
+  const track = (e: React.PointerEvent<HTMLSpanElement>) => {
+    if (e.pointerType !== "mouse") return;
+    const el = frameRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty("--x", `${e.clientX - r.left}px`);
+    el.style.setProperty("--y", `${e.clientY - r.top}px`);
+  };
 
   return (
-    <section id="work" ref={containerRef} className="relative section-py section-px bg-flow-bg">
-      <div className="mx-auto max-w-7xl">
-        <div className="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] bg-flow-text text-flow-bg">
-          {/* Ambient */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-70"
-            style={{
-              backgroundImage:
-                "linear-gradient(rgb(var(--accent-3)/0.06) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--accent-3)/0.06) 1px, transparent 1px)",
-              backgroundSize: "64px 64px",
-            }}
+    <Reveal
+      as="li"
+      delay={(index % 2) * 0.08}
+      className={cn("w-[78vw] shrink-0 snap-start sm:w-[58vw] lg:w-auto", layout.cell)}
+    >
+      <a
+        href={project.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="cs-focus group block rounded-lg"
+      >
+        <span
+          ref={frameRef}
+          onPointerMove={track}
+          onPointerEnter={track}
+          className="relative block aspect-[16/10] overflow-hidden rounded-lg bg-cs-sunken ring-1 ring-inset ring-cs-ink/[0.06]"
+        >
+          <Image
+            src={project.image}
+            alt=""
+            fill
+            sizes={layout.sizes}
+            className="object-cover object-top transition-transform duration-[1.4s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.035] motion-reduce:transition-none"
           />
-          <div
+
+          {/* Cursor tag (mouse) */}
+          <span
             aria-hidden
-            className="pointer-events-none absolute -top-32 -right-24 w-[560px] h-[560px] rounded-full opacity-30"
-            style={{ background: "radial-gradient(circle, rgb(var(--accent-2)) 0%, transparent 70%)" }}
-          />
+            className="pointer-events-none absolute left-0 top-0 hidden md:block"
+            style={{ transform: "translate3d(var(--x, 50%), var(--y, 50%), 0)" }}
+          >
+            <span className="cs-meta inline-flex -translate-x-1/2 -translate-y-1/2 scale-75 items-center gap-1.5 whitespace-nowrap rounded-full bg-cs-ink px-3.5 py-2 text-cs-bg opacity-0 shadow-[0_12px_30px_-12px_rgb(0_0_0/0.5)] transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-100 group-hover:opacity-100">
+              {ctaLabel}
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </span>
+          </span>
 
-          <div className="relative z-10 grid lg:grid-cols-2 gap-14 lg:gap-10 p-7 sm:p-12 lg:p-16">
-            {/* Left — text */}
-            <motion.div
-              className="flex flex-col justify-center items-center text-center"
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: EASE }}
-            >
-              <Beam className="max-w-[14rem] mb-8" />
+          {/* Keyboard focus and touch get a fixed tag instead. */}
+          <span
+            aria-hidden
+            className="cs-meta absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full bg-cs-ink/85 px-3 py-1.5 text-cs-bg backdrop-blur-sm md:opacity-0 md:group-focus-visible:opacity-100"
+          >
+            {ctaLabel}
+            <ArrowUpRight className="h-3.5 w-3.5" />
+          </span>
+        </span>
 
-              <span className="micro text-flow-bg/55 mb-5">{t("realEstate.badge")}</span>
+        <span className="mt-5 grid grid-cols-[auto_1fr] gap-x-4">
+          <span className="cs-meta pt-[0.35rem] tabular-nums text-cs-ink3">{String(index + 1).padStart(2, "0")}</span>
+          <span className="min-w-0">
+            <span className="cs-meta block text-cs-ink3">{project.category}</span>
+            <span className="mt-2 flex items-baseline gap-2 text-[1.375rem] font-medium leading-tight tracking-[-0.03em] text-cs-ink">
+              <span className="cs-underline">{project.name}</span>
+              <span className="sr-only">({ctaLabel}, opens in a new tab)</span>
+            </span>
+            <span className="mt-2 block max-w-[30rem] text-[15px] leading-relaxed text-cs-ink2">{project.description}</span>
+            <span className="cs-meta mt-3 block truncate text-cs-ink3 normal-case tracking-normal">{project.domain}</span>
+          </span>
+        </span>
+      </a>
+    </Reveal>
+  );
+}
 
-              <h2
-                className="display mb-4 text-flow-bg"
-                style={{ fontSize: "clamp(2.1rem,4.2vw,3.8rem)" }}
-              >
-                {t("realEstate.headingLine1")}
-                <br />
-                <span className="text-aurora-shimmer">{t("realEstate.headingAccent")}</span>
-              </h2>
+export default function Work() {
+  const t = useT(homeExtraMessages);
+  const projects: Project[] = PROJECTS.map((meta, i) => ({
+    ...meta,
+    category: t(`webDev.projects.${i}.category`),
+    description: t(`webDev.projects.${i}.description`),
+  }));
 
-              <p className="micro text-flow-bg/45 mb-6">
-                {t("realEstate.subline")}
-              </p>
+  return (
+    <section id="work" aria-labelledby="work-title" className="scroll-mt-16 bg-cs-bg pb-24 md:pb-32 xl:pb-40">
+      <div className="cs-container">
+        <SectionIntro
+          id="work-title"
+          index="02"
+          label={t("sections.work")}
+          line={t("webDev.headingLine1")}
+          accent={t("webDev.headingAccent")}
+          lede={t("webDev.intro")}
+        />
+      </div>
 
-              <p className="text-flow-bg/70 text-base leading-relaxed max-w-lg mb-8">
-                {t("realEstate.bodyStart")}{" "}
-                <span className="text-flow-bg font-semibold">{t("realEstate.bodyStrong")}</span>{" "}
-                {t("realEstate.bodyEnd")}
-              </p>
-
-              <div className="flex flex-wrap justify-center gap-2 mb-10">
-                {t.list("realEstate.pills").map((label, i) => ({ icon: PILL_ICONS[i] ?? MapPin, label })).map(({ icon: Icon, label }) => (
-                  <div
-                    key={label}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-flow-bg/15 text-aurora-3"
-                  >
-                    <Icon className="w-3 h-3" />
-                    {label}
-                  </div>
-                ))}
-              </div>
-
-              {/* Big stat callouts */}
-              <div className="flex flex-wrap justify-center gap-x-10 gap-y-6 mb-10">
-                {stats.map(({ icon: Icon, label, value }) => (
-                  <div key={label} className="flex flex-col items-center gap-1">
-                    <Icon className="w-4 h-4 mb-1 text-aurora-3" />
-                    <span className="display text-flow-bg tabular-nums" style={{ fontSize: "2.4rem" }}>
-                      <CountUp value={value} />
-                    </span>
-                    <span className="text-xs text-flow-bg/55 leading-tight">{label}</span>
-                  </div>
-                ))}
-              </div>
-
-              <Link href="/real-estate" className="focus-ring inline-block w-fit">
-                <ActionButton onDark>{t("realEstate.cta")}</ActionButton>
-              </Link>
-            </motion.div>
-
-            {/* Right — image mosaic */}
-            <motion.div
-              className="relative"
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
-            >
-              <div className="relative h-[420px] sm:h-[480px] lg:h-full lg:min-h-[480px] flex gap-3">
-                <motion.div style={{ y: yValues[0] }} className="flex-1 flex flex-col justify-end">
-                  <div className="group/tile relative h-[75%] rounded-2xl overflow-hidden shadow-2xl">
-                    <Image src={images[0].src} alt={images[0].alt} fill className="object-cover object-center transition-transform duration-[1.2s] ease-out group-hover/tile:scale-[1.06]" sizes="(max-width:768px) 50vw, 25vw" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    <div className="absolute bottom-3 left-3 right-3 flex items-center gap-1.5">
-                      <MapPin className="w-3 h-3 text-white/80 flex-shrink-0" />
-                      <span className="text-white/90 text-xs font-medium truncate">{images[0].caption}</span>
-                    </div>
-                  </div>
-                </motion.div>
-
-                <div className="flex-1 flex flex-col gap-3">
-                  <motion.div style={{ y: yValues[1] }} className="flex-1">
-                    <div className="group/tile relative h-full rounded-2xl overflow-hidden shadow-2xl">
-                      <Image src={images[1].src} alt={images[1].alt} fill className="object-cover object-center transition-transform duration-[1.2s] ease-out group-hover/tile:scale-[1.06]" sizes="(max-width:768px) 50vw, 25vw" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
-                      <div className="absolute bottom-3 left-3 right-3">
-                        <span className="text-white/90 text-xs font-medium">{images[1].caption}</span>
-                      </div>
-                    </div>
-                  </motion.div>
-                  <motion.div style={{ y: yValues[2] }} className="flex-1">
-                    <div className="group/tile relative h-full rounded-2xl overflow-hidden shadow-2xl">
-                      <Image src={images[2].src} alt={images[2].alt} fill className="object-cover object-top transition-transform duration-[1.2s] ease-out group-hover/tile:scale-[1.06]" sizes="(max-width:768px) 50vw, 25vw" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
-                      <div className="absolute bottom-3 left-3 right-3">
-                        <span className="text-white/90 text-xs font-medium">{images[2].caption}</span>
-                      </div>
-                    </div>
-                  </motion.div>
-                </div>
-              </div>
-
-              <motion.div
-                initial={{ opacity: 0, scale: 0.85, y: 20 }}
-                whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, ease: EASE, delay: 0.5 }}
-                className="absolute -bottom-4 -left-4 sm:-left-6 rounded-2xl px-4 py-3 flex items-center gap-3 shadow-2xl bg-flow-bg"
-              >
-                <div
-                  className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
-                >
-                  <Building2 className="w-4 h-4 text-white" />
-                </div>
-                <div>
-                  <div className="text-xs font-bold text-flow-text">{t("realEstate.floatingTitle")}</div>
-                  <div className="text-[0.65rem] text-flow-textSoft">{t("realEstate.floatingSub")}</div>
-                </div>
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
+      {/* Phones and tablets: a swipeable strip that bleeds off the right edge,
+          so the next project is always peeking. Desktop: the spread. */}
+      <div className="mt-12 sm:mt-16 lg:mx-auto lg:mt-24 lg:max-w-[86rem] lg:px-12">
+        <ul className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-px-5 px-5 pb-4 no-scrollbar sm:scroll-px-8 sm:px-8 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:gap-y-0 lg:overflow-visible lg:px-0 lg:pb-0">
+          {projects.map((project, i) => (
+            <ProjectFigure
+              key={project.name}
+              project={project}
+              index={i}
+              layout={LAYOUT[i]}
+              ctaLabel={t("webDev.ctaLabel")}
+            />
+          ))}
+        </ul>
       </div>
     </section>
   );

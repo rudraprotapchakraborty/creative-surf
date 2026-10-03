@@ -3,13 +3,16 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react"
 import { useT, useLocale, formatDateForLocale, type Locale } from "@/lib/i18n"
 import { blogsMessages } from "@/lib/i18n/messages/blogs"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import Link from "next/link"
-import { Plus, Pencil, Trash2, MoreHorizontal, Clock, LogIn } from "lucide-react"
+import { Clock, LogIn, Plus } from "lucide-react"
 import BlogCardActions from "@/components/blog/BlogCardActions"
 import BlogComments from "@/components/blog/BlogComments"
 import { EMPTY_ENGAGEMENT, type BlogEngagement } from "@/lib/blog-engagement-shared"
 import { getVisitorId } from "@/lib/visitor-id"
+import { cn } from "@/lib/utils"
+import { ButtonLink, EASE, Meta } from "@/app/components/editorial"
+import { FeedSkeleton, JournalCover, Monogram, PostMenu } from "./JournalParts"
 
 interface Blog {
   _id: string
@@ -26,15 +29,8 @@ interface Blog {
   createdAt: string
   /** Account that wrote the post. Absent on posts saved before ownership existed. */
   authorId?: string
-}
-
-const CATEGORY_EMOJI: Record<string, string> = {
-  Strategy: "🎯", Marketing: "📈", Design: "🎨", SEO: "🔍",
-  "Social Media": "📱", Content: "✍️", General: "💡", Technology: "⚡",
-  Business: "💼", Branding: "🌟", UX: "🖥️", Analytics: "📊",
-  Growth: "🚀", Copywriting: "🖊️", Advertising: "📣",
-  "Lead Generation": "🧲", "AI & Creative": "🤖", "Video Production": "🎬",
-  "Web Development": "🌐", "Digital Marketing": "📣",
+  /** The owner's profile picture, attached by the API when the account has one. */
+  authorAvatar?: string
 }
 
 /** How many posts render before the scroll sentinel pulls in the next batch. */
@@ -44,47 +40,24 @@ function formatDate(dateStr: string, locale: Locale) {
   return formatDateForLocale(dateStr, locale, { month: "short", day: "numeric", year: "numeric" })
 }
 
-/** Initials for the post author's avatar, e.g. "Creative Surf" → "CS". */
-function initialsOf(name: string) {
-  const parts = name.trim().split(/\s+/).filter(Boolean)
-  if (parts.length === 0) return "CS"
-  return (parts[0][0] + (parts[1]?.[0] ?? "")).toUpperCase()
-}
-
 /**
- * A deterministic accent per author so the same byline always gets the same
- * avatar colour, without storing one on the post.
+ * The blog as a journal: a masthead, one ruled row of topics, and the posts
+ * as editorial entries — words on the left, the picture on the right — rather
+ * than a stack of social-feed cards. Everything the feed did still works in
+ * place: likes, shares, the inline comment thread, owners' edit and delete,
+ * and the next batch arriving as you near the end.
  */
-function accentOf(name: string) {
-  const palette = [
-    ["#0066A2", "#0EA5E9"], ["#7C3AED", "#C084FC"], ["#0F766E", "#2DD4BF"],
-    ["#BE123C", "#FB7185"], ["#B8892A", "#D4A843"], ["#1D4ED8", "#60A5FA"],
-  ]
-  let hash = 0
-  for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) | 0
-  const [from, to] = palette[Math.abs(hash) % palette.length]
-  return `linear-gradient(135deg, ${from}, ${to})`
-}
-
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.06 } },
-}
-const fadeUp = {
-  hidden: { opacity: 0, y: 22 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
-}
-
 export default function BlogsPage() {
   const t = useT(blogsMessages)
   const locale = useLocale()
+  const still = useReducedMotion() ?? false
   const [blogs, setBlogs] = useState<Blog[]>([])
   const [engagement, setEngagement] = useState<Record<string, BlogEngagement>>({})
   const [visitorId, setVisitorId] = useState("")
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
   /** Signed-in account, or null when logged out. */
-  const [viewer, setViewer] = useState<{ sub: string; name: string } | null>(null)
+  const [viewer, setViewer] = useState<{ sub: string; name: string; avatar?: string } | null>(null)
   const [activeCategory, setActiveCategory] = useState("All")
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [openComments, setOpenComments] = useState<Record<string, boolean>>({})
@@ -93,8 +66,8 @@ export default function BlogsPage() {
   const sentinelRef = useRef<HTMLDivElement>(null)
 
   /**
-   * Facebook-style compact age ("3h", "2d"). Anything older than about a month
-   * reads better as a real date than as an ever-growing week count.
+   * Compact age ("3h", "2d"). Anything older than about a month reads better
+   * as a real date than as an ever-growing week count.
    */
   const relativeTime = useCallback(
     (dateStr: string) => {
@@ -128,7 +101,7 @@ export default function BlogsPage() {
     fetch("/api/auth/me").then(r => r.json()).then(d => {
       if (!d.authenticated) return
       if (d.role === "admin") setIsAdmin(true)
-      setViewer({ sub: d.user?.sub ?? "", name: d.username || d.user?.name || "" })
+      setViewer({ sub: d.user?.sub ?? "", name: d.username || d.user?.name || "", avatar: d.user?.avatar })
     }).catch(() => {})
   }, [fetchBlogs])
 
@@ -141,7 +114,7 @@ export default function BlogsPage() {
     [isAdmin, viewer]
   )
 
-  // One batched request for every card's like/comment counts, re-run once the
+  // One batched request for every post's like/comment counts, re-run once the
   // visitor id is known so the heart can render in its "already liked" state.
   useEffect(() => {
     if (blogs.length === 0) return
@@ -200,7 +173,7 @@ export default function BlogsPage() {
   const visible = filtered.slice(0, visibleCount)
   const hasMore = visibleCount < filtered.length
 
-  // Switching category restarts the feed at the top of the new list.
+  // Switching topic restarts the feed at the top of the new list.
   useEffect(() => { setVisibleCount(PAGE_SIZE) }, [activeCategory])
 
   /** Infinite scroll — reveal the next batch as the sentinel enters view. */
@@ -226,7 +199,7 @@ export default function BlogsPage() {
     return () => window.removeEventListener("click", close)
   }, [menuOpenId])
 
-  /** Most-liked posts, for the right rail. */
+  /** Most-liked posts, for the rail. */
   const trending = useMemo(() => {
     return [...blogs]
       .sort((a, b) => (engagement[b._id]?.likes ?? 0) - (engagement[a._id]?.likes ?? 0))
@@ -234,478 +207,366 @@ export default function BlogsPage() {
       .filter(b => (engagement[b._id]?.likes ?? 0) > 0)
   }, [blogs, engagement])
 
-  const railCard = {
-    background: "var(--flow-card)",
-    border: "1px solid var(--flow-border-strong)",
-  }
+  const topicCount = Math.max(0, categories.length - 1)
 
   return (
-    <main className="min-h-screen bg-flow-bg relative">
-      {/* Aurora background */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="aurora-blob animate-aurora" style={{ width: 700, height: 700, top: "-10%", left: "-5%", background: "radial-gradient(circle, rgb(var(--accent-1) / 0.12), transparent 65%)" }} />
-        <div className="aurora-blob animate-aurora-alt" style={{ width: 600, height: 600, bottom: "5%", right: "-8%", background: "radial-gradient(circle, rgb(var(--accent-2) / 0.1), transparent 65%)" }} />
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 pb-20">
-
-        {/* ─── Three-column shell: rail · feed · rail ─── */}
-        <div className="flex justify-center gap-6 xl:gap-8">
-
-          {/* Left rail — category nav */}
-          <aside className="hidden lg:block w-[240px] shrink-0">
-            <div className="sticky top-24 flex flex-col gap-4">
-              <nav className="rounded-2xl p-3" style={railCard}>
-                <h2 className="px-2 pb-2 text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                  {t("categoriesTitle")}
-                </h2>
-                <ul className="flex flex-col gap-0.5">
-                  {categories.map(cat => {
-                    const active = activeCategory === cat
-                    return (
-                      <li key={cat}>
-                        <button
-                          onClick={() => setActiveCategory(cat)}
-                          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-[13px] font-semibold text-left transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.05]"
-                          style={active ? { background: "rgb(var(--accent-1) / 0.12)", color: "rgb(var(--accent-1))" } : { color: "rgb(var(--flow-text))" }}
-                          aria-current={active ? "page" : undefined}
-                        >
-                          <span className="text-base leading-none w-5 text-center shrink-0" aria-hidden>
-                            {cat === "All" ? "🗂️" : CATEGORY_EMOJI[cat] ?? "💡"}
-                          </span>
-                          <span className="truncate">{cat === "All" ? t("categoryAll") : cat}</span>
-                        </button>
-                      </li>
-                    )
-                  })}
-                </ul>
-              </nav>
-
-            </div>
-          </aside>
-
-          {/* ─── Center feed ─── */}
-          <div className="w-full max-w-[640px] min-w-0">
-
-            {/* Heading — lives in the column so it lines up with the posts */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="mb-6"
-            >
-              <span className="inline-flex items-center gap-2 mb-2.5">
-                <span className="w-5 h-[2px]" style={{ background: "rgb(var(--accent-1))" }} />
-                <span className="text-[10px] font-bold uppercase tracking-[0.3em]" style={{ color: "rgb(var(--accent-1))" }}>
-                  {t("eyebrow")}
-                </span>
-              </span>
-              <h1 className="font-bold text-flow-text leading-tight mb-1.5" style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.25rem)" }}>
-                {t("title")}
-              </h1>
-              <p className="text-[13.5px] leading-relaxed" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                {t("subtitle")}
+    <div className="bg-cs-bg text-cs-ink">
+      {/* ─── Masthead ─── */}
+      <header className="pt-[5.25rem] sm:pt-24 lg:pt-[6.5rem]">
+        <div className="cs-container">
+          <motion.div
+            initial={still ? false : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: EASE }}
+            className="cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 pb-4 text-cs-ink3"
+          >
+            <p className="text-cs-ink">{t("eyebrow")}</p>
+            {!loading && (
+              <p className="tabular-nums">
+                {blogs.length} {t("postsLabel")} <span aria-hidden className="mx-1.5 opacity-50">·</span> {topicCount}{" "}
+                {t("topicsLabel")}
               </p>
-            </motion.div>
-
-            {/* Category chips — the rail is hidden below lg, so the feed keeps its own.
-                Wraps onto rows rather than scrolling, so every topic is reachable. */}
-            {categories.length > 1 && (
-              <div className="lg:hidden flex flex-wrap gap-2 mb-4">
-                {categories.map(cat => (
-                  <button
-                    key={cat}
-                    onClick={() => setActiveCategory(cat)}
-                    className="px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-200"
-                    style={
-                      activeCategory === cat
-                        ? { background: "rgb(var(--accent-1))", color: "#fff", boxShadow: "0 2px 12px rgb(var(--accent-1) / 0.3)" }
-                        : { background: "var(--flow-card)", color: "rgb(var(--flow-text))", border: "1px solid var(--flow-border-strong)" }
-                    }
-                  >
-                    {cat === "All" ? t("categoryAll") : cat}
-                  </button>
-                ))}
-              </div>
             )}
+          </motion.div>
 
-            {/*
-              Composer — open to any signed-in account. Signed out, the same
-              control is blurred behind a sign-in prompt so the ability to post
-              is visible rather than hidden.
-            */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="relative rounded-2xl mb-4 overflow-hidden"
-              style={railCard}
-            >
-              <div
-                className={`p-3.5 flex items-center gap-3 ${viewer ? "" : "pointer-events-none select-none"}`}
-                style={viewer ? undefined : { filter: "blur(3px)", opacity: 0.55 }}
-                aria-hidden={viewer ? undefined : true}
-              >
-                <div
-                  className="shrink-0 flex items-center justify-center rounded-full text-xs font-bold text-white"
-                  style={{ width: 40, height: 40, background: accentOf(viewer?.name || "Creative Surf") }}
-                  aria-hidden
+          <div className="grid gap-y-8 pb-12 pt-12 sm:pt-16 lg:grid-cols-12 lg:gap-x-8 lg:pb-16 lg:pt-20">
+            <div className="lg:col-span-8">
+              <h1 className="overflow-hidden pb-[0.08em]">
+                <motion.span
+                  className="cs-display block text-cs-ink"
+                  style={{ fontSize: "clamp(3rem, 8.4vw, 8rem)", lineHeight: 0.92, letterSpacing: "-0.055em" }}
+                  initial={still ? false : { y: "100%" }}
+                  animate={{ y: "0%" }}
+                  transition={{ duration: 1.1, ease: EASE, delay: 0.05 }}
                 >
-                  {initialsOf(viewer?.name || "Creative Surf")}
-                </div>
-                {viewer ? (
-                  <Link
-                    href="/blogs/new"
-                    className="flex-1 px-4 py-2.5 rounded-full text-sm transition-colors hover:opacity-80"
-                    style={{ background: "rgb(var(--flow-border) / 0.6)", color: "rgb(var(--flow-text-soft))" }}
-                  >
-                    {t("composerPrompt")}
-                  </Link>
-                ) : (
-                  <span
-                    className="flex-1 px-4 py-2.5 rounded-full text-sm"
-                    style={{ background: "rgb(var(--flow-border) / 0.6)", color: "rgb(var(--flow-text-soft))" }}
-                  >
-                    {t("composerPrompt")}
-                  </span>
-                )}
-              </div>
+                  {t("title")}
+                </motion.span>
+              </h1>
+              <motion.p
+                initial={still ? false : { opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9, ease: EASE, delay: 0.25 }}
+                className="cs-lede mt-7 max-w-[36rem] text-cs-ink2"
+              >
+                {t("subtitle")}
+              </motion.p>
+            </div>
 
-              {!viewer && (
-                <div className="absolute inset-0 flex items-center justify-center px-4">
-                  <Link
-                    href="/login"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-semibold text-white shadow-lg transition-transform hover:-translate-y-0.5"
-                    style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
-                  >
-                    <LogIn size={15} />
-                    {t("loginToPost")}
-                  </Link>
+            {/* Posting: open to any signed-in account, and visible — not hidden —
+                to everyone else, as a way in. */}
+            <motion.div
+              initial={still ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.35 }}
+              className="flex items-end lg:col-span-4 lg:justify-end"
+            >
+              {viewer ? (
+                <div className="flex items-center gap-4">
+                  <Monogram name={viewer.name || t("brand")} src={viewer.avatar} size={40} />
+                  <div>
+                    <p className="text-sm text-cs-ink2">{t("composerPrompt")}</p>
+                    <Link
+                      href="/blogs/new"
+                      className="cs-focus group mt-1 inline-flex items-center gap-1.5 rounded-sm text-[15px] font-semibold text-cs-blue"
+                    >
+                      <Plus aria-hidden className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
+                      <span className="cs-underline">{t("newPost")}</span>
+                    </Link>
+                  </div>
                 </div>
+              ) : (
+                <ButtonLink href="/login" variant="secondary" size="md" icon="none">
+                  <span className="inline-flex items-center gap-2">
+                    <LogIn aria-hidden className="h-4 w-4" />
+                    {t("loginToPost")}
+                  </span>
+                </ButtonLink>
               )}
             </motion.div>
+          </div>
+        </div>
+      </header>
 
-            {/* Loading */}
-            {loading && (
-              <div className="flex flex-col gap-4">
-                {[0, 1, 2].map(i => (
-                  <div key={i} className="rounded-2xl p-4 animate-pulse" style={railCard}>
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="rounded-full" style={{ width: 40, height: 40, background: "rgb(var(--flow-border))" }} />
-                      <div className="flex-1">
-                        <div className="h-3 w-32 rounded mb-2" style={{ background: "rgb(var(--flow-border))" }} />
-                        <div className="h-2.5 w-20 rounded" style={{ background: "rgb(var(--flow-border))" }} />
-                      </div>
-                    </div>
-                    <div className="h-4 w-3/4 rounded mb-2.5" style={{ background: "rgb(var(--flow-border))" }} />
-                    <div className="h-3 w-full rounded mb-2" style={{ background: "rgb(var(--flow-border))" }} />
-                    <div className="rounded-xl mt-3" style={{ height: 200, background: "rgb(var(--flow-border))" }} />
-                  </div>
-                ))}
-              </div>
-            )}
+      {/* ─── Topics ─── */}
+      {categories.length > 1 && (
+        <nav aria-label={t("categoriesTitle")} className="border-y border-cs-ink/10">
+          <div className="cs-container">
+            <ul className="-mx-2 flex flex-wrap gap-x-1 gap-y-1 py-3">
+              {categories.map(cat => {
+                const active = activeCategory === cat
+                return (
+                  <li key={cat}>
+                    <button
+                      type="button"
+                      onClick={() => setActiveCategory(cat)}
+                      aria-pressed={active}
+                      className={cn(
+                        "cs-focus relative rounded-md px-2.5 py-2 text-sm font-medium tracking-[-0.01em] transition-colors duration-200",
+                        active ? "text-cs-ink" : "text-cs-ink3 hover:text-cs-ink"
+                      )}
+                    >
+                      {cat === "All" ? t("categoryAll") : cat}
+                      {active && (
+                        <motion.span
+                          layoutId="journal-topic"
+                          aria-hidden
+                          className="absolute inset-x-2.5 bottom-0.5 h-[2px] rounded-full bg-cs-blue"
+                          transition={still ? { duration: 0 } : { type: "spring", stiffness: 420, damping: 36 }}
+                        />
+                      )}
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        </nav>
+      )}
 
-            {/* Empty */}
-            {!loading && filtered.length === 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex flex-col items-center justify-center py-20 text-center rounded-2xl"
-                style={railCard}
-              >
-                <div className="w-16 h-16 rounded-2xl mb-6 flex items-center justify-center" style={{ background: "rgb(var(--accent-1) / 0.08)" }}>
-                  <span className="text-3xl">✍️</span>
+      {/* ─── Feed + rail ─── */}
+      <div className="cs-container grid gap-y-16 pb-24 pt-4 lg:grid-cols-12 lg:gap-x-8 lg:pb-32">
+        <section aria-label={t("title")} className="min-w-0 lg:col-span-8">
+          {loading && <FeedSkeleton />}
+
+          {!loading && filtered.length === 0 && (
+            <div className="border-t border-cs-ink/10 py-20">
+              <Meta>{t("emptyTitle")}</Meta>
+              <p className="cs-h3 mt-6 max-w-[28rem] text-cs-ink">{viewer ? t("emptyAdmin") : t("emptyPublic")}</p>
+              {viewer && (
+                <div className="mt-8">
+                  <ButtonLink href="/blogs/new">{t("writeFirst")}</ButtonLink>
                 </div>
-                <h3 className="font-bold text-xl mb-2 text-flow-text">{t("emptyTitle")}</h3>
-                <p className="text-sm mb-6" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                  {viewer ? t("emptyAdmin") : t("emptyPublic")}
-                </p>
-                {viewer && (
-                  <Link href="/blogs/new" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}>
-                    <Plus size={15} /> {t("writeFirst")}
-                  </Link>
-                )}
-              </motion.div>
-            )}
+              )}
+            </div>
+          )}
 
-            {/* ─── Post feed ─── */}
-            {!loading && filtered.length > 0 && (
-              <motion.div variants={stagger} initial="hidden" animate="show" className="flex flex-col gap-4">
-                <AnimatePresence>
-                  {visible.map(blog => {
-                    const author = blog.author || t("brand")
-                    const commentsOpen = Boolean(openComments[blog._id])
-                    return (
-                      <motion.article
-                        key={blog._id}
-                        variants={fadeUp}
-                        layout
-                        className="rounded-2xl overflow-hidden"
-                        style={railCard}
-                      >
-                        {/* Post header — avatar, byline, age, admin menu */}
-                        <header className="flex items-start gap-3 p-4 pb-3">
-                          <div
-                            className="shrink-0 flex items-center justify-center rounded-full text-[13px] font-bold text-white"
-                            style={{ width: 42, height: 42, background: accentOf(author) }}
-                            aria-hidden
-                          >
-                            {initialsOf(author)}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm font-bold text-flow-text leading-tight truncate">{author}</p>
-                            <div className="flex items-center gap-1.5 mt-0.5 text-[11px] flex-wrap" style={{ color: "rgb(var(--flow-text-soft))" }}>
+          {!loading && filtered.length > 0 && (
+            <>
+              <AnimatePresence initial={false}>
+                {visible.map((blog, i) => {
+                  const author = blog.author || t("brand")
+                  const commentsOpen = Boolean(openComments[blog._id])
+                  const lead = i === 0
+                  return (
+                    <motion.article
+                      key={blog._id}
+                      layout={still ? false : "position"}
+                      initial={still ? false : { opacity: 0, y: 22 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={still ? { opacity: 0 } : { opacity: 0, y: -10 }}
+                      transition={{ duration: 0.6, ease: EASE, delay: still ? 0 : (i % PAGE_SIZE) * 0.05 }}
+                      aria-labelledby={`post-${blog._id}`}
+                      className={cn("border-t border-cs-ink/10", lead ? "pb-12 pt-8" : "py-10")}
+                    >
+                      <div className={cn("grid gap-6 md:gap-8", lead ? "" : "md:grid-cols-[1fr_0.85fr]")}>
+                        {/* Words */}
+                        <div className={cn("min-w-0", lead ? "order-2" : "order-2 md:order-1")}>
+                          <div className="flex items-start justify-between gap-4">
+                            <p className="cs-meta flex flex-wrap items-center gap-x-2 gap-y-1 text-cs-ink3">
+                              <button
+                                type="button"
+                                onClick={() => setActiveCategory(blog.category)}
+                                className="cs-focus rounded-sm text-cs-blue transition-colors hover:text-cs-blueHover"
+                              >
+                                {blog.category}
+                              </button>
+                              <span aria-hidden className="opacity-50">/</span>
                               <time dateTime={blog.createdAt} title={formatDate(blog.createdAt, locale)}>
                                 {relativeTime(blog.createdAt)}
                               </time>
-                              <span aria-hidden>·</span>
-                              <button
-                                onClick={() => setActiveCategory(blog.category)}
-                                className="font-semibold hover:underline"
-                                style={{ color: "rgb(var(--accent-1))" }}
-                              >
-                                {CATEGORY_EMOJI[blog.category] ?? "💡"} {blog.category}
-                              </button>
                               {blog.readTime && (
                                 <>
-                                  <span aria-hidden>·</span>
+                                  <span aria-hidden className="opacity-50">/</span>
                                   <span className="inline-flex items-center gap-1">
-                                    <Clock size={11} /> {blog.readTime}
+                                    <Clock aria-hidden size={11} /> {blog.readTime}
                                   </span>
                                 </>
                               )}
-                            </div>
+                            </p>
+                            {canManage(blog) && (
+                              <PostMenu
+                                open={menuOpenId === blog._id}
+                                onToggle={() => setMenuOpenId(menuOpenId === blog._id ? null : blog._id)}
+                                editHref={`/blogs/edit/${blog._id}`}
+                                onDelete={() => handleDelete(blog._id, blog.title)}
+                                deleting={deletingId === blog._id}
+                                labels={{ edit: t("edit"), delete: t("delete") }}
+                              />
+                            )}
                           </div>
 
-                          {canManage(blog) && (
-                            <div className="relative shrink-0">
-                              <button
-                                onClick={e => { e.stopPropagation(); setMenuOpenId(menuOpenId === blog._id ? null : blog._id) }}
-                                className="p-1.5 rounded-full transition-colors hover:bg-black/[0.05] dark:hover:bg-white/[0.07]"
-                                style={{ color: "rgb(var(--flow-text-soft))" }}
-                                aria-haspopup="menu"
-                                aria-expanded={menuOpenId === blog._id}
-                                aria-label={t("edit")}
-                              >
-                                <MoreHorizontal size={18} />
-                              </button>
-                              {menuOpenId === blog._id && (
-                                <div
-                                  onClick={e => e.stopPropagation()}
-                                  role="menu"
-                                  className="absolute right-0 top-9 z-20 w-40 rounded-xl overflow-hidden py-1"
-                                  style={{ background: "var(--flow-card-strong, rgb(var(--flow-bg)))", border: "1px solid var(--flow-border-strong)", boxShadow: "0 8px 28px rgba(0,0,0,0.18)" }}
-                                >
-                                  <Link
-                                    href={`/blogs/edit/${blog._id}`}
-                                    role="menuitem"
-                                    className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium transition-colors hover:bg-black/[0.05] dark:hover:bg-white/[0.07]"
-                                    style={{ color: "rgb(var(--flow-text))" }}
-                                  >
-                                    <Pencil size={14} /> {t("edit")}
-                                  </Link>
-                                  <button
-                                    onClick={() => handleDelete(blog._id, blog.title)}
-                                    disabled={deletingId === blog._id}
-                                    role="menuitem"
-                                    className="w-full flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium transition-colors hover:bg-black/[0.05] dark:hover:bg-white/[0.07] disabled:opacity-50"
-                                    style={{ color: "rgb(239 68 68)" }}
-                                  >
-                                    <Trash2 size={14} /> {t("delete")}
-                                  </button>
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </header>
-
-                        {/* Post body */}
-                        <div className="px-4 pb-3">
-                          <Link href={`/blogs/${blog.slug}`} className="group">
-                            <h2 className="font-bold text-flow-text leading-snug mb-1.5 text-[1.15rem] transition-colors group-hover:text-aurora-1">
+                          <h2 id={`post-${blog._id}`} className="mt-4">
+                            <Link
+                              href={`/blogs/${blog.slug}`}
+                              className="cs-focus rounded-sm font-medium text-cs-ink transition-colors duration-200 hover:text-cs-blue"
+                              style={{
+                                fontSize: lead ? "clamp(1.9rem, 3.6vw, 3.25rem)" : "clamp(1.45rem, 2.1vw, 1.875rem)",
+                                lineHeight: 1.08,
+                                letterSpacing: "-0.04em",
+                                textWrap: "balance",
+                              }}
+                            >
                               {blog.title}
-                            </h2>
-                          </Link>
-                          <p className="text-[13.5px] leading-relaxed line-clamp-3" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                            </Link>
+                          </h2>
+
+                          <p className={cn("mt-4 text-cs-ink2", lead ? "cs-lede max-w-[40rem]" : "line-clamp-3 text-[15px] leading-relaxed")}>
                             {blog.excerpt}
+                          </p>
+
+                          <p className="mt-5 flex items-center gap-2.5 text-sm font-medium text-cs-ink">
+                            <Monogram name={author} src={blog.authorAvatar} size={26} />
+                            {author}
                           </p>
                         </div>
 
-                        {/* Cover — full-bleed, the way a feed photo reads */}
-                        <Link href={`/blogs/${blog.slug}`} className="block w-full overflow-hidden group" style={{ aspectRatio: "16 / 9" }}>
+                        {/* Picture */}
+                        <Link
+                          href={`/blogs/${blog.slug}`}
+                          tabIndex={-1}
+                          aria-hidden
+                          className={cn(
+                            "group relative block overflow-hidden rounded-lg bg-cs-sunken ring-1 ring-inset ring-cs-ink/[0.06]",
+                            lead ? "order-1 aspect-[16/8]" : "order-1 aspect-[16/10] md:order-2"
+                          )}
+                        >
                           {blog.coverImage ? (
-                            <img src={blog.coverImage} alt={blog.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={blog.coverImage}
+                              alt=""
+                              loading={i < 2 ? "eager" : "lazy"}
+                              decoding="async"
+                              className="h-full w-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03] motion-reduce:transition-none"
+                            />
                           ) : (
-                            <div className="w-full h-full relative overflow-hidden transition-transform duration-500 group-hover:scale-[1.03]">
-                              <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #0d1117 0%, #1a1040 60%, #0d1b2a 100%)" }} />
-                              <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px)", backgroundSize: "16px 16px" }} />
-                              <div className="absolute" style={{ width: 180, height: 180, borderRadius: "50%", background: "rgb(var(--accent-1) / 0.3)", filter: "blur(44px)", top: -40, right: 20 }} />
-                              <div className="absolute" style={{ width: 130, height: 130, borderRadius: "50%", background: "rgb(var(--accent-2) / 0.2)", filter: "blur(34px)", bottom: -20, left: 0 }} />
-                              <div className="absolute" style={{ width: "200%", height: "1px", background: "linear-gradient(90deg, transparent, rgb(var(--accent-1) / 0.7), transparent)", top: "46%", left: "-50%", transform: "rotate(-5deg)" }} />
-                              <div className="absolute" style={{ fontSize: "5.5rem", lineHeight: 1, right: "7%", top: "50%", transform: "translateY(-52%) rotate(8deg)", filter: "drop-shadow(0 6px 18px rgba(0,0,0,0.5))", userSelect: "none" }} aria-hidden>
-                                {CATEGORY_EMOJI[blog.category] ?? "💡"}
-                              </div>
-                              <div className="absolute inset-0 flex flex-col justify-between p-5 z-10">
-                                <span style={{ fontSize: "9px", fontWeight: 800, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgb(var(--accent-1) / 0.9)" }}>{blog.category}</span>
-                                <div style={{ maxWidth: "64%" }}>
-                                  <span style={{ fontSize: "clamp(1rem, 3vw, 1.4rem)", fontWeight: 900, color: "white", fontFamily: "var(--font-heading)", lineHeight: 1.25, textShadow: "0 2px 12px rgba(0,0,0,0.7)", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                                    {blog.title}
-                                  </span>
-                                </div>
-                                <div className="flex items-center gap-1.5">
-                                  <div style={{ width: 18, height: 18, borderRadius: 5, background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                                    <span style={{ fontSize: 8, fontWeight: 900, color: "white" }}>CS</span>
-                                  </div>
-                                  <span style={{ fontSize: "11px", fontWeight: 600, color: "rgba(255,255,255,0.55)", letterSpacing: "0.04em" }}>{t("brand")}</span>
-                                </div>
-                              </div>
-                            </div>
+                            <JournalCover category={blog.category} brand={t("brand")} />
                           )}
                         </Link>
+                      </div>
 
-                        {/* Engagement bar + inline thread */}
-                        <div className="px-4 pb-3">
-                          <BlogCardActions
-                            blogId={blog._id}
-                            slug={blog.slug}
-                            title={blog.title}
-                            visitorId={visitorId}
-                            engagement={engagement[blog._id] ?? EMPTY_ENGAGEMENT}
-                            onEngagementChange={handleEngagementChange}
-                            onToggleComments={() => toggleComments(blog._id)}
-                            commentsOpen={commentsOpen}
-                          />
+                      {/* Engagement + inline thread */}
+                      <div className="mt-6">
+                        <BlogCardActions
+                          blogId={blog._id}
+                          slug={blog.slug}
+                          title={blog.title}
+                          visitorId={visitorId}
+                          engagement={engagement[blog._id] ?? EMPTY_ENGAGEMENT}
+                          onEngagementChange={handleEngagementChange}
+                          onToggleComments={() => toggleComments(blog._id)}
+                          commentsOpen={commentsOpen}
+                        />
 
-                          <AnimatePresence initial={false}>
-                            {commentsOpen && (
-                              <motion.div
-                                key="thread"
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: "auto", opacity: 1 }}
-                                exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                                style={{ overflow: "hidden" }}
-                              >
-                                <BlogComments
-                                  blogId={blog._id}
-                                  variant="feed"
-                                  onCountChange={handleCommentCount}
-                                />
-                                <div className="pt-3 flex items-center justify-between gap-3">
-                                  <Link
-                                    href={`/blogs/${blog.slug}`}
-                                    className="text-[12px] font-semibold hover:underline"
-                                    style={{ color: "rgb(var(--accent-1))" }}
-                                  >
-                                    {t("readFullPost")} →
-                                  </Link>
-                                  <button
-                                    onClick={() => toggleComments(blog._id)}
-                                    className="text-[12px] font-semibold hover:underline"
-                                    style={{ color: "rgb(var(--flow-text-soft))" }}
-                                  >
-                                    {t("hideComments")}
-                                  </button>
-                                </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                        </div>
-                      </motion.article>
-                    )
-                  })}
-                </AnimatePresence>
+                        <AnimatePresence initial={false}>
+                          {commentsOpen && (
+                            <motion.div
+                              key="thread"
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.3, ease: EASE }}
+                              style={{ overflow: "hidden" }}
+                            >
+                              <BlogComments blogId={blog._id} variant="feed" onCountChange={handleCommentCount} />
+                              <div className="flex items-center justify-between gap-3 pt-3">
+                                <Link
+                                  href={`/blogs/${blog.slug}`}
+                                  className="cs-focus cs-underline rounded-sm text-[13px] font-semibold text-cs-blue"
+                                >
+                                  {t("readFullPost")} →
+                                </Link>
+                                <button
+                                  type="button"
+                                  onClick={() => toggleComments(blog._id)}
+                                  className="cs-focus rounded-sm text-[13px] font-semibold text-cs-ink3 transition-colors hover:text-cs-ink"
+                                >
+                                  {t("hideComments")}
+                                </button>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </motion.article>
+                  )
+                })}
+              </AnimatePresence>
 
-                {/*
-                  Scrolling past this pulls in the next batch. The button is a
-                  real fallback, not decoration — if IntersectionObserver never
-                  fires, it keeps the rest of the feed reachable.
-                */}
-                {hasMore && (
-                  <div ref={sentinelRef} className="flex justify-center py-8">
-                    <button
-                      onClick={() => setVisibleCount(c => c + PAGE_SIZE)}
-                      className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full text-[13px] font-semibold transition-colors hover:opacity-80"
-                      style={{ background: "var(--flow-card)", border: "1px solid var(--flow-border-strong)", color: "rgb(var(--flow-text))" }}
-                    >
-                      <span className="w-4 h-4 border-2 rounded-full animate-spin" style={{ borderColor: "rgb(var(--accent-1) / 0.25)", borderTopColor: "rgb(var(--accent-1))" }} aria-hidden />
-                      {t("loadMore")}
-                    </button>
-                  </div>
-                )}
-                {!hasMore && filtered.length > PAGE_SIZE && (
-                  <p className="text-center py-8 text-[13px] font-medium" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                    ✓ {t("allCaughtUp")}
-                  </p>
-                )}
-              </motion.div>
-            )}
-          </div>
-
-          {/* Right rail — trending */}
-          <aside className="hidden xl:block w-[280px] shrink-0">
-            <div className="sticky top-24 flex flex-col gap-4">
-              <div className="rounded-2xl p-4" style={railCard}>
-                <div className="flex items-center gap-2.5 mb-3">
-                  <div
-                    className="shrink-0 flex items-center justify-center rounded-xl text-[11px] font-black text-white"
-                    style={{ width: 34, height: 34, background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
-                    aria-hidden
+              {/*
+                Scrolling past this pulls in the next batch. The button is a
+                real fallback, not decoration — if IntersectionObserver never
+                fires, it keeps the rest of the feed reachable.
+              */}
+              {hasMore && (
+                <div ref={sentinelRef} className="flex justify-center border-t border-cs-ink/10 py-10">
+                  <button
+                    type="button"
+                    onClick={() => setVisibleCount(c => c + PAGE_SIZE)}
+                    className="cs-focus inline-flex h-11 items-center gap-2.5 rounded-[10px] border border-cs-ink/15 px-5 text-sm font-semibold text-cs-ink transition-colors hover:border-cs-ink/35"
                   >
-                    CS
-                  </div>
-                  <span className="text-sm font-bold text-flow-text">{t("brand")}</span>
-                </div>
-                {/* Stats, not the subtitle — that already heads the feed column. */}
-                <div className="flex items-center gap-5">
-                  <span>
-                    <span className="block text-lg font-bold leading-none text-flow-text">{blogs.length}</span>
-                    <span className="block text-[11px] mt-1" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                      {t("postsLabel")}
-                    </span>
-                  </span>
-                  <span>
-                    <span className="block text-lg font-bold leading-none text-flow-text">{Math.max(0, categories.length - 1)}</span>
-                    <span className="block text-[11px] mt-1" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                      {t("topicsLabel")}
-                    </span>
-                  </span>
-                </div>
-              </div>
-
-              {trending.length > 0 && (
-                <div className="rounded-2xl p-4" style={railCard}>
-                  <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                    🔥 {t("trendingTitle")}
-                  </h2>
-                  <ul className="flex flex-col gap-3">
-                    {trending.map(b => (
-                      <li key={b._id}>
-                        <Link href={`/blogs/${b.slug}`} className="flex gap-2.5 group">
-                          <span className="text-base leading-none shrink-0 mt-0.5" aria-hidden>
-                            {CATEGORY_EMOJI[b.category] ?? "💡"}
-                          </span>
-                          <span className="min-w-0">
-                            <span className="block text-[12.5px] font-semibold leading-snug line-clamp-2 text-flow-text transition-colors group-hover:text-aurora-1">
-                              {b.title}
-                            </span>
-                            <span className="block text-[11px] mt-0.5" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                              {t(
-                                (engagement[b._id]?.likes ?? 0) === 1 ? "likeCountOne" : "likesCount",
-                                { count: engagement[b._id]?.likes ?? 0 }
-                              )}
-                            </span>
-                          </span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                    <span
+                      aria-hidden
+                      className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-cs-ink/15 border-t-cs-blue motion-reduce:animate-none"
+                    />
+                    {t("loadMore")}
+                  </button>
                 </div>
               )}
-            </div>
-          </aside>
-        </div>
+              {!hasMore && filtered.length > PAGE_SIZE && (
+                <p className="cs-meta border-t border-cs-ink/10 py-10 text-center text-cs-ink3">{t("allCaughtUp")}</p>
+              )}
+            </>
+          )}
+        </section>
+
+        {/* ─── Rail ─── */}
+        <aside className="hidden lg:col-span-3 lg:col-start-10 lg:block">
+          <div className="sticky top-24 pt-8">
+            <dl className="grid grid-cols-2 border-y border-cs-ink/10">
+              {[
+                { value: blogs.length, label: t("postsLabel") },
+                { value: topicCount, label: t("topicsLabel") },
+              ].map((stat, i) => (
+                <div key={stat.label} className={cn("flex flex-col py-5", i > 0 && "border-l border-cs-ink/10 pl-5")}>
+                  <dt className="order-2 mt-2 text-sm text-cs-ink2">{stat.label}</dt>
+                  <dd className="order-1 text-[2.5rem] font-medium leading-none tabular-nums tracking-[-0.045em]">
+                    {loading ? "—" : stat.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+
+            {trending.length > 0 && (
+              <div className="mt-10">
+                <h2 className="cs-meta text-cs-ink">{t("trendingTitle")}</h2>
+                <ol className="mt-4">
+                  {trending.map((b, i) => (
+                    <li key={b._id} className="border-t border-cs-ink/10 first:border-t-0">
+                      <Link href={`/blogs/${b.slug}`} className="cs-focus group grid grid-cols-[1.75rem_1fr] gap-x-2 rounded-sm py-4">
+                        <span className="cs-accent text-xl leading-none text-cs-cyan" aria-hidden>
+                          {i + 1}
+                        </span>
+                        <span className="min-w-0">
+                          <span className="line-clamp-2 text-[15px] font-medium leading-snug tracking-[-0.015em] text-cs-ink transition-colors group-hover:text-cs-blue">
+                            {b.title}
+                          </span>
+                          <span className="cs-meta mt-1.5 block text-cs-ink3">
+                            {t(
+                              (engagement[b._id]?.likes ?? 0) === 1 ? "likeCountOne" : "likesCount",
+                              { count: engagement[b._id]?.likes ?? 0 }
+                            )}
+                          </span>
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+          </div>
+        </aside>
       </div>
-    </main>
+    </div>
   )
 }

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import ReactMarkdown from "react-markdown"
@@ -26,6 +26,8 @@ import {
   type BlogSeoFields,
 } from "@/lib/blog-types"
 import { LogoSpinner } from "@/components/ui/LogoSpinner"
+import { navMessages } from "@/lib/i18n/messages/nav"
+import { JournalCover } from "./JournalParts"
 
 interface BlogForm {
   title: string
@@ -44,15 +46,6 @@ interface BlogForm {
 }
 
 const CATEGORIES = ["Digital Marketing", "Lead Generation", "AI & Creative", "Branding", "Video Production", "Web Development", "SEO", "Design", "UX", "Strategy", "General"]
-
-const CATEGORY_EMOJI: Record<string, string> = {
-  Strategy: "🎯", Marketing: "📈", Design: "🎨", SEO: "🔍",
-  "Social Media": "📱", Content: "✍️", General: "💡", Technology: "⚡",
-  Business: "💼", Branding: "🌟", UX: "🖥️", Analytics: "📊",
-  Growth: "🚀", Copywriting: "🖊️", Advertising: "📣",
-  "Lead Generation": "🧲", "AI & Creative": "🤖", "Video Production": "🎬",
-  "Web Development": "🌐", "Digital Marketing": "📣",
-}
 
 const DEFAULT_FORM: BlogForm = {
   title: "",
@@ -96,6 +89,7 @@ function slugify(text: string) {
 export default function BlogEditor({ blogId }: { blogId?: string }) {
   const t = useT(editorMessages)
   const tUi = useT(editorUiMessages)
+  const tNav = useT(navMessages)
   const isEdit = !!blogId
   const [form, setForm] = useState<BlogForm>(DEFAULT_FORM)
   const [tagInput, setTagInput] = useState("")
@@ -253,217 +247,150 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-flow-bg flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-cs-bg">
         <LogoSpinner size={56} />
       </div>
     )
   }
 
   return (
-    <main className="min-h-screen bg-flow-bg">
-      {/* Aurora bg */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="aurora-blob animate-aurora" style={{ width: 600, height: 600, top: "-10%", right: "-5%", background: "radial-gradient(circle, rgb(var(--accent-1) / 0.1), transparent 65%)" }} />
-      </div>
-
-      {/* Sticky header */}
-      <div
-        className="sticky top-0 z-30 border-b"
-        style={{ background: "var(--flow-card-strong)", borderColor: "var(--flow-border)", backdropFilter: "blur(16px)" }}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <Link
-              href="/blogs"
-              className="p-2 rounded-lg transition-colors hover:opacity-70"
-              style={{ color: "rgb(var(--flow-text))" }}
-            >
-              <ArrowLeft size={16} />
+    <div className="min-h-screen bg-cs-bg text-cs-ink">
+      <div className="cs-container pt-[5.25rem] sm:pt-24 lg:pt-[6.5rem]">
+        {/* Dateline: the way back, what this is, and how long it reads. */}
+        <div className="cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 pb-4 text-cs-ink3">
+          <p className="flex items-center gap-2">
+            <Link href="/blogs" className="cs-focus group inline-flex items-center gap-2 rounded-sm text-cs-ink transition-colors hover:text-cs-blue">
+              <ArrowLeft aria-hidden size={13} className="transition-transform duration-300 group-hover:-translate-x-0.5" />
+              {tNav("links.blogs")}
             </Link>
-            <span className="font-semibold text-sm text-flow-text" style={{ fontFamily: "var(--font-heading)" }}>
-              {isEdit ? t("editPost") : t("newPost")}
-            </span>
-          </div>
-
-          <button
-            onClick={() => setPreview(v => !v)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
-            style={{ background: preview ? "rgb(var(--accent-1) / 0.15)" : "var(--flow-card)", color: "rgb(var(--flow-text))", border: "1px solid var(--flow-border-strong)" }}
-          >
-            {preview ? <EyeOff size={12} /> : <Eye size={12} />}
-            {preview ? t("editorMode") : t("preview")}
-          </button>
+            <span aria-hidden className="opacity-50">/</span>
+            <span>{isEdit ? t("editPost") : t("newPost")}</span>
+          </p>
+          <p className="tabular-nums">
+            {form.category}
+            {form.readTime && (
+              <>
+                <span aria-hidden className="mx-2 opacity-50">·</span>
+                {form.readTime}
+              </>
+            )}
+          </p>
         </div>
       </div>
 
-      {/* Error banner */}
-      {error && (
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="sticky top-[53px] z-20 px-6 py-2 text-sm text-center text-white"
-          style={{ background: "rgb(239 68 68)" }}
-        >
-          {error}
-          <button onClick={() => setError("")} className="ml-3 opacity-70 hover:opacity-100"><X size={13} /></button>
-        </motion.div>
-      )}
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      <div className="cs-container pb-32 pt-10 sm:pt-14">
         {preview ? (
-          /* ─── Preview Mode ─── */
-          <div className="max-w-4xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-widest" style={{ color: "rgb(var(--accent-1))" }}>{form.category}</span>
-            <h1 className="font-bold text-flow-text mt-3 mb-4 leading-tight" style={{ fontSize: "clamp(1.8rem, 3vw, 2.6rem)", fontFamily: "var(--font-heading)" }}>
+          /* ─── Preview: the post as a reader will see it ─── */
+          <article className="mx-auto max-w-[46rem]">
+            <p className="cs-meta text-cs-blue">{form.category}</p>
+            <h1
+              className="cs-display mt-5 text-cs-ink"
+              style={{ fontSize: "clamp(2.25rem, 5vw, 4rem)", lineHeight: 1, letterSpacing: "-0.05em" }}
+            >
               {form.title || t("untitled")}
             </h1>
-            {form.excerpt && (
-              <p className="text-base leading-relaxed mb-8 font-medium" style={{ color: "rgb(var(--flow-text-soft))", borderLeft: "3px solid rgb(var(--accent-1))", paddingLeft: "1rem" }}>
-                {form.excerpt}
-              </p>
+            {form.excerpt && <p className="cs-lede mt-6 text-cs-ink2">{form.excerpt}</p>}
+            {form.coverImage && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={form.coverImage} alt="" className="mt-10 aspect-[16/9] w-full rounded-lg object-cover" />
             )}
-            <BlogKeyTakeaways items={form.keyTakeaways} title={tUi("takeaways.label")} />
+            <div className="mt-10">
+              <BlogKeyTakeaways items={form.keyTakeaways} title={tUi("takeaways.label")} />
+            </div>
             <div className="prose-blog">
               <ReactMarkdown remarkPlugins={[remarkGfm]} components={blogMarkdownComponents}>
                 {normalizeBlogMarkdown(form.content) || t("noContent")}
               </ReactMarkdown>
             </div>
-          </div>
+          </article>
         ) : (
-          /* ─── Editor Mode ─── */
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6 sm:gap-8">
-            {/* Left: main content */}
-            <div className="space-y-5">
-              {/* Title */}
-              <div>
-                <input
-                  type="text"
+          /* ─── Writing ─── */
+          <div className="grid gap-14 lg:grid-cols-12 lg:gap-8">
+            {/* The manuscript */}
+            <div className="min-w-0 space-y-8 lg:col-span-8">
+              <label className="block">
+                <span className="sr-only">{t("titlePlaceholder")}</span>
+                {/* A textarea, so a long headline wraps the way it will on the page. */}
+                <textarea
                   value={form.title}
-                  onChange={e => handleTitleChange(e.target.value)}
+                  onChange={e => handleTitleChange(e.target.value.replace(/\n/g, " "))}
                   placeholder={t("titlePlaceholder")}
-                  className="w-full font-bold outline-none bg-transparent text-flow-text placeholder:text-flow-text/45 border-b pb-3 transition-colors"
-                  style={{
-                    fontSize: "clamp(1.6rem, 3vw, 2.2rem)",
-                    fontFamily: "var(--font-heading)",
-                    borderColor: "var(--flow-border-strong)",
-                  }}
+                  rows={2}
+                  className="block w-full resize-none bg-transparent font-medium text-cs-ink outline-none placeholder:text-cs-ink3/60"
+                  style={{ fontSize: "clamp(2rem, 4.4vw, 3.5rem)", lineHeight: 1.04, letterSpacing: "-0.045em" }}
                 />
-              </div>
+              </label>
 
-
-              {/* Excerpt */}
-              <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-                <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                  {t("excerptLabel")}
-                </label>
+              <label className="block border-t border-cs-ink/10 pt-5">
+                <span className="cs-meta mb-3 block text-cs-ink3">{t("excerptLabel")}</span>
                 <textarea
                   value={form.excerpt}
                   onChange={e => set("excerpt", e.target.value)}
                   placeholder={t("excerptPlaceholder")}
                   rows={3}
-                  className="w-full bg-transparent outline-none resize-none text-sm leading-relaxed text-flow-text placeholder:opacity-50"
+                  className="cs-lede block w-full resize-none bg-transparent text-cs-ink2 outline-none placeholder:text-cs-ink3/60"
                 />
-              </div>
+              </label>
 
-              {/* Key takeaways */}
-              <BlogKeyTakeawaysPanel
-                value={form.keyTakeaways}
-                onChange={items => set("keyTakeaways", items)}
-              />
+              <BlogKeyTakeawaysPanel frame="ruled" value={form.keyTakeaways} onChange={items => set("keyTakeaways", items)} />
 
-              {/* Content */}
-              <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-                <label className="block text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                  {t("contentLabel")}
-                </label>
-                <BlogRichTextEditor
-                  value={form.content}
-                  onChange={md => { set("content", md); set("readTime", calcReadTime(md)) }}
-                  placeholder={t("contentPlaceholder")}
-                  minHeight={420}
-                />
+              <div className="border-t border-cs-ink/10 pt-5">
+                <p className="cs-meta mb-4 text-cs-ink3">{t("contentLabel")}</p>
+                <div className="rounded-lg bg-cs-surface p-4 ring-1 ring-inset ring-cs-ink/10 sm:p-6">
+                  <BlogRichTextEditor
+                    value={form.content}
+                    onChange={md => { set("content", md); set("readTime", calcReadTime(md)) }}
+                    placeholder={t("contentPlaceholder")}
+                    minHeight={420}
+                  />
+                </div>
               </div>
             </div>
 
-            {/* Right: meta sidebar */}
-            <div className="space-y-4">
-              {/* Category */}
-              <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-                <label className="block text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>{t("categoryLabel")}</label>
+            {/* The details, in the rail */}
+            <aside className="space-y-8 lg:col-span-4 lg:pl-4">
+              <label className="block border-t border-cs-ink/10 pt-5">
+                <span className="cs-meta mb-3 block text-cs-ink3">{t("categoryLabel")}</span>
                 <select
                   value={form.category}
                   onChange={e => set("category", e.target.value)}
-                  className="w-full bg-transparent outline-none text-sm text-flow-text"
+                  className="cs-focus h-11 w-full rounded-[10px] bg-cs-surface px-3 text-[15px] text-cs-ink outline-none ring-1 ring-inset ring-cs-ink/15 focus:ring-2 focus:ring-cs-blue"
                 >
                   {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
-              </div>
+              </label>
 
-              {/* Cover Image */}
-              <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-                <label className="block text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "rgb(var(--flow-text-soft))" }}>{t("coverImageLabel")}</label>
+              <div className="border-t border-cs-ink/10 pt-5">
+                <p className="cs-meta mb-3 text-cs-ink3">{t("coverImageLabel")}</p>
                 <ImageUpload
                   value={form.coverImage}
                   onChange={v => set("coverImage", v)}
-                  placeholder={
-                    <div className="w-full h-full relative overflow-hidden">
-                      <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #0d1117 0%, #1a1040 60%, #0d1b2a 100%)" }} />
-                      <div className="absolute inset-0" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px)", backgroundSize: "12px 12px" }} />
-                      <div className="absolute" style={{ width: 90, height: 90, borderRadius: "50%", background: "rgb(var(--accent-1) / 0.3)", filter: "blur(22px)", top: -18, right: -8 }} />
-                      <div className="absolute" style={{ width: 70, height: 70, borderRadius: "50%", background: "rgb(var(--accent-2) / 0.2)", filter: "blur(18px)", bottom: -10, left: -10 }} />
-                      <div className="absolute" style={{ width: "200%", height: "1px", background: "linear-gradient(90deg, transparent, rgb(var(--accent-1) / 0.7), transparent)", top: "44%", left: "-50%", transform: "rotate(-6deg)" }} />
-                      <div className="absolute" style={{ width: "200%", height: "1px", background: "linear-gradient(90deg, transparent, rgb(var(--accent-2) / 0.4), transparent)", top: "49%", left: "-50%", transform: "rotate(-6deg)" }} />
-                      <div className="absolute" style={{ fontSize: "3rem", lineHeight: 1, right: "6%", top: "50%", transform: "translateY(-52%) rotate(8deg)", filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.5))", userSelect: "none" }}>
-                        {CATEGORY_EMOJI[form.category] ?? "💡"}
-                      </div>
-                    </div>
-                  }
+                  placeholder={<JournalCover category={form.category} brand="Creative Surf" />}
                 />
               </div>
 
-              {/* Tags */}
-              <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-                <label className="block text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>{t("tagsLabel")}</label>
-                <div className="flex flex-wrap gap-1.5 mb-2">
-                  {form.tags.map(tag => (
-                    <span key={tag} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium" style={{ background: "rgb(var(--accent-1) / 0.1)", color: "rgb(var(--accent-1))" }}>
-                      {tag}
-                      <button onClick={() => removeTag(tag)} className="opacity-60 hover:opacity-100"><X size={10} /></button>
-                    </span>
-                  ))}
-                </div>
-                <input
-                  type="text"
-                  value={tagInput}
-                  onChange={e => setTagInput(e.target.value)}
-                  onKeyDown={addTag}
-                  placeholder={t("tagPlaceholder")}
-                  className="w-full bg-transparent outline-none text-xs text-flow-text placeholder:opacity-50"
-                />
-              </div>
+              <ChipField
+                label={t("tagsLabel")}
+                items={form.tags}
+                onRemove={removeTag}
+                input={tagInput}
+                onInput={setTagInput}
+                onKeyDown={addTag}
+                placeholder={t("tagPlaceholder")}
+              />
 
-              {/* Writers */}
-              <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-                <label className="block text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>{t("authorsLabel")}</label>
-                <div className="flex flex-wrap gap-1.5 mb-2">
-                  {form.authors.map(author => (
-                    <span key={author} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium" style={{ background: "rgb(var(--accent-1) / 0.1)", color: "rgb(var(--accent-1))" }}>
-                      {author}
-                      <button onClick={() => removeAuthor(author)} className="opacity-60 hover:opacity-100"><X size={10} /></button>
-                    </span>
-                  ))}
-                </div>
-                <input
-                  type="text"
-                  value={authorInput}
-                  onChange={e => setAuthorInput(e.target.value)}
-                  onKeyDown={addAuthor}
-                  placeholder={t("authorPlaceholder")}
-                  className="w-full bg-transparent outline-none text-xs text-flow-text placeholder:opacity-50"
-                />
-              </div>
+              <ChipField
+                label={t("authorsLabel")}
+                items={form.authors}
+                onRemove={removeAuthor}
+                input={authorInput}
+                onInput={setAuthorInput}
+                onKeyDown={addAuthor}
+                placeholder={t("authorPlaceholder")}
+              />
 
               <BlogSeoPanel
+                frame="ruled"
                 value={{
                   metaDescription: form.metaDescription,
                   inboundLinks: form.inboundLinks,
@@ -475,54 +402,119 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                   setForm(prev => ({ ...prev, ...seo }))
                 }}
               />
-
-              {/* Formatting tips */}
-              <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>{t("tipsTitle")}</p>
-                <ul className="space-y-2 text-xs leading-relaxed" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                  {t.list("tips").map((tip) => (
-                    <li key={tip}>{tip}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            </aside>
           </div>
         )}
       </div>
 
-      {/* ─── Bottom action bar ─── */}
-      <div
-        className="border-t"
-        style={{ background: "var(--flow-card-strong)", borderColor: "var(--flow-border)" }}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-4">
-          {error && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-sm flex items-center gap-2"
-              style={{ color: "rgb(239 68 68)" }}
-            >
-              {error}
-              <button onClick={() => setError("")}><X size={13} /></button>
-            </motion.p>
-          )}
-          <div className="ml-auto">
-            <button
-              onClick={() => handleSave()}
-              disabled={saving}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold text-white shine relative overflow-hidden transition-all"
-              style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))", boxShadow: "0 4px 18px rgb(var(--accent-1) / 0.3)" }}
-            >
-              {saving ? (
-                <><span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />{t("saving")}</>
-              ) : (
-                <><Save size={14} />{isEdit ? t("updatePost") : t("publishPost")}</>
-              )}
-            </button>
-          </div>
+      {/* ─── Action bar: always within reach, never under the site header ─── */}
+      <div className="sticky bottom-0 z-30 border-t border-cs-ink/10 bg-cs-bg/90 backdrop-blur-xl backdrop-saturate-150">
+        <div className="cs-container flex items-center justify-between gap-4 py-3">
+          <button
+            type="button"
+            onClick={() => setPreview(v => !v)}
+            aria-pressed={preview}
+            className="cs-focus inline-flex h-11 items-center gap-2 rounded-[10px] px-4 text-sm font-semibold text-cs-ink ring-1 ring-inset ring-cs-ink/15 transition-colors hover:bg-cs-ink/[0.04]"
+          >
+            {preview ? <EyeOff aria-hidden size={15} /> : <Eye aria-hidden size={15} />}
+            {preview ? t("editorMode") : t("preview")}
+          </button>
+
+          <AnimatePresence>
+            {error && (
+              <motion.p
+                role="alert"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="hidden min-w-0 flex-1 items-center justify-center gap-2 text-sm text-red-600 dark:text-red-400 sm:flex"
+              >
+                <span className="truncate">{error}</span>
+                <button type="button" onClick={() => setError("")} aria-label="×" className="cs-focus shrink-0 rounded-sm">
+                  <X aria-hidden size={14} />
+                </button>
+              </motion.p>
+            )}
+          </AnimatePresence>
+
+          <button
+            type="button"
+            onClick={() => handleSave()}
+            disabled={saving}
+            aria-busy={saving || undefined}
+            className="cs-focus inline-flex h-11 items-center gap-2 rounded-[10px] bg-cs-blue px-5 text-sm font-semibold text-cs-onBlue transition-colors hover:bg-cs-blueHover disabled:cursor-progress disabled:opacity-70"
+          >
+            {saving ? (
+              <>
+                <span aria-hidden className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent motion-reduce:animate-none" />
+                {t("saving")}
+              </>
+            ) : (
+              <>
+                <Save aria-hidden size={15} />
+                {isEdit ? t("updatePost") : t("publishPost")}
+              </>
+            )}
+          </button>
         </div>
+        {/* Phones: the error gets its own line under the controls. */}
+        {error && (
+          <p role="alert" className="cs-container pb-3 text-sm text-red-600 dark:text-red-400 sm:hidden">
+            {error}
+          </p>
+        )}
       </div>
-    </main>
+    </div>
+  )
+}
+
+/** Tags and writers: chips you can remove, and a field that adds one on Enter. */
+function ChipField({
+  label,
+  items,
+  onRemove,
+  input,
+  onInput,
+  onKeyDown,
+  placeholder,
+}: {
+  label: string
+  items: string[]
+  onRemove: (item: string) => void
+  input: string
+  onInput: (value: string) => void
+  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void
+  placeholder: string
+}) {
+  return (
+    <div className="border-t border-cs-ink/10 pt-5">
+      <p className="cs-meta mb-3 text-cs-ink3">{label}</p>
+      {items.length > 0 && (
+        <ul className="mb-3 flex flex-wrap gap-1.5">
+          {items.map(item => (
+            <li key={item} className="inline-flex items-center gap-1 rounded-md bg-cs-ink/[0.06] py-1 pl-2.5 pr-1 text-[13px] font-medium text-cs-ink">
+              {item}
+              <button
+                type="button"
+                onClick={() => onRemove(item)}
+                aria-label={`${label}: ${item} ×`}
+                className="cs-focus grid h-5 w-5 place-items-center rounded text-cs-ink3 transition-colors hover:text-cs-ink"
+              >
+                <X aria-hidden size={11} />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <input
+        type="text"
+        value={input}
+        onChange={e => onInput(e.target.value)}
+        onKeyDown={onKeyDown}
+        placeholder={placeholder}
+        aria-label={label}
+        className="h-11 w-full rounded-[10px] bg-cs-surface px-3 text-[15px] text-cs-ink outline-none ring-1 ring-inset ring-cs-ink/15 placeholder:text-cs-ink3/70 focus:ring-2 focus:ring-cs-blue"
+      />
+    </div>
   )
 }

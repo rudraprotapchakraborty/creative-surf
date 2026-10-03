@@ -209,7 +209,7 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
       : t("methodPassword")
 
   return (
-    <main className="min-h-screen bg-flow-bg pb-24">
+    <div className="min-h-screen bg-cs-bg pb-24 text-cs-ink">
       <ProfileHeader
         user={user}
         isAdmin={isAdmin}
@@ -220,9 +220,9 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
         onSaved={setUser}
       />
 
-      <div className="mx-auto w-[95%] max-w-6xl">
-        <div className="grid gap-6 lg:grid-cols-3 lg:items-start">
-          <aside className="lg:col-span-1 lg:sticky lg:top-28">
+      <div className="cs-container">
+        <div className="grid gap-12 lg:grid-cols-12 lg:items-start lg:gap-8">
+          <aside className="lg:sticky lg:top-24 lg:col-span-4">
             <Panel title={t("profileAbout")}>
               <DetailRow icon={<Mail size={14} />} label={t("accountEmail")} value={user.email || "—"} />
               <DetailRow
@@ -236,7 +236,7 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
             </Panel>
           </aside>
 
-          <div className="lg:col-span-2 space-y-5">
+          <div className="space-y-8 lg:col-span-8">
             {/*
               An admin has three unrelated collections to look through, and
               stacking them made the page a long scroll where the last one was
@@ -266,7 +266,7 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
                           <Search
                             size={13}
                             className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2"
-                            style={{ color: "rgb(var(--flow-text-soft))" }}
+                            style={{ color: "rgb(var(--cs-ink-2))" }}
                           />
                           <input
                             value={userQuery}
@@ -275,9 +275,9 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
                             aria-label={t("userSearch")}
                             className="w-36 rounded-full py-1.5 pl-8 pr-3 text-xs outline-none transition-all focus:w-48 sm:w-44 sm:focus:w-60"
                             style={{
-                              background: "rgb(var(--flow-surface))",
-                              border: "1px solid var(--flow-border-strong)",
-                              color: "rgb(var(--flow-text))",
+                              background: "rgb(var(--cs-surface))",
+                              border: "1px solid rgb(var(--cs-ink) / 0.15)",
+                              color: "rgb(var(--cs-ink))",
                             }}
                           />
                         </label>
@@ -294,7 +294,7 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
                     )}
 
                     {noPeopleMatch ? (
-                      <p className="py-8 text-center text-sm" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                      <p className="py-8 text-center text-sm" style={{ color: "rgb(var(--cs-ink-2))" }}>
                         {t("userNoMatches")}
                       </p>
                     ) : (
@@ -316,7 +316,7 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
 
                         <PeopleGroup title={t("members")} count={visiblePeople?.members.length}>
                           {visiblePeople && visiblePeople.members.length === 0 ? (
-                            <p className="text-sm py-2" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                            <p className="text-sm py-2" style={{ color: "rgb(var(--cs-ink-2))" }}>
                               {t("noMembers")}
                             </p>
                           ) : (
@@ -370,12 +370,13 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
           </div>
         </div>
       </div>
-    </main>
+    </div>
   )
 }
 
 /**
- * Cover band, overlapping avatar, name and a short stat line.
+ * The account's masthead: a dateline, the face and the name as the headline,
+ * then a ruled ledger of figures.
  *
  * The name is edited in place here rather than through a "Display name" row
  * further down: on a profile the name is the headline, so that is where you
@@ -402,80 +403,54 @@ function ProfileHeader({
 
   return (
     <motion.header
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="relative"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      className="pt-[5.25rem] sm:pt-24 lg:pt-[6.5rem]"
     >
-      {/* Cover */}
-      <div className="relative h-40 sm:h-52 overflow-hidden border-b border-flow-border">
-        <div className="absolute inset-0 bg-aurora-mesh opacity-80" aria-hidden />
-        <div className="absolute inset-0 bg-grid mask-radial opacity-25" aria-hidden />
-        <div className="absolute inset-0 bg-grain opacity-[0.05] mix-blend-overlay" aria-hidden />
-      </div>
+      <div className="cs-container">
+        {/* Dateline: where you are, and with what standing. */}
+        <div className="cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 pb-4 text-cs-ink3">
+          <p>
+            <span className="text-cs-ink">Creative Surf</span>
+            <span aria-hidden className="mx-2 opacity-50">/</span>
+            {t("dashboard")}
+          </p>
+          <p className={`flex items-center gap-1.5 ${isAdmin ? "text-cs-blue" : ""}`}>
+            {isAdmin && <ShieldCheck aria-hidden size={13} />}
+            {isAdmin ? t("roleAdmin") : t("roleUser")}
+          </p>
+        </div>
 
-      <div className="mx-auto w-[95%] max-w-6xl">
-        {/* Avatar rides the cover's lower edge, the way a profile page reads. */}
-        <div className="-mt-12 sm:-mt-14 flex flex-col gap-5 pb-8 sm:flex-row sm:items-end sm:justify-between">
-          <div className="flex items-end gap-4 min-w-0">
-            <span
-              className="shrink-0 rounded-full p-1"
-              style={{ background: "rgb(var(--flow-bg))" }}
-            >
-              <Avatar user={user} size={96} badgeAdmin />
-            </span>
-            <div className="min-w-0 pb-1">
-              <NameHeading user={user} onSaved={onSaved} />
-              <p className="mt-1 text-sm truncate" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                {user.email}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex shrink-0 items-center gap-2.5">
-            <span
-              className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold"
-              style={
-                isAdmin
-                  ? { background: "rgb(var(--accent-1) / 0.12)", color: "rgb(var(--accent-1))", border: "1px solid rgb(var(--accent-1) / 0.25)" }
-                  : { background: "rgb(var(--flow-surface))", color: "rgb(var(--flow-text-soft))", border: "1px solid var(--flow-border-strong)" }
-              }
-            >
-              {isAdmin && <ShieldCheck size={13} />}
-              {isAdmin ? t("roleAdmin") : t("roleUser")}
-            </span>
+        {/* The account itself: the face, then the name set as the page's headline. */}
+        <div className="grid items-end gap-6 pb-10 pt-12 sm:grid-cols-[auto_1fr] sm:gap-8 sm:pt-16 lg:pb-12 lg:pt-20">
+          <Avatar user={user} size={104} badgeAdmin />
+          <div className="min-w-0">
+            <NameHeading user={user} onSaved={onSaved} />
+            <p className="mt-3 truncate text-[15px] text-cs-ink2">{user.email}</p>
           </div>
         </div>
 
-        {/* Stat line — figures rather than another label/value table. */}
-        <dl className="flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-flow-border py-5 mb-8">
+        {/* Stat ledger: figures set large, divided by hairlines. */}
+        <dl className="mb-14 grid grid-cols-2 border-y border-cs-ink/10 sm:flex sm:flex-wrap">
           <Stat value={cvCount} label={t("statCvs")} />
           {peopleCount !== null && <Stat value={peopleCount} label={t("statPeople")} />}
           {chatCount !== null && <Stat value={chatCount} label={t("statChats")} />}
-          {memberSince && (
-            <div className="flex flex-col">
-              <dd className="text-lg font-bold text-flow-text leading-none">{memberSince}</dd>
-              <dt className="mt-1.5 text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                {t("memberSince")}
-              </dt>
-            </div>
-          )}
+          {memberSince && <Stat value={memberSince} label={t("memberSince")} />}
         </dl>
       </div>
     </motion.header>
   )
 }
 
-function Stat({ value, label }: { value: number | null; label: string }) {
+function Stat({ value, label }: { value: number | string | null; label: string }) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col border-cs-ink/10 py-5 pr-8 sm:border-r sm:pl-8 sm:first:pl-0 sm:last:border-r-0">
       {/* A dash until the count lands, so the figure never flashes a wrong zero. */}
-      <dd className="text-lg font-bold text-flow-text leading-none tabular-nums">
+      <dd className="text-[2rem] font-medium leading-none tracking-[-0.045em] text-cs-ink tabular-nums">
         {value === null ? "—" : value}
       </dd>
-      <dt className="mt-1.5 text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
-        {label}
-      </dt>
+      <dt className="order-last mt-2 text-sm text-cs-ink2">{label}</dt>
     </div>
   )
 }
@@ -525,11 +500,11 @@ function NameHeading({ user, onSaved }: { user: AuthPayload; onSaved: (user: Aut
             }}
             autoFocus
             maxLength={80}
-            className="min-w-0 flex-1 rounded-lg px-3 py-1.5 text-xl font-bold outline-none"
+            className="h-14 min-w-0 flex-1 rounded-[10px] px-4 text-[1.75rem] font-medium tracking-[-0.04em] outline-none focus:ring-2 focus:ring-cs-blue"
             style={{
-              background: "rgb(var(--flow-surface))",
-              border: "1px solid var(--flow-border-strong)",
-              color: "rgb(var(--flow-text))",
+              background: "rgb(var(--cs-surface))",
+              border: "1px solid rgb(var(--cs-ink) / 0.15)",
+              color: "rgb(var(--cs-ink))",
             }}
           />
           <button
@@ -537,8 +512,7 @@ function NameHeading({ user, onSaved }: { user: AuthPayload; onSaved: (user: Aut
             onClick={save}
             disabled={saving}
             aria-label={t("save")}
-            className="shrink-0 rounded-lg p-2 text-white disabled:opacity-60"
-            style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-[10px] bg-cs-blue text-cs-onBlue disabled:opacity-60"
           >
             {saving ? <Loader2 size={15} className="animate-spin" /> : <Check size={15} />}
           </button>
@@ -546,8 +520,8 @@ function NameHeading({ user, onSaved }: { user: AuthPayload; onSaved: (user: Aut
             type="button"
             onClick={() => { setEditing(false); setDraft(user.name || ""); setError("") }}
             aria-label={t("cancel")}
-            className="shrink-0 rounded-lg p-2 hover:bg-flow-card transition-colors"
-            style={{ color: "rgb(var(--flow-text-soft))" }}
+            className="shrink-0 rounded-lg p-2 hover:bg-cs-ink/[0.05] transition-colors"
+            style={{ color: "rgb(var(--cs-ink-2))" }}
           >
             <X size={15} />
           </button>
@@ -560,8 +534,8 @@ function NameHeading({ user, onSaved }: { user: AuthPayload; onSaved: (user: Aut
   return (
     <div className="flex items-center gap-2 min-w-0">
       <h1
-        className="font-bold text-flow-text truncate"
-        style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", fontFamily: "var(--font-heading)" }}
+        className="cs-display truncate text-cs-ink"
+        style={{ fontSize: "clamp(2.25rem, 5.2vw, 4.5rem)", lineHeight: 1, letterSpacing: "-0.05em" }}
       >
         {user.name || user.email}
       </h1>
@@ -570,8 +544,7 @@ function NameHeading({ user, onSaved }: { user: AuthPayload; onSaved: (user: Aut
         onClick={() => { setDraft(user.name || ""); setEditing(true) }}
         aria-label={t("edit")}
         title={t("edit")}
-        className="shrink-0 rounded-lg p-1.5 transition-colors hover:bg-flow-card hover:text-flow-text"
-        style={{ color: "rgb(var(--flow-text-soft))", border: "1px solid var(--flow-border)" }}
+        className="cs-focus grid h-9 w-9 shrink-0 place-items-center self-center rounded-full text-cs-ink2 ring-1 ring-inset ring-cs-ink/15 transition-colors hover:text-cs-ink hover:ring-cs-ink/35"
       >
         <Pencil size={15} />
       </button>
@@ -607,11 +580,7 @@ function TabBar({
   tabs: TabDef[]
 }) {
   return (
-    <div
-      role="tablist"
-      className="flex gap-1 overflow-x-auto rounded-full p-1"
-      style={{ background: "var(--flow-card)", border: "1px solid var(--flow-border)" }}
-    >
+    <div role="tablist" className="-mx-1 flex gap-1 overflow-x-auto border-b border-cs-ink/10 px-1 no-scrollbar">
       {tabs.map(tab => {
         const selected = tab.id === active
         return (
@@ -621,37 +590,21 @@ function TabBar({
             type="button"
             aria-selected={selected}
             onClick={() => onChange(tab.id)}
-            className="relative flex flex-1 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-xs font-semibold transition-colors sm:px-4 sm:text-sm"
-            style={{ color: selected ? "#fff" : "rgb(var(--flow-text-soft))" }}
+            className={`cs-focus relative flex shrink-0 items-center gap-2 whitespace-nowrap rounded-md px-3 pb-3.5 pt-2 text-[15px] font-medium tracking-[-0.01em] transition-colors ${
+              selected ? "text-cs-ink" : "text-cs-ink3 hover:text-cs-ink"
+            }`}
           >
+            {tab.icon}
+            {tab.label}
+            {tab.count !== undefined && <span className="cs-meta tabular-nums text-cs-ink3">{tab.count}</span>}
             {selected && (
               <motion.span
-                layoutId="account-tab-pill"
-                transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                className="absolute inset-0 rounded-full shadow-aurora"
-                style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
+                layoutId="account-tab-bar"
+                aria-hidden
+                transition={{ type: "spring", stiffness: 420, damping: 36 }}
+                className="absolute inset-x-3 -bottom-px h-[2px] rounded-full bg-cs-blue"
               />
             )}
-            <span className="relative flex items-center gap-1.5">
-              {tab.icon}
-              {tab.label}
-              {tab.count !== undefined && (
-                <span
-                  className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full px-1.5 text-[10px] font-bold"
-                  style={
-                    selected
-                      ? { background: "rgba(255,255,255,0.22)", color: "#fff" }
-                      : {
-                          background: "rgb(var(--flow-surface))",
-                          border: "1px solid var(--flow-border-strong)",
-                          color: "rgb(var(--flow-text-soft))",
-                        }
-                  }
-                >
-                  {tab.count}
-                </span>
-              )}
-            </span>
           </button>
         )
       })}
@@ -662,12 +615,12 @@ function TabBar({
 /** One fact about the account. Left label, right value, no boxed-row chrome. */
 function DetailRow({ icon, label, value }: { icon?: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between gap-4 border-b border-flow-border py-2.5 last:border-0 last:pb-0">
-      <span className="flex items-center gap-2 text-sm shrink-0" style={{ color: "rgb(var(--flow-text-soft))" }}>
+    <div className="flex items-center justify-between gap-4 border-b border-cs-ink/10 py-2.5 last:border-0 last:pb-0">
+      <span className="flex items-center gap-2 text-sm shrink-0" style={{ color: "rgb(var(--cs-ink-2))" }}>
         {icon}
         {label}
       </span>
-      <span className="text-sm font-medium truncate text-flow-text">{value}</span>
+      <span className="text-sm font-medium truncate text-cs-ink">{value}</span>
     </div>
   )
 }
@@ -715,8 +668,7 @@ function SavedCvsSection({
         cvs && cvs.length > 0 && !isAdmin ? (
           <Link
             href="/cv-builder"
-            className="shine inline-flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold text-white shadow-aurora"
-            style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
+            className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-[10px] bg-cs-blue px-4 text-[13px] font-semibold text-cs-onBlue transition-colors hover:bg-cs-blueHover"
           >
             <Plus size={13} />
             {t("createFirstCv")}
@@ -731,19 +683,18 @@ function SavedCvsSection({
       ) : cvs.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-3 px-4 py-12 text-center">
           <div
-            className="flex h-12 w-12 items-center justify-center rounded-2xl"
-            style={{ background: "rgb(var(--accent-1) / 0.1)", border: "1px solid rgb(var(--accent-1) / 0.2)" }}
+            className="flex h-12 w-12 items-center justify-center rounded-xl"
+            style={{ background: "rgb(var(--cs-blue) / 0.1)", border: "1px solid rgb(var(--cs-blue) / 0.2)" }}
           >
-            <FileText className="h-6 w-6" style={{ color: "rgb(var(--accent-1))" }} />
+            <FileText className="h-6 w-6" style={{ color: "rgb(var(--cs-blue))" }} />
           </div>
-          <p className="text-sm" style={{ color: "rgb(var(--flow-text-soft))" }}>
+          <p className="text-sm" style={{ color: "rgb(var(--cs-ink-2))" }}>
             {isAdmin ? t("cvsEmptyAdmin") : t("cvsEmptyMember")}
           </p>
           {!isAdmin && (
             <Link
               href="/cv-builder"
-              className="shine mt-1 inline-flex items-center gap-1.5 rounded-full px-5 py-2.5 text-xs font-semibold text-white shadow-aurora"
-              style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
+              className="mt-1 inline-flex h-11 items-center gap-1.5 rounded-[10px] bg-cs-blue px-5 text-sm font-semibold text-cs-onBlue transition-colors hover:bg-cs-blueHover"
             >
               <Plus size={14} />
               {t("createFirstCv")}
@@ -830,12 +781,12 @@ function CvThumbnailCard({
 
   return (
     <div
-      className="group relative flex flex-col overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-aurora"
-      style={{ background: "rgb(var(--flow-surface))", border: "1px solid var(--flow-border)" }}
+      className="group relative flex flex-col overflow-hidden rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_-24px_rgb(var(--cs-ink)/0.3)]"
+      style={{ background: "rgb(var(--cs-surface))", border: "1px solid rgb(var(--cs-ink) / 0.1)" }}
     >
       <div
         ref={containerRef}
-        className="relative aspect-[1/1.3] w-full select-none overflow-hidden border-b border-flow-border bg-white"
+        className="relative aspect-[1/1.3] w-full select-none overflow-hidden border-b border-cs-ink/10 bg-white"
       >
         <div style={{ width: 794, height: 1123, transform: `scale(${scale})`, transformOrigin: "top left" }}>
           <iframe
@@ -848,21 +799,20 @@ function CvThumbnailCard({
         </div>
 
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2.5 p-4 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100"
-          style={{ background: "rgb(var(--flow-bg) / 0.82)" }}
+          style={{ background: "rgb(var(--cs-bg) / 0.86)" }}
         >
           {/* Reading it is the common case and costs nothing, so it leads. */}
           <button
             onClick={() => onView(cv)}
-            className="shine flex w-36 items-center justify-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-white shadow-aurora"
-            style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
+            className="flex h-10 w-36 items-center justify-center gap-2 rounded-[10px] bg-cs-blue px-4 text-[13px] font-semibold text-cs-onBlue transition-colors hover:bg-cs-blueHover"
           >
             <Eye size={13} />
             {t("viewCv")}
           </button>
           <button
             onClick={() => onDownload(cv)}
-            className="flex w-36 items-center justify-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-flow-text transition-colors hover:bg-flow-card"
-            style={{ background: "rgb(var(--flow-surface))", border: "1px solid var(--flow-border-strong)" }}
+            className="flex w-36 items-center justify-center gap-2 h-10 rounded-[10px] px-4 text-[13px] font-semibold text-cs-ink transition-colors hover:bg-cs-ink/[0.04]"
+            style={{ background: "rgb(var(--cs-surface))", border: "1px solid rgb(var(--cs-ink) / 0.15)" }}
           >
             <Download size={13} />
             {t("downloadPdf")}
@@ -870,8 +820,8 @@ function CvThumbnailCard({
           {canEdit && (
             <Link
               href={`/cv-builder?id=${cv._id}`}
-              className="flex w-36 items-center justify-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-flow-text transition-colors hover:bg-flow-card"
-              style={{ background: "rgb(var(--flow-surface))", border: "1px solid var(--flow-border-strong)" }}
+              className="flex w-36 items-center justify-center gap-2 h-10 rounded-[10px] px-4 text-[13px] font-semibold text-cs-ink transition-colors hover:bg-cs-ink/[0.04]"
+              style={{ background: "rgb(var(--cs-surface))", border: "1px solid rgb(var(--cs-ink) / 0.15)" }}
             >
               <Pencil size={13} />
               {isOwn ? t("openCv") : t("openCvCopy")}
@@ -891,10 +841,10 @@ function CvThumbnailCard({
 
       <div className="flex items-start justify-between gap-2 p-3.5">
         <div className="min-w-0 flex-1">
-          <h4 className="truncate text-xs font-bold text-flow-text" title={cv.title}>
+          <h4 className="truncate text-xs font-bold text-cs-ink" title={cv.title}>
             {cv.title}
           </h4>
-          <p className="mt-0.5 truncate text-[11px]" style={{ color: "rgb(var(--flow-text-soft))" }}>
+          <p className="mt-0.5 truncate text-[11px]" style={{ color: "rgb(var(--cs-ink-2))" }}>
             {showUserEmail && cv.userEmail ? `${cv.userEmail} · ` : ""}
             {formatDate(cv.createdAt as string)}
           </p>
@@ -902,9 +852,9 @@ function CvThumbnailCard({
         <span
           className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold"
           style={{
-            background: "rgb(var(--accent-1) / 0.1)",
-            color: "rgb(var(--accent-1))",
-            border: "1px solid rgb(var(--accent-1) / 0.2)",
+            background: "rgb(var(--cs-blue) / 0.1)",
+            color: "rgb(var(--cs-blue))",
+            border: "1px solid rgb(var(--cs-blue) / 0.2)",
           }}
         >
           {cv.inputData?.language || "English"}
@@ -926,15 +876,15 @@ function PeopleGroup({
 }) {
   return (
     <div className="pt-4 first:pt-0">
-      <h3 className="mb-2.5 flex items-center gap-2 text-xs font-bold uppercase tracking-wider" style={{ color: "rgb(var(--flow-text-soft))" }}>
+      <h3 className="mb-2.5 flex items-center gap-2 cs-meta" style={{ color: "rgb(var(--cs-ink-2))" }}>
         {title}
         {count !== undefined && (
           <span
             className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full px-1.5 text-[10px] font-bold"
             style={{
-              background: "rgb(var(--flow-surface))",
-              border: "1px solid var(--flow-border-strong)",
-              color: "rgb(var(--flow-text-soft))",
+              background: "rgb(var(--cs-surface))",
+              border: "1px solid rgb(var(--cs-ink) / 0.15)",
+              color: "rgb(var(--cs-ink-2))",
             }}
           >
             {count}
@@ -974,33 +924,33 @@ function PersonRow({
   const isEntryAdmin = entry.role === "admin"
 
   return (
-    <div className="flex items-center gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-flow-surface">
+    <div className="flex items-center gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-cs-ink/[0.03]">
       <Avatar user={{ ...entry, sub: entry.id } as AuthPayload} size={36} badgeAdmin />
       <div className="min-w-0 flex-1">
-        <p className="flex items-center gap-2 truncate text-sm font-semibold text-flow-text">
+        <p className="flex items-center gap-2 truncate text-sm font-semibold text-cs-ink">
           <span className="truncate">{entry.name}</span>
           {isSelf && (
             <span
               className="shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-bold"
               style={{
-                background: "rgb(var(--accent-1) / 0.12)",
-                color: "rgb(var(--accent-1))",
+                background: "rgb(var(--cs-blue) / 0.12)",
+                color: "rgb(var(--cs-blue))",
               }}
             >
               {t("youBadge")}
             </span>
           )}
         </p>
-        <p className="truncate text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
+        <p className="truncate text-xs" style={{ color: "rgb(var(--cs-ink-2))" }}>
           {entry.email} · {method}
         </p>
       </div>
 
       <div className="hidden shrink-0 text-right lg:block">
-        <p className="text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
+        <p className="text-xs" style={{ color: "rgb(var(--cs-ink-2))" }}>
           {t("joined")} {formatDate(entry.createdAt)}
         </p>
-        <p className="text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
+        <p className="text-xs" style={{ color: "rgb(var(--cs-ink-2))" }}>
           {t("lastSeen")} {formatDate(entry.lastLoginAt)}
         </p>
       </div>
@@ -1013,8 +963,8 @@ function PersonRow({
             disabled={busy}
             aria-label={isEntryAdmin ? t("makeMember") : t("makeAdmin")}
             title={isEntryAdmin ? t("makeMember") : t("makeAdmin")}
-            className="rounded-lg p-2 transition-colors hover:bg-flow-card disabled:opacity-50"
-            style={{ color: isEntryAdmin ? "rgb(var(--accent-1))" : "rgb(var(--flow-text-soft))" }}
+            className="rounded-lg p-2 transition-colors hover:bg-cs-ink/[0.05] disabled:opacity-50"
+            style={{ color: isEntryAdmin ? "rgb(var(--cs-blue))" : "rgb(var(--cs-ink-2))" }}
           >
             {busy ? (
               <Loader2 size={14} className="animate-spin" />
@@ -1031,7 +981,7 @@ function PersonRow({
             disabled={busy}
             aria-label={t("deleteUser")}
             title={t("deleteUser")}
-            className="rounded-lg p-2 transition-colors hover:bg-flow-card disabled:opacity-50"
+            className="rounded-lg p-2 transition-colors hover:bg-cs-ink/[0.05] disabled:opacity-50"
             style={{ color: "rgb(239 68 68)" }}
           >
             <Trash2 size={14} />

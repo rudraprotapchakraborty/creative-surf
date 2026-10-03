@@ -11,9 +11,7 @@ import {
   useTransform,
 } from 'framer-motion';
 import { markIntroDone, markIntroPending } from '@/lib/intro';
-
-/** The Creative Surf mark (public/logo.webp), revealed by the progress sweep. */
-const LOGO = '/logo.webp';
+import { LogoMark } from '@/components/brand/LogoMark';
 
 /* ------------------------------------------------------------------ *
  * The real-estate mark — a vector rebuild of public/logo2.webp: a crescent
@@ -65,10 +63,6 @@ export default function PageLoader() {
   const progress = useMotionValue(0);
   const percent = useTransform(progress, (v) => `${Math.round(v)}`);
   const sweep = useTransform(progress, [0, 100], [0, 1]);
-  const reveal = useTransform(
-    progress,
-    (v) => `conic-gradient(#000 ${v * 3.6}deg, transparent ${v * 3.6}deg)`,
-  );
   const tipRotate = useTransform(progress, [0, 100], [0, 360]);
   const tipOpacity = useTransform(progress, [0, 4, 94, 100], [0, 1, 1, 0]);
 
@@ -148,54 +142,44 @@ export default function PageLoader() {
           transition={{ duration: still ? 0.3 : 0.85, ease: CURTAIN_EASE }}
         >
           {/* Backdrop */}
-          <div className="absolute inset-0 bg-[#f3f9fd] dark:bg-[#03121d]" />
+          <div className="absolute inset-0 bg-cs-bg" />
 
           {/* Wave-shaped trailing edge — visible only while the curtain lifts. */}
           <svg
             aria-hidden
             viewBox="0 0 1440 120"
             preserveAspectRatio="none"
-            className="absolute left-0 top-full w-full h-[12vh] -mt-px fill-[#f3f9fd] dark:fill-[#03121d]"
+            className="absolute left-0 top-full w-full h-[12vh] -mt-px fill-cs-bg"
           >
             <path d="M0 0 H1440 V40 C1200 120 960 10 720 60 C480 110 240 20 0 80 Z" />
           </svg>
 
-          {/* Drifting light */}
-          {/* Drifting light — CSS keyframes on transform only, so they run on the
-              compositor and keep gliding even while the page hydrates. */}
-          <div
-            aria-hidden
-            className="absolute rounded-full animate-drift-a will-change-transform"
-            style={{
-              width: '60vmax',
-              height: '60vmax',
-              top: '-20vmax',
-              left: '-18vmax',
-              background: `radial-gradient(circle, ${theme.glowA}, transparent 68%)`,
-            }}
-          />
-          <div
-            aria-hidden
-            className="absolute rounded-full animate-drift-b will-change-transform"
-            style={{
-              width: '55vmax',
-              height: '55vmax',
-              bottom: '-22vmax',
-              right: '-16vmax',
-              background: `radial-gradient(circle, ${theme.glowB}, transparent 68%)`,
-            }}
-          />
-          <div
-            aria-hidden
-            className="absolute inset-0 opacity-[0.35] dark:opacity-[0.18]"
-            style={{
-              backgroundImage:
-                'linear-gradient(rgba(2,132,199,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(2,132,199,0.08) 1px, transparent 1px)',
-              backgroundSize: '48px 48px',
-              maskImage: 'radial-gradient(circle at 50% 45%, black, transparent 65%)',
-              WebkitMaskImage: 'radial-gradient(circle at 50% 45%, black, transparent 65%)',
-            }}
-          />
+          {realEstate && (
+            <>
+              <div
+                aria-hidden
+                className="absolute rounded-full animate-drift-a will-change-transform"
+                style={{
+                  width: '60vmax',
+                  height: '60vmax',
+                  top: '-20vmax',
+                  left: '-18vmax',
+                  background: `radial-gradient(circle, ${theme.glowA}, transparent 68%)`,
+                }}
+              />
+              <div
+                aria-hidden
+                className="absolute rounded-full animate-drift-b will-change-transform"
+                style={{
+                  width: '55vmax',
+                  height: '55vmax',
+                  bottom: '-22vmax',
+                  right: '-16vmax',
+                  background: `radial-gradient(circle, ${theme.glowB}, transparent 68%)`,
+                }}
+              />
+            </>
+          )}
 
           {/* Stage — fades up and away slightly ahead of the curtain. */}
           <motion.div
@@ -205,11 +189,11 @@ export default function PageLoader() {
           >
             <div className="relative w-36 h-36 md:w-44 md:h-44">
               {/* Soft pulse behind the mark */}
-              <div
+              {realEstate && <div
                 aria-hidden
                 className="absolute inset-[8%] rounded-full animate-pulse-soft will-change-transform"
                 style={{ background: `radial-gradient(circle, ${theme.glowA}, transparent 70%)` }}
-              />
+              />}
 
               {realEstate ? (
                 <>
@@ -318,94 +302,20 @@ export default function PageLoader() {
                   )}
                 </>
               ) : (
-                <>
-                  {/* Progress ring round the mark: a faint track, then the arc. */}
-                  <svg viewBox="0 0 100 100" aria-hidden className="absolute inset-0 w-full h-full overflow-visible">
-                    <defs>
-                      <linearGradient id={ids.ringGrad} x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0%" stopColor={theme.light} />
-                        <stop offset="55%" stopColor={theme.mid} />
-                        <stop offset="100%" stopColor={theme.deep} />
-                      </linearGradient>
-                    </defs>
-                    <circle cx="50" cy="50" r="47" fill="none" stroke={theme.track} strokeWidth="2" />
-                    <g transform="rotate(-90 50 50)">
-                      <motion.circle
-                        cx="50"
-                        cy="50"
-                        r="47"
-                        fill="none"
-                        stroke={`url(#${ids.ringGrad})`}
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        style={{ pathLength: sweep }}
-                      />
-                    </g>
-                  </svg>
-
-                  {/* The logo — a ghost as the track, then the real thing swept in
-                      clockwise with the ring, so progress is the logo arriving. */}
-                  <div className="absolute inset-[15%]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={LOGO} alt="" aria-hidden draggable={false} className="absolute inset-0 w-full h-full object-contain opacity-[0.12]" />
-                    <motion.img
-                      src={LOGO}
-                      alt=""
-                      aria-hidden
-                      draggable={false}
-                      className="absolute inset-0 w-full h-full object-contain"
-                      style={{ maskImage: reveal, WebkitMaskImage: reveal }}
-                    />
-                    {/* A glint passes over the finished mark, clipped to its shape. */}
-                    {!still && (
-                      <div
-                        aria-hidden
-                        className="absolute inset-0 overflow-hidden"
-                        style={{
-                          maskImage: `url(${LOGO})`,
-                          WebkitMaskImage: `url(${LOGO})`,
-                          maskSize: 'contain',
-                          WebkitMaskSize: 'contain',
-                          maskRepeat: 'no-repeat',
-                          WebkitMaskRepeat: 'no-repeat',
-                          maskPosition: 'center',
-                          WebkitMaskPosition: 'center',
-                        }}
-                      >
-                        <motion.div
-                          className="absolute -top-1/4 h-[150%] w-1/4 rotate-[20deg]"
-                          style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent)' }}
-                          initial={{ left: '-40%' }}
-                          animate={{ left: '120%' }}
-                          transition={{ duration: 0.8, ease: 'easeInOut', delay: 1.05 }}
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Glowing tip riding the leading edge of the ring */}
-                  {!still && (
-                    <motion.div aria-hidden className="absolute inset-0" style={{ rotate: tipRotate, opacity: tipOpacity }}>
-                      <span
-                        className="absolute left-1/2 top-[3%] -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full"
-                        style={{ background: '#fff', boxShadow: `0 0 10px 3px ${theme.light}, 0 0 22px 6px ${theme.mid}` }}
-                      />
-                    </motion.div>
-                  )}
-                </>
+                <LogoMark variant="intro" delay={0.1} className="absolute inset-0 h-full w-full" />
               )}
             </div>
 
             {/* Wordmark — letters rise out of a mask one after another. */}
             <div className="flex flex-col items-center gap-2">
               <span
-                className="flex overflow-hidden text-2xl md:text-[1.75rem] font-bold tracking-tight text-zinc-900 dark:text-zinc-100"
+                className="flex overflow-hidden pb-[0.08em] text-[1.75rem] md:text-[2.1rem] font-extrabold tracking-[-0.045em]"
                 aria-hidden
               >
                 {title.split('').map((char, i) => (
                   <motion.span
                     key={i}
-                    className="inline-block"
+                    className={`inline-block ${realEstate ? 'text-zinc-900 dark:text-zinc-100' : i < 8 ? 'text-cs-blue' : 'text-cs-cyan'}`}
                     initial={still ? false : { y: '110%', opacity: 0 }}
                     animate={{ y: '0%', opacity: 1 }}
                     transition={{ duration: 0.6, ease: EASE, delay: 0.3 + i * 0.03 }}
@@ -415,9 +325,9 @@ export default function PageLoader() {
                 ))}
               </span>
               <motion.span
-                className={`text-[10px] uppercase font-bold ${theme.subtitleClass}`}
-                initial={still ? false : { opacity: 0, letterSpacing: '0.15em' }}
-                animate={{ opacity: 1, letterSpacing: '0.42em' }}
+                className={`cs-meta ${realEstate ? theme.subtitleClass : 'text-cs-ink3'}`}
+                initial={still ? false : { opacity: 0, letterSpacing: '0.04em' }}
+                animate={{ opacity: 1, letterSpacing: '0.2em' }}
                 transition={{ duration: 1, ease: EASE, delay: 0.55 }}
               >
                 {theme.subtitle}
@@ -426,7 +336,7 @@ export default function PageLoader() {
 
             {/* Counter */}
             <motion.div
-              className="flex items-baseline gap-0.5 tabular-nums text-xs font-semibold text-zinc-500 dark:text-zinc-400"
+              className="cs-meta flex items-baseline gap-0.5 tabular-nums text-cs-ink3"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4, delay: 0.2 }}

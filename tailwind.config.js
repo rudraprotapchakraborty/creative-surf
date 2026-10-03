@@ -57,6 +57,23 @@ module.exports = {
           blob2: "var(--flow-blob-2)",
           blob3: "var(--flow-blob-3)",
         },
+        // Editorial layer (homepage, navbar, footer). Named by role, not hue —
+        // the --cs-* tokens in app/globals.css carry the light/dark values.
+        cs: {
+          bg: "rgb(var(--cs-bg) / <alpha-value>)",
+          surface: "rgb(var(--cs-surface) / <alpha-value>)",
+          sunken: "rgb(var(--cs-sunken) / <alpha-value>)",
+          ink: "rgb(var(--cs-ink) / <alpha-value>)",
+          ink2: "rgb(var(--cs-ink-2) / <alpha-value>)",
+          ink3: "rgb(var(--cs-ink-3) / <alpha-value>)",
+          blue: "rgb(var(--cs-blue) / <alpha-value>)",
+          blueHover: "rgb(var(--cs-blue-hover) / <alpha-value>)",
+          onBlue: "rgb(var(--cs-on-blue) / <alpha-value>)",
+          cyan: "rgb(var(--cs-cyan) / <alpha-value>)",
+          gold: "rgb(var(--cs-gold) / <alpha-value>)",
+          deep: "rgb(var(--cs-deep) / <alpha-value>)",
+          deepInk: "rgb(var(--cs-deep-ink) / <alpha-value>)",
+        },
         aurora: {
           1: "rgb(var(--accent-1) / <alpha-value>)",
           2: "rgb(var(--accent-2) / <alpha-value>)",
@@ -74,6 +91,9 @@ module.exports = {
       fontFamily: {
         sans: ["var(--font-jakarta)"],
         heading: ["var(--font-jakarta)"],
+        // Not `serif`/`mono`: other pages use those classes and expect the defaults.
+        editorial: ["var(--font-serif)", "Georgia", "serif"],
+        meta: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "monospace"],
       },
       backgroundImage: {
         "aurora-grad": "linear-gradient(110deg, rgb(var(--accent-1)) 0%, rgb(var(--accent-2)) 100%)",

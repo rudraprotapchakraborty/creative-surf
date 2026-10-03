@@ -1,142 +1,160 @@
 "use client"
 
 import type { ReactNode } from "react"
-import { motion } from "framer-motion"
-import { Waves } from "lucide-react"
+import { motion, useReducedMotion } from "framer-motion"
+import { Check } from "lucide-react"
+import { useT } from "@/lib/i18n"
+import { authMessages } from "@/lib/i18n/messages/auth"
+
+const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
+
+/** A seamless thin swell, two panels wide, so it can drift and loop unseen. */
+const SWELL = (() => {
+  let d = "M0,30"
+  for (let x = 10; x <= 2000; x += 10) d += ` L${x},${(30 + Math.sin((x / 2000) * Math.PI * 8) * 9).toFixed(1)}`
+  return d
+})()
 
 /**
- * The glass card and aurora backdrop shared by the sign-in, registration and
- * verification screens, so all three read as one flow.
+ * The editorial panel beside the form: what an account is for, on the deep
+ * band the homepage uses for its other side of the business. Wide screens
+ * only — on a phone it would push the form below the fold, and the form is
+ * the point.
+ *
+ * It floats as an inset panel below the navbar rather than running to the
+ * top edge, so the bar's dark logo never sits on dark ground.
+ */
+function AccountPanel() {
+  const t = useT(authMessages)
+  const perks = t.list("panel.perks")
+
+  return (
+    <aside className="relative hidden overflow-hidden rounded-xl bg-cs-deep text-cs-deepInk lg:col-span-5 lg:my-3 lg:ml-3 lg:mt-[4.75rem] lg:flex lg:flex-col lg:justify-between">
+      <div className="px-10 pt-12 xl:px-14 xl:pt-16">
+        <p className="cs-meta flex items-center gap-3 text-cs-deepInk/60">
+          <span aria-hidden className="h-px w-6 bg-current opacity-50" />
+          {t("panel.label")}
+        </p>
+        <p
+          className="cs-display mt-8 max-w-[22rem]"
+          style={{ fontSize: "clamp(2.25rem, 3.6vw, 3.5rem)", lineHeight: 0.98, letterSpacing: "-0.045em" }}
+        >
+          {t("panel.headline")} <span className="cs-accent text-cs-cyan">{t("panel.headlineAccent")}</span>
+        </p>
+        <ul className="mt-12 max-w-[24rem] border-t border-cs-deepInk/15">
+          {perks.map(perk => (
+            <li key={perk} className="flex items-start gap-3 border-b border-cs-deepInk/15 py-4 text-[15px] leading-snug text-cs-deepInk/80">
+              <Check aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-cs-cyan" strokeWidth={2.5} />
+              {perk}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div aria-hidden className="relative">
+        <div className="h-10 overflow-hidden">
+          <svg viewBox="0 0 2000 60" preserveAspectRatio="none" className="cs-swell-slow h-full w-[200%]">
+            <path d={SWELL} fill="none" stroke="rgb(var(--cs-cyan) / 0.45)" strokeWidth="1.25" vectorEffect="non-scaling-stroke" />
+          </svg>
+        </div>
+        <p
+          className="select-none whitespace-nowrap px-8 font-extrabold leading-[0.8] text-cs-deepInk/[0.07]"
+          style={{ fontSize: "clamp(3rem, 5.9vw, 6.25rem)", letterSpacing: "-0.055em", transform: "translateY(0.16em)" }}
+        >
+          Creative Surf
+        </p>
+      </div>
+    </aside>
+  )
+}
+
+/**
+ * The frame shared by the sign-in, registration and verification screens, so
+ * all three read as one flow: the account panel on the left, the form on the
+ * paper on the right, opened by the same mono step label and display heading
+ * the rest of the site uses.
  */
 export function AuthShell({
-  brand,
+  step,
   title,
   subtitle,
   footer,
   children,
 }: {
-  brand: string
+  /** The mono label above the heading — which step of the flow this is. */
+  step: string
   title: string
   subtitle?: string
   footer?: ReactNode
   children: ReactNode
 }) {
+  const still = useReducedMotion() ?? false
+
   return (
-    // Top padding clears the fixed navbar. Padding rather than a margin so the
-    // card still centres in the space that is left, instead of being pushed off
-    // centre on tall screens.
-    <main className="min-h-screen flex items-center justify-center bg-flow-bg px-4 pt-28 sm:pt-32 pb-16 relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div
-          className="aurora-blob animate-aurora"
-          style={{
-            width: 600,
-            height: 600,
-            top: "-15%",
-            left: "-10%",
-            background: "radial-gradient(circle, rgb(var(--accent-1) / 0.18), transparent 65%)",
-          }}
-        />
-        <div
-          className="aurora-blob animate-aurora-alt"
-          style={{
-            width: 500,
-            height: 500,
-            bottom: "-10%",
-            right: "-5%",
-            background: "radial-gradient(circle, rgb(var(--accent-2) / 0.15), transparent 65%)",
-          }}
-        />
+    <div className="grid min-h-[100svh] bg-cs-bg text-cs-ink lg:grid-cols-12">
+      <AccountPanel />
+
+      <div className="flex items-center justify-center px-5 pb-16 pt-28 sm:px-8 lg:col-span-7 lg:pt-32">
+        <motion.div
+          initial={still ? false : { opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: EASE }}
+          className="w-full max-w-[26rem]"
+        >
+          <p className="cs-meta flex items-center gap-3 text-cs-ink3">
+            <span aria-hidden className="h-px w-6 bg-current opacity-50" />
+            {step}
+          </p>
+          <h1
+            className="cs-display mt-6 text-cs-ink"
+            style={{ fontSize: "clamp(2.4rem, 4.2vw, 3.5rem)", lineHeight: 0.98, letterSpacing: "-0.045em" }}
+          >
+            {title}
+          </h1>
+          {subtitle && <p className="mt-4 text-[15px] leading-relaxed text-cs-ink2">{subtitle}</p>}
+
+          <div className="mt-10">{children}</div>
+
+          {footer && <div className="mt-10 border-t border-cs-ink/10 pt-6 text-sm text-cs-ink2">{footer}</div>}
+        </motion.div>
       </div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 28 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-md relative z-10"
-      >
-        <div className="glass rounded-2xl p-8 shadow-xl" style={{ border: "1px solid var(--flow-border-strong)" }}>
-          <div className="flex items-center justify-center gap-2 mb-8">
-            <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center"
-              style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
-            >
-              <Waves size={18} className="text-white" />
-            </div>
-            <span
-              className="font-bold text-flow-text"
-              style={{ fontFamily: "var(--font-heading)", fontSize: "1.1rem" }}
-            >
-              {brand}
-            </span>
-          </div>
-
-          <div className="text-center mb-8">
-            <h1
-              className="font-bold text-flow-text mb-2"
-              style={{ fontSize: "1.6rem", fontFamily: "var(--font-heading)" }}
-            >
-              {title}
-            </h1>
-            {subtitle && (
-              <p className="text-sm" style={{ color: "rgb(var(--flow-text-soft))" }}>
-                {subtitle}
-              </p>
-            )}
-          </div>
-
-          {children}
-        </div>
-
-        {footer && (
-          <div className="text-center text-xs mt-6" style={{ color: "rgb(var(--flow-text-soft))" }}>
-            {footer}
-          </div>
-        )}
-      </motion.div>
-    </main>
+    </div>
   )
 }
 
-/** Inline validation / server error banner. */
+/** Inline validation / server error. Announced as soon as it appears. */
 export function AuthError({ message }: { message: string }) {
   if (!message) return null
   return (
     <motion.p
+      role="alert"
       initial={{ opacity: 0, y: -6 }}
       animate={{ opacity: 1, y: 0 }}
-      className="text-sm text-center py-2 px-4 rounded-lg"
-      style={{
-        background: "rgb(239 68 68 / 0.1)",
-        color: "rgb(239 68 68)",
-        border: "1px solid rgb(239 68 68 / 0.2)",
-      }}
+      className="flex items-start gap-2.5 rounded-[10px] bg-red-500/[0.08] px-4 py-3 text-sm leading-snug text-red-700 ring-1 ring-inset ring-red-500/20 dark:text-red-300"
     >
+      <span aria-hidden className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-current" />
       {message}
     </motion.p>
   )
 }
 
-/** Success / informational banner, same shape as {@link AuthError}. */
+/** Success / informational message, same shape as {@link AuthError}. */
 export function AuthNotice({ message }: { message: string }) {
   if (!message) return null
   return (
     <motion.p
+      role="status"
       initial={{ opacity: 0, y: -6 }}
       animate={{ opacity: 1, y: 0 }}
-      className="text-sm text-center py-2 px-4 rounded-lg"
-      style={{
-        background: "rgb(var(--accent-1) / 0.1)",
-        color: "rgb(var(--accent-1))",
-        border: "1px solid rgb(var(--accent-1) / 0.25)",
-      }}
+      className="flex items-start gap-2.5 rounded-[10px] bg-cs-blue/[0.07] px-4 py-3 text-sm leading-snug text-cs-blue ring-1 ring-inset ring-cs-blue/20"
     >
+      <span aria-hidden className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-current" />
       {message}
     </motion.p>
   )
 }
 
-/** Primary gradient submit button with a busy state. */
+/** The form's one primary action, with a busy state that holds its size. */
 export function AuthSubmit({
   loading,
   label,
@@ -150,22 +168,13 @@ export function AuthSubmit({
     <button
       type="submit"
       disabled={loading}
-      className="relative w-full py-3 rounded-xl font-semibold text-sm text-white overflow-hidden shine transition-all duration-200 mt-2"
-      style={{
-        background: loading
-          ? "rgb(var(--accent-1) / 0.5)"
-          : "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))",
-        boxShadow: loading ? "none" : "0 4px 20px rgb(var(--accent-1) / 0.35)",
-      }}
+      aria-busy={loading || undefined}
+      className="cs-focus mt-2 flex h-12 w-full items-center justify-center gap-2.5 rounded-[10px] bg-cs-blue text-[15px] font-semibold tracking-[-0.01em] text-cs-onBlue transition-[background-color,opacity] duration-200 hover:bg-cs-blueHover disabled:cursor-progress disabled:opacity-70"
     >
-      {loading ? (
-        <span className="flex items-center justify-center gap-2">
-          <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-          {loadingLabel}
-        </span>
-      ) : (
-        label
+      {loading && (
+        <span aria-hidden className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent motion-reduce:animate-none" />
       )}
+      {loading ? loadingLabel : label}
     </button>
   )
 }

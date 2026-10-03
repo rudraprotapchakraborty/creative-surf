@@ -6,7 +6,7 @@ export const footerMessages = defineMessages({
     headlineLine1: "Let's build something",
     headlineAccent: "unreal.",
     blurb: "Combining creativity, strategy, and technology to shape the future of your brand.",
-    cta: "Start a Project",
+    cta: "Start a project",
     exploreTitle: "Explore",
     contactTitle: "Get in touch",
     whatsapp: "Chat on WhatsApp",
@@ -25,6 +25,13 @@ export const footerMessages = defineMessages({
     craftedAccent: "aurora",
     craftedPost: "energy",
     logoAlt: "Creative Surf",
+    legal: {
+      label: "Legal",
+      contents: "Contents",
+      others: "Other documents",
+      questions: "Questions about this document?",
+      questionsBody: "Write to us and a person — not a bot — will reply.",
+    },
   },
   fr: {
     badge: "Discutons",

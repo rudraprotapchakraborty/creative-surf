@@ -2,7 +2,11 @@
 
 import { motion } from "framer-motion"
 
-/** A titled block of profile content. Sentence-case heading, not a micro-label. */
+/**
+ * A titled block of account content: a ruled section rather than a box, so
+ * the dashboard reads like the rest of the site — a hairline, a heading, the
+ * content beneath — instead of a stack of cards.
+ */
 export function Panel({
   title,
   subtitle,
@@ -18,23 +22,18 @@ export function Panel({
 }) {
   return (
     <motion.section
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="rounded-2xl p-5 sm:p-6"
-      style={{ background: "var(--flow-card)", border: "1px solid var(--flow-border)" }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      className="border-t border-cs-ink/10 pt-6"
     >
-      <header className="mb-4 flex items-start justify-between gap-3">
+      <header className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h2 className="flex items-center gap-2 text-base font-bold text-flow-text">
-            {icon}
+          <h2 className="flex items-center gap-2.5 text-[1.375rem] font-medium tracking-[-0.03em] text-cs-ink">
+            {icon && <span className="text-cs-ink3">{icon}</span>}
             {title}
           </h2>
-          {subtitle && (
-            <p className="mt-1 text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
-              {subtitle}
-            </p>
-          )}
+          {subtitle && <p className="mt-1.5 text-sm text-cs-ink2">{subtitle}</p>}
         </div>
         {action}
       </header>

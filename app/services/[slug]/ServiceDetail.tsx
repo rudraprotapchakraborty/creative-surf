@@ -1,279 +1,193 @@
 "use client";
 
-import { useRef } from "react";
 import Link from "next/link";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check } from "lucide-react";
 
 import { useT } from "@/lib/i18n";
 import { servicesMessages } from "@/lib/i18n/messages/services";
 import { serviceDetailsMessages } from "@/lib/i18n/messages/serviceDetails";
+import { cn } from "@/lib/utils";
 import {
-  ActionButton,
-  EASE,
-  KineticHeading,
-  Kicker,
-  Magnetic,
-  SectionHead,
-} from "@/app/components/home/shared";
-import { SERVICES, serviceIndex, type ServiceEntry } from "../catalog";
-import { ClosingCta, FaqSection, ServiceCard, type FaqItem, type ServiceCopy } from "../parts";
-import { Emblem } from "@/app/components/kit";
+  ButtonLink,
+  ClosingBlock,
+  FaqSection,
+  Masthead,
+  Reveal,
+  SectionIntro,
+  TextLink,
+} from "@/app/components/editorial";
+import { SERVICES, serviceIndex } from "../catalog";
+import type { FaqItem, ServiceCopy } from "../parts";
 
 type Block = { title: string; description: string };
 type Detail = { tagline: string; intro: string; includes: Block[]; outcomes: Block[]; faq: FaqItem[] };
 
-function Hero({
-  service,
-  index,
-  copy,
-  detail,
-  next,
-}: {
-  service: ServiceEntry;
-  index: number;
-  copy: ServiceCopy;
-  detail: Detail;
-  next: { slug: string; title: string };
-}) {
-  const t = useT(serviceDetailsMessages);
-  const still = !!useReducedMotion();
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [0, 90]);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+const pad = (n: number) => String(n).padStart(2, "0");
 
+/**
+ * The masthead's side column: the service's own spec — its number in the
+ * series, the disciplines it covers — set like a colophon.
+ */
+function Spec({ index, tags, label }: { index: number; tags: string[]; label: string }) {
   return (
-    <section ref={ref} className="relative overflow-hidden bg-flow-bg text-flow-text pt-32 sm:pt-40 pb-16 sm:pb-24">
-      <div className="absolute inset-0 bg-grid-fine mask-radial pointer-events-none opacity-40" />
-      <motion.div
-        aria-hidden
-        className="absolute pointer-events-none rounded-full aurora-1"
-        style={{ width: "44vw", height: "44vw", top: "-16vw", left: "-12vw", filter: "blur(90px)", opacity: 0.3 }}
-        animate={still ? undefined : { scale: [1, 1.15, 1] }}
-        transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
-      />
-
-      <motion.div style={still ? undefined : { y, opacity }} className="relative z-10 section-px mx-auto max-w-7xl">
-        {/* Breadcrumb row */}
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: EASE }}
-          className="flex flex-wrap items-center justify-between gap-3 mb-12 sm:mb-16"
-        >
-          <Link
-            href="/services"
-            className="focus-ring group inline-flex items-center gap-2 micro text-flow-textSoft hover:text-flow-text transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-1" />
-            {t("labels.back")}
-          </Link>
-          <Link
-            href={`/services/${next.slug}`}
-            className="focus-ring group inline-flex items-center gap-2 micro text-flow-textSoft hover:text-flow-text transition-colors"
-          >
-            <span className="hidden sm:inline">{t("labels.next")}:</span>
-            <span className="text-flow-text">{next.title}</span>
-            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </Link>
-        </motion.div>
-
-        <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-16">
-          <div>
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE }}>
-              <Kicker>
-                {String(index + 1).padStart(2, "0")} {t("labels.of")} {String(SERVICES.length).padStart(2, "0")}
-              </Kicker>
-            </motion.div>
-
-            <KineticHeading
-              className="display mt-7"
-              style={{ fontSize: "clamp(2.4rem, 5.6vw, 4.75rem)" }}
-              delay={0.1}
-              lines={[{ text: copy.title }]}
-            />
-
-            <motion.p
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: EASE, delay: 0.45 }}
-              className="mt-4 display-sm text-aurora"
-              style={{ fontSize: "clamp(1.25rem, 2.4vw, 1.75rem)" }}
-            >
-              {detail.tagline}
-            </motion.p>
-
-            <motion.p
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: EASE, delay: 0.6 }}
-              className="mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-flow-textSoft"
-            >
-              {detail.intro}
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: EASE, delay: 0.75 }}
-              className="mt-10 flex flex-wrap items-center gap-4"
-            >
-              <Magnetic>
-                <Link href="/contact" className="focus-ring inline-block rounded-xl">
-                  <ActionButton>{t("labels.heroCta")}</ActionButton>
-                </Link>
-              </Magnetic>
-              {service.hub && (
-                <Link
-                  href={service.hub}
-                  className="focus-ring group inline-flex items-center gap-2 px-6 py-3.5 rounded-xl micro text-flow-text border border-flow-border hover:border-aurora-1/40 transition-colors"
-                >
-                  {t("labels.deeper")}
-                  <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </Link>
-              )}
-            </motion.div>
-          </div>
-
-          <Emblem icon={service.icon} chips={copy.tags} numeral={String(index + 1).padStart(2, "0")} />
-        </div>
-      </motion.div>
-    </section>
+    <div className="flex h-full flex-col gap-8 lg:items-end lg:text-right">
+      <p className="cs-accent text-cs-cyan" style={{ fontSize: "clamp(4rem, 7vw, 7rem)", lineHeight: 0.85 }} aria-hidden>
+        {pad(index + 1)}
+      </p>
+      <div className="w-full">
+        <p className="cs-meta border-b border-cs-ink/10 pb-3 text-cs-ink">{label}</p>
+        <ul>
+          {tags.map((tag) => (
+            <li key={tag} className="border-b border-cs-ink/10 py-3 text-[15px] font-medium tracking-[-0.015em] text-cs-ink2">
+              {tag}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 }
 
-/* ------------------------------------------------------------------ */
-
+/** What's included, as a ruled two-by-two: numbered, checked, no boxes. */
 function Includes({ items }: { items: Block[] }) {
   const t = useT(serviceDetailsMessages);
   return (
-    <section className="relative section-py section-px bg-flow-bg text-flow-text overflow-hidden">
-      <div className="relative z-10 mx-auto max-w-7xl">
-        <SectionHead
-          className="mb-14 sm:mb-20"
+    <section aria-labelledby="includes-title" className="bg-cs-bg py-24 text-cs-ink md:py-32">
+      <div className="cs-container">
+        <SectionIntro
+          id="includes-title"
+          index="02"
           label={t("labels.includesKicker")}
-          heading={t("labels.includesTitle")}
+          line={t("labels.includesTitle")}
           accent={t("labels.includesAccent")}
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+        <ul className="mt-14 grid border-t border-cs-ink/10 sm:mt-20 md:grid-cols-2 lg:ml-[calc(25%+0.5rem)]">
           {items.map((item, i) => (
-            <motion.div
+            <Reveal
+              as="li"
               key={item.title}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.7, ease: EASE, delay: (i % 2) * 0.1 }}
-              className="group hairline-card relative overflow-hidden p-7 sm:p-9 flex gap-6"
+              delay={(i % 2) * 0.08}
+              className={cn(
+                "grid grid-cols-[2rem_1fr] gap-x-4 border-b border-cs-ink/10 py-9",
+                i % 2 === 1 ? "md:border-l md:pl-8" : "md:pr-8"
+              )}
             >
-              <span
-                aria-hidden
-                className="absolute -top-20 -right-20 w-48 h-48 rounded-full aurora-1 opacity-0 blur-3xl transition-opacity duration-700 group-hover:opacity-40"
-              />
-              <motion.span
-                initial={{ scale: 0, rotate: -90 }}
-                whileInView={{ scale: 1, rotate: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ type: "spring", stiffness: 240, damping: 16, delay: 0.2 + (i % 2) * 0.1 }}
-                className="relative flex-shrink-0 grid place-items-center w-11 h-11 rounded-full text-white bg-aurora-grad shadow-aurora"
-              >
-                <Check className="w-5 h-5" />
-              </motion.span>
-              <div className="relative">
-                <span className="micro text-flow-textSoft/60 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="display-sm mt-2 text-lg sm:text-xl text-flow-text">{item.title}</h3>
-                <p className="mt-2 text-sm sm:text-[0.95rem] leading-relaxed text-flow-textSoft">{item.description}</p>
+              <span aria-hidden className="mt-0.5 grid h-6 w-6 place-items-center rounded-full bg-cs-blue text-cs-onBlue">
+                <Check className="h-3.5 w-3.5" strokeWidth={3} />
+              </span>
+              <div>
+                <p className="cs-meta tabular-nums text-cs-ink3">{pad(i + 1)}</p>
+                <h3 className="mt-2 text-[1.375rem] font-medium leading-tight tracking-[-0.03em]">{item.title}</h3>
+                <p className="mt-3 text-[15px] leading-relaxed text-cs-ink2">{item.description}</p>
               </div>
-            </motion.div>
+            </Reveal>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );
 }
 
+/** Outcomes on the deep band: three columns, serif numerals, rules drawing in. */
 function Outcomes({ items }: { items: Block[] }) {
   const t = useT(serviceDetailsMessages);
+  const still = useReducedMotion() ?? false;
   return (
-    <section className="relative section-py section-px bg-flow-bg text-flow-text overflow-hidden">
-      <div className="absolute inset-0 bg-grid-fine mask-radial pointer-events-none opacity-25" />
-      <div className="relative z-10 mx-auto max-w-7xl">
-        <SectionHead
-          className="mb-14 sm:mb-20"
+    <section aria-labelledby="outcomes-title" className="relative overflow-hidden bg-cs-deep py-24 text-cs-deepInk md:py-32">
+      <span
+        aria-hidden
+        className="absolute inset-x-0 top-0 h-px"
+        style={{ background: "linear-gradient(90deg, transparent, rgb(var(--cs-cyan) / 0.5), transparent)" }}
+      />
+      <div className="cs-container">
+        <SectionIntro
+          id="outcomes-title"
+          index="03"
           label={t("labels.outcomesKicker")}
-          heading={t("labels.outcomesTitle")}
+          line={t("labels.outcomesTitle")}
           accent={t("labels.outcomesAccent")}
+          tone="deep"
         />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
+        <ul className="mt-14 grid gap-12 sm:mt-20 md:grid-cols-3 md:gap-8">
           {items.map((item, i) => (
-            <motion.div
-              key={item.title}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.7, ease: EASE, delay: i * 0.12 }}
-            >
-              <span
-                className="display block tabular-nums text-aurora"
-                style={{ fontSize: "clamp(3rem, 6vw, 4.5rem)" }}
-              >
-                {String(i + 1).padStart(2, "0")}
+            <Reveal as="li" key={item.title} delay={i * 0.1}>
+              <span className="cs-accent block text-cs-cyan" style={{ fontSize: "clamp(3.25rem, 5vw, 4.5rem)", lineHeight: 0.85 }} aria-hidden>
+                {pad(i + 1)}
               </span>
-              {/* The rule draws itself in as the column arrives. */}
               <motion.span
                 aria-hidden
-                initial={{ scaleX: 0 }}
+                initial={still ? false : { scaleX: 0 }}
                 whileInView={{ scaleX: 1 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 1, ease: EASE, delay: 0.2 + i * 0.12 }}
-                className="mt-4 block h-px w-full origin-left"
-                style={{ background: "linear-gradient(90deg, rgb(var(--accent-1)), transparent)" }}
+                viewport={{ once: true, margin: "0px 0px -12% 0px" }}
+                transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.15 + i * 0.1 }}
+                className="mt-6 block h-px w-full origin-left bg-cs-deepInk/25"
               />
-              <h3 className="display-sm mt-6 text-xl text-flow-text">{item.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-flow-textSoft max-w-sm">{item.description}</p>
-            </motion.div>
+              <h3 className="mt-6 font-medium" style={{ fontSize: "clamp(1.5rem, 2.2vw, 1.875rem)", lineHeight: 1.1, letterSpacing: "-0.035em" }}>
+                {item.title}
+              </h3>
+              <p className="mt-3 max-w-[22rem] text-[15px] leading-relaxed text-cs-deepInk/70">{item.description}</p>
+            </Reveal>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );
 }
 
+/** The other five, as a compact ruled index — the same device as the homepage's list. */
 function OtherServices({ current, items }: { current: number; items: ServiceCopy[] }) {
   const t = useT(serviceDetailsMessages);
   const tServices = useT(servicesMessages);
-  const others = SERVICES.map((service, i) => ({ service, i })).filter(({ i }) => i !== current);
+  const others = SERVICES.map((service, i) => ({ service, i })).filter(({ i }) => i !== current && items[i]);
 
   return (
-    <section className="relative section-py section-px bg-flow-bg text-flow-text">
-      <div className="mx-auto max-w-7xl">
-        <SectionHead
-          className="mb-14 sm:mb-16"
+    <section aria-labelledby="other-title" className="border-t border-cs-ink/10 bg-cs-bg py-24 text-cs-ink md:py-32">
+      <div className="cs-container">
+        <SectionIntro
+          id="other-title"
+          index="05"
           label={t("labels.otherKicker")}
-          heading={t("labels.otherTitle")}
+          line={t("labels.otherTitle")}
           accent={t("labels.otherAccent")}
         />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {others.map(({ service, i }) =>
-            items[i] ? (
-              <ServiceCard
-                key={service.slug}
-                title={items[i].title}
-                description={items[i].description}
-                icon={service.icon}
+        <ol className="mt-12 border-t border-cs-ink/10 lg:ml-[calc(25%+0.5rem)]">
+          {others.map(({ service, i }) => (
+            <li key={service.slug}>
+              <Link
                 href={`/services/${service.slug}`}
-                index={i}
-                cta={tServices("explore")}
-                compact
-              />
-            ) : null
-          )}
-        </div>
+                className="cs-focus group grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-x-4 border-b border-cs-ink/10 py-6 outline-offset-[-2px]"
+              >
+                <span className="cs-meta tabular-nums text-cs-ink3 transition-colors group-hover:text-cs-blue">{pad(i + 1)}</span>
+                <span className="min-w-0">
+                  <span
+                    className="block font-medium text-cs-ink transition-[color,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1.5 group-hover:text-cs-blue motion-reduce:transform-none"
+                    style={{ fontSize: "clamp(1.375rem, 2.2vw, 1.875rem)", lineHeight: 1.1, letterSpacing: "-0.035em" }}
+                  >
+                    {items[i].title}
+                  </span>
+                  <span className="mt-1.5 block truncate text-sm text-cs-ink3">{items[i].tags.join(" · ")}</span>
+                </span>
+                <span className="grid h-9 w-9 place-items-center self-center rounded-full border border-cs-ink/15 text-cs-ink2 transition-colors duration-300 group-hover:border-cs-blue group-hover:bg-cs-blue group-hover:text-cs-onBlue">
+                  <ArrowUpRight aria-hidden className="h-4 w-4" />
+                  <span className="sr-only">
+                    {tServices("explore")} {items[i].title}
+                  </span>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );
 }
 
+/**
+ * /services/[slug]: masthead with the service's spec beside it → what's in it
+ * → what it gets you → questions → its neighbours → the ask. The dateline
+ * doubles as the series navigation: back to the index, on to the next.
+ */
 export default function ServiceDetail({ slug }: { slug: string }) {
   const t = useT(serviceDetailsMessages);
   const tServices = useT(servicesMessages);
@@ -288,25 +202,63 @@ export default function ServiceDetail({ slug }: { slug: string }) {
   const next = { slug: SERVICES[nextIndex].slug, title: items[nextIndex]?.title ?? "" };
 
   return (
-    <main className="flex flex-col min-h-screen bg-flow-bg">
-      <Hero service={service} index={index} copy={copy} detail={detail} next={next} />
+    <div className="flex min-h-screen flex-col bg-cs-bg text-cs-ink">
+      <Masthead
+        dateline={
+          <Link href="/services" className="cs-focus group inline-flex items-center gap-2 rounded-sm text-cs-ink transition-colors hover:text-cs-blue">
+            <ArrowLeft aria-hidden className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-x-0.5" />
+            {t("labels.back")}
+          </Link>
+        }
+        datelineAside={
+          <Link
+            href={`/services/${next.slug}`}
+            className="cs-focus group inline-flex items-center gap-2 rounded-sm transition-colors hover:text-cs-ink"
+          >
+            <span className="hidden sm:inline">{t("labels.next")}:</span>
+            <span className="text-cs-ink">{next.title}</span>
+            <ArrowRight aria-hidden className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
+          </Link>
+        }
+        index="01"
+        label={`${pad(index + 1)} ${t("labels.of")} ${pad(SERVICES.length)}`}
+        title={copy.title}
+        lede={
+          <>
+            <p className="cs-accent text-cs-blue" style={{ fontSize: "clamp(1.5rem, 2.4vw, 2.1rem)", lineHeight: 1.1 }}>
+              {detail.tagline}
+            </p>
+            <p className="mt-6">{detail.intro}</p>
+          </>
+        }
+        actions={
+          <>
+            <ButtonLink href="/contact">{t("labels.heroCta")}</ButtonLink>
+            {service.hub && <TextLink href={service.hub}>{t("labels.deeper")}</TextLink>}
+          </>
+        }
+        side={<Spec index={index} tags={copy.tags} label={t("labels.specLabel")} />}
+        titleSize="clamp(2.75rem, 6.4vw, 6rem)"
+      />
       <Includes items={detail.includes} />
       <Outcomes items={detail.outcomes} />
       <FaqSection
-        kicker={t("labels.faqKicker")}
-        title={t("labels.faqTitle")}
+        id={`${slug}-faq`}
+        index="04"
+        label={t("labels.faqKicker")}
+        line={t("labels.faqTitle")}
         accent={t("labels.faqAccent")}
         items={detail.faq}
-        idPrefix={slug}
       />
       <OtherServices current={index} items={items} />
-      <ClosingCta
-        kicker={t("labels.ctaKicker")}
+      <ClosingBlock
+        index="06"
+        label={t("labels.ctaKicker")}
         title={t("labels.ctaTitle")}
         accent={t("labels.ctaAccent")}
         body={t("labels.ctaBody")}
         button={t("labels.ctaButton")}
       />
-    </main>
+    </div>
   );
 }

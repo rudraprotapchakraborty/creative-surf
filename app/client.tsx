@@ -3,7 +3,7 @@ import { Navbar } from "@/components/navbar"
 import { ConditionalFooter } from "@/components/ConditionalFooter"
 import { LoadingBarProvider } from "@/components/LoadingBarContext"
 import { ChatWidget } from "@/components/ChatWidget"
-import { Plus_Jakarta_Sans } from "next/font/google"
+import { Instrument_Serif, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google"
 import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import GoogleAnalytics from "@/components/google-analytics"
@@ -15,6 +15,25 @@ const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-jakarta",
   weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
+})
+
+// The editorial pair. The serif italic only sets accent words inside section
+// headings, all below the fold, so it isn't preloaded; the mono carries the
+// small instrument labels, including the hero's, so it is.
+const serif = Instrument_Serif({
+  subsets: ["latin"],
+  variable: "--font-serif",
+  weight: "400",
+  style: ["normal", "italic"],
+  display: "swap",
+  preload: false,
+})
+
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  weight: ["400", "500"],
   display: "swap",
 })
 
@@ -61,7 +80,7 @@ export default async function RootLayout({
   const locale = await getServerLocale()
 
   return (
-    <html lang={locale} className={`${jakarta.variable} font-sans`} suppressHydrationWarning>
+    <html lang={locale} className={`${jakarta.variable} ${serif.variable} ${mono.variable} font-sans`} suppressHydrationWarning>
       <head>
         {/*
           One-time reset of a stale saved theme.

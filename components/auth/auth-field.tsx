@@ -1,7 +1,9 @@
 "use client"
 
-import { useState, type ComponentType } from "react"
+import { useId, useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
+import { useT } from "@/lib/i18n"
+import { authMessages } from "@/lib/i18n/messages/auth"
 
 interface AuthFieldProps {
   label: string
@@ -12,10 +14,13 @@ interface AuthFieldProps {
   autoComplete?: string
   required?: boolean
   hint?: string
-  icon?: ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }>
 }
 
-/** Labelled input matching the glass card styling, with a reveal toggle for passwords. */
+/**
+ * A labelled input on the paper: the label above in the grotesk, a plain
+ * field with a hairline that turns the action colour on focus. Passwords get
+ * a reveal toggle that is a real, labelled, reachable button.
+ */
 export function AuthField({
   label,
   value,
@@ -25,55 +30,44 @@ export function AuthField({
   autoComplete,
   required = true,
   hint,
-  icon: Icon,
 }: AuthFieldProps) {
+  const t = useT(authMessages)
+  const id = useId()
   const [revealed, setRevealed] = useState(false)
   const isPassword = type === "password"
   const inputType = isPassword && revealed ? "text" : type
 
   return (
     <div>
-      <label
-        className="block text-xs font-semibold uppercase tracking-widest mb-2"
-        style={{ color: "rgb(var(--flow-text-soft))" }}
-      >
+      <label htmlFor={id} className="mb-2 block text-[13px] font-semibold tracking-[-0.005em] text-cs-ink">
         {label}
       </label>
       <div className="relative">
-        {Icon && (
-          <Icon
-            size={15}
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 opacity-40"
-            style={{ color: "rgb(var(--flow-text))" }}
-          />
-        )}
         <input
+          id={id}
           type={inputType}
           value={value}
           onChange={e => onChange(e.target.value)}
           required={required}
           autoComplete={autoComplete}
           placeholder={placeholder}
-          className={`w-full ${Icon ? "pl-10" : "pl-4"} ${isPassword ? "pr-12" : "pr-4"} py-3 rounded-xl text-sm outline-none transition-all duration-200`}
-          style={{
-            background: "rgb(var(--flow-surface) / 0.8)",
-            border: "1px solid var(--flow-border-strong)",
-            color: "rgb(var(--flow-text))",
-          }}
+          aria-describedby={hint ? `${id}-hint` : undefined}
+          className={`h-12 w-full rounded-[10px] bg-cs-surface pl-4 ${isPassword ? "pr-12" : "pr-4"} text-[15px] text-cs-ink outline-none ring-1 ring-inset ring-cs-ink/15 transition-shadow duration-200 placeholder:text-cs-ink3/70 hover:ring-cs-ink/30 focus:ring-2 focus:ring-cs-blue`}
         />
         {isPassword && (
           <button
             type="button"
             onClick={() => setRevealed(v => !v)}
-            className="absolute right-3.5 top-1/2 -translate-y-1/2 opacity-40 hover:opacity-70 transition-opacity"
-            tabIndex={-1}
+            aria-label={revealed ? t("hidePassword") : t("showPassword")}
+            aria-pressed={revealed}
+            className="cs-focus absolute right-1.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-md text-cs-ink3 transition-colors hover:text-cs-ink"
           >
-            {revealed ? <EyeOff size={15} /> : <Eye size={15} />}
+            {revealed ? <EyeOff aria-hidden size={16} /> : <Eye aria-hidden size={16} />}
           </button>
         )}
       </div>
       {hint && (
-        <p className="text-xs mt-1.5" style={{ color: "rgb(var(--flow-text-soft))" }}>
+        <p id={`${id}-hint`} className="mt-2 text-[13px] leading-snug text-cs-ink3">
           {hint}
         </p>
       )}

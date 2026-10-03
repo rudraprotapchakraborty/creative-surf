@@ -31,14 +31,11 @@ export function ThemeToggle({
 
     const isDark = theme === "dark"
     return (
-      <div className="relative flex p-1 rounded-2xl glass border border-flow-border">
+      <div className="relative flex p-1 rounded-full bg-cs-ink/[0.05]">
         <motion.span
           aria-hidden
-          className="absolute top-1 bottom-1 left-1 rounded-xl"
-          style={{
-            width: "calc(50% - 0.25rem)",
-            background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))",
-          }}
+          className="absolute top-1 bottom-1 left-1 rounded-full bg-cs-ink"
+          style={{ width: "calc(50% - 0.25rem)" }}
           initial={false}
           animate={{ x: isDark ? "100%" : "0%" }}
           transition={pillSpring}
@@ -47,8 +44,8 @@ export function ThemeToggle({
           type="button"
           onClick={() => setTheme("light")}
           aria-current={!isDark ? "true" : undefined}
-          className={`relative z-10 flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-sm font-semibold transition-colors ${
-            !isDark ? "text-white" : "text-flow-textSoft"
+          className={`relative z-10 flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-full text-sm font-semibold transition-colors ${
+            !isDark ? "text-cs-bg" : "text-cs-ink2"
           }`}
         >
           <Sun className="w-4 h-4" />
@@ -58,8 +55,8 @@ export function ThemeToggle({
           type="button"
           onClick={() => setTheme("dark")}
           aria-current={isDark ? "true" : undefined}
-          className={`relative z-10 flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-sm font-semibold transition-colors ${
-            isDark ? "text-white" : "text-flow-textSoft"
+          className={`relative z-10 flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-full text-sm font-semibold transition-colors ${
+            isDark ? "text-cs-bg" : "text-cs-ink2"
           }`}
         >
           <Moon className="w-4 h-4" />

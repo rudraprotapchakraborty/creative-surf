@@ -1,26 +1,33 @@
-"use client";
-
-import * as React from "react";
 import Hero from "./components/home/Hero";
-import Services from "./components/home/Services";
-import WebDev from "./components/home/WebDev";
+import ClientShore from "./components/home/ClientShore";
+import Capabilities from "./components/home/Capabilities";
 import Work from "./components/home/Work";
-import Process from "./components/home/Process";
-import Testimonials from "./components/home/Testimonials";
-import TrustedBy from "./components/home/TrustedBy";
-import CTA from "./components/home/CTA";
+import RealEstate from "./components/home/RealEstate";
+import CvTool from "./components/home/CvTool";
+import Voices from "./components/home/Voices";
+import Closing from "./components/home/Closing";
 
+/**
+ * The homepage reads as one argument, in order:
+ *
+ *   what this is (hero + the outcomes it produces) → who already trusts it →
+ *   what exactly we do → proof of the craft → the other business →
+ *   something you can use right now → what clients say → the ask.
+ *
+ * A server component: each section is its own client island, so nothing that
+ * doesn't move or translate ships as JavaScript for the page shell.
+ */
 export default function Page() {
   return (
-    <div className="flex flex-col min-h-screen" style={{ fontFamily: "var(--font-jakarta)" }}>
+    <div className="flex min-h-screen flex-col bg-cs-bg text-cs-ink">
       <Hero />
-      <TrustedBy />
-      <Services />
-      <WebDev />
+      <ClientShore />
+      <Capabilities />
       <Work />
-      <Process />
-      <Testimonials />
-      <CTA />
+      <RealEstate />
+      <CvTool />
+      <Voices />
+      <Closing />
     </div>
   );
 }

@@ -126,7 +126,7 @@ export function CvPreviewModal({
             then cut off everything past the fold with nothing left to scroll.
           */
           className="fixed inset-0 z-[9000] overflow-y-auto overscroll-contain p-3 sm:p-6"
-          style={{ background: "rgb(var(--flow-bg) / 0.85)", backdropFilter: "blur(6px)" }}
+          style={{ background: "rgb(var(--cs-bg) / 0.88)", backdropFilter: "blur(6px)" }}
         >
           <div className="mx-auto w-full max-w-[794px]">
           {/* Sticky so the title and the way out stay reachable down a long CV. */}
@@ -134,14 +134,14 @@ export function CvPreviewModal({
             onClick={event => event.stopPropagation()}
             className="sticky top-0 z-10 flex items-center gap-3 rounded-2xl px-4 py-3"
             style={{
-              background: "var(--flow-card-solid)",
-              border: "1px solid var(--flow-border-strong)",
+              background: "rgb(var(--cs-surface))",
+              border: "1px solid rgb(var(--cs-ink) / 0.12)",
             }}
           >
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-bold text-flow-text">{title}</p>
+              <p className="truncate text-[15px] font-semibold tracking-[-0.015em] text-cs-ink">{title}</p>
               {ownerEmail && (
-                <p className="truncate text-xs" style={{ color: "rgb(var(--flow-text-soft))" }}>
+                <p className="truncate text-xs" style={{ color: "rgb(var(--cs-ink-2))" }}>
                   {ownerEmail}
                 </p>
               )}
@@ -150,8 +150,7 @@ export function CvPreviewModal({
             <button
               type="button"
               onClick={onDownload}
-              className="shine flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-white shadow-aurora"
-              style={{ background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
+              className="flex h-10 shrink-0 items-center gap-2 rounded-[10px] bg-cs-blue px-4 text-[13px] font-semibold text-cs-onBlue transition-colors hover:bg-cs-blueHover"
             >
               <Download size={13} />
               <span className="hidden sm:inline">{t("downloadPdf")}</span>
@@ -161,8 +160,8 @@ export function CvPreviewModal({
               type="button"
               onClick={onClose}
               aria-label={t("closePreview")}
-              className="shrink-0 rounded-full p-2 transition-colors hover:bg-flow-card"
-              style={{ color: "rgb(var(--flow-text-soft))" }}
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-cs-ink2 ring-1 ring-inset ring-cs-ink/15 transition-colors hover:text-cs-ink"
+              style={{ color: "rgb(var(--cs-ink-2))" }}
             >
               <X size={16} />
             </button>
