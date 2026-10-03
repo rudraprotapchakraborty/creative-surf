@@ -29,7 +29,7 @@ const MAX_TERMS = 24;
 const TIMEOUT_MS = 20_000;
 
 /** The same two models the CV itself is written with, chosen the same way. */
-const CLAUDE_MODEL = "claude-sonnet-5";
+const CLAUDE_MODEL = "claude-sonnet-5-5";
 const GROQ_MODEL = "openai/gpt-oss-120b";
 
 const SYSTEM_PROMPT = `You grade a finished CV against the job advert it was written for.

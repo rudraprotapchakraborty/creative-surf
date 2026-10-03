@@ -26,6 +26,7 @@ import {
   Sparkles,
   Target,
   Trash2,
+  Upload,
   TriangleAlert,
   Wand2,
   X,
@@ -369,6 +370,99 @@ export default function CvBuilderClient() {
 
   /** What the form shows: the picture waiting to be hosted, else the hosted one. */
   const photoPreview = form.photoData || form.photo;
+
+  const importInputRef = useRef<HTMLInputElement>(null);
+  const [importBusy, setImportBusy] = useState(false);
+  const [importStatus, setImportStatus] = useState<{ ok: boolean; message: string } | null>(null);
+
+  /**
+   * Reads an existing CV (PDF or .docx) on the server and fills the form with
+   * what it found. Only fields the CV actually had are written, so anything
+   * already typed that the file lacks is left alone.
+   */
+  const onImportPick = useCallback(
+    async (event: ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      // Cleared so picking the same file twice still fires a change event.
+      event.target.value = "";
+      if (!file) return;
+
+      setImportStatus(null);
+      setImportBusy(true);
+      trackEvent("tool_action", "cv_builder", "Import CV");
+      try {
+        const body = new FormData();
+        body.append("file", file);
+        const response = await fetch("/api/cv/import", { method: "POST", body });
+        const data = await response.json().catch(() => null);
+        if (!response.ok || !data?.fields) {
+          setImportStatus({ ok: false, message: data?.error || t("import.failed") });
+          return;
+        }
+
+        const fields = data.fields as Record<string, unknown>;
+        const text = (key: string) =>
+          typeof fields[key] === "string" ? (fields[key] as string).trim() : "";
+        const links = (Array.isArray(fields.profileLinks) ? fields.profileLinks : [])
+          .filter((row): row is ProfileLink => typeof row?.url === "string" && row.url.trim() !== "")
+          .slice(0, MAX_CV_LINKS)
+          .map((row) => ({
+            url: row.url.trim(),
+            label: "",
+            type: (CV_LINK_TYPE_CHOICES as readonly string[]).includes(row.type) ? row.type : "other",
+          }));
+        const languages = (Array.isArray(fields.languages) ? fields.languages : [])
+          .filter((row): row is SpokenLanguage => typeof row?.name === "string" && row.name.trim() !== "")
+          .slice(0, MAX_CV_LANGUAGES)
+          .map((row) => ({
+            name: row.name.trim(),
+            level: (CV_LANGUAGE_LEVELS as readonly string[]).includes(row.level) ? row.level : "fluent",
+          }));
+
+        setForm((prev) => {
+          const next = { ...prev };
+          for (const key of [
+            "fullName",
+            "jobTitle",
+            "email",
+            "phone",
+            "location",
+            "yearsExperience",
+            "workHistory",
+            "education",
+            "skills",
+          ] as const) {
+            const value = text(key);
+            if (value) next[key] = value;
+          }
+          if (links.length) next.profileLinks = links;
+          if (languages.length) next.languages = languages;
+          return next;
+        });
+
+        /*
+         * The uploaded CV as it stands goes straight into the preview, so the
+         * ATS and advert-match panels score the candidate's current document
+         * before anything is rewritten. Coverage is the server's grade of a
+         * generated CV, so it is cleared rather than left describing another.
+         */
+        if (data.cv) {
+          setCv(data.cv as GeneratedCv);
+          setScoredAgainst(form.targetJob);
+          setCoverage(null);
+          requestAnimationFrame(() =>
+            resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+          );
+        }
+        setImportStatus({ ok: true, message: t("import.success") });
+      } catch {
+        setImportStatus({ ok: false, message: t("import.failed") });
+      } finally {
+        setImportBusy(false);
+      }
+    },
+    [t, form.targetJob]
+  );
 
   const setLanguage = useCallback(
     (index: number, patch: Partial<SpokenLanguage>) =>
@@ -825,6 +919,59 @@ export default function CvBuilderClient() {
             )}
 
             <div className="space-y-6">
+              {/* Import an existing CV — fills the form so the candidate only edits. */}
+              <div className="rounded-2xl border border-dashed border-aurora-1/40 bg-aurora-soft p-5">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-aurora-grad text-white shadow-aurora">
+                      <Upload className="h-4 w-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="text-sm font-bold text-flow-text">{t("import.title")}</h3>
+                      <p className="mt-1 text-xs leading-relaxed text-flow-textSoft">{t("import.subtitle")}</p>
+                    </div>
+                  </div>
+                  <input
+                    ref={importInputRef}
+                    type="file"
+                    accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    className="hidden"
+                    onChange={onImportPick}
+                  />
+                  <Button
+                    type="button"
+                    size="sm"
+                    disabled={importBusy}
+                    onClick={() => importInputRef.current?.click()}
+                    className="shine shrink-0 rounded-full bg-aurora-grad text-xs font-semibold text-white shadow-aurora"
+                  >
+                    {importBusy ? (
+                      <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Upload className="mr-1.5 h-3.5 w-3.5" />
+                    )}
+                    {importBusy ? t("import.reading") : t("import.button")}
+                  </Button>
+                </div>
+                {importStatus && (
+                  <p
+                    role="status"
+                    className={`mt-3 flex items-start gap-1.5 text-xs leading-relaxed ${
+                      importStatus.ok
+                        ? "text-emerald-600 dark:text-emerald-400"
+                        : "text-red-600 dark:text-red-400"
+                    }`}
+                  >
+                    {importStatus.ok ? (
+                      <BadgeCheck className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                    ) : (
+                      <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                    )}
+                    {importStatus.message}
+                  </p>
+                )}
+              </div>
+
               {/* Completeness meter — a nudge towards detail, not a gate. */}
               <div className="rounded-2xl border border-flow-border bg-flow-surface px-5 py-4">
                 <div className="flex items-baseline justify-between gap-4">

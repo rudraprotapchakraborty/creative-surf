@@ -44,7 +44,7 @@ function rateLimited(ip: string): boolean {
  * work a larger model would otherwise be paid to do. Kept here so a swap is
  * one line — https://docs.anthropic.com/en/docs/models-overview.
  */
-const CLAUDE_MODEL = "claude-sonnet-5";
+const CLAUDE_MODEL = "claude-sonnet-5-5";
 
 /**
  * The low-effort writer. Groq retires models on a rolling basis and the id is

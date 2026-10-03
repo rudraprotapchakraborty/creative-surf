@@ -7,8 +7,8 @@ export const cvBuilderMessages = defineMessages({
       "Turn rough notes into a recruiter-ready CV. Paste the job advert, see which requirements you have covered, and download a free ATS-safe PDF. We never invent employers, dates or numbers.",
     hero: {
       badge: "Free · No sign-up",
-      title: "Your real career, written",
-      titleHighlight: "like a recruiter wants it",
+      title: "Make your CV",
+      titleHighlight: "in 60 seconds",
       subtitle:
         "Paste your rough notes and the job advert. Get a recruiter-ready CV built only from what you actually did — scored against that advert, and yours as a free PDF.",
       ctaPrimary: "Build my CV",
@@ -24,6 +24,15 @@ export const cvBuilderMessages = defineMessages({
       { value: "0", label: "Paywalls between you and your download" },
       { value: "6", label: "Languages your CV can be written in" },
     ],
+    import: {
+      title: "Already have a CV?",
+      subtitle:
+        "Upload a PDF or Word (.docx) file to see its ATS score straight away. We'll fill in the form too, so improving it is one click.",
+      button: "Upload CV",
+      reading: "Reading your CV…",
+      success: "Your CV is in the preview with its ATS score, and the form is filled in. Generate to get an improved version.",
+      failed: "We couldn't read that CV. Try another file, or fill the form in by hand.",
+    },
     guestNotice: {
       title: "You're building without an account",
       subtitle: "Build and download your CV without signing in — It won't be filed under an account, so you won't be able to reopen it later. A free account keeps your CVs in one place.",
@@ -472,8 +481,8 @@ export const cvBuilderMessages = defineMessages({
       "Transformez quelques notes en un CV prêt pour les recruteurs. Collez l'annonce, voyez les exigences déjà couvertes et téléchargez un PDF gratuit compatible ATS. Nous n'inventons jamais d'employeur, de date ni de chiffre.",
     hero: {
       badge: "Gratuit · Sans inscription",
-      title: "Votre vrai parcours, écrit",
-      titleHighlight: "comme un recruteur l'attend",
+      title: "Créez votre CV",
+      titleHighlight: "en 60 secondes",
       subtitle:
         "Collez vos notes en vrac et l'annonce visée. Vous obtenez un CV prêt pour les recruteurs, bâti uniquement sur ce que vous avez réellement fait — noté face à cette annonce, et à vous en PDF gratuit.",
       ctaPrimary: "Créer mon CV",
@@ -489,6 +498,15 @@ export const cvBuilderMessages = defineMessages({
       { value: "0", label: "Paiement entre vous et votre téléchargement" },
       { value: "6", label: "Langues possibles pour votre CV" },
     ],
+    import: {
+      title: "Vous avez déjà un CV ?",
+      subtitle:
+        "Importez un fichier PDF ou Word (.docx) pour voir tout de suite son score ATS. Nous remplissons aussi le formulaire : l'améliorer ne prend qu'un clic.",
+      button: "Importer un CV",
+      reading: "Lecture de votre CV…",
+      success: "Votre CV est dans l'aperçu avec son score ATS, et le formulaire est rempli. Générez pour obtenir une version améliorée.",
+      failed: "Impossible de lire ce CV. Essayez un autre fichier ou remplissez le formulaire à la main.",
+    },
     guestNotice: {
       title: "Vous créez sans compte",
       subtitle: "Créez et téléchargez votre CV sans vous connecter — il ne sera rattaché à aucun compte, vous ne pourrez donc pas le rouvrir plus tard. Un compte gratuit garde vos CV au même endroit.",
@@ -940,8 +958,8 @@ export const cvBuilderMessages = defineMessages({
       "Aus Stichpunkten wird ein Lebenslauf, den Recruiter lesen wollen. Stellenanzeige einfügen, offene Anforderungen sehen und ein kostenloses ATS-sicheres PDF laden. Wir erfinden keine Arbeitgeber, Daten oder Zahlen.",
     hero: {
       badge: "Kostenlos · Ohne Anmeldung",
-      title: "Ihr echter Werdegang, geschrieben",
-      titleHighlight: "wie Recruiter ihn lesen wollen",
+      title: "Ihr Lebenslauf",
+      titleHighlight: "in 60 Sekunden",
       subtitle:
         "Fügen Sie Ihre groben Notizen und die Stellenanzeige ein. Sie bekommen einen Lebenslauf, der nur auf Ihren echten Erfahrungen beruht — bewertet gegen diese Anzeige, und als kostenloses PDF für Sie.",
       ctaPrimary: "Lebenslauf erstellen",
@@ -957,6 +975,15 @@ export const cvBuilderMessages = defineMessages({
       { value: "0", label: "Bezahlschranken vor dem Download" },
       { value: "6", label: "Sprachen für Ihren Lebenslauf" },
     ],
+    import: {
+      title: "Schon einen Lebenslauf?",
+      subtitle:
+        "Laden Sie eine PDF- oder Word-Datei (.docx) hoch und sehen Sie sofort ihren ATS-Score. Wir füllen auch das Formular aus – verbessern ist dann nur ein Klick.",
+      button: "Lebenslauf hochladen",
+      reading: "Lebenslauf wird gelesen…",
+      success: "Ihr Lebenslauf ist mit seinem ATS-Score in der Vorschau, und das Formular ist ausgefüllt. Generieren Sie für eine verbesserte Version.",
+      failed: "Dieser Lebenslauf konnte nicht gelesen werden. Versuchen Sie eine andere Datei oder füllen Sie das Formular von Hand aus.",
+    },
     guestNotice: {
       title: "Sie erstellen ohne Konto",
       subtitle: "Erstellen und laden Sie Ihren Lebenslauf ohne Anmeldung herunter — er gehört dann zu keinem Konto, Sie können ihn später also nicht erneut öffnen. Ein kostenloses Konto behält Ihre Lebensläufe an einem Ort.",
@@ -1408,8 +1435,8 @@ export const cvBuilderMessages = defineMessages({
       "Hawwil mulahazatik ila Sira Dhatiyya jahiza lil-Muwazzifin. Alsiq ilan Al-Wazifa, shahid ayy Al-Mutatallabat ghattaytaha, wa hammil PDF majjani mutawafiq ma anzimat Al-Farz. La nakhtali arbab amal aw tawarikh aw arqam.",
     hero: {
       badge: "Majjani · Bidun Tasjil",
-      title: "Masirak Al-Haqiqi, maktub",
-      titleHighlight: "kama yuriduhu Al-Muwazzif",
+      title: "Usnaʿ Siratak Al-Thatiya",
+      titleHighlight: "fi 60 thaniya",
       subtitle:
         "Alsiq mulahazatik Al-Aridha wa-Ilan Al-Wazifa. Satahsul ala Sira Dhatiyya jahiza lil-Muwazzifin mabniyya faqat ala ma faaltahu haqqan — bi-darajat mutabaqa ma dhalika Al-Ilan, wa laka ka-PDF majjani.",
       ctaPrimary: "Anshi Siratee",
@@ -1425,6 +1452,15 @@ export const cvBuilderMessages = defineMessages({
       { value: "0", label: "Hawajiz dafi bainaka wa bayn Al-Tahmil" },
       { value: "6", label: "Lughat yumkin kitabat Siratik biha" },
     ],
+    import: {
+      title: "Ladayka Sira Thatiya?",
+      subtitle:
+        "Irfaʿ milaf PDF aw Word (.docx) li-tara darajat ATS fawran. Sanamlaʾ Al-Namudhaj aydan, fa-yakun Al-Tahsin bi-naqra wahida.",
+      button: "Irfaʿ Al-Sira",
+      reading: "Jari qiraʾat siratak…",
+      success: "Siratak fi Al-Muʿayana maʿa darajat ATS, wa tamma malʾ Al-Namudhaj. Ansiʾ li-tahsul ʿala nuskha muhassana.",
+      failed: "Lam natamakkan min qiraʾat hadhihi Al-Sira. Jarrib milafan akhar aw imlaʾ Al-Namudhaj yadawiyan.",
+    },
     guestNotice: {
       title: "Anta tunshi bidun hisab",
       subtitle: "Anshi wa hammil Siratik Al-Dhatiyya bidun tasjil dukhul — lan tartabit bi-ayy hisab, fa-lan tastati'a fathaha lahiqan. Al-hisab al-majjani yubqi Siratik fi makan wahid.",
@@ -1875,8 +1911,8 @@ export const cvBuilderMessages = defineMessages({
       "এলোমেলো নোট থেকে তৈরি করুন রিক্রুটারের উপযোগী সিভি। চাকরির বিজ্ঞপ্তিটি পেস্ট করুন, দেখুন কোন শর্তগুলো আপনি পূরণ করেছেন, আর বিনামূল্যে ATS-উপযোগী পিডিএফ নামান। আমরা কখনও প্রতিষ্ঠান, তারিখ বা সংখ্যা বানিয়ে লিখি না।",
     hero: {
       badge: "বিনামূল্যে · সাইন-আপ ছাড়াই",
-      title: "আপনার সত্যিকারের ক্যারিয়ার, লেখা",
-      titleHighlight: "যেভাবে রিক্রুটার চায়",
+      title: "আপনার সিভি তৈরি করুন",
+      titleHighlight: "৬০ সেকেন্ডে",
       subtitle:
         "আপনার এলোমেলো নোট আর চাকরির বিজ্ঞপ্তিটি পেস্ট করুন। পাবেন কেবল আপনার সত্যিকারের কাজ দিয়ে গড়া রিক্রুটার-উপযোগী সিভি — সেই বিজ্ঞপ্তির সাথে মিলের স্কোরসহ, আর আপনার নিজের বিনামূল্যের পিডিএফ।",
       ctaPrimary: "আমার সিভি বানান",
@@ -1892,6 +1928,15 @@ export const cvBuilderMessages = defineMessages({
       { value: "০", label: "ডাউনলোডের পথে কোনো পেওয়াল নেই" },
       { value: "৬", label: "যত ভাষায় আপনার সিভি লেখা যায়" },
     ],
+    import: {
+      title: "ইতিমধ্যে সিভি আছে?",
+      subtitle:
+        "একটি PDF বা Word (.docx) ফাইল আপলোড করে সাথে সাথে এর ATS স্কোর দেখুন। আমরা ফর্মও পূরণ করে দেব, তাই উন্নত করা এক ক্লিকের কাজ।",
+      button: "সিভি আপলোড করুন",
+      reading: "আপনার সিভি পড়া হচ্ছে…",
+      success: "আপনার সিভি এখন প্রিভিউতে, সাথে ATS স্কোর। ফর্মও পূরণ হয়েছে — উন্নত সংস্করণ পেতে তৈরি করুন।",
+      failed: "এই সিভিটি পড়া যায়নি। অন্য ফাইল চেষ্টা করুন, অথবা নিজে ফর্মটি পূরণ করুন।",
+    },
     guestNotice: {
       title: "অ্যাকাউন্ট ছাড়াই বানাচ্ছেন",
       subtitle: "সাইন ইন না করেও সিভি বানাতে ও ডাউনলোড করতে পারবেন — তবে সেটি কোনো অ্যাকাউন্টের সঙ্গে যুক্ত থাকবে না, তাই পরে আর খুলতে পারবেন না। বিনামূল্যে অ্যাকাউন্ট খুললে সব সিভি এক জায়গায় থাকবে।",
