@@ -75,6 +75,8 @@ function ProjectFigure({
           ref={frameRef}
           onPointerMove={track}
           onPointerEnter={track}
+          // The "Visit live site" tag is this image's cursor; the site cursor steps aside.
+          data-cursor="none"
           className="relative block aspect-[16/10] overflow-hidden rounded-lg bg-cs-sunken ring-1 ring-inset ring-cs-ink/[0.06]"
         >
           <Image

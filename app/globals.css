@@ -1036,3 +1036,90 @@ main:has(.cs-horizon) + footer { border-top-color: transparent; }
   .cs-logo-bar { animation-name: cs-logo-bar-still; animation-duration: 2.4s; }
   .cs-logo-travel { animation: none; }
 }
+
+/* ============================================================
+   CUSTOM CURSOR (components/CustomCursor.tsx)
+   The elements carry position; their ::before carries the look,
+   so a state can scale the shape without fighting the translate.
+   ============================================================ */
+.cs-cursor-dot,
+.cs-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2147483000;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: difference;
+  transition: opacity 0.25s ease;
+  will-change: transform;
+}
+html:not(.cs-cursor) .cs-cursor-dot,
+html:not(.cs-cursor) .cs-cursor-ring { display: none; }
+
+.cs-cursor-dot::before,
+.cs-cursor-ring::before {
+  content: "";
+  position: absolute;
+  border-radius: 9999px;
+  transition: transform 0.45s var(--cs-ease), opacity 0.2s ease, background-color 0.3s ease;
+}
+.cs-cursor-dot::before { width: 6px; height: 6px; left: -3px; top: -3px; background: #fff; }
+.cs-cursor-ring::before {
+  width: 34px;
+  height: 34px;
+  left: -17px;
+  top: -17px;
+  border: 1.5px solid #fff;
+  background: transparent;
+}
+
+/* Over something you can press: the ring opens, the dot gives way to it. */
+.cs-cursor-ring[data-state="hover"]::before { transform: scale(1.65); background: rgba(255, 255, 255, 0.1); }
+.cs-cursor-dot[data-state="hover"]::before { transform: scale(0); }
+
+/* A labelled target: a solid disc that inverts what's under it, with the label
+   cut out in black — under difference blend, black shows the page through. */
+.cs-cursor-ring[data-state="label"]::before { transform: scale(2.6); background: #fff; }
+.cs-cursor-dot[data-state="label"]::before { transform: scale(0); }
+.cs-cursor-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #000;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.45s var(--cs-ease);
+}
+.cs-cursor-ring[data-state="label"] .cs-cursor-label { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+/* Hidden: over a text field (the I-beam takes over) or where something
+   draws its own cursor. */
+.cs-cursor-ring[data-state="hidden"]::before,
+.cs-cursor-dot[data-state="hidden"]::before,
+.cs-cursor-ring[data-state="text"]::before,
+.cs-cursor-dot[data-state="text"]::before { opacity: 0; transform: scale(0.4); }
+
+/* Pressing: the ring tightens, so a click is felt. */
+.cs-cursor-ring.is-pressed[data-state="default"]::before { transform: scale(0.72); }
+.cs-cursor-ring.is-pressed[data-state="hover"]::before { transform: scale(1.35); }
+
+/* The native cursor steps aside only while the custom one is running, and
+   never over text entry. */
+html.cs-cursor,
+html.cs-cursor * { cursor: none !important; }
+html.cs-cursor :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="submit"]):not([type="button"]):not([type="file"]), textarea, [contenteditable="true"], [contenteditable=""]) {
+  cursor: text !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-cursor-dot::before,
+  .cs-cursor-ring::before,
+  .cs-cursor-label { transition: none; }
+}

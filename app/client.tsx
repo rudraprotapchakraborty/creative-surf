@@ -3,6 +3,7 @@ import { Navbar } from "@/components/navbar"
 import { ConditionalFooter } from "@/components/ConditionalFooter"
 import { LoadingBarProvider } from "@/components/LoadingBarContext"
 import { ChatWidget } from "@/components/ChatWidget"
+import { CustomCursor } from "@/components/CustomCursor"
 import { Instrument_Serif, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google"
 import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -135,6 +136,9 @@ export default async function RootLayout({
 
             {/* FLOATING AI ASSISTANT */}
             <ChatWidget />
+
+            {/* CURSOR (mouse only; touch keeps the platform behaviour) */}
+            <CustomCursor />
           </ThemeProvider>
         </LanguageProvider>
       </body>
