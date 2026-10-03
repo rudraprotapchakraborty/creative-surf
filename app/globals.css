@@ -1123,3 +1123,14 @@ html.cs-cursor :is(input:not([type="checkbox"]):not([type="radio"]):not([type="r
   .cs-cursor-ring::before,
   .cs-cursor-label { transition: none; }
 }
+
+/* The page is never wider than the screen. Without this, one element that
+   spills sideways on a real phone makes mobile Chrome lay the whole page out
+   wider and zoom out to fit — the content shrinks into a strip down the left.
+   `clip` rather than `hidden`: it cuts the spill without turning the root into
+   a scroll container, so sticky elements and anchor scrolling keep working. */
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
