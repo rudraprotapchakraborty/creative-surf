@@ -110,3 +110,14 @@ export function setSessionCookie(response: NextResponse, token: string): NextRes
   })
   return response
 }
+
+/**
+ * A post-sign-in destination taken from the query string, kept on this site:
+ * only a path ("/account"), never "//elsewhere" or a full URL — otherwise a
+ * crafted link could bounce someone to another domain.
+ */
+export function safeRedirectPath(from: string | undefined | null, fallback = '/account'): string {
+  // "/\" is treated like "//" by browsers, so it is refused too.
+  if (!from || !from.startsWith('/') || from.startsWith('//') || from.startsWith('/\\')) return fallback
+  return from
+}

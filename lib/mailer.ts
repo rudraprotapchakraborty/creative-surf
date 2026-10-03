@@ -87,12 +87,18 @@ export async function sendMail({ to, subject, html, text }: MailInput): Promise<
 }
 
 /** Branded wrapper for the one-time codes. */
-export function otpEmailTemplate(code: string, purpose: 'verify' | 'reset'): { subject: string; html: string; text: string } {
-  const heading = purpose === 'verify' ? 'Confirm your email' : 'Reset your password'
+export function otpEmailTemplate(
+  code: string,
+  purpose: 'verify' | 'reset' | 'email-change',
+): { subject: string; html: string; text: string } {
+  const heading =
+    purpose === 'verify' ? 'Confirm your email' : purpose === 'reset' ? 'Reset your password' : 'Confirm your new email'
   const lead =
     purpose === 'verify'
       ? 'Use this code to finish creating your Creative Surf account.'
-      : 'Use this code to set a new password for your Creative Surf account.'
+      : purpose === 'reset'
+        ? 'Use this code to set a new password for your Creative Surf account.'
+        : 'Use this code to move your Creative Surf account to this address.'
 
   return {
     subject: `${code} is your Creative Surf verification code`,

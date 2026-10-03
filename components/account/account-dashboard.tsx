@@ -4,12 +4,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import {
-  Check,
   Download,
   Eye,
   FileText,
   Loader2,
-  Mail,
   MessageSquare,
   Pencil,
   Plus,
@@ -18,7 +16,6 @@ import {
   ShieldOff,
   Trash2,
   Users,
-  X,
 } from "lucide-react"
 import { formatDateForLocale, useLocale, useT } from "@/lib/i18n"
 import { authMessages } from "@/lib/i18n/messages/auth"
@@ -28,6 +25,7 @@ import type { SavedCvDoc } from "@/lib/cv-types"
 import { buildCvHtml, printCvDocument } from "@/lib/cv-document"
 import { Avatar } from "@/components/auth/user-menu"
 import { Panel } from "@/components/account/panel"
+import { AccountNav } from "@/components/account/account-nav"
 import { ChatTranscriptsSection, useChatTranscripts } from "@/components/account/chat-transcripts"
 import { CvPreviewModal } from "@/components/account/cv-preview-modal"
 import { LogoSpinner } from "@/components/ui/LogoSpinner"
@@ -36,14 +34,6 @@ interface Directory {
   admins: DirectoryEntry[]
   members: DirectoryEntry[]
   total: number
-}
-
-/** The account record behind the session token — joining date and providers. */
-interface Profile {
-  createdAt: string | null
-  lastLoginAt: string | null
-  providers: string[]
-  emailVerified: boolean
 }
 
 /** Section headings the PDF renderer needs; the saved CV keeps its own language. */
@@ -60,23 +50,13 @@ const CV_LABELS = {
 export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) {
   const t = useT(authMessages)
   const locale = useLocale()
-  const [user, setUser] = useState(initialUser)
-  const [profile, setProfile] = useState<Profile | null>(null)
+  const user = initialUser
   const [directory, setDirectory] = useState<Directory | null>(null)
   const [cvs, setCvs] = useState<SavedCvDoc[] | null>(null)
 
   const isAdmin = user.role === "admin"
   const { chats, total: chatTotal, failed: chatsFailed, remove: removeChat } = useChatTranscripts(isAdmin)
   const [tab, setTab] = useState<AdminTab>("people")
-
-  useEffect(() => {
-    let active = true
-    fetch("/api/account")
-      .then(r => (r.ok ? r.json() : null))
-      .then(d => { if (active && d?.profile) setProfile(d.profile) })
-      .catch(() => {})
-    return () => { active = false }
-  }, [])
 
   const loadCvs = useCallback(() => {
     fetch("/api/cv/saved")
@@ -102,12 +82,6 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
     (iso?: string | null) =>
       iso ? formatDateForLocale(iso, locale, { month: "short", day: "numeric", year: "numeric" }) : t("never"),
     [locale, t],
-  )
-
-  const monthYear = useCallback(
-    (iso?: string | null) =>
-      iso ? formatDateForLocale(iso, locale, { month: "long", year: "numeric" }) : null,
-    [locale],
   )
 
   const [busyUserId, setBusyUserId] = useState<string | null>(null)
@@ -202,41 +176,12 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
     [loadCvs, replaceEntry, t],
   )
 
-  const signInMethod =
-    !profile ? null
-      : profile.providers.length > 1 ? t("methodBoth")
-      : profile.providers[0] === "google" ? t("methodGoogle")
-      : t("methodPassword")
-
   return (
     <div className="min-h-screen bg-cs-bg pb-24 text-cs-ink">
-      <ProfileHeader
-        user={user}
-        isAdmin={isAdmin}
-        memberSince={monthYear(profile?.createdAt)}
-        cvCount={cvs?.length ?? null}
-        peopleCount={isAdmin ? directory?.total ?? null : null}
-        chatCount={isAdmin ? chatTotal : null}
-        onSaved={setUser}
-      />
+      <ProfileHeader user={user} />
 
       <div className="cs-container">
-        <div className="grid gap-12 lg:grid-cols-12 lg:items-start lg:gap-8">
-          <aside className="lg:sticky lg:top-24 lg:col-span-4">
-            <Panel title={t("profileAbout")}>
-              <DetailRow icon={<Mail size={14} />} label={t("accountEmail")} value={user.email || "—"} />
-              <DetailRow
-                icon={<ShieldCheck size={14} />}
-                label={t("accountRole")}
-                value={isAdmin ? t("roleAdmin") : t("roleUser")}
-              />
-              {signInMethod && <DetailRow label={t("signInMethod")} value={signInMethod} />}
-              <DetailRow label={t("joined")} value={formatDate(profile?.createdAt)} />
-              <DetailRow label={t("lastSeen")} value={formatDate(profile?.lastLoginAt)} />
-            </Panel>
-          </aside>
-
-          <div className="space-y-8 lg:col-span-8">
+        <div className="space-y-8">
             {/*
               An admin has three unrelated collections to look through, and
               stacking them made the page a long scroll where the last one was
@@ -367,7 +312,6 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
                 onDeleted={id => setCvs(prev => (prev ?? []).filter(c => c._id !== id))}
               />
             )}
-          </div>
         </div>
       </div>
     </div>
@@ -375,32 +319,11 @@ export function AccountDashboard({ initialUser }: { initialUser: AuthPayload }) 
 }
 
 /**
- * The account's masthead: a dateline, the face and the name as the headline,
- * then a ruled ledger of figures.
- *
- * The name is edited in place here rather than through a "Display name" row
- * further down: on a profile the name is the headline, so that is where you
- * expect to change it.
+ * The account's masthead: the Dashboard · Settings dateline, then the face
+ * and the name as the headline. Name, email and password are changed on the
+ * settings page.
  */
-function ProfileHeader({
-  user,
-  isAdmin,
-  memberSince,
-  cvCount,
-  peopleCount,
-  chatCount,
-  onSaved,
-}: {
-  user: AuthPayload
-  isAdmin: boolean
-  memberSince: string | null
-  cvCount: number | null
-  peopleCount: number | null
-  chatCount: number | null
-  onSaved: (user: AuthPayload) => void
-}) {
-  const t = useT(authMessages)
-
+function ProfileHeader({ user }: { user: AuthPayload }) {
   return (
     <motion.header
       initial={{ opacity: 0, y: 12 }}
@@ -409,146 +332,24 @@ function ProfileHeader({
       className="pt-[5.25rem] sm:pt-24 lg:pt-[6.5rem]"
     >
       <div className="cs-container">
-        {/* Dateline: where you are, and with what standing. */}
-        <div className="cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 pb-4 text-cs-ink3">
-          <p>
-            <span className="text-cs-ink">Creative Surf</span>
-            <span aria-hidden className="mx-2 opacity-50">/</span>
-            {t("dashboard")}
-          </p>
-          <p className={`flex items-center gap-1.5 ${isAdmin ? "text-cs-blue" : ""}`}>
-            {isAdmin && <ShieldCheck aria-hidden size={13} />}
-            {isAdmin ? t("roleAdmin") : t("roleUser")}
-          </p>
-        </div>
+        <AccountNav />
 
         {/* The account itself: the face, then the name set as the page's headline. */}
-        <div className="grid items-end gap-6 pb-10 pt-12 sm:grid-cols-[auto_1fr] sm:gap-8 sm:pt-16 lg:pb-12 lg:pt-20">
-          <Avatar user={user} size={104} badgeAdmin />
+        <div className="mb-12 grid items-end gap-6 border-b border-cs-ink/10 pb-10 pt-12 sm:grid-cols-[auto_1fr] sm:gap-8 sm:pt-16 lg:mb-14 lg:pb-12 lg:pt-20">
+          <Avatar user={user} size={104} />
           <div className="min-w-0">
-            <NameHeading user={user} onSaved={onSaved} />
+            <h1
+              className="cs-display truncate text-cs-ink"
+              style={{ fontSize: "clamp(2.25rem, 5.2vw, 4.5rem)", lineHeight: 1, letterSpacing: "-0.05em" }}
+            >
+              {user.name || user.email}
+            </h1>
             <p className="mt-3 truncate text-[15px] text-cs-ink2">{user.email}</p>
           </div>
         </div>
 
-        {/* Stat ledger: figures set large, divided by hairlines. */}
-        <dl className="mb-14 grid grid-cols-2 border-y border-cs-ink/10 sm:flex sm:flex-wrap">
-          <Stat value={cvCount} label={t("statCvs")} />
-          {peopleCount !== null && <Stat value={peopleCount} label={t("statPeople")} />}
-          {chatCount !== null && <Stat value={chatCount} label={t("statChats")} />}
-          {memberSince && <Stat value={memberSince} label={t("memberSince")} />}
-        </dl>
       </div>
     </motion.header>
-  )
-}
-
-function Stat({ value, label }: { value: number | string | null; label: string }) {
-  return (
-    <div className="flex flex-col border-cs-ink/10 py-5 pr-8 sm:border-r sm:pl-8 sm:first:pl-0 sm:last:border-r-0">
-      {/* A dash until the count lands, so the figure never flashes a wrong zero. */}
-      <dd className="text-[2rem] font-medium leading-none tracking-[-0.045em] text-cs-ink tabular-nums">
-        {value === null ? "—" : value}
-      </dd>
-      <dt className="order-last mt-2 text-sm text-cs-ink2">{label}</dt>
-    </div>
-  )
-}
-
-/** The display name as the page's heading, editable in place. */
-function NameHeading({ user, onSaved }: { user: AuthPayload; onSaved: (user: AuthPayload) => void }) {
-  const t = useT(authMessages)
-  const [editing, setEditing] = useState(false)
-  const [draft, setDraft] = useState(user.name || "")
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState("")
-
-  async function save() {
-    setSaving(true)
-    setError("")
-    try {
-      const res = await fetch("/api/account", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: draft }),
-      })
-      const data = await res.json().catch(() => ({}))
-
-      if (res.ok) {
-        onSaved(data.user)
-        setEditing(false)
-      } else {
-        setError(data.error || t("genericError"))
-      }
-    } catch {
-      setError(t("genericError"))
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  if (editing) {
-    return (
-      <div className="flex flex-col gap-1.5">
-        <div className="flex items-center gap-2">
-          <input
-            value={draft}
-            onChange={e => setDraft(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === "Enter") save()
-              if (e.key === "Escape") { setEditing(false); setError("") }
-            }}
-            autoFocus
-            maxLength={80}
-            className="h-14 min-w-0 flex-1 rounded-[10px] px-4 text-[1.75rem] font-medium tracking-[-0.04em] outline-none focus:ring-2 focus:ring-cs-blue"
-            style={{
-              background: "rgb(var(--cs-surface))",
-              border: "1px solid rgb(var(--cs-ink) / 0.15)",
-              color: "rgb(var(--cs-ink))",
-            }}
-          />
-          <button
-            type="button"
-            onClick={save}
-            disabled={saving}
-            aria-label={t("save")}
-            className="grid h-10 w-10 shrink-0 place-items-center rounded-[10px] bg-cs-blue text-cs-onBlue disabled:opacity-60"
-          >
-            {saving ? <Loader2 size={15} className="animate-spin" /> : <Check size={15} />}
-          </button>
-          <button
-            type="button"
-            onClick={() => { setEditing(false); setDraft(user.name || ""); setError("") }}
-            aria-label={t("cancel")}
-            className="shrink-0 rounded-lg p-2 hover:bg-cs-ink/[0.05] transition-colors"
-            style={{ color: "rgb(var(--cs-ink-2))" }}
-          >
-            <X size={15} />
-          </button>
-        </div>
-        {error && <p className="text-xs" style={{ color: "rgb(239 68 68)" }}>{error}</p>}
-      </div>
-    )
-  }
-
-  return (
-    <div className="flex items-center gap-2 min-w-0">
-      <h1
-        className="cs-display truncate text-cs-ink"
-        style={{ fontSize: "clamp(2.25rem, 5.2vw, 4.5rem)", lineHeight: 1, letterSpacing: "-0.05em" }}
-      >
-        {user.name || user.email}
-      </h1>
-      <button
-        type="button"
-        onClick={() => { setDraft(user.name || ""); setEditing(true) }}
-        aria-label={t("edit")}
-        title={t("edit")}
-        className="cs-focus grid h-9 w-9 shrink-0 place-items-center self-center rounded-full text-cs-ink2 ring-1 ring-inset ring-cs-ink/15 transition-colors hover:text-cs-ink hover:ring-cs-ink/35"
-      >
-        <Pencil size={15} />
-      </button>
-    </div>
   )
 }
 
@@ -608,19 +409,6 @@ function TabBar({
           </button>
         )
       })}
-    </div>
-  )
-}
-
-/** One fact about the account. Left label, right value, no boxed-row chrome. */
-function DetailRow({ icon, label, value }: { icon?: React.ReactNode; label: string; value: string }) {
-  return (
-    <div className="flex items-center justify-between gap-4 border-b border-cs-ink/10 py-2.5 last:border-0 last:pb-0">
-      <span className="flex items-center gap-2 text-sm shrink-0" style={{ color: "rgb(var(--cs-ink-2))" }}>
-        {icon}
-        {label}
-      </span>
-      <span className="text-sm font-medium truncate text-cs-ink">{value}</span>
     </div>
   )
 }
@@ -925,7 +713,7 @@ function PersonRow({
 
   return (
     <div className="flex items-center gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-cs-ink/[0.03]">
-      <Avatar user={{ ...entry, sub: entry.id } as AuthPayload} size={36} badgeAdmin />
+      <Avatar user={{ ...entry, sub: entry.id } as AuthPayload} size={36} />
       <div className="min-w-0 flex-1">
         <p className="flex items-center gap-2 truncate text-sm font-semibold text-cs-ink">
           <span className="truncate">{entry.name}</span>

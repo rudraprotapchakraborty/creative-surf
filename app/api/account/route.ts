@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAuth, setSessionCookie, signToken } from '@/lib/auth'
-import { findUserByAuth, toAuthPayload, updateName, validateName } from '@/lib/users'
+import { COOKIE_NAME, getAuth, setSessionCookie, signToken } from '@/lib/auth'
+import {
+  countAdmins,
+  deleteUser,
+  findUserByAuth,
+  normaliseEmail,
+  toAuthPayload,
+  updateName,
+  validateName,
+} from '@/lib/users'
 
 /**
  * The signed-in account's own profile.
@@ -57,5 +65,53 @@ export async function PATCH(request: NextRequest) {
   } catch (err) {
     console.error('Updating the profile failed:', err)
     return NextResponse.json({ error: 'Could not save your changes. Please try again.' }, { status: 500 })
+  }
+}
+
+/**
+ * Deletes the signed-in account and its saved CVs — the same cleanup the admin
+ * directory performs. Posts it published stay up. It is confirmed by typing
+ * the account's email address. The last administrator cannot delete
+ * themselves, or the site would be left with nobody able to manage it.
+ */
+export async function DELETE(request: NextRequest) {
+  const auth = getAuth(request)
+  if (!auth) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  try {
+    const { confirmEmail = '' } = await request.json().catch(() => ({}))
+
+    const user = await findUserByAuth(auth.sub)
+    if (!user) return NextResponse.json({ error: 'Account not found.' }, { status: 404 })
+
+    // Typing the address is the confirmation, for every account: it can't be
+    // done by a stray click, and it doesn't lock out anyone without a password.
+    if (normaliseEmail(String(confirmEmail)) !== user.email) {
+      return NextResponse.json({ error: 'Type your email address exactly to confirm.' }, { status: 403 })
+    }
+
+    if (user.role === 'admin' && (await countAdmins()) <= 1) {
+      return NextResponse.json(
+        { error: 'You are the only administrator. Make someone else an admin first.' },
+        { status: 400 },
+      )
+    }
+
+    const ok = await deleteUser(user._id)
+    if (!ok) return NextResponse.json({ error: 'Account not found.' }, { status: 404 })
+
+    // Signed out on the spot: the session belonged to an account that no longer exists.
+    const response = NextResponse.json({ success: true })
+    response.cookies.set(COOKIE_NAME, '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 0,
+      path: '/',
+    })
+    return response
+  } catch (err) {
+    console.error('Deleting the account failed:', err)
+    return NextResponse.json({ error: 'Could not delete your account. Please try again.' }, { status: 500 })
   }
 }

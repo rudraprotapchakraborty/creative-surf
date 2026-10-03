@@ -123,7 +123,7 @@ export function UserMenu({
         aria-label={labels.menu}
         className="rounded-full transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-1"
       >
-        <Avatar user={user} size={32} badgeAdmin />
+        <Avatar user={user} size={32} />
       </button>
 
       <AnimatePresence>
@@ -241,22 +241,11 @@ export function GuestMenu({
  * brand gradient. Plain `img` rather than `next/image` because the Google CDN
  * host would otherwise need whitelisting in next.config.
  */
-export function Avatar({
-  user,
-  size = 32,
-  badgeAdmin = false,
-}: {
-  user: AuthPayload
-  size?: number
-  /** Shows the admin shield on the corner of the avatar. */
-  badgeAdmin?: boolean
-}) {
+export function Avatar({ user, size = 32 }: { user: AuthPayload; size?: number }) {
   const [failed, setFailed] = React.useState(false)
   const label = user.name || user.email || "?"
-  const showBadge = badgeAdmin && user.role === "admin"
 
-  const face =
-    user.avatar && !failed ? (
+  return user.avatar && !failed ? (
       <img
         src={user.avatar}
         alt=""
@@ -281,28 +270,4 @@ export function Avatar({
         {label.trim().charAt(0).toUpperCase()}
       </span>
     )
-
-  if (!showBadge) return face
-
-  const badgeSize = Math.max(13, Math.round(size * 0.42))
-
-  return (
-    <span className="relative inline-flex shrink-0" style={{ width: size, height: size }}>
-      {face}
-      <span
-        className="absolute flex items-center justify-center rounded-full text-white"
-        style={{
-          width: badgeSize,
-          height: badgeSize,
-          right: -1,
-          bottom: -1,
-          background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))",
-          // Cuts the badge out of the avatar rather than sitting flat on it.
-          boxShadow: "0 0 0 2px rgb(var(--flow-bg))",
-        }}
-      >
-        <ShieldCheck size={Math.round(badgeSize * 0.62)} strokeWidth={2.6} />
-      </span>
-    </span>
-  )
 }

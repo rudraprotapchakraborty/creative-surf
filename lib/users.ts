@@ -30,9 +30,11 @@ export interface OtpDoc {
   lastSentAt: Date
   /** Registration details held until the code is confirmed, so an unverified email never becomes an account. */
   pending?: { name: string; password: string }
+  /** For an email change: the account the new address is being confirmed for. */
+  accountId?: string
 }
 
-export type OtpPurpose = 'verify' | 'reset'
+export type OtpPurpose = 'verify' | 'reset' | 'email-change'
 
 export const OTP_TTL_MS = 10 * 60 * 1000
 export const OTP_RESEND_COOLDOWN_MS = 60 * 1000
@@ -157,6 +159,37 @@ export async function updateName(id: ObjectId, name: string): Promise<void> {
   await users.updateOne({ _id: id }, { $set: { name: name.trim(), updatedAt: new Date() } })
 }
 
+/**
+ * Moves the account to a confirmed new address and disconnects Google: the
+ * Google login belonged to the old address, which is now free for someone to
+ * register — so signing in with that Google account starts a new account
+ * rather than reopening this one. The caller ensures a password exists first,
+ * so the account always keeps a way in.
+ */
+export async function updateEmail(id: ObjectId, email: string): Promise<void> {
+  const users = await usersCollection()
+  await users.updateOne(
+    { _id: id },
+    {
+      $set: { email: normaliseEmail(email), emailVerified: true, updatedAt: new Date() },
+      $unset: { googleId: "" },
+      $pull: { providers: "google" as AuthProvider },
+    },
+  )
+}
+
+/**
+ * Stores a new password hash. An account that only signed in with Google gains
+ * the password provider, so it can now sign in either way.
+ */
+export async function updatePassword(id: ObjectId, passwordHash: string): Promise<void> {
+  const users = await usersCollection()
+  await users.updateOne(
+    { _id: id },
+    { $set: { password: passwordHash, updatedAt: new Date() }, $addToSet: { providers: 'password' as AuthProvider } },
+  )
+}
+
 export interface DirectoryEntry {
   id: string
   name: string
@@ -247,7 +280,10 @@ export async function upsertGoogleUser(profile: {
   const email = normaliseEmail(profile.email)
   const now = new Date()
 
-  const existing = await users.findOne({ email })
+  // The Google id first, then the address. An email change unlinks Google, so
+  // a Google login whose address moved away finds nothing and starts afresh.
+  const existing =
+    (await users.findOne({ googleId: profile.googleId })) ?? (await users.findOne({ email }))
   if (existing) {
     await users.updateOne(
       { _id: existing._id },
@@ -300,6 +336,7 @@ export async function issueOtp(
   email: string,
   purpose: OtpPurpose,
   pending?: OtpDoc['pending'],
+  accountId?: string,
 ): Promise<IssueOtpResult> {
   const otps = await otpsCollection()
   const key = { email: normaliseEmail(email), purpose }
@@ -315,6 +352,7 @@ export async function issueOtp(
 
   // A resend passes no `pending`, so carry the original signup details forward.
   const carried = pending ?? existing?.pending
+  const owner = accountId ?? existing?.accountId
 
   const code = randomCode()
   await otps.replaceOne(
@@ -326,6 +364,7 @@ export async function issueOtp(
       attempts: 0,
       lastSentAt: now,
       ...(carried ? { pending: carried } : {}),
+      ...(owner ? { accountId: owner } : {}),
     },
     { upsert: true },
   )
@@ -356,7 +395,7 @@ export async function allowOtpRetry(email: string, purpose: OtpPurpose): Promise
 }
 
 export type OtpCheck =
-  | { ok: true; pending?: OtpDoc['pending'] }
+  | { ok: true; pending?: OtpDoc['pending']; accountId?: string }
   | { ok: false; reason: 'missing' | 'expired' | 'too-many-attempts' | 'mismatch' }
 
 /** Consumes a code. A correct code is deleted so it cannot be replayed. */
@@ -383,7 +422,7 @@ export async function verifyOtp(email: string, purpose: OtpPurpose, code: string
   }
 
   await otps.deleteOne(key)
-  return { ok: true, pending: doc.pending }
+  return { ok: true, pending: doc.pending, accountId: doc.accountId }
 }
 
 /** How many admins remain — the guard against demoting or deleting the last one. */

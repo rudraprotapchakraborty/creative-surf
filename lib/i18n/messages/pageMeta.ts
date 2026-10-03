@@ -10,6 +10,10 @@ export const pageMetaMessages = defineMessages({
       title: "My Account | Creative Surf",
       description: "Manage your Creative Surf account, saved CVs and chats.",
     },
+    accountSettings: {
+      title: "Account Settings | Creative Surf",
+      description: "Change your name, sign-in email and password.",
+    },
     newPost: {
       title: "New Blog Post | Creative Surf",
       description: "Write a new blog post.",
@@ -34,6 +38,10 @@ export const pageMetaMessages = defineMessages({
     login: {
       title: "Sign In | Creative Surf",
       description: "Sign in to your Creative Surf account.",
+    },
+    forgotPassword: {
+      title: "Reset Password | Creative Surf",
+      description: "Reset the password for your Creative Surf account.",
     },
     register: {
       title: "Create an Account | Creative Surf",
