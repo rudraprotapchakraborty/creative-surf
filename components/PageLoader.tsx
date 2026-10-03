@@ -10,12 +10,13 @@ import {
   useReducedMotion,
   useTransform,
 } from 'framer-motion';
+import { markIntroDone, markIntroPending } from '@/lib/intro';
 
-/** The Creative Surf mark (public/logo.png), revealed by the progress sweep. */
-const LOGO = '/logo.png';
+/** The Creative Surf mark (public/logo.webp), revealed by the progress sweep. */
+const LOGO = '/logo.webp';
 
 /* ------------------------------------------------------------------ *
- * The real-estate mark — a vector rebuild of public/logo2.png: a crescent
+ * The real-estate mark — a vector rebuild of public/logo2.webp: a crescent
  * "C" with rising bars and an arrow off the curve. Drawn in a 100-unit box.
  * ------------------------------------------------------------------ */
 
@@ -74,14 +75,20 @@ export default function PageLoader() {
   useEffect(() => {
     if (!enabled) {
       setLoading(false);
+      markIntroDone();
       return;
     }
+    markIntroPending();
     setLoading(true);
     progress.set(still ? 100 : 0);
     const run = still
       ? undefined
       : animate(progress, 100, { duration: (INTRO_MS - 250) / 1000, ease: [0.45, 0, 0.2, 1] });
-    const timeout = setTimeout(() => setLoading(false), INTRO_MS);
+    const timeout = setTimeout(() => {
+      setLoading(false);
+      // The page underneath starts its own entrance as the curtain lifts.
+      markIntroDone();
+    }, INTRO_MS);
     return () => {
       run?.stop();
       clearTimeout(timeout);
@@ -132,10 +139,12 @@ export default function PageLoader() {
           role="status"
           aria-live="polite"
           aria-label={`${title} — loading`}
-          className="fixed inset-0 z-[9999] pointer-events-none"
-          initial={{ y: 0 }}
+          className="fixed inset-0 z-[9999] pointer-events-none will-change-transform"
+          initial={{ transform: 'translateY(0%)' }}
           // The whole stage lifts away like a wave drawing back off the beach.
-          exit={still ? { opacity: 0 } : { y: '-110%' }}
+          // Animating `transform` itself (not `y`) lets Motion hand the lift to
+          // the compositor, so it glides even while the page below is busy.
+          exit={still ? { opacity: 0 } : { transform: 'translateY(-110%)' }}
           transition={{ duration: still ? 0.3 : 0.85, ease: CURTAIN_EASE }}
         >
           {/* Backdrop */}
@@ -152,33 +161,29 @@ export default function PageLoader() {
           </svg>
 
           {/* Drifting light */}
-          <motion.div
+          {/* Drifting light — CSS keyframes on transform only, so they run on the
+              compositor and keep gliding even while the page hydrates. */}
+          <div
             aria-hidden
-            className="absolute rounded-full"
+            className="absolute rounded-full animate-drift-a will-change-transform"
             style={{
               width: '60vmax',
               height: '60vmax',
               top: '-20vmax',
               left: '-18vmax',
-              background: `radial-gradient(circle, ${theme.glowA}, transparent 62%)`,
-              filter: 'blur(40px)',
+              background: `radial-gradient(circle, ${theme.glowA}, transparent 68%)`,
             }}
-            animate={still ? undefined : { x: [0, 60, 0], y: [0, 40, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
           />
-          <motion.div
+          <div
             aria-hidden
-            className="absolute rounded-full"
+            className="absolute rounded-full animate-drift-b will-change-transform"
             style={{
               width: '55vmax',
               height: '55vmax',
               bottom: '-22vmax',
               right: '-16vmax',
-              background: `radial-gradient(circle, ${theme.glowB}, transparent 62%)`,
-              filter: 'blur(40px)',
+              background: `radial-gradient(circle, ${theme.glowB}, transparent 68%)`,
             }}
-            animate={still ? undefined : { x: [0, -50, 0], y: [0, -30, 0] }}
-            transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
           />
           <div
             aria-hidden
@@ -195,17 +200,15 @@ export default function PageLoader() {
           {/* Stage — fades up and away slightly ahead of the curtain. */}
           <motion.div
             className="relative h-full flex flex-col items-center justify-center gap-7"
-            exit={{ opacity: 0, y: -24, scale: 0.97 }}
+            exit={{ opacity: 0, transform: 'translateY(-24px) scale(0.97)' }}
             transition={{ duration: 0.4, ease: EASE }}
           >
             <div className="relative w-36 h-36 md:w-44 md:h-44">
               {/* Soft pulse behind the mark */}
-              <motion.div
+              <div
                 aria-hidden
-                className="absolute inset-[8%] rounded-full"
+                className="absolute inset-[8%] rounded-full animate-pulse-soft will-change-transform"
                 style={{ background: `radial-gradient(circle, ${theme.glowA}, transparent 70%)` }}
-                animate={still ? undefined : { scale: [0.92, 1.12, 0.92], opacity: [0.55, 1, 0.55] }}
-                transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
               />
 
               {realEstate ? (

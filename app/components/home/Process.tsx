@@ -45,7 +45,6 @@ export default function Process() {
 
       <div className="relative z-10 mx-auto max-w-7xl">
         <SectionHead
-          align="split"
           className="mb-16 sm:mb-20"
           label={t("process.badge")}
           heading={t("process.headingLine1")}

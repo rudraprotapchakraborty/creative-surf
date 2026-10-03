@@ -141,7 +141,7 @@ export default function RealEstatePage() {
       <section ref={heroRef} className="relative h-screen min-h-[700px] overflow-hidden">
         {/* background image with parallax */}
         <motion.div className="absolute inset-0" style={{ y: imgY }}>
-          <Image src="/real-estate-hero.png" alt="" fill className="object-cover object-right" priority />
+          <Image src="/real-estate-hero.webp" alt="" fill className="object-cover object-right" priority />
           <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-transparent" />
         </motion.div>
 
@@ -267,9 +267,10 @@ export default function RealEstatePage() {
             >
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl">
                 <Image
-                  src="/about.jpeg"
+                  src="/about.webp"
                   alt={t("about.imageAlt")}
                   fill
+                  sizes="(max-width: 1024px) 100vw, 42vw"
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />

@@ -47,7 +47,6 @@ export default function Services() {
     <section id="services" className="relative section-py section-px bg-flow-bg text-flow-text overflow-hidden">
       <div className="relative z-10 mx-auto max-w-7xl">
         <SectionHead
-          align="split"
           className="mb-12 sm:mb-16"
           label={t("services.badge")}
           heading={t("services.headingLine1")}

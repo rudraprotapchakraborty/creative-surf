@@ -57,26 +57,30 @@ export function KineticHeading({
 /** Button that drifts slightly toward the cursor while hovered — desktop only. */
 export function Magnetic({ children, className }: { children: React.ReactNode; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState({ x: 0, y: 0 });
+  // Motion values, not state: the cursor moves the button without re-rendering React.
+  const spring = { stiffness: 150, damping: 12, mass: 0.4 };
+  const x = useSpring(0, spring);
+  const y = useSpring(0, spring);
 
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = ref.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    const x = e.clientX - (rect.left + rect.width / 2);
-    const y = e.clientY - (rect.top + rect.height / 2);
-    setPos({ x: x * 0.28, y: y * 0.35 });
+    x.set((e.clientX - (rect.left + rect.width / 2)) * 0.28);
+    y.set((e.clientY - (rect.top + rect.height / 2)) * 0.35);
   };
 
-  const reset = () => setPos({ x: 0, y: 0 });
+  const reset = () => {
+    x.set(0);
+    y.set(0);
+  };
 
   return (
     <motion.div
       ref={ref}
       onMouseMove={onMouseMove}
       onMouseLeave={reset}
-      animate={{ x: pos.x, y: pos.y }}
-      transition={{ type: "spring", stiffness: 150, damping: 12, mass: 0.4 }}
+      style={{ x, y }}
       className={className}
     >
       {children}
@@ -270,7 +274,7 @@ export function SectionHead({
   /** Second line, rendered in the brand gradient. */
   accent?: React.ReactNode;
   subline?: React.ReactNode;
-  /** Extra content under the subline — split layout only. */
+  /** Extra content under the subline, such as a link. */
   aside?: React.ReactNode;
   align?: "center" | "split";
   /** Flips the label and subline colours for use on a dark panel. */
@@ -358,6 +362,8 @@ export function SectionHead({
           {subline}
         </p>
       )}
+
+      {aside && <div className="mt-6">{aside}</div>}
     </motion.div>
   );
 }

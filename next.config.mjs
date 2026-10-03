@@ -20,7 +20,9 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
+    // Serve each image resized for the device, as AVIF/WebP, instead of the original file.
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 31536000,
   },
   experimental: {
     webpackBuildWorker: true,

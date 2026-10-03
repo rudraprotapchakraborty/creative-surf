@@ -181,7 +181,7 @@ export default function ProjectsPage() {
         {/* ─── Loading ─── */}
         {loading && (
           <div className="flex justify-center py-24">
-            <LogoSpinner size={48} src="/logo2.png" />
+            <LogoSpinner size={48} src="/logo2.webp" />
           </div>
         )}
 

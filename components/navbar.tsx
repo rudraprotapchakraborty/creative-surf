@@ -175,7 +175,7 @@ export function Navbar() {
             <div className="relative shrink-0">
               <div className="absolute inset-0 bg-aurora-grad rounded-full blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-500" />
               <img
-                src={isRE ? "/logo2.png" : "/logo.png"}
+                src={isRE ? "/logo2.webp" : "/logo.webp"}
                 alt={t("logoAlt")}
                 className="relative w-7 h-7 md:w-8 md:h-8 transition-transform duration-500 group-hover:scale-110"
               />

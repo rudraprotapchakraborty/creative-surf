@@ -1268,7 +1268,7 @@ export function CtaPanel({ children }: { children: React.ReactNode }) {
         <motion.div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: spotlight }} />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/logo.png"
+          src="/logo.webp"
           alt=""
           aria-hidden
           draggable={false}

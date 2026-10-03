@@ -57,7 +57,7 @@ export default function RealEstateFooter() {
           >
             {/* faint building watermark, washed to read as solid brand color */}
             <div className="absolute inset-0 opacity-[0.22]">
-              <Image src="/real-estate-hero.png" alt="" fill className="object-cover object-top" />
+              <Image src="/real-estate-hero.webp" alt="" fill className="object-cover object-top" />
               <div className="absolute inset-0" style={{ background: `linear-gradient(110deg, ${G}f2 0%, #8a6418e6 100%)` }} />
             </div>
 
@@ -98,7 +98,7 @@ export default function RealEstateFooter() {
       <div className="relative overflow-hidden">
         {/* Background skyline */}
         <div className="absolute inset-0">
-          <Image src="/real-estate-reimagined.png" alt={t("skylineAlt")} fill className="object-cover" priority />
+          <Image src="/real-estate-reimagined.webp" alt={t("skylineAlt")} fill sizes="100vw" className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/75 to-black/40" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
         </div>
@@ -211,7 +211,7 @@ export default function RealEstateFooter() {
           <div className="mt-12 pt-6 border-t border-white/10 flex flex-col lg:flex-row justify-between items-center gap-6 text-xs text-white/50 font-medium">
             <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left">
               <div className="flex items-center gap-2.5">
-                <Image src="/logo2.png" alt="Creative Surf" width={20} height={20} className="opacity-90" />
+                <Image src="/logo2.webp" alt="Creative Surf" width={20} height={20} className="opacity-90" />
                 <span>{t("rights", { year: new Date().getFullYear() })}</span>
               </div>
               <div className="hidden sm:block text-white/20">•</div>

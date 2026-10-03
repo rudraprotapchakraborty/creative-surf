@@ -323,7 +323,7 @@ body {
     --hero-cyan: #22bdf0;
     --hero-glow-1: rgba(11, 87, 196, 0.15);
     --hero-glow-2: rgba(34, 189, 240, 0.18);
-    --hero-chip-bg: rgba(255, 255, 255, 0.72);
+    --hero-chip-bg: rgba(255, 255, 255, 0.86);
     --hero-chip-border: rgba(47, 155, 240, 0.28);
     --hero-chip-text: #17408a;
     --hero-chip-shadow: 0 4px 16px rgba(11, 87, 196, 0.08);
@@ -403,7 +403,7 @@ body {
     --hero-cyan: #5ee2ff;
     --hero-glow-1: rgba(74, 168, 255, 0.22);
     --hero-glow-2: rgba(94, 226, 255, 0.18);
-    --hero-chip-bg: rgba(255, 255, 255, 0.06);
+    --hero-chip-bg: rgba(10, 30, 54, 0.72);
     --hero-chip-border: rgba(125, 211, 252, 0.24);
     --hero-chip-text: #bfdcff;
     --hero-chip-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
@@ -500,16 +500,23 @@ html {
   100% { background-position: 250% 0; }
 }
 
-/* Logo marquee: the track holds two copies of the row, so sliding it by half
-   its width lands exactly where it started. Hovering the band pauses it. */
-@keyframes marquee {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-50%, 0, 0); }
-}
-.marquee-track { animation: marquee var(--marquee-duration, 40s) linear infinite; }
-.marquee-track[data-reverse] { animation-direction: reverse; }
-.marquee:hover .marquee-track,
-.marquee:focus-within .marquee-track { animation-play-state: paused; }
+/* Ambient loops for the intro and hero. Transform/opacity only, as CSS
+   keyframes, so the compositor runs them off the main thread — they stay
+   smooth while React hydrates or WebGL compiles. */
+@keyframes drift-a { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(60px, 40px, 0); } }
+@keyframes drift-b { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(-50px, -30px, 0); } }
+@keyframes pulse-soft { 0%, 100% { transform: scale(0.92); opacity: 0.55; } 50% { transform: scale(1.12); opacity: 1; } }
+@keyframes breathe-a { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.12); opacity: 1; } }
+@keyframes breathe-b { 0%, 100% { transform: scale(1.1); opacity: 1; } 50% { transform: scale(1); opacity: 0.68; } }
+@keyframes shafts { 0%, 100% { transform: translate3d(-8%, 0, 0); } 50% { transform: translate3d(8%, 0, 0); } }
+@keyframes bob { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(0, 6px, 0); } }
+.animate-drift-a { animation: drift-a 6s ease-in-out infinite; }
+.animate-drift-b { animation: drift-b 7s ease-in-out infinite; }
+.animate-pulse-soft { animation: pulse-soft 2.2s ease-in-out infinite; }
+.animate-breathe-a { animation: breathe-a 15s ease-in-out infinite; }
+.animate-breathe-b { animation: breathe-b 17s ease-in-out infinite; }
+.animate-shafts { animation: shafts 26s ease-in-out infinite; }
+.animate-bob { animation: bob 1.8s ease-in-out infinite; }
 
 /* A bar that fills once, left to right. The testimonials use its end as their
    autoplay tick, so the bar and the slide change can never disagree. */
@@ -547,7 +554,8 @@ html {
   .animate-mesh, .animate-float-y, .animate-float-y-slow,
   .animate-aurora, .animate-aurora-alt, .animate-float-slow,
   .animate-text-shimmer, .animate-spin-slow,
-  .animate-logo-breathe, .marquee-track,
+  .animate-logo-breathe, .animate-drift-a, .animate-drift-b, .animate-pulse-soft,
+  .animate-breathe-a, .animate-breathe-b, .animate-shafts, .animate-bob,
   .animate-fill-x, .orbit-spin, .orbit-counter { animation: none !important; }
   /* A loader still has to read as "working", so the ring slows rather than stops. */
   .animate-logo-ring { animation-duration: 2.4s !important; }

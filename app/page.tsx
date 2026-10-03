@@ -9,21 +9,18 @@ import Process from "./components/home/Process";
 import Testimonials from "./components/home/Testimonials";
 import TrustedBy from "./components/home/TrustedBy";
 import CTA from "./components/home/CTA";
-import { NoSSR } from "./NoSSR";
 
 export default function Page() {
   return (
     <div className="flex flex-col min-h-screen" style={{ fontFamily: "var(--font-jakarta)" }}>
-      <NoSSR>
-        <Hero />
-        <TrustedBy />
-        <Services />
-        <WebDev />
-        <Work />
-        <Process />
-        <Testimonials />
-        <CTA />
-      </NoSSR>
+      <Hero />
+      <TrustedBy />
+      <Services />
+      <WebDev />
+      <Work />
+      <Process />
+      <Testimonials />
+      <CTA />
     </div>
   );
 }

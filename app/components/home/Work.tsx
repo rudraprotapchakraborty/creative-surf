@@ -22,9 +22,9 @@ export default function Work() {
   ];
 
   const images = [
-    { src: "/1.png", alt: t("realEstate.images.alt1"), caption: t("realEstate.images.caption1") },
-    { src: "/2.png", alt: t("realEstate.images.alt2"), caption: t("realEstate.images.caption2") },
-    { src: "/3.png", alt: t("realEstate.images.alt3"), caption: t("realEstate.images.caption3") },
+    { src: "/1.webp", alt: t("realEstate.images.alt1"), caption: t("realEstate.images.caption1") },
+    { src: "/2.webp", alt: t("realEstate.images.alt2"), caption: t("realEstate.images.caption2") },
+    { src: "/3.webp", alt: t("realEstate.images.alt3"), caption: t("realEstate.images.caption3") },
   ];
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -57,13 +57,13 @@ export default function Work() {
           <div className="relative z-10 grid lg:grid-cols-2 gap-14 lg:gap-10 p-7 sm:p-12 lg:p-16">
             {/* Left — text */}
             <motion.div
-              className="flex flex-col justify-center"
+              className="flex flex-col justify-center items-center text-center"
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: EASE }}
             >
-              <Beam className="!mx-0 max-w-[14rem] mb-8" />
+              <Beam className="max-w-[14rem] mb-8" />
 
               <span className="micro text-flow-bg/55 mb-5">{t("realEstate.badge")}</span>
 
@@ -86,7 +86,7 @@ export default function Work() {
                 {t("realEstate.bodyEnd")}
               </p>
 
-              <div className="flex flex-wrap gap-2 mb-10">
+              <div className="flex flex-wrap justify-center gap-2 mb-10">
                 {t.list("realEstate.pills").map((label, i) => ({ icon: PILL_ICONS[i] ?? MapPin, label })).map(({ icon: Icon, label }) => (
                   <div
                     key={label}
@@ -99,9 +99,9 @@ export default function Work() {
               </div>
 
               {/* Big stat callouts */}
-              <div className="flex flex-wrap gap-x-10 gap-y-6 mb-10">
+              <div className="flex flex-wrap justify-center gap-x-10 gap-y-6 mb-10">
                 {stats.map(({ icon: Icon, label, value }) => (
-                  <div key={label} className="flex flex-col items-start gap-1">
+                  <div key={label} className="flex flex-col items-center gap-1">
                     <Icon className="w-4 h-4 mb-1 text-aurora-3" />
                     <span className="display text-flow-bg tabular-nums" style={{ fontSize: "2.4rem" }}>
                       <CountUp value={value} />

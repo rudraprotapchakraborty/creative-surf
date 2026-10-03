@@ -6,59 +6,30 @@ import { homeMessages } from "@/lib/i18n/messages/home";
 import { EASE } from "./shared";
 
 const LOGOS = [
-  { src: "/bridgepoint.jpg", name: "Bridge Point" },
-  { src: "/beeteam.jpeg", name: "Bee Team" },
-  { src: "/icreation.jpeg", name: "iCreation" },
-  { src: "/hm.jpeg", name: "HM Production" },
-  { src: "/nextgen.png", name: "NextGen Development Properties" },
-  { src: "/springfield.png", name: "Springfield" },
-  { src: "/wedvisa.png", name: "Wedvisa" },
-  { src: "/channel_i.png", name: "Channel I" },
-  { src: "/apex-footwear-ltd--600.png", name: "Apex Footwear Ltd" },
+  { src: "/bridgepoint.webp", name: "Bridge Point" },
+  { src: "/beeteam.webp", name: "Bee Team" },
+  { src: "/icreation.webp", name: "iCreation" },
+  { src: "/hm.webp", name: "HM Production" },
+  { src: "/nextgen.webp", name: "NextGen Development Properties" },
+  { src: "/springfield.webp", name: "Springfield" },
+  { src: "/wedvisa.webp", name: "Wedvisa" },
+  { src: "/channel_i.webp", name: "Channel I" },
+  { src: "/apex-footwear-ltd--600.webp", name: "Apex Footwear Ltd" },
+  { src: "/brisket.webp", name: "Brisket & Bistro" },
+  { src: "/namimoon.webp", name: "Nami Moon" },
+  { src: "/waffletime.webp", name: "Waffle Time" },
+  { src: "/zafenity.webp", name: "Zafenity" },
+  { src: "/ghuddy.webp", name: "Ghuddy" },
+  { src: "/masalaking.webp", name: "Masala King" },
+  { src: "/kudos.webp", name: "Kudos" },
 ];
-
-type Logo = (typeof LOGOS)[number];
-
-/**
- * One marquee row. The logos are laid down twice so the CSS animation can
- * slide the track by exactly half its width and loop without a seam; the
- * second copy is hidden from assistive tech so each client is announced once.
- */
-function LogoRow({ logos, reverse = false, duration }: { logos: Logo[]; reverse?: boolean; duration: number }) {
-  return (
-    <div
-      className="marquee-track flex w-max gap-4 sm:gap-5 pr-4 sm:pr-5"
-      data-reverse={reverse ? "" : undefined}
-      style={{ "--marquee-duration": `${duration}s` } as React.CSSProperties}
-    >
-      {[...logos, ...logos].map((logo, i) => (
-        <div
-          key={`${logo.name}-${i}`}
-          aria-hidden={i >= logos.length || undefined}
-          className="group relative flex h-20 w-40 sm:h-24 sm:w-48 flex-shrink-0 items-center justify-center rounded-2xl border border-flow-border bg-white p-5 transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:border-aurora-1/40 hover:shadow-[0_12px_32px_-12px_rgb(var(--accent-1)/0.35)]"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={logo.src}
-            alt={i < logos.length ? `${logo.name} logo` : ""}
-            loading="lazy"
-            draggable={false}
-            className="max-h-full max-w-full object-contain opacity-[0.85] transition-[opacity,transform] duration-500 group-hover:opacity-100 group-hover:scale-105"
-          />
-        </div>
-      ))}
-    </div>
-  );
-}
 
 /**
  * The first thing under the hero, so it is a band rather than a full section:
- * a compact heading and two rows of client logos drifting in opposite
- * directions. Pointing at the band pauses it, so a logo can actually be read.
+ * a compact heading and a static grid of equal square client-logo tiles.
  */
 export default function TrustedBy() {
   const t = useT(homeMessages);
-  const reversed = [...LOGOS].reverse();
 
   return (
     <section aria-labelledby="trusted-heading" className="relative w-full py-16 sm:py-20 bg-flow-bg overflow-hidden">
@@ -87,16 +58,28 @@ export default function TrustedBy() {
         <p className="mt-3 text-sm sm:text-base text-flow-textSoft">{t("trustedBy.subtitle")}</p>
       </motion.div>
 
-      <div
-        className="marquee relative flex flex-col gap-4 sm:gap-5"
-        style={{
-          maskImage: "linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)",
-          WebkitMaskImage: "linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)",
-        }}
-      >
-        <LogoRow logos={LOGOS} duration={42} />
-        <LogoRow logos={reversed} duration={48} reverse />
-      </div>
+      <ul className="section-px relative z-10 mx-auto grid max-w-7xl grid-cols-4 gap-3 sm:gap-4 lg:grid-cols-8">
+        {LOGOS.map((logo, i) => (
+          <motion.li
+            key={logo.name}
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.5, delay: (i % 8) * 0.04, ease: EASE }}
+            className="group aspect-square overflow-hidden rounded-2xl border border-flow-border bg-white transition-[border-color,box-shadow] duration-300 hover:border-aurora-1/40 hover:shadow-[0_12px_32px_-12px_rgb(var(--accent-1)/0.35)]"
+          >
+            {/* Each file is pre-padded to a square on its own background, so it fills the tile edge to edge. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={logo.src}
+              alt={`${logo.name} logo`}
+              loading="lazy"
+              draggable={false}
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          </motion.li>
+        ))}
+      </ul>
     </section>
   );
 }

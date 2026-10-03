@@ -58,7 +58,7 @@ function ServiceOrbit({ services }: { services: Service[] }) {
           transition={{ duration: 2.6, repeat: Infinity, ease: "easeOut" }}
         />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo.png" alt="" draggable={false} className="relative w-[64%] h-[64%] object-contain" />
+        <img src="/logo.webp" alt="" draggable={false} className="relative w-[64%] h-[64%] object-contain" />
       </div>
 
       {/* The turning ring of services */}

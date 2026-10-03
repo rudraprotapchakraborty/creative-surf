@@ -315,9 +315,14 @@ export default function HeroOcean({ reduced = false }: { reduced?: boolean }) {
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
     const isCoarse = window.matchMedia("(pointer: coarse)").matches;
 
-    const renderer = new WebGLRenderer({ alpha: true, antialias: !isMobile, powerPreference: "high-performance" });
+    // Antialiasing only pays off on 1x screens; on retina the extra pixels
+    // already smooth the edges, and MSAA at 2x is a big fill-rate cost.
+    const deviceDpr = window.devicePixelRatio || 1;
+    const renderer = new WebGLRenderer({ alpha: true, antialias: !isMobile && deviceDpr < 1.5, powerPreference: "high-performance" });
     renderer.setClearAlpha(0);
-    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
+    // The sea is soft and in motion — 1.5x is indistinguishable from 2x here
+    // and shades ~44% fewer pixels per frame.
+    const dpr = Math.min(deviceDpr, isMobile ? 1.25 : 1.5);
     renderer.setPixelRatio(dpr);
     renderer.domElement.style.cssText = "position:absolute;inset:0;width:100%;height:100%;display:block";
     host.appendChild(renderer.domElement);
@@ -375,7 +380,7 @@ export default function HeroOcean({ reduced = false }: { reduced?: boolean }) {
     });
 
     /* ---- geometry ---- */
-    const surfaceGeo = new PlaneGeometry(OCEAN_W, OCEAN_D, isMobile ? 150 : 300, isMobile ? 110 : 220);
+    const surfaceGeo = new PlaneGeometry(OCEAN_W, OCEAN_D, isMobile ? 120 : 220, isMobile ? 88 : 160);
     const surface = new Mesh(surfaceGeo, surfaceMat);
     scene.add(surface);
 
@@ -387,7 +392,7 @@ export default function HeroOcean({ reduced = false }: { reduced?: boolean }) {
 
     // Spray motes are scattered over the near half of the sheet, where crests
     // are large enough on screen for the effect to read.
-    const SPRAY = isMobile ? 900 : 2600;
+    const SPRAY = isMobile ? 700 : 1800;
     const sprayGeo = new BufferGeometry();
     const sprayPos = new Float32Array(SPRAY * 3);
     const spraySeed = new Float32Array(SPRAY);
@@ -557,16 +562,26 @@ export default function HeroOcean({ reduced = false }: { reduced?: boolean }) {
       renderer.render(scene, camera);
     };
 
-    if (reduced) {
-      renderer.render(scene, camera);
-    } else {
-      raf = requestAnimationFrame(frame);
-    }
+    // Compile the three shader programs off the main thread (where the driver
+    // supports KHR_parallel_shader_compile) before the first frame, so the
+    // first render isn't one long synchronous stall.
+    let disposed = false;
+    const startLoop = () => {
+      if (disposed) return;
+      if (reduced) {
+        renderer.render(scene, camera);
+      } else if (running) {
+        last = performance.now();
+        raf = requestAnimationFrame(frame);
+      }
+    };
+    const compiled = renderer.compileAsync(scene, camera).then(startLoop, startLoop);
 
     /* ---- pause offscreen — the homepage is long, this saves battery ---- */
     const io = new IntersectionObserver(
       ([entry]) => {
         if (reduced) return;
+        if (disposed) return;
         if (entry.isIntersecting && !running) {
           running = true;
           last = performance.now();
@@ -581,6 +596,7 @@ export default function HeroOcean({ reduced = false }: { reduced?: boolean }) {
     io.observe(host);
 
     return () => {
+      disposed = true;
       cancelAnimationFrame(raf);
       io.disconnect();
       ro.disconnect();
@@ -589,15 +605,19 @@ export default function HeroOcean({ reduced = false }: { reduced?: boolean }) {
       window.removeEventListener("pointerleave", onPointerLeave);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("pointerdown", onPointerDown);
-      surfaceGeo.dispose();
-      gridGeo.dispose();
-      sprayGeo.dispose();
-      surfaceMat.dispose();
-      gridMat.dispose();
-      sprayMat.dispose();
-      renderer.dispose();
-      renderer.forceContextLoss();
       if (renderer.domElement.parentNode === host) host.removeChild(renderer.domElement);
+      // compileAsync polls the programs until they're ready; tearing them down
+      // mid-poll makes three read a disposed program, so wait for it to settle.
+      compiled.finally(() => {
+        surfaceGeo.dispose();
+        gridGeo.dispose();
+        sprayGeo.dispose();
+        surfaceMat.dispose();
+        gridMat.dispose();
+        sprayMat.dispose();
+        renderer.dispose();
+        renderer.forceContextLoss();
+      });
     };
   }, [reduced]);
 

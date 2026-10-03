@@ -5,7 +5,7 @@
  */
 export function LogoSpinner({
   size = 40,
-  src = "/logo.png",
+  src = "/logo.webp",
   label = "Loading",
   className = "",
 }: {

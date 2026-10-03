@@ -28,26 +28,32 @@ function hasWebGL() {
   }
 }
 
-export default function HeroBackdrop3D() {
+/** Lets the intro curtain finish lifting before WebGL claims the main thread. */
+const AFTER_CURTAIN_MS = 900;
+
+export default function HeroBackdrop3D({ ready = true }: { ready?: boolean }) {
   const reduced = useReducedMotion() ?? false;
   const [mount, setMount] = useState(false);
 
   useEffect(() => {
-    if (!hasWebGL()) return;
+    if (!ready || !hasWebGL()) return;
 
-    // Wait for the browser to go idle so the wordmark and CTAs own the main
-    // thread through LCP. The ocean arrives a beat later, by design.
+    // Wait out the intro curtain, then for the browser to go idle, so the
+    // loader and the wordmark own the main thread. The ocean arrives a beat
+    // later, by design.
     const start = () => setMount(true);
     const canIdle = typeof window.requestIdleCallback === "function";
-    const handle = canIdle
-      ? window.requestIdleCallback(start, { timeout: 2000 })
-      : window.setTimeout(start, 900);
+    let idle = 0;
+    const delay = window.setTimeout(() => {
+      if (canIdle) idle = window.requestIdleCallback(start, { timeout: 1500 });
+      else start();
+    }, AFTER_CURTAIN_MS);
 
     return () => {
-      if (canIdle) window.cancelIdleCallback(handle);
-      else clearTimeout(handle);
+      clearTimeout(delay);
+      if (canIdle && idle) window.cancelIdleCallback(idle);
     };
-  }, []);
+  }, [ready]);
 
   if (!mount) return null;
 

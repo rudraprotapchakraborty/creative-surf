@@ -156,7 +156,7 @@ export function Footer() {
         <div className="mt-12 pt-6 border-t border-flow-border flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
             <div className="flex items-center gap-2.5">
-              <Image src="/logo.png" alt={t("logoAlt")} width={22} height={22} className="opacity-90" />
+              <Image src="/logo.webp" alt={t("logoAlt")} width={22} height={22} className="opacity-90" />
               <p className="text-xs text-flow-textSoft font-medium">
                 {t("rights", { year: new Date().getFullYear() })}
               </p>

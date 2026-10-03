@@ -226,7 +226,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
   if (loading) {
     return (
       <div className="min-h-screen bg-flow-bg flex items-center justify-center">
-        <LogoSpinner size={56} src="/logo2.png" />
+        <LogoSpinner size={56} src="/logo2.webp" />
       </div>
     )
   }

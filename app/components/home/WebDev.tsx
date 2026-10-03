@@ -10,10 +10,10 @@ import { EASE, SectionHead } from "./shared";
 
 /** Live URLs and screenshots are facts, not copy — only category/description translate. */
 const PROJECT_META = [
-  { name: "Bee Team Studios", domain: "beeteamltd.com", url: "https://www.beeteamltd.com/", image: "/work-beeteam.jpg" },
-  { name: "Sirius A Marketing", domain: "sirius-a-marketing.vercel.app", url: "https://sirius-a-marketing.vercel.app/", image: "/work-sirius.jpg" },
-  { name: "Nami Moon", domain: "nami-moon.vercel.app", url: "https://nami-moon.vercel.app/", image: "/work-namimoon.jpg" },
-  { name: "Spring Field Developments", domain: "springfield-developments.vercel.app", url: "https://springfield-developments.vercel.app/", image: "/work-springfield.jpg" },
+  { name: "Bee Team Studios", domain: "beeteamltd.com", url: "https://www.beeteamltd.com/", image: "/work-beeteam.webp" },
+  { name: "Sirius A Marketing", domain: "sirius-a-marketing.vercel.app", url: "https://sirius-a-marketing.vercel.app/", image: "/work-sirius.webp" },
+  { name: "Nami Moon", domain: "nami-moon.vercel.app", url: "https://nami-moon.vercel.app/", image: "/work-namimoon.webp" },
+  { name: "Spring Field Developments", domain: "springfield-developments.vercel.app", url: "https://springfield-developments.vercel.app/", image: "/work-springfield.webp" },
 ];
 
 type Project = (typeof PROJECT_META)[number] & { category: string; description: string };
@@ -151,7 +151,6 @@ export default function WebDev() {
 
       <div className="relative z-10 mx-auto max-w-7xl">
         <SectionHead
-          align="split"
           className="mb-14 sm:mb-20"
           label={t("webDev.badge")}
           heading={t("webDev.headingLine1")}
