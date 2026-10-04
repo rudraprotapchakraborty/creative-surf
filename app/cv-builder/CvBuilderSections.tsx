@@ -68,7 +68,7 @@ export default function CvBuilderSections() {
         <div className="cs-container">
           <SectionIntro
             id="why-title"
-            index="03"
+            index="02"
             label={t("why.eyebrow")}
             line={t("why.title")}
             accent={t("why.highlight")}
@@ -100,7 +100,7 @@ export default function CvBuilderSections() {
         <div className="cs-container">
           <SectionIntro
             id="honesty-title"
-            index="04"
+            index="03"
             label={t("honesty.eyebrow")}
             line={t("honesty.title")}
             accent={t("honesty.highlight")}
@@ -142,7 +142,7 @@ export default function CvBuilderSections() {
         <div className="cs-container">
           <SectionIntro
             id="compare-title"
-            index="05"
+            index="04"
             label={t("compare.eyebrow")}
             line={t("compare.title")}
             accent={t("compare.highlight")}
@@ -207,7 +207,7 @@ export default function CvBuilderSections() {
         <div className="cs-container">
           <SectionIntro
             id="how-title"
-            index="06"
+            index="05"
             label={t("how.eyebrow")}
             line={t("how.title")}
             accent={t("how.highlight")}
@@ -233,7 +233,7 @@ export default function CvBuilderSections() {
         <div className="cs-container">
           <SectionIntro
             id="cv-faq-title"
-            index="07"
+            index="06"
             label={t("faq.eyebrow")}
             line={t("faq.title")}
             accent={t("faq.highlight")}
@@ -250,7 +250,7 @@ export default function CvBuilderSections() {
         <div className="cs-container">
           <Reveal className="grid gap-8 border-t border-cs-ink/10 pt-12 lg:grid-cols-12 lg:gap-x-8 lg:pt-16">
             <div className="lg:col-span-3">
-              <Meta index="08">{t("hero.badge")}</Meta>
+              <Meta index="07">{t("hero.badge")}</Meta>
             </div>
             <div className="lg:col-span-9">
               <h2

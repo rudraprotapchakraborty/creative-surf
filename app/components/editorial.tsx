@@ -344,6 +344,7 @@ export function Masthead({
   actions,
   side,
   titleSize = "clamp(2.75rem, 7vw, 6.5rem)",
+  compact = false,
 }: {
   /** The breadcrumb trail after Home; takes the place of a plain dateline. */
   crumbs?: Crumb[];
@@ -357,6 +358,8 @@ export function Masthead({
   actions?: React.ReactNode;
   side?: React.ReactNode;
   titleSize?: string;
+  /** Less air above and below, for a page whose real content is a tool right underneath. */
+  compact?: boolean;
 }) {
   const still = useReducedMotion() ?? false;
   const fade = (delay: number) => ({
@@ -376,7 +379,11 @@ export function Masthead({
           {datelineAside && <div className="text-right">{datelineAside}</div>}
         </motion.div>
 
-        <div className="grid gap-y-8 pb-14 pt-12 sm:pt-16 lg:grid-cols-12 lg:gap-x-8 lg:pb-20 lg:pt-20">
+        <div
+          className={`grid gap-y-8 lg:grid-cols-12 lg:gap-x-8 ${
+            compact ? "gap-y-6 pb-8 pt-8 sm:pt-10 lg:pb-10 lg:pt-12" : "pb-14 pt-12 sm:pt-16 lg:pb-20 lg:pt-20"
+          }`}
+        >
           <motion.div {...fade(0.05)} className="lg:col-span-3 lg:pt-3">
             <Meta index={index}>{label}</Meta>
           </motion.div>
@@ -400,7 +407,7 @@ export function Masthead({
               </motion.div>
             )}
             {actions && (
-              <motion.div {...fade(0.35)} className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
+              <motion.div {...fade(0.35)} className={`${compact ? "mt-6" : "mt-9"} flex flex-wrap items-center gap-x-6 gap-y-4`}>
                 {actions}
               </motion.div>
             )}

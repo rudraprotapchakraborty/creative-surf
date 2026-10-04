@@ -5,9 +5,9 @@ import type { GeneratedCv } from "@/lib/cv-types"
  * looks like, rendered by the same document code as a real one — and kept to
  * one page, because that is what a recruiter reads.
  *
- * The candidate and her employers are fictional, every contact detail uses a
- * reserved example address, and the portrait is an illustration, so the sample
- * can never point at — or wear the face of — a real person. It is written the
+ * The candidate and her employers are fictional and every contact detail uses
+ * a reserved example address, so the sample can never point at a real person.
+ * The portrait is a studio headshot supplied for the sample. It is written the
  * way the builder writes: specific outcomes with numbers, plain verbs, one line
  * per achievement, nothing a candidate couldn't defend in an interview. Same
  * persona as the CV fragment on the homepage, so the two read as one story.
@@ -15,7 +15,7 @@ import type { GeneratedCv } from "@/lib/cv-types"
 export const SAMPLE_CV: GeneratedCv = {
   fullName: "Nadia Rahman",
   headline: "Product Analyst · Experimentation, SQL & Funnel Analytics",
-  photoUrl: "/cv-sample-photo.svg",
+  photoUrl: "/cv-sample-photo.jpg",
   contact: {
     email: "nadia.rahman@example.com",
     phone: "+880 1700 000000",
