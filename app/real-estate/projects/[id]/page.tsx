@@ -4,9 +4,11 @@ import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
-import { ArrowLeft, MapPin, Building2, Home, Users, Layers, Clock, Calendar, User, Pencil, Trash2, ChevronLeft, ChevronRight, X } from "lucide-react"
+import { MapPin, Building2, Home, Users, Layers, Clock, Calendar, User, Pencil, Trash2, ChevronLeft, ChevronRight, X } from "lucide-react"
 import { useT , useLocale, formatDateForLocale, type Locale } from "@/lib/i18n"
 import { realEstateProjectDetailMessages } from "@/lib/i18n/messages/realEstateProjectDetail"
+import { commonMessages } from "@/lib/i18n/messages/common"
+import { Breadcrumbs } from "@/components/Breadcrumbs"
 import { realEstateWhatsAppMessages } from "@/lib/i18n/messages/realEstateWhatsApp"
 import { LogoSpinner } from "@/components/ui/LogoSpinner"
 import { FloatingWhatsApp, projectUrl } from "../../WhatsApp"
@@ -71,6 +73,7 @@ const SPEC_ICONS: Record<string, React.ElementType> = {
 
 export default function ProjectDetailPage() {
   const t = useT(realEstateProjectDetailMessages)
+  const tc = useT(commonMessages)
   const tw = useT(realEstateWhatsAppMessages)
   const locale = useLocale()
   const { id } = useParams<{ id: string }>()
@@ -184,11 +187,12 @@ export default function ProjectDetailPage() {
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex items-center justify-between mb-8 sm:mb-12"
+          className="flex items-center justify-between gap-4 mb-8 sm:mb-12"
         >
-          <Link href="/real-estate/projects" className="inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:opacity-70" style={{ color: "#0066A2" }}>
-            <ArrowLeft size={15} /> {t("allProjects")}
-          </Link>
+          <Breadcrumbs
+            className="cs-meta flex-1"
+            items={[{ label: tc("breadcrumb.realEstate"), href: "/real-estate" }, { label: tc("breadcrumb.projects"), href: "/real-estate/projects" }, { label: project.name }]}
+          />
 
           {isAdmin && (
             <div className="flex gap-2">

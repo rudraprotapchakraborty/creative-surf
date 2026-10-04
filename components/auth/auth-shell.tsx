@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion"
 import { Check } from "lucide-react"
 import { useT } from "@/lib/i18n"
 import { authMessages } from "@/lib/i18n/messages/auth"
+import { Breadcrumbs, type Crumb } from "@/components/Breadcrumbs"
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
@@ -71,18 +72,21 @@ function AccountPanel() {
 /**
  * The frame shared by the sign-in, registration and verification screens, so
  * all three read as one flow: the account panel on the left, the form on the
- * paper on the right, opened by the same mono step label and display heading
- * the rest of the site uses.
+ * paper on the right, opened by a breadcrumb ending at this step and the display
+ * heading the rest of the site uses.
  */
 export function AuthShell({
   step,
+  trail,
   title,
   subtitle,
   footer,
   children,
 }: {
-  /** The mono label above the heading — which step of the flow this is. */
+  /** Which step of the flow this is: the last level of the breadcrumb. */
   step: string
+  /** Levels between Home and the step, when the step sits inside another page's flow. */
+  trail?: Crumb[]
   title: string
   subtitle?: string
   footer?: ReactNode
@@ -101,10 +105,9 @@ export function AuthShell({
           transition={{ duration: 0.8, ease: EASE }}
           className="w-full max-w-[26rem]"
         >
-          <p className="cs-meta flex items-center gap-3 text-cs-ink3">
-            <span aria-hidden className="h-px w-6 bg-current opacity-50" />
-            {step}
-          </p>
+          <div className="cs-meta text-cs-ink3">
+            <Breadcrumbs structuredData={false} items={[...(trail ?? []), { label: step }]} />
+          </div>
           <h1
             className="cs-display mt-6 text-cs-ink"
             style={{ fontSize: "clamp(2.4rem, 4.2vw, 3.5rem)", lineHeight: 0.98, letterSpacing: "-0.045em" }}

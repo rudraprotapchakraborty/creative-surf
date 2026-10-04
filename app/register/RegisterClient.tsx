@@ -123,6 +123,7 @@ function RegisterFlow() {
     return (
       <AuthShell
         step={t("panel.steps.verify")}
+        trail={[{ label: t("panel.steps.register") }]}
         title={t("otpTitle")}
         subtitle={t("otpSubtitle", { email })}
         footer={

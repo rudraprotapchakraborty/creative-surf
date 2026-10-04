@@ -13,6 +13,7 @@ export const cvBuilderMessages = defineMessages({
         "Paste your rough notes and the job advert. Get a recruiter-ready CV built only from what you actually did — scored against that advert, and yours as a free PDF.",
       ctaPrimary: "Build my CV",
       ctaSecondary: "See a sample CV",
+      sampleTitle: "Sample CV — a fictional candidate",
       trust: [
         "Nothing invented",
         "Free PDF, no export fee",

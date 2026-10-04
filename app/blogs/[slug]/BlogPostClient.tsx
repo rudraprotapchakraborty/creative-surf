@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react"
 import { useT, useLocale, formatDateForLocale, type Locale } from "@/lib/i18n"
 import { blogPostMessages } from "@/lib/i18n/messages/blogPost"
+import { commonMessages } from "@/lib/i18n/messages/common"
+import { Breadcrumbs } from "@/components/Breadcrumbs"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -46,6 +48,7 @@ export default function BlogPostClient({
   initialBlog?: BlogRecord
 }) {
   const t = useT(blogPostMessages)
+  const tc = useT(commonMessages)
   const locale = useLocale()
   const [blog, setBlog] = useState<BlogRecord | null>(initialBlog ?? null)
   const [loading, setLoading] = useState(!initialBlog)
@@ -164,15 +167,10 @@ export default function BlogPostClient({
         style={{ background: "var(--flow-card-strong)", borderColor: "var(--flow-border)", backdropFilter: "blur(16px)" }}
       >
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
-          <Link
-            href="/blogs"
-            className="inline-flex items-center gap-1.5 text-sm font-medium transition-opacity hover:opacity-70"
-            style={{ color: "rgb(var(--flow-text))" }}
-          >
-            <ArrowLeft size={14} />
-            <span className="hidden sm:inline">{t("backToBlogsShort")}</span>
-            <span className="sm:hidden">{t("back")}</span>
-          </Link>
+          <Breadcrumbs
+            className="cs-meta flex-1 py-1"
+            items={[{ label: tc("breadcrumb.blogs"), href: "/blogs" }, { label: blog.title }]}
+          />
 
           {isAdmin && (
             <div className="flex items-center gap-2">

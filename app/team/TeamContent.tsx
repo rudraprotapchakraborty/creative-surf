@@ -5,6 +5,8 @@ import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { useT } from "@/lib/i18n";
 import { teamMessages } from "@/lib/i18n/messages/team";
+import { commonMessages } from "@/lib/i18n/messages/common";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ButtonLink, EASE, Meta, Reveal } from "@/app/components/editorial";
 import { TEAM } from "./members";
 
@@ -61,6 +63,7 @@ function Portrait({ member }: { member: Member }) {
  */
 export default function TeamContent() {
   const t = useT(teamMessages);
+  const tc = useT(commonMessages);
   const still = useReducedMotion() ?? false;
 
   const cities = Array.from(
@@ -86,11 +89,7 @@ export default function TeamContent() {
             transition={{ duration: 0.8, ease: EASE }}
             className="cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 pb-4 text-cs-ink3"
           >
-            <p>
-              <span className="text-cs-ink">Creative Surf</span>
-              <span aria-hidden className="mx-2 opacity-50">/</span>
-              {t("meta.section")}
-            </p>
+            <Breadcrumbs items={[{ label: tc("breadcrumb.team") }]} />
             <p className="text-right">
               {t("meta.count", { people: TEAM.length, cities: cities.length, countries })}
             </p>

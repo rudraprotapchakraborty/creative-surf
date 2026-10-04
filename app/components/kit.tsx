@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
+import { BreadcrumbJsonLd } from "@/components/Breadcrumbs";
 import {
   AnimatePresence,
   motion,
@@ -216,6 +217,8 @@ export function Emblem({
 
 export function Breadcrumbs({ crumbs }: { crumbs: Crumb[] }) {
   return (
+    <>
+    <BreadcrumbJsonLd crumbs={crumbs} />
     <nav aria-label="Breadcrumb">
       <ol className="flex flex-wrap items-center gap-1.5 micro text-flow-textSoft">
         {crumbs.map((crumb, i) => {
@@ -237,6 +240,7 @@ export function Breadcrumbs({ crumbs }: { crumbs: Crumb[] }) {
         })}
       </ol>
     </nav>
+    </>
   );
 }
 

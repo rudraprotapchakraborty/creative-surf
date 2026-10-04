@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { Settings } from "lucide-react"
 import { useT } from "@/lib/i18n"
 import { authMessages } from "@/lib/i18n/messages/auth"
+import { commonMessages } from "@/lib/i18n/messages/common"
 
 /**
  * The account area's dateline, shared by the dashboard and settings: where
@@ -12,6 +13,7 @@ import { authMessages } from "@/lib/i18n/messages/auth"
  */
 export function AccountNav() {
   const t = useT(authMessages)
+  const tc = useT(commonMessages)
   const pathname = usePathname()
 
   const links = [
@@ -21,8 +23,10 @@ export function AccountNav() {
 
   return (
     <div className="cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 text-cs-ink3">
-      <nav aria-label={t("dashboard")} className="flex min-w-0 items-center">
-        <span className="hidden pb-4 text-cs-ink sm:inline">Creative Surf</span>
+      <nav aria-label={tc("breadcrumb.label")} className="flex min-w-0 items-center">
+        <Link href="/" className="cs-focus hidden rounded-sm pb-4 transition-colors duration-200 hover:text-cs-blue sm:inline">
+          {tc("breadcrumb.home")}
+        </Link>
         <span aria-hidden className="mx-3 hidden pb-4 opacity-50 sm:inline">/</span>
         <ul className="-mb-px flex items-center gap-1">
           {links.map(link => {

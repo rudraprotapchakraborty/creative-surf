@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation"
 import { Plus, Pencil, Trash2, MapPin, Building2, LogOut } from "lucide-react"
 import { useT } from "@/lib/i18n"
 import { realEstateProjectsMessages } from "@/lib/i18n/messages/realEstateProjects"
+import { commonMessages } from "@/lib/i18n/messages/common"
+import { Breadcrumbs } from "@/components/Breadcrumbs"
 import { LogoSpinner } from "@/components/ui/LogoSpinner"
 
 interface Project {
@@ -45,6 +47,7 @@ const fadeUp = {
 
 export default function ProjectsPage() {
   const t = useT(realEstateProjectsMessages)
+  const tc = useT(commonMessages)
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
@@ -108,6 +111,7 @@ export default function ProjectsPage() {
             className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-5"
           >
             <div>
+              <Breadcrumbs className="cs-meta mb-6" items={[{ label: tc("breadcrumb.realEstate"), href: "/real-estate" }, { label: tc("breadcrumb.projects") }]} />
               <span className="inline-flex items-center gap-2 mb-4">
                 <span className="w-5 h-[2px]" style={{ background: "#B8892A" }} />
                 <span className="text-[10px] font-bold uppercase tracking-[0.3em]" style={{ color: "#B8892A" }}>

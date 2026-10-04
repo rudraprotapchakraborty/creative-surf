@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react"
 import { useT, useLocale, formatDateForLocale, type Locale } from "@/lib/i18n"
 import { blogsMessages } from "@/lib/i18n/messages/blogs"
+import { commonMessages } from "@/lib/i18n/messages/common"
+import { Breadcrumbs } from "@/components/Breadcrumbs"
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import Link from "next/link"
 import { Clock, LogIn, Plus } from "lucide-react"
@@ -49,6 +51,7 @@ function formatDate(dateStr: string, locale: Locale) {
  */
 export default function BlogsPage() {
   const t = useT(blogsMessages)
+  const tc = useT(commonMessages)
   const locale = useLocale()
   const still = useReducedMotion() ?? false
   const [blogs, setBlogs] = useState<Blog[]>([])
@@ -220,7 +223,7 @@ export default function BlogsPage() {
             transition={{ duration: 0.8, ease: EASE }}
             className="cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 pb-4 text-cs-ink3"
           >
-            <p className="text-cs-ink">{t("eyebrow")}</p>
+            <Breadcrumbs items={[{ label: tc("breadcrumb.blogs") }]} />
             {!loading && (
               <p className="tabular-nums">
                 {blogs.length} {t("postsLabel")} <span aria-hidden className="mx-1.5 opacity-50">·</span> {topicCount}{" "}

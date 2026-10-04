@@ -6,6 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 
 import { useT } from "@/lib/i18n";
 import { servicesMessages } from "@/lib/i18n/messages/services";
+import { commonMessages } from "@/lib/i18n/messages/common";
 import { cn } from "@/lib/utils";
 import {
   ButtonLink,
@@ -251,6 +252,7 @@ function Why() {
  */
 export default function ServicesContent() {
   const t = useT(servicesMessages);
+  const tc = useT(commonMessages);
   const services: Service[] = t
     .raw<ServiceCopy[]>("items", [])
     .slice(0, SERVICES.length)
@@ -260,13 +262,7 @@ export default function ServicesContent() {
   return (
     <div className="flex min-h-screen flex-col bg-cs-bg text-cs-ink">
       <Masthead
-        dateline={
-          <>
-            <span className="text-cs-ink">Creative Surf</span>
-            <span aria-hidden className="mx-2 opacity-50">/</span>
-            {t("hero.kicker")}
-          </>
-        }
+        crumbs={[{ label: tc("breadcrumb.services") }]}
         datelineAside={`${pad(services.length)} — ${t("offerKicker")}`}
         index="01"
         label={t("hero.kicker")}

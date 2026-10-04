@@ -3,10 +3,9 @@
 import { useState, useEffect, useCallback } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
-import { ArrowLeft, Eye, EyeOff, Save, X, Plus } from "lucide-react"
+import { Eye, EyeOff, Save, X, Plus } from "lucide-react"
 import { useT } from "@/lib/i18n"
 import { editorMessages } from "@/lib/i18n/messages/editor"
 import { editorUiMessages } from "@/lib/i18n/messages/editorUi"
@@ -26,7 +25,8 @@ import {
   type BlogSeoFields,
 } from "@/lib/blog-types"
 import { LogoSpinner } from "@/components/ui/LogoSpinner"
-import { navMessages } from "@/lib/i18n/messages/nav"
+import { commonMessages } from "@/lib/i18n/messages/common"
+import { Breadcrumbs } from "@/components/Breadcrumbs"
 import { JournalCover } from "./JournalParts"
 
 interface BlogForm {
@@ -89,7 +89,7 @@ function slugify(text: string) {
 export default function BlogEditor({ blogId }: { blogId?: string }) {
   const t = useT(editorMessages)
   const tUi = useT(editorUiMessages)
-  const tNav = useT(navMessages)
+  const tc = useT(commonMessages)
   const isEdit = !!blogId
   const [form, setForm] = useState<BlogForm>(DEFAULT_FORM)
   const [tagInput, setTagInput] = useState("")
@@ -258,14 +258,10 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
       <div className="cs-container pt-[5.25rem] sm:pt-24 lg:pt-[6.5rem]">
         {/* Dateline: the way back, what this is, and how long it reads. */}
         <div className="cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 pb-4 text-cs-ink3">
-          <p className="flex items-center gap-2">
-            <Link href="/blogs" className="cs-focus group inline-flex items-center gap-2 rounded-sm text-cs-ink transition-colors hover:text-cs-blue">
-              <ArrowLeft aria-hidden size={13} className="transition-transform duration-300 group-hover:-translate-x-0.5" />
-              {tNav("links.blogs")}
-            </Link>
-            <span aria-hidden className="opacity-50">/</span>
-            <span>{isEdit ? t("editPost") : t("newPost")}</span>
-          </p>
+          <Breadcrumbs
+            structuredData={false}
+            items={[{ label: tc("breadcrumb.blogs"), href: "/blogs" }, { label: isEdit ? t("editPost") : t("newPost") }]}
+          />
           <p className="tabular-nums">
             {form.category}
             {form.readTime && (

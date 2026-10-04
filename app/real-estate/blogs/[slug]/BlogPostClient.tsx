@@ -14,6 +14,8 @@ import type { BlogRecord } from "@/lib/blog-db"
 import { ArrowLeft, Clock, Calendar, User, Tag, Pencil, Trash2 } from "lucide-react"
 import { useT , useLocale, formatDateForLocale, type Locale } from "@/lib/i18n"
 import { blogPostMessages } from "@/lib/i18n/messages/blogPost"
+import { commonMessages } from "@/lib/i18n/messages/common"
+import { Breadcrumbs } from "@/components/Breadcrumbs"
 import { LogoSpinner } from "@/components/ui/LogoSpinner"
 
 const CATEGORY_COLOR = "#B8892A"
@@ -42,6 +44,7 @@ export default function BlogPostClient({
   initialBlog?: BlogRecord
 }) {
   const t = useT(blogPostMessages)
+  const tc = useT(commonMessages)
   const locale = useLocale()
   const [blog, setBlog] = useState<BlogRecord | null>(initialBlog ?? null)
   const [loading, setLoading] = useState(!initialBlog)
@@ -101,6 +104,10 @@ export default function BlogPostClient({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
         >
+          <Breadcrumbs
+            className="cs-meta mb-6"
+            items={[{ label: tc("breadcrumb.realEstate"), href: "/real-estate" }, { label: tc("breadcrumb.blogs"), href: "/real-estate/blogs" }, { label: blog.title }]}
+          />
           <span
             className="inline-block mb-4 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest text-white"
             style={{ background: CATEGORY_COLOR }}

@@ -43,9 +43,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ButtonLink, Masthead, SectionIntro, TextLink } from "@/app/components/editorial";
+import { ButtonLink, Masthead, SectionIntro } from "@/app/components/editorial";
 import CvBuilderSections from "./CvBuilderSections";
 import { buildCvHtml, printCvDocument } from "@/lib/cv-document";
+import { SAMPLE_CV } from "@/lib/cv-sample";
 import { scoreCvAgainstJob, type CvMatch } from "@/lib/cv-match";
 import { scoreCvForAts } from "@/lib/cv-ats";
 import { nameForLinkType } from "@/lib/cv-links";
@@ -72,7 +73,7 @@ import {
 import { trackEvent } from "@/lib/analytics";
 import { formatNumber, useT } from "@/lib/i18n";
 import { cvBuilderMessages } from "@/lib/i18n/messages/cvBuilder";
-import { navMessages } from "@/lib/i18n/messages/nav";
+import { commonMessages } from "@/lib/i18n/messages/common";
 import { LogoSpinner } from "@/components/ui/LogoSpinner";
 
 /** A4 at 96dpi — the preview iframe renders at this width and is scaled to fit. */
@@ -245,7 +246,7 @@ const DECENT_MATCH = 50;
 
 export default function CvBuilderClient() {
   const t = useT(cvBuilderMessages);
-  const tNav = useT(navMessages);
+  const tc = useT(commonMessages);
 
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [cv, setCv] = useState<GeneratedCv | null>(null);
@@ -259,6 +260,8 @@ export default function CvBuilderClient() {
   const [isAuthChecking, setIsAuthChecking] = useState(true);
   const [savedCvs, setSavedCvs] = useState<SavedCvSummary[]>([]);
   const [isReading, setIsReading] = useState(false);
+  // "See a sample CV": a finished CV in the real renderer, not a screenshot.
+  const [sampleOpen, setSampleOpen] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -801,13 +804,7 @@ export default function CvBuilderClient() {
     <div className="min-h-screen bg-cs-bg">
       {/* MASTHEAD ---------------------------------------------------- */}
       <Masthead
-        dateline={
-          <>
-            <span className="text-cs-ink">Creative Surf</span>
-            <span aria-hidden className="mx-2 opacity-50">/</span>
-            {tNav("links.cvBuilder")}
-          </>
-        }
+        crumbs={[{ label: tc("breadcrumb.cvBuilder") }]}
         index="01"
         label={t("hero.badge")}
         title={t("hero.title")}
@@ -816,7 +813,17 @@ export default function CvBuilderClient() {
         actions={
           <>
             <ButtonLink href="#builder">{t("hero.ctaPrimary")}</ButtonLink>
-            <TextLink href="#honesty">{t("hero.ctaSecondary")}</TextLink>
+            <button
+              type="button"
+              onClick={() => {
+                trackEvent("tool_action", "cv_builder", "View sample CV");
+                setSampleOpen(true);
+              }}
+              className="cs-focus group/tl inline-flex items-center gap-1.5 rounded-sm text-[15px] font-semibold tracking-[-0.01em] text-cs-ink transition-colors duration-200 hover:text-cs-blue"
+            >
+              <span className="cs-underline pb-0.5">{t("hero.ctaSecondary")}</span>
+              <Eye aria-hidden className="h-4 w-4" />
+            </button>
           </>
         }
         side={
@@ -1657,6 +1664,14 @@ export default function CvBuilderClient() {
       </section>
 
       <CvBuilderSections />
+
+      <CvPreviewModal
+        cv={sampleOpen ? SAMPLE_CV : null}
+        labels={cvLabels}
+        title={t("hero.sampleTitle")}
+        onClose={() => setSampleOpen(false)}
+        onDownload={() => printCvDocument(buildCvHtml(SAMPLE_CV, cvLabels), `${SAMPLE_CV.fullName} — sample CV`)}
+      />
 
       <CvPreviewModal
         cv={isReading ? cv : null}

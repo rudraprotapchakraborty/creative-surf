@@ -48,12 +48,14 @@ const section = (title: string, body: string): string =>
   body.trim() ? `<section class="block"><h2>${esc(title)}</h2>${body}</section>` : "";
 
 /**
- * The photo, only ever from an https image host. A CV is printed and emailed
- * around, so a `data:` or `javascript:` src has no business in it.
+ * The photo, only ever from an https image host or a path on this site (the
+ * sample CV's portrait). A CV is printed and emailed around, so a `data:` or
+ * `javascript:` src has no business in it — and "//host" or "/\host" is
+ * refused, being another host in disguise.
  */
 const photoSrc = (url: string | undefined): string | null => {
   const trimmed = String(url ?? "").trim();
-  return /^https:\/\//i.test(trimmed) ? trimmed : null;
+  return /^https:\/\//i.test(trimmed) || /^\/(?![/\\])/.test(trimmed) ? trimmed : null;
 };
 
 export function buildCvHtml(cv: GeneratedCv, labels: CvDocumentLabels): string {

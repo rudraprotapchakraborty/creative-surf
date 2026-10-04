@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, ArrowUpRight, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Breadcrumbs, type Crumb } from "@/components/Breadcrumbs";
 
 /**
  * Primitives for the editorial layer (homepage, team, blogs). Everything here
@@ -332,6 +333,7 @@ export function SectionIntro({
  * the homepage does, a size down.
  */
 export function Masthead({
+  crumbs,
   dateline,
   datelineAside,
   index,
@@ -343,7 +345,9 @@ export function Masthead({
   side,
   titleSize = "clamp(2.75rem, 7vw, 6.5rem)",
 }: {
-  dateline: React.ReactNode;
+  /** The breadcrumb trail after Home; takes the place of a plain dateline. */
+  crumbs?: Crumb[];
+  dateline?: React.ReactNode;
   datelineAside?: React.ReactNode;
   index: string;
   label: React.ReactNode;
@@ -368,7 +372,7 @@ export function Masthead({
           {...fade(0)}
           className="cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 pb-4 text-cs-ink3"
         >
-          <div>{dateline}</div>
+          {crumbs ? <Breadcrumbs items={crumbs} /> : <div>{dateline}</div>}
           {datelineAside && <div className="text-right">{datelineAside}</div>}
         </motion.div>
 

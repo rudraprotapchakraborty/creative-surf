@@ -75,13 +75,7 @@ export default async function AboutPage() {
   return (
     <div className="flex min-h-screen flex-col bg-cs-bg text-cs-ink">
       <Masthead
-        dateline={
-          <>
-            <span className="text-cs-ink">Creative Surf</span>
-            <span aria-hidden className="mx-2 opacity-50">/</span>
-            {c("breadcrumb.about")}
-          </>
-        }
+        crumbs={[{ label: c("breadcrumb.about") }]}
         datelineAside={tf("location")}
         index="01"
         label={c("breadcrumb.about")}

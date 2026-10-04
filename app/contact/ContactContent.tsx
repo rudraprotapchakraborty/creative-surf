@@ -7,6 +7,8 @@ import { ArrowUpRight, Check, Copy, Plus } from "lucide-react"
 
 import { useT } from "@/lib/i18n"
 import { contactMessages } from "@/lib/i18n/messages/contact"
+import { commonMessages } from "@/lib/i18n/messages/common"
+import { Breadcrumbs } from "@/components/Breadcrumbs"
 import { cn } from "@/lib/utils"
 import { EASE, FaqSection, Meta } from "@/app/components/editorial"
 
@@ -62,6 +64,7 @@ function Step({ index, title, children }: { index: string; title: string; childr
  */
 export default function ContactContent() {
   const t = useT(contactMessages)
+  const tc = useT(commonMessages)
   const params = useSearchParams()
   const still = useReducedMotion() ?? false
   const time = useDhakaTime()
@@ -144,11 +147,7 @@ export default function ContactContent() {
             transition={{ duration: 0.8, ease: EASE }}
             className="cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 pb-4 text-cs-ink3"
           >
-            <p>
-              <span className="text-cs-ink">Creative Surf</span>
-              <span aria-hidden className="mx-2 opacity-50">/</span>
-              {t("kicker")}
-            </p>
+            <Breadcrumbs items={[{ label: tc("breadcrumb.contact") }]} />
             <p className="flex items-center gap-2.5">
               <span aria-hidden className="relative flex h-2 w-2">
                 <span className="cs-pulse absolute inset-0 rounded-full bg-cs-cyan" />

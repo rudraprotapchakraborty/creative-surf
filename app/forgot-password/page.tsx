@@ -105,10 +105,16 @@ function ResetFlow() {
     </span>
   )
 
+  // Reached from sign-in, or from settings by someone already signed in.
+  const trail = user
+    ? [{ label: t("settings.nav"), href: "/account/settings" }]
+    : [{ label: t("panel.steps.signIn"), href: "/login" }]
+
   if (step === "reset") {
     return (
       <AuthShell
         step={t("panel.steps.reset")}
+        trail={trail}
         title={t("forgot.sentTitle")}
         subtitle={notice}
         footer={
@@ -175,7 +181,7 @@ function ResetFlow() {
   }
 
   return (
-    <AuthShell step={t("panel.steps.reset")} title={t("forgot.title")} subtitle={t("forgot.subtitle")} footer={user ? undefined : backToLogin}>
+    <AuthShell step={t("panel.steps.reset")} trail={trail} title={t("forgot.title")} subtitle={t("forgot.subtitle")} footer={user ? undefined : backToLogin}>
       <form onSubmit={sendCode} className="space-y-4">
         <AuthField
           label={t("email")}

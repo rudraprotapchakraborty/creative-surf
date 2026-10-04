@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Check } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
 
 import { useT } from "@/lib/i18n";
 import { servicesMessages } from "@/lib/i18n/messages/services";
 import { serviceDetailsMessages } from "@/lib/i18n/messages/serviceDetails";
+import { commonMessages } from "@/lib/i18n/messages/common";
 import { cn } from "@/lib/utils";
 import {
   ButtonLink,
@@ -191,6 +192,7 @@ function OtherServices({ current, items }: { current: number; items: ServiceCopy
 export default function ServiceDetail({ slug }: { slug: string }) {
   const t = useT(serviceDetailsMessages);
   const tServices = useT(servicesMessages);
+  const tc = useT(commonMessages);
 
   const index = serviceIndex(slug);
   const service = SERVICES[index];
@@ -204,12 +206,7 @@ export default function ServiceDetail({ slug }: { slug: string }) {
   return (
     <div className="flex min-h-screen flex-col bg-cs-bg text-cs-ink">
       <Masthead
-        dateline={
-          <Link href="/services" className="cs-focus group inline-flex items-center gap-2 rounded-sm text-cs-ink transition-colors hover:text-cs-blue">
-            <ArrowLeft aria-hidden className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-x-0.5" />
-            {t("labels.back")}
-          </Link>
-        }
+        crumbs={[{ label: tc("breadcrumb.services"), href: "/services" }, { label: copy.title }]}
         datelineAside={
           <Link
             href={`/services/${next.slug}`}

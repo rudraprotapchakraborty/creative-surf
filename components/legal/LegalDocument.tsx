@@ -108,15 +108,7 @@ export default function LegalDocument({
       />
 
       <Masthead
-        dateline={
-          <nav aria-label="Breadcrumb">
-            <Link href="/" className="cs-focus rounded-sm text-cs-ink transition-colors hover:text-cs-blue">
-              {breadcrumbHome}
-            </Link>
-            <span aria-hidden className="mx-2 opacity-50">/</span>
-            <span aria-current="page">{breadcrumbCurrent}</span>
-          </nav>
-        }
+        crumbs={[{ label: breadcrumbCurrent }]}
         datelineAside={lastUpdatedLabel}
         index="01"
         label={t("legal.label")}

@@ -10,6 +10,7 @@ import { useEffect, useRef } from "react"
  *
  * It only exists for a real mouse — on touch there is no cursor to replace.
  * Text fields keep the native I-beam (you need to see where you're typing),
+ * embedded frames (the CV previews) get their own native cursor,
  * and anything can steer it with a data attribute:
  *
  *   data-cursor="none"    hide it (an element drawing its own, like the work tags)
@@ -82,6 +83,11 @@ export function CustomCursor() {
     const onOver = (e: PointerEvent) => {
       const target = e.target as Element | null
       if (!target || !(target instanceof Element)) return
+
+      // An embedded frame is its own document: no mouse events reach this one
+      // while the pointer is inside it, so the cursor would freeze at the edge.
+      // Hand over to the frame's native cursor until the pointer comes back.
+      if (target.closest("iframe")) return setState("hidden")
 
       const steer = target.closest<HTMLElement>("[data-cursor]")
       if (steer?.dataset.cursor === "none") return setState("hidden")

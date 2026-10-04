@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation"
 import { Plus, Pencil, Trash2, Clock, User, LogOut, Calendar } from "lucide-react"
 import { useT , useLocale, formatDateForLocale, type Locale } from "@/lib/i18n"
 import { realEstateBlogsMessages } from "@/lib/i18n/messages/realEstateBlogs"
+import { commonMessages } from "@/lib/i18n/messages/common"
+import { Breadcrumbs } from "@/components/Breadcrumbs"
 import { LogoSpinner } from "@/components/ui/LogoSpinner"
 
 interface Blog {
@@ -48,6 +50,7 @@ const fadeUp = {
 
 export default function RealEstateBlogsPage() {
   const t = useT(realEstateBlogsMessages)
+  const tc = useT(commonMessages)
   const locale = useLocale()
   const [blogs, setBlogs] = useState<Blog[]>([])
   const [loading, setLoading] = useState(true)
@@ -111,6 +114,7 @@ export default function RealEstateBlogsPage() {
             className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-5"
           >
             <div>
+              <Breadcrumbs className="cs-meta mb-6" items={[{ label: tc("breadcrumb.realEstate"), href: "/real-estate" }, { label: tc("breadcrumb.blogs") }]} />
               <span className="inline-flex items-center gap-2 mb-4">
                 <span className="w-5 h-[2px]" style={{ background: "#B8892A" }} />
                 <span className="text-[10px] font-bold uppercase tracking-[0.3em]" style={{ color: "#B8892A" }}>
