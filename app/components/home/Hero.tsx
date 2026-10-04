@@ -5,6 +5,7 @@ import { useT } from "@/lib/i18n";
 import { homeMessages } from "@/lib/i18n/messages/home";
 import { homeExtraMessages } from "@/lib/i18n/messages/homeExtra";
 import { ButtonLink, TextLink } from "@/app/components/editorial";
+import { useIntroDone } from "@/lib/intro";
 import SwellReport from "./SwellReport";
 
 /**
@@ -58,16 +59,19 @@ export default function Hero() {
   const t = useT(homeExtraMessages);
   const th = useT(homeMessages);
   const time = useDhakaTime();
+  // The swell draws its line once the intro curtain has lifted, not behind it.
+  const introDone = useIntroDone();
 
-  // Entrances are CSS (see .cs-enter / .cs-glide in globals.css), so they run
-  // from the first paint rather than waiting for this component to hydrate.
+  // Entrances are CSS (see .cs-enter / .cs-glide in globals.css). They are in
+  // the HTML from the first paint, held on their first frame while the intro
+  // curtain covers them (.cs-hold-for-intro), and play as it lifts.
   const delay = (seconds: number) => ({ animationDelay: `${seconds}s` });
 
   return (
     <section
       id="home"
       aria-labelledby="hero-title"
-      className="relative overflow-hidden bg-cs-bg pt-[5.25rem] sm:pt-24 lg:pt-[6.5rem]"
+      className="cs-hold-for-intro relative overflow-hidden bg-cs-bg pt-[5.25rem] sm:pt-24 lg:pt-[6.5rem]"
     >
       <div className="cs-container">
         {/* ---- Dateline ---- */}
@@ -142,7 +146,7 @@ export default function Hero() {
 
         {/* ---- The swell ---- */}
         <div style={delay(0.6)} className="cs-glide mt-12 pb-10 sm:mt-14 lg:mt-10 lg:pb-14">
-          <SwellReport ready />
+          <SwellReport ready={introDone} />
         </div>
       </div>
     </section>

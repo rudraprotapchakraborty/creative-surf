@@ -1162,3 +1162,12 @@ body {
   .cs-glide,
   .cs-enter { animation: none; }
 }
+
+/*
+ * On the homepage the intro curtain covers the hero for its first moments, so
+ * the hero's entrances wait, paused on their first frame, until the curtain
+ * starts to lift (lib/intro sets html[data-intro="done"]) — then play in view.
+ */
+html:not([data-intro="done"]) .cs-hold-for-intro :is(.cs-rise, .cs-glide, .cs-enter) {
+  animation-play-state: paused;
+}
