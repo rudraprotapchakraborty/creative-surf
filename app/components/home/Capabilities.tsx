@@ -5,7 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { homeMessages } from "@/lib/i18n/messages/home";
 import { homeExtraMessages } from "@/lib/i18n/messages/homeExtra";
-import { servicesMessages } from "@/lib/i18n/messages/services";
+import { servicesIndexMessages } from "@/lib/i18n/messages/servicesIndex";
 import { SERVICES } from "@/app/services/catalog";
 import { Reveal, SectionIntro, TextLink } from "@/app/components/editorial";
 
@@ -23,7 +23,7 @@ type ServiceCopy = { title: string; description: string; tags: string[] };
 export default function Capabilities() {
   const t = useT(homeMessages);
   const tx = useT(homeExtraMessages);
-  const ts = useT(servicesMessages);
+  const ts = useT(servicesIndexMessages);
 
   const services = ts
     .raw<ServiceCopy[]>("items", [])

@@ -83,7 +83,7 @@ export function LanguageSwitcher({
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-label={t("labels.chooseLanguage")}
+        aria-label={`${LOCALE_META[locale].short} — ${t("labels.chooseLanguage")}`}
         title={t("labels.language")}
         className="flex items-center gap-1.5 px-2.5 py-2 rounded-full text-flow-textSoft hover:text-aurora-1 hover:bg-flow-card transition-colors"
       >

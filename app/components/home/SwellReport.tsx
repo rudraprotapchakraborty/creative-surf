@@ -183,7 +183,7 @@ export default function SwellReport({ ready }: { ready: boolean }) {
                   selected ? "text-cs-ink" : "text-cs-ink3 hover:text-cs-ink"
                 )}
               >
-                <span className="mr-2 hidden tabular-nums opacity-60 sm:inline">{String(i + 1).padStart(2, "0")}</span>
+                <span className="mr-2 hidden tabular-nums text-cs-ink3 sm:inline">{String(i + 1).padStart(2, "0")}</span>
                 {s.tab}
                 {selected && (
                   <motion.span

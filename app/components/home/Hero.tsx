@@ -1,12 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { motion, useReducedMotion } from "framer-motion";
-import { useIntroDone } from "@/lib/intro";
 import { useT } from "@/lib/i18n";
 import { homeMessages } from "@/lib/i18n/messages/home";
 import { homeExtraMessages } from "@/lib/i18n/messages/homeExtra";
-import { ButtonLink, EASE, TextLink } from "@/app/components/editorial";
+import { ButtonLink, TextLink } from "@/app/components/editorial";
 import SwellReport from "./SwellReport";
 
 /**
@@ -39,28 +37,19 @@ function useDhakaTime() {
 function Line({
   children,
   delay,
-  ready,
-  still,
   className,
 }: {
   children: React.ReactNode;
   delay: number;
-  ready: boolean;
-  still: boolean;
   className?: string;
 }) {
   return (
     // The clip is padded below so descenders and the rising glyphs aren't
     // cropped, then pulled back so the padding doesn't open the leading.
     <span className={`block overflow-hidden pb-[0.08em] -mb-[0.08em] ${className ?? ""}`}>
-      <motion.span
-        className="inline-block will-change-transform"
-        initial={still ? false : { y: "104%" }}
-        animate={ready ? { y: "0%" } : undefined}
-        transition={{ duration: 1.15, ease: EASE, delay }}
-      >
+      <span className="cs-rise inline-block" style={{ animationDelay: `${delay}s` }}>
         {children}
-      </motion.span>
+      </span>
     </span>
   );
 }
@@ -68,15 +57,11 @@ function Line({
 export default function Hero() {
   const t = useT(homeExtraMessages);
   const th = useT(homeMessages);
-  const still = useReducedMotion() ?? false;
-  const ready = useIntroDone() || still;
   const time = useDhakaTime();
 
-  const fade = (delay: number) => ({
-    initial: still ? false : { opacity: 0, y: 14 },
-    animate: ready ? { opacity: 1, y: 0 } : undefined,
-    transition: { duration: 0.9, ease: EASE, delay },
-  });
+  // Entrances are CSS (see .cs-enter / .cs-glide in globals.css), so they run
+  // from the first paint rather than waiting for this component to hydrate.
+  const delay = (seconds: number) => ({ animationDelay: `${seconds}s` });
 
   return (
     <section
@@ -86,9 +71,9 @@ export default function Hero() {
     >
       <div className="cs-container">
         {/* ---- Dateline ---- */}
-        <motion.div
-          {...fade(0.05)}
-          className="cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 pb-4 text-cs-ink3"
+        <div
+          style={delay(0.05)}
+          className="cs-enter cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 pb-4 text-cs-ink3"
         >
           <p>
             <span className="text-cs-ink">{t("hero.agency")}</span>
@@ -111,7 +96,7 @@ export default function Hero() {
               </span>
             )}
           </p>
-        </motion.div>
+        </div>
 
         {/* ---- Wordmark + tagline ---- */}
         {/* Wordmark scale: as wide as a phone allows, then a touch under the
@@ -122,11 +107,11 @@ export default function Hero() {
             className="font-extrabold"
             style={{ fontSize: "1em", lineHeight: 0.84, letterSpacing: "-0.055em" }}
           >
-            <Line ready={ready} still={still} delay={0.1} className="text-cs-blue">
+            <Line delay={0.1} className="text-cs-blue">
               Creative
             </Line>
             {/* The lines are blocks, so without this the accessible name is "CreativeSurf". */}{" "}
-            <Line ready={ready} still={still} delay={0.2} className="text-right text-cs-cyan">
+            <Line delay={0.2} className="text-right text-cs-cyan">
               {/* Optical alignment: the S overshoots the right edge less than
                   the C does the left, so it's nudged to sit on the margin. */}
               <span className="inline-block translate-x-[0.03em]">Surf</span>
@@ -138,28 +123,27 @@ export default function Hero() {
               two go in the pocket — it is one line of the wordmark tall, and
               anything more would climb into "Creative". */}
           <div className="mt-8 max-w-[30rem] lg:absolute lg:bottom-[0.1em] lg:left-0 lg:mt-0 lg:max-w-[min(30rem,42%)]">
-            <motion.p
-              {...fade(0.45)}
-              className="font-medium text-cs-ink"
-              style={{ fontSize: "clamp(1.45rem, 2.15vw, 2rem)", lineHeight: 1.12, letterSpacing: "-0.03em" }}
+            <p
+              className="cs-glide font-medium text-cs-ink"
+              style={{ ...delay(0.3), fontSize: "clamp(1.45rem, 2.15vw, 2rem)", lineHeight: 1.12, letterSpacing: "-0.03em" }}
             >
               Surfing Growth with{" "}
               <span className="cs-accent whitespace-nowrap text-cs-blue">AI-Powered Creativity.</span>
-            </motion.p>
-            <motion.p {...fade(0.55)} className="mt-4 max-w-[26rem] text-[15px] leading-relaxed text-cs-ink2 lg:hidden">
+            </p>
+            <p style={delay(0.4)} className="cs-glide mt-4 max-w-[26rem] text-[15px] leading-relaxed text-cs-ink2 lg:hidden">
               {th("hero.subtitle")}
-            </motion.p>
-            <motion.div {...fade(0.65)} className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-4">
+            </p>
+            <div style={delay(0.5)} className="cs-enter mt-7 flex flex-wrap items-center gap-x-6 gap-y-4">
               <ButtonLink href="/contact">{t("hero.ctaPrimary")}</ButtonLink>
               <TextLink href="#work">{t("hero.ctaSecondary")}</TextLink>
-            </motion.div>
+            </div>
           </div>
         </div>
 
         {/* ---- The swell ---- */}
-        <motion.div {...fade(0.8)} className="mt-12 pb-10 sm:mt-14 lg:mt-10 lg:pb-14">
-          <SwellReport ready={ready} />
-        </motion.div>
+        <div style={delay(0.6)} className="cs-glide mt-12 pb-10 sm:mt-14 lg:mt-10 lg:pb-14">
+          <SwellReport ready />
+        </div>
       </div>
     </section>
   );

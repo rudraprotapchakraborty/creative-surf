@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, ArrowUpRight, Facebook, Instagram, Linkedin } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { footerMessages } from "@/lib/i18n/messages/footer";
@@ -42,8 +43,7 @@ export function Footer() {
           {/* ---- Studio ---- */}
           <div className="lg:col-span-5">
             <Link href="/" className="cs-focus inline-flex items-center gap-2.5 rounded-md">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo.webp" alt="" width={28} height={28} className="h-7 w-7" loading="lazy" />
+              <Image src="/logo.webp" alt="" width={28} height={28} className="h-7 w-7" />
               <span className="text-[17px] font-extrabold tracking-[-0.035em]">
                 Creative <span className="text-cs-blue">Surf</span>
               </span>
@@ -154,14 +154,17 @@ export function Footer() {
         </div>
       </div>
 
-      {/* The wordmark, returning. Decorative: the logo link above names it. */}
+      {/*
+        The wordmark, returning. Decorative: the logo link above names it. It is
+        drawn from CSS content rather than text, so it is not page text at all —
+        a 6% tint is a watermark, and as text it would fail every contrast check.
+      */}
       <div aria-hidden className="cs-container select-none overflow-hidden">
-        <p
-          className="translate-y-[0.2em] whitespace-nowrap font-extrabold leading-[0.8] text-cs-ink/[0.06]"
+        <div
+          data-wordmark="Creative Surf"
+          className="translate-y-[0.2em] whitespace-nowrap font-extrabold leading-[0.8] text-cs-ink/[0.06] before:content-[attr(data-wordmark)]"
           style={{ fontSize: "clamp(3rem, 15vw, 13.5rem)", letterSpacing: "-0.055em" }}
-        >
-          Creative Surf
-        </p>
+        />
       </div>
     </footer>
   );

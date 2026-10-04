@@ -141,11 +141,8 @@ export default function ContactContent() {
       {/* ─── Masthead ─── */}
       <header className="pt-[5.25rem] sm:pt-24 lg:pt-[6.5rem]">
         <div className="cs-container">
-          <motion.div
-            initial={still ? false : { opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: EASE }}
-            className="cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 pb-4 text-cs-ink3"
+          <div
+            className="cs-enter cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 pb-4 text-cs-ink3"
           >
             <Breadcrumbs items={[{ label: tc("breadcrumb.contact") }]} />
             <p className="flex items-center gap-2.5">
@@ -155,36 +152,29 @@ export default function ContactContent() {
               </span>
               <span className="text-cs-ink">{t("cards.hqAvailable")}</span>
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid gap-y-8 pb-14 pt-12 sm:pt-16 lg:grid-cols-12 lg:gap-x-8 lg:pb-20 lg:pt-20">
             <div className="lg:col-span-3 lg:pt-3">
               <Meta index="01">{t("kicker")}</Meta>
             </div>
             <div className="lg:col-span-9">
-              <motion.h1
-                initial={still ? false : { opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, ease: EASE, delay: 0.05 }}
-                className="cs-display max-w-[16ch] text-cs-ink"
-                style={{ fontSize: "clamp(2.4rem, 5.2vw, 5rem)", lineHeight: 0.98, letterSpacing: "-0.05em" }}
+              <h1
+                className="cs-glide cs-display max-w-[16ch] text-cs-ink"
+                style={{ animationDelay: "0.05s", fontSize: "clamp(2.4rem, 5.2vw, 5rem)", lineHeight: 0.98, letterSpacing: "-0.05em" }}
               >
                 {t("headerLine1")}
-              </motion.h1>
-              <motion.p
-                initial={still ? false : { opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.9, ease: EASE, delay: 0.25 }}
-                className="cs-lede mt-8 max-w-[36rem] text-cs-ink2"
+              </h1>
+              <p
+                style={{ animationDelay: "0.25s" }}
+                className="cs-glide cs-lede mt-8 max-w-[36rem] text-cs-ink2"
               >
                 {t("headerLine2")}
-              </motion.p>
+              </p>
 
-              <motion.ul
-                initial={still ? false : { opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="mt-10 grid border-y border-cs-ink/10 sm:grid-cols-3"
+              <ul
+                style={{ animationDelay: "0.4s" }}
+                className="cs-enter mt-10 grid border-y border-cs-ink/10 sm:grid-cols-3"
               >
                 {badges.map((badge, i) => (
                   <li
@@ -198,7 +188,7 @@ export default function ContactContent() {
                     {badge}
                   </li>
                 ))}
-              </motion.ul>
+              </ul>
             </div>
           </div>
         </div>

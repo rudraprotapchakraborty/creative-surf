@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { COOKIE_NAME, verifyToken } from "@/lib/auth";
 import { generateMetadata as buildMetadata } from "@/lib/metadata";
 import CvBuilderClient from "./CvBuilderClient";
 import { getTranslator } from "@/lib/i18n/server";
@@ -18,6 +20,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function CvBuilderPage() {
   const t = await getTranslator(cvBuilderMessages);
+  // Known on the server, so the sign-in notice is in the first paint (or not)
+  // rather than arriving after a client check and pushing the form down.
+  const token = (await cookies()).get(COOKIE_NAME)?.value;
+  const signedIn = Boolean(token && verifyToken(token));
 
   // The page already answers these in the FAQ accordion; publishing the same
   // answers as structured data lets search engines show them directly.
@@ -37,7 +43,7 @@ export default async function CvBuilderPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <CvBuilderClient />
+      <CvBuilderClient initialSignedIn={signedIn} />
     </>
   );
 }

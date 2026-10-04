@@ -4,7 +4,7 @@ import * as React from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { Check, Minus } from "lucide-react";
 import { useT } from "@/lib/i18n";
-import { cvBuilderMessages } from "@/lib/i18n/messages/cvBuilder";
+import { cvTeaserMessages } from "@/lib/i18n/messages/cvTeaser";
 import { homeExtraMessages } from "@/lib/i18n/messages/homeExtra";
 import { AccentHeading, ButtonLink, EASE, Meta, Reveal } from "@/app/components/editorial";
 
@@ -126,7 +126,7 @@ function Fragment() {
  * visitor can use in a minute, today, for nothing.
  */
 export default function CvTool() {
-  const t = useT(cvBuilderMessages);
+  const t = useT(cvTeaserMessages);
   const tx = useT(homeExtraMessages);
 
   return (

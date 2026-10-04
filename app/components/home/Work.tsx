@@ -23,10 +23,10 @@ const PROJECTS = [
  * cropping a website to portrait cuts its type off and reads as a bug.
  */
 const LAYOUT = [
-  { cell: "lg:col-span-7", sizes: "(min-width: 1024px) 56vw, 85vw" },
-  { cell: "lg:col-span-5 lg:col-start-8 lg:mt-32", sizes: "(min-width: 1024px) 40vw, 85vw" },
-  { cell: "lg:col-span-5 lg:mt-16", sizes: "(min-width: 1024px) 40vw, 85vw" },
-  { cell: "lg:col-span-7 lg:col-start-6 lg:mt-40", sizes: "(min-width: 1024px) 56vw, 85vw" },
+  { cell: "lg:col-span-7", sizes: "(min-width: 1024px) 56vw, calc(100vw - 2.5rem)" },
+  { cell: "lg:col-span-5 lg:col-start-8 lg:mt-32", sizes: "(min-width: 1024px) 40vw, calc(100vw - 2.5rem)" },
+  { cell: "lg:col-span-5 lg:mt-16", sizes: "(min-width: 1024px) 40vw, calc(100vw - 2.5rem)" },
+  { cell: "lg:col-span-7 lg:col-start-6 lg:mt-40", sizes: "(min-width: 1024px) 56vw, calc(100vw - 2.5rem)" },
 ];
 
 type Project = (typeof PROJECTS)[number] & { category: string; description: string };

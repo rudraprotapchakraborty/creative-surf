@@ -2,13 +2,12 @@ import "./globals.css"
 import { Navbar } from "@/components/navbar"
 import { ConditionalFooter } from "@/components/ConditionalFooter"
 import { LoadingBarProvider } from "@/components/LoadingBarContext"
-import { ChatWidget } from "@/components/ChatWidget"
+import { LazyChatWidget } from "@/components/LazyChatWidget"
 import { CustomCursor } from "@/components/CustomCursor"
 import { Instrument_Serif, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google"
 import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import GoogleAnalytics from "@/components/google-analytics"
-import PageLoader from "@/components/PageLoader"
 import { LanguageProvider } from "@/lib/i18n"
 import { getServerLocale } from "@/lib/i18n/server"
 
@@ -36,6 +35,12 @@ const mono = JetBrains_Mono({
   variable: "--font-mono",
   weight: ["400", "500"],
   display: "swap",
+  // Next's generated fallback is Arial stretched to the average width, and
+  // uppercase labels set in it run wider and wrap differently, so the page
+  // jumps when the font arrives. A real monospace face has JetBrains Mono's
+  // exact 0.6em advance, so the swap changes the letterforms and nothing else.
+  adjustFontFallback: false,
+  fallback: ["Courier New", "monospace"],
 })
 
 /**
@@ -118,11 +123,6 @@ export default async function RootLayout({
               <GoogleAnalytics />
             </Suspense>
 
-            {/* PAGE LOAD WAVE LOADER */}
-            <Suspense fallback={null}>
-              <PageLoader />
-            </Suspense>
-
             {/* NAV */}
             <Navbar />
 
@@ -135,7 +135,7 @@ export default async function RootLayout({
             <ConditionalFooter />
 
             {/* FLOATING AI ASSISTANT */}
-            <ChatWidget />
+            <LazyChatWidget />
 
             {/* CURSOR (mouse only; touch keeps the platform behaviour) */}
             <CustomCursor />

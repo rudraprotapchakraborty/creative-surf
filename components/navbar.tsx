@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
@@ -199,6 +200,11 @@ export function Navbar() {
   }, [mobileOpen]);
 
   const solid = scrolled || mobileOpen;
+  // The real-estate landing page opens on a dark photograph. While the bar is
+  // still transparent over it, the bar takes the dark theme — light text and
+  // icons, and dark dropdowns to match — so nothing in it is dark on dark.
+  // Once it gains its own surface it follows the site theme again.
+  const overDarkHero = pathname === "/real-estate" && !solid;
   const ctaHref = "/contact";
   const ctaLabel = isRE ? t("links.contact") : t("startProject");
 
@@ -211,7 +217,7 @@ export function Navbar() {
           solid
             ? "border-b border-cs-ink/10 bg-cs-bg/85 backdrop-blur-xl backdrop-saturate-150"
             : "border-b border-transparent bg-transparent"
-        }`}
+        } ${overDarkHero ? "dark" : ""}`}
         style={{ fontFamily: "var(--font-jakarta)" }}
       >
         <nav aria-label={t("mainNav")} className="cs-container flex h-16 items-center gap-6">
@@ -220,12 +226,12 @@ export function Navbar() {
             href={isRE ? "/real-estate" : "/"}
             className="cs-focus group -ml-1 flex shrink-0 items-center gap-2.5 rounded-md px-1 py-1"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={isRE ? "/logo2.webp" : "/logo.webp"}
               alt=""
               width={28}
               height={28}
+              loading="eager"
               className="h-7 w-7 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-rotate-12"
             />
             <span className="text-[17px] font-extrabold tracking-[-0.035em] text-cs-ink">

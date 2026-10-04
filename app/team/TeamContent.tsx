@@ -83,47 +83,37 @@ export default function TeamContent() {
       {/* ---- Masthead ---- */}
       <section aria-labelledby="team-title" className="pb-16 pt-[5.25rem] sm:pt-24 lg:pb-24 lg:pt-[6.5rem]">
         <div className="cs-container">
-          <motion.div
-            initial={still ? false : { opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: EASE }}
-            className="cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 pb-4 text-cs-ink3"
+          <div
+            className="cs-enter cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 pb-4 text-cs-ink3"
           >
             <Breadcrumbs items={[{ label: tc("breadcrumb.team") }]} />
             <p className="text-right">
               {t("meta.count", { people: TEAM.length, cities: cities.length, countries })}
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid gap-y-6 pt-12 sm:pt-16 lg:grid-cols-12 lg:gap-x-8 lg:pt-20">
-            <motion.div
-              initial={still ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="lg:col-span-3 lg:pt-5"
+            <div
+              style={{ animationDelay: "0.1s" }}
+              className="cs-enter lg:col-span-3 lg:pt-5"
             >
               <Meta index="01">{t("hero.eyebrow")}</Meta>
-            </motion.div>
+            </div>
             <div className="lg:col-span-9">
               <h1 id="team-title" className="overflow-hidden pb-[0.08em]">
-                <motion.span
-                  className="cs-display block text-cs-ink"
-                  style={{ fontSize: "clamp(3.25rem, 9vw, 8.5rem)", lineHeight: 0.92, letterSpacing: "-0.055em" }}
-                  initial={still ? false : { y: "100%" }}
-                  animate={{ y: "0%" }}
-                  transition={{ duration: 1.1, ease: EASE, delay: 0.05 }}
+                <span
+                  className="cs-rise cs-display block text-cs-ink"
+                  style={{ animationDelay: "0.05s", fontSize: "clamp(3.25rem, 9vw, 8.5rem)", lineHeight: 0.92, letterSpacing: "-0.055em" }}
                 >
                   {t("hero.title")}
-                </motion.span>
+                </span>
               </h1>
-              <motion.p
-                initial={still ? false : { opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.9, ease: EASE, delay: 0.3 }}
-                className="cs-lede mt-8 max-w-[34rem] text-cs-ink2"
+              <p
+                style={{ animationDelay: "0.3s" }}
+                className="cs-glide cs-lede mt-8 max-w-[34rem] text-cs-ink2"
               >
                 {t("hero.subtitle")}
-              </motion.p>
+              </p>
             </div>
           </div>
         </div>

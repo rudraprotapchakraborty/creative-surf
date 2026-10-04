@@ -24,7 +24,7 @@ export const trackEvent = (action: string, category: string, label: string, valu
  */
 export const trackPageView = (url: string, title: string) => {
   if (typeof window !== "undefined" && window.gtag) {
-    window.gtag("config", "G-XXXXXXXXXX", {
+    window.gtag("config", process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "", {
       page_path: url,
       page_title: title,
     })
@@ -40,7 +40,7 @@ export const trackPageView = (url: string, title: string) => {
 export const trackConversion = (conversionId: string, label: string, value?: number) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "conversion", {
-      send_to: `G-XXXXXXXXXX/${conversionId}`,
+      send_to: `${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? ""}/${conversionId}`,
       event_label: label,
       value: value,
       currency: "USD",

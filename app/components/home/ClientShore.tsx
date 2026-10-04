@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useT } from "@/lib/i18n";
 import { homeMessages } from "@/lib/i18n/messages/home";
 import { homeExtraMessages } from "@/lib/i18n/messages/homeExtra";
@@ -30,14 +31,11 @@ function Tile({ logo, hidden }: { logo: (typeof LOGOS)[number]; hidden?: boolean
       className="mr-3 h-16 w-16 shrink-0 overflow-hidden rounded-xl sm:mr-4 bg-white ring-1 ring-inset ring-cs-ink/[0.07] sm:h-[4.5rem] sm:w-[4.5rem]"
     >
       {/* Each file is pre-padded to a square on its own background. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={logo.src}
         alt={hidden ? "" : logo.name}
         width={72}
         height={72}
-        loading="lazy"
-        decoding="async"
         draggable={false}
         className="h-full w-full object-cover"
       />

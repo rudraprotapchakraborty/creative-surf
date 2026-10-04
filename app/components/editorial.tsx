@@ -361,37 +361,34 @@ export function Masthead({
   /** Less air above and below, for a page whose real content is a tool right underneath. */
   compact?: boolean;
 }) {
-  const still = useReducedMotion() ?? false;
-  const fade = (delay: number) => ({
-    initial: still ? false : { opacity: 0, y: 14 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.9, ease: EASE, delay },
-  });
+  /*
+   * Entrances are CSS (.cs-enter fades, .cs-glide only moves; see globals.css)
+   * so the header is on screen from the first paint, not after hydration. The
+   * headline and lede glide without fading: one of them is usually the
+   * largest thing on the page, and it should count as painted immediately.
+   */
+  const at = (seconds: number) => ({ animationDelay: `${seconds}s` });
 
   return (
     <header className="bg-cs-bg pt-[5.25rem] text-cs-ink sm:pt-24 lg:pt-[6.5rem]">
       <div className="cs-container">
-        <motion.div
-          {...fade(0)}
-          className="cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 pb-4 text-cs-ink3"
-        >
+        <div className="cs-enter cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 pb-4 text-cs-ink3">
           {crumbs ? <Breadcrumbs items={crumbs} /> : <div>{dateline}</div>}
           {datelineAside && <div className="text-right">{datelineAside}</div>}
-        </motion.div>
+        </div>
 
         <div
           className={`grid gap-y-8 lg:grid-cols-12 lg:gap-x-8 ${
             compact ? "gap-y-6 pb-8 pt-8 sm:pt-10 lg:pb-10 lg:pt-12" : "pb-14 pt-12 sm:pt-16 lg:pb-20 lg:pt-20"
           }`}
         >
-          <motion.div {...fade(0.05)} className="lg:col-span-3 lg:pt-3">
+          <div style={at(0.05)} className="cs-enter lg:col-span-3 lg:pt-3">
             <Meta index={index}>{label}</Meta>
-          </motion.div>
+          </div>
           <div className={side ? "lg:col-span-6" : "lg:col-span-9"}>
-            <motion.h1
-              {...fade(0.1)}
-              className="cs-display text-cs-ink"
-              style={{ fontSize: titleSize, lineHeight: 0.95, letterSpacing: "-0.052em" }}
+            <h1
+              className="cs-glide cs-display text-cs-ink"
+              style={{ ...at(0.1), fontSize: titleSize, lineHeight: 0.95, letterSpacing: "-0.052em" }}
             >
               {title}
               {accent && (
@@ -400,22 +397,22 @@ export function Masthead({
                   <span className="cs-accent text-cs-blue">{accent}</span>
                 </>
               )}
-            </motion.h1>
+            </h1>
             {lede && (
-              <motion.div {...fade(0.25)} className="cs-lede mt-8 max-w-[36rem] text-cs-ink2">
+              <div style={at(0.2)} className="cs-glide cs-lede mt-8 max-w-[36rem] text-cs-ink2">
                 {lede}
-              </motion.div>
+              </div>
             )}
             {actions && (
-              <motion.div {...fade(0.35)} className={`${compact ? "mt-6" : "mt-9"} flex flex-wrap items-center gap-x-6 gap-y-4`}>
+              <div style={at(0.3)} className={`cs-enter ${compact ? "mt-6" : "mt-9"} flex flex-wrap items-center gap-x-6 gap-y-4`}>
                 {actions}
-              </motion.div>
+              </div>
             )}
           </div>
           {side && (
-            <motion.div {...fade(0.4)} className="lg:col-span-3 lg:pt-3">
+            <div style={at(0.35)} className="cs-enter lg:col-span-3 lg:pt-3">
               {side}
-            </motion.div>
+            </div>
           )}
         </div>
       </div>

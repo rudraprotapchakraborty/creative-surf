@@ -1,28 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { ObjectId } from 'mongodb'
 import { getDb } from '@/lib/mongodb'
 import { requireUser } from '@/lib/auth'
 import { sanitizeBlogInput, validateBlogInput } from '@/lib/blog-input'
+import { listPublishedBlogs } from '@/lib/blogs-feed'
 
 export async function GET() {
   try {
-    const db = await getDb()
-    const blogs = await db.collection('blogs').find({ published: true }).sort({ createdAt: -1 }).toArray()
-
-    // Each owner's profile picture, for the byline. One query for the whole
-    // feed, projected to the avatar alone so no other account field is exposed.
-    const ownerIds = Array.from(new Set(blogs.map(b => b.authorId).filter((id): id is string => typeof id === 'string' && ObjectId.isValid(id))))
-    const owners = ownerIds.length
-      ? await db
-          .collection('users')
-          .find({ _id: { $in: ownerIds.map(id => new ObjectId(id)) } }, { projection: { avatar: 1 } })
-          .toArray()
-      : []
-    const avatars = new Map(owners.filter(o => o.avatar).map(o => [o._id.toString(), String(o.avatar)]))
-
-    return NextResponse.json(
-      blogs.map(b => ({ ...b, authorAvatar: (b.authorId && avatars.get(b.authorId)) || undefined }))
-    )
+    return NextResponse.json(await listPublishedBlogs())
   } catch (err) {
     return NextResponse.json({ error: 'Failed to fetch blogs' }, { status: 500 })
   }

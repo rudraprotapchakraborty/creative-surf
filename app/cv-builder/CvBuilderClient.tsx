@@ -268,7 +268,7 @@ const THUMB_SCALE = THUMB_WIDTH / PAGE_WIDTH;
 const STRONG_MATCH = 75;
 const DECENT_MATCH = 50;
 
-export default function CvBuilderClient() {
+export default function CvBuilderClient({ initialSignedIn = false }: { initialSignedIn?: boolean }) {
   const t = useT(cvBuilderMessages);
   const tc = useT(commonMessages);
 
@@ -280,8 +280,9 @@ export default function CvBuilderClient() {
   const [coverage, setCoverage] = useState<CvCoverage | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const [isAuthChecking, setIsAuthChecking] = useState(true);
+  // Seeded from the session cookie on the server; the check below only confirms it.
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(initialSignedIn);
+  const [isAuthChecking, setIsAuthChecking] = useState(false);
   const [savedCvs, setSavedCvs] = useState<SavedCvSummary[]>([]);
   const [isReading, setIsReading] = useState(false);
   // "See a sample CV": a finished CV in the real renderer, not a screenshot.
@@ -1034,7 +1035,7 @@ export default function CvBuilderClient() {
                   <Info className="h-4 w-4 text-cs-blue" />
                 </div>
                 <div className="min-w-0">
-                  <h3 className="text-sm font-bold text-cs-ink">{t("guestNotice.title")}</h3>
+                  <h2 className="text-sm font-bold text-cs-ink">{t("guestNotice.title")}</h2>
                   <p className="mt-1 text-xs leading-relaxed text-cs-ink2">
                     {t("guestNotice.subtitle")}
                   </p>
@@ -1069,7 +1070,7 @@ export default function CvBuilderClient() {
                     <Upload className="h-4 w-4" />
                   </div>
                   <div className="min-w-0">
-                    <h3 className="text-sm font-bold text-cs-ink">{t("import.title")}</h3>
+                    <h2 className="text-sm font-bold text-cs-ink">{t("import.title")}</h2>
                     <p className="mt-1 text-xs leading-relaxed text-cs-ink2">{t("import.subtitle")}</p>
                   </div>
                 </div>

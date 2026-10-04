@@ -1,4 +1,5 @@
 import { defineMessages } from "../types";
+import { cvTeaserMessages } from "./cvTeaser";
 
 export const cvBuilderMessages = defineMessages({
   en: {
@@ -6,19 +7,10 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "Turn rough notes into a recruiter-ready CV. Paste the job advert, see which requirements you have covered, and download a free ATS-safe PDF. We never invent employers, dates or numbers.",
     hero: {
+      ...cvTeaserMessages.en.hero,
       badge: "Free · No sign-up",
-      title: "Make your CV",
-      titleHighlight: "in 60 seconds",
-      subtitle:
-        "Paste your rough notes and the job advert. Get a recruiter-ready CV built only from what you actually did — scored against that advert, and yours as a free PDF.",
-      ctaPrimary: "Build my CV",
       ctaSecondary: "See a sample CV",
       sampleTitle: "Sample CV — a fictional candidate",
-      trust: [
-        "Nothing invented",
-        "Free PDF, no export fee",
-        "ATS-safe single column",
-      ],
     },
     stats: [
       { value: "~60s", label: "From rough notes to a finished PDF" },
@@ -500,18 +492,9 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "Transformez quelques notes en un CV prêt pour les recruteurs. Collez l'annonce, voyez les exigences déjà couvertes et téléchargez un PDF gratuit compatible ATS. Nous n'inventons jamais d'employeur, de date ni de chiffre.",
     hero: {
+      ...cvTeaserMessages.fr!.hero,
       badge: "Gratuit · Sans inscription",
-      title: "Créez votre CV",
-      titleHighlight: "en 60 secondes",
-      subtitle:
-        "Collez vos notes en vrac et l'annonce visée. Vous obtenez un CV prêt pour les recruteurs, bâti uniquement sur ce que vous avez réellement fait — noté face à cette annonce, et à vous en PDF gratuit.",
-      ctaPrimary: "Créer mon CV",
       ctaSecondary: "Voir un exemple de CV",
-      trust: [
-        "Rien d'inventé",
-        "PDF gratuit, sans frais d'export",
-        "Colonne unique, compatible ATS",
-      ],
     },
     stats: [
       { value: "~60s", label: "De quelques notes à un PDF terminé" },
@@ -996,18 +979,9 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "Aus Stichpunkten wird ein Lebenslauf, den Recruiter lesen wollen. Stellenanzeige einfügen, offene Anforderungen sehen und ein kostenloses ATS-sicheres PDF laden. Wir erfinden keine Arbeitgeber, Daten oder Zahlen.",
     hero: {
+      ...cvTeaserMessages.de!.hero,
       badge: "Kostenlos · Ohne Anmeldung",
-      title: "Ihr Lebenslauf",
-      titleHighlight: "in 60 Sekunden",
-      subtitle:
-        "Fügen Sie Ihre groben Notizen und die Stellenanzeige ein. Sie bekommen einen Lebenslauf, der nur auf Ihren echten Erfahrungen beruht — bewertet gegen diese Anzeige, und als kostenloses PDF für Sie.",
-      ctaPrimary: "Lebenslauf erstellen",
       ctaSecondary: "Beispiel-Lebenslauf ansehen",
-      trust: [
-        "Nichts erfunden",
-        "Kostenloses PDF, keine Exportgebühr",
-        "ATS-sichere Einspaltigkeit",
-      ],
     },
     stats: [
       { value: "~60s", label: "Von Stichpunkten zum fertigen PDF" },
@@ -1492,18 +1466,9 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "Hawwil mulahazatik ila Sira Dhatiyya jahiza lil-Muwazzifin. Alsiq ilan Al-Wazifa, shahid ayy Al-Mutatallabat ghattaytaha, wa hammil PDF majjani mutawafiq ma anzimat Al-Farz. La nakhtali arbab amal aw tawarikh aw arqam.",
     hero: {
+      ...cvTeaserMessages.ar!.hero,
       badge: "Majjani · Bidun Tasjil",
-      title: "Usnaʿ Siratak Al-Thatiya",
-      titleHighlight: "fi 60 thaniya",
-      subtitle:
-        "Alsiq mulahazatik Al-Aridha wa-Ilan Al-Wazifa. Satahsul ala Sira Dhatiyya jahiza lil-Muwazzifin mabniyya faqat ala ma faaltahu haqqan — bi-darajat mutabaqa ma dhalika Al-Ilan, wa laka ka-PDF majjani.",
-      ctaPrimary: "Anshi Siratee",
       ctaSecondary: "Shahid Namudhaj Sira",
-      trust: [
-        "La shay makhtalaq",
-        "PDF majjani, bidun rusum tasdir",
-        "Amud wahid mutawafiq ma Al-Farz",
-      ],
     },
     stats: [
       { value: "~60s", label: "Min mulahazat basita ila PDF jahiz" },
@@ -1987,18 +1952,9 @@ export const cvBuilderMessages = defineMessages({
     metaDescription:
       "এলোমেলো নোট থেকে তৈরি করুন রিক্রুটারের উপযোগী সিভি। চাকরির বিজ্ঞপ্তিটি পেস্ট করুন, দেখুন কোন শর্তগুলো আপনি পূরণ করেছেন, আর বিনামূল্যে ATS-উপযোগী পিডিএফ নামান। আমরা কখনও প্রতিষ্ঠান, তারিখ বা সংখ্যা বানিয়ে লিখি না।",
     hero: {
+      ...cvTeaserMessages.bn!.hero,
       badge: "বিনামূল্যে · সাইন-আপ ছাড়াই",
-      title: "আপনার সিভি তৈরি করুন",
-      titleHighlight: "৬০ সেকেন্ডে",
-      subtitle:
-        "আপনার এলোমেলো নোট আর চাকরির বিজ্ঞপ্তিটি পেস্ট করুন। পাবেন কেবল আপনার সত্যিকারের কাজ দিয়ে গড়া রিক্রুটার-উপযোগী সিভি — সেই বিজ্ঞপ্তির সাথে মিলের স্কোরসহ, আর আপনার নিজের বিনামূল্যের পিডিএফ।",
-      ctaPrimary: "আমার সিভি বানান",
       ctaSecondary: "নমুনা সিভি দেখুন",
-      trust: [
-        "কিছুই বানানো নয়",
-        "বিনামূল্যে পিডিএফ, কোনো এক্সপোর্ট ফি নেই",
-        "ATS-উপযোগী এক কলাম",
-      ],
     },
     stats: [
       { value: "~৬০ সে.", label: "এলোমেলো নোট থেকে সম্পূর্ণ পিডিএফ" },

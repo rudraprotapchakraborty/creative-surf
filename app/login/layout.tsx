@@ -1,8 +1,10 @@
 import type { Metadata } from "next"
 import { pageMetadata } from "@/lib/page-metadata"
 
+// Indexable: a sign-in page is a legitimate way into the site, and a noindex
+// on it only costs the page its search listing.
 export function generateMetadata(): Promise<Metadata> {
-  return pageMetadata("login", "/login", { noIndex: true })
+  return pageMetadata("login", "/login")
 }
 
 export default function LoginLayout({ children }: { children: React.ReactNode }) {

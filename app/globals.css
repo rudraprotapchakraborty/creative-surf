@@ -1134,3 +1134,31 @@ body {
   max-width: 100%;
   overflow-x: clip;
 }
+
+/*
+ * Hero entrances, in CSS rather than JavaScript so they start on the very
+ * first paint instead of after hydration: the headline and the copy are on
+ * screen the moment the HTML is, which is what Largest Contentful Paint
+ * measures. Text that might be the largest element only moves (cs-glide);
+ * fading (cs-enter) is kept for the small furniture around it.
+ */
+@keyframes cs-rise {
+  from { transform: translateY(104%); }
+  to { transform: none; }
+}
+@keyframes cs-glide {
+  from { transform: translateY(14px); }
+  to { transform: none; }
+}
+@keyframes cs-enter {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+.cs-rise { animation: cs-rise 1.15s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.cs-glide { animation: cs-glide 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.cs-enter { animation: cs-enter 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .cs-rise,
+  .cs-glide,
+  .cs-enter { animation: none; }
+}
