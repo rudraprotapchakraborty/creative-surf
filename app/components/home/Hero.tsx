@@ -5,8 +5,15 @@ import { useT } from "@/lib/i18n";
 import { homeMessages } from "@/lib/i18n/messages/home";
 import { homeExtraMessages } from "@/lib/i18n/messages/homeExtra";
 import { ButtonLink, TextLink } from "@/app/components/editorial";
-import { useIntroDone } from "@/lib/intro";
 import SwellReport from "./SwellReport";
+
+/**
+ * The homepage intro curtain lifts at --cs-intro-lift (globals.css). The hero
+ * sits under it from the first paint, and its entrances are timed from that
+ * moment so they play in view rather than behind the curtain.
+ */
+const INTRO_LIFT_MS = 1000;
+const afterIntro = (seconds: number) => `calc(var(--cs-intro-lift) + ${seconds}s)`;
 
 /**
  * The wordmark is the headline, so it is set as one: "Creative" hangs off the
@@ -48,7 +55,7 @@ function Line({
     // The clip is padded below so descenders and the rising glyphs aren't
     // cropped, then pulled back so the padding doesn't open the leading.
     <span className={`block overflow-hidden pb-[0.08em] -mb-[0.08em] ${className ?? ""}`}>
-      <span className="cs-rise inline-block" style={{ animationDelay: `${delay}s` }}>
+      <span className="cs-rise inline-block" style={{ animationDelay: afterIntro(delay) }}>
         {children}
       </span>
     </span>
@@ -60,18 +67,21 @@ export default function Hero() {
   const th = useT(homeMessages);
   const time = useDhakaTime();
   // The swell draws its line once the intro curtain has lifted, not behind it.
-  const introDone = useIntroDone();
+  const [introDone, setIntroDone] = React.useState(false);
+  React.useEffect(() => {
+    const timer = window.setTimeout(() => setIntroDone(true), INTRO_LIFT_MS);
+    return () => clearTimeout(timer);
+  }, []);
 
-  // Entrances are CSS (see .cs-enter / .cs-glide in globals.css). They are in
-  // the HTML from the first paint, held on their first frame while the intro
-  // curtain covers them (.cs-hold-for-intro), and play as it lifts.
-  const delay = (seconds: number) => ({ animationDelay: `${seconds}s` });
+  // Entrances are CSS (see .cs-enter / .cs-glide in globals.css), in the HTML
+  // from the first paint and timed to begin as the intro curtain lifts.
+  const delay = (seconds: number) => ({ animationDelay: afterIntro(seconds) });
 
   return (
     <section
       id="home"
       aria-labelledby="hero-title"
-      className="cs-hold-for-intro relative overflow-hidden bg-cs-bg pt-[5.25rem] sm:pt-24 lg:pt-[6.5rem]"
+      className="relative overflow-hidden bg-cs-bg pt-[5.25rem] sm:pt-24 lg:pt-[6.5rem]"
     >
       <div className="cs-container">
         {/* ---- Dateline ---- */}

@@ -8,7 +8,6 @@ import { Instrument_Serif, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/g
 import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import GoogleAnalytics from "@/components/google-analytics"
-import PageLoader from "@/components/PageLoader"
 import { LanguageProvider } from "@/lib/i18n"
 import { getServerLocale } from "@/lib/i18n/server"
 
@@ -122,11 +121,6 @@ export default async function RootLayout({
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
             <Suspense fallback={null}>
               <GoogleAnalytics />
-            </Suspense>
-
-            {/* HOMEPAGE INTRO (the logo draws itself, then the curtain lifts) */}
-            <Suspense fallback={null}>
-              <PageLoader />
             </Suspense>
 
             {/* NAV */}

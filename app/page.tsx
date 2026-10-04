@@ -1,3 +1,4 @@
+import IntroCurtain from "./components/home/IntroCurtain";
 import Hero from "./components/home/Hero";
 import ClientShore from "./components/home/ClientShore";
 import Capabilities from "./components/home/Capabilities";
@@ -20,6 +21,7 @@ import Closing from "./components/home/Closing";
 export default function Page() {
   return (
     <div className="flex min-h-screen flex-col bg-cs-bg text-cs-ink">
+      <IntroCurtain />
       <Hero />
       <ClientShore />
       <Capabilities />

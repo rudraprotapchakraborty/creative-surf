@@ -1,7 +1,6 @@
 "use client";
 
 import { useId } from "react";
-import { motion, useReducedMotion } from "framer-motion";
 
 /**
  * The Creative Surf mark, as vector: traced from the original artwork and
@@ -21,8 +20,11 @@ import { motion, useReducedMotion } from "framer-motion";
  *   spinner — a loop for waiting states: the bars rise and settle in turn,
  *             like a signal meter, and the arrow carries a travelling light
  *
- * Reduced motion: intro renders finished; spinner swaps movement for a
- * gentle opacity step so it still reads as "working".
+ * Both animated variants are pure CSS (keyframes in globals.css), so they run
+ * from the first paint, before any JavaScript has loaded. Each element's
+ * resting style is its finished state and the keyframes only describe where
+ * it starts, so with reduced motion (animations off) the intro simply renders
+ * finished, and the spinner swaps movement for a gentle opacity step.
  */
 
 /* ---- Generated geometry (1024-unit artboard of the original) ---- */
@@ -47,8 +49,8 @@ const BODY_STOPS = [["0.083", "#2DAAE7"], ["0.25", "#2DABE7"], ["0.417", "#2FACE
 const DEEP = "#035CAC";
 const CREST_FILL = "#59CBF4";
 
-const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
-const DRAW: [number, number, number, number] = [0.65, 0, 0.35, 1];
+const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
+const DRAW = "cubic-bezier(0.65, 0, 0.35, 1)";
 
 /** A full circle as a path, drawn clockwise or anticlockwise from 3 o'clock. */
 const ring = (r: number, clockwise: boolean) =>
@@ -70,12 +72,13 @@ export function LogoMark({
   delay?: number;
 }) {
   const uid = useId().replace(/:/g, "");
-  const still = useReducedMotion() ?? false;
-  const intro = variant === "intro" && !still;
+  const intro = variant === "intro";
+  const spinner = variant === "spinner";
   const id = (name: string) => `lm-${name}-${uid}`;
 
-  // Intro timeline, in seconds from `delay`.
-  const at = (s: number) => delay + s;
+  /** One intro keyframe run: name, seconds long, easing, seconds after `delay`. */
+  const run = (name: string, duration: number, easing: string, at: number, extra?: React.CSSProperties) =>
+    ({ animation: `${name} ${duration}s ${easing} ${delay + at}s both`, ...extra }) as React.CSSProperties;
 
   return (
     <svg
@@ -103,27 +106,29 @@ export function LogoMark({
             {/* Pie-wedge reveals: a stroke far wider than its radius, so
                 drawing it round uncovers a growing wedge from the centre. */}
             <mask id={id("m-crescent")} maskUnits="userSpaceOnUse" x="-400" y="-400" width="2000" height="2000">
-              <motion.path
+              <path
+                className="cs-intro-anim"
                 d={ring(380, true)}
+                pathLength={1}
                 transform={`rotate(128 ${CX} ${CY})`}
                 fill="none"
                 stroke="#fff"
                 strokeWidth={800}
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 0.85, ease: DRAW, delay: at(0) }}
+                strokeDasharray={1}
+                style={run("cs-logo-draw", 0.55, DRAW, 0)}
               />
             </mask>
             <mask id={id("m-body")} maskUnits="userSpaceOnUse" x="-400" y="-400" width="2000" height="2000">
-              <motion.path
+              <path
+                className="cs-intro-anim"
                 d={ring(380, false)}
+                pathLength={1}
                 transform={`rotate(-40 ${CX} ${CY})`}
                 fill="none"
                 stroke="#fff"
                 strokeWidth={800}
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 0.85, ease: DRAW, delay: at(0.12) }}
+                strokeDasharray={1}
+                style={run("cs-logo-draw", 0.55, DRAW, 0.08)}
               />
             </mask>
 
@@ -133,27 +138,24 @@ export function LogoMark({
               <stop offset="1" stopColor="#fff" stopOpacity="0" />
             </linearGradient>
             <mask id={id("m-crest")} maskUnits="userSpaceOnUse" x="-2000" y="0" width="5000" height="1100">
-              {/* Offset lives on the group: framer animates `x` as a transform. */}
               <g transform={`translate(${155 - 900} 0)`}>
-                <motion.rect
+                <rect
+                  className="cs-intro-anim"
                   width="900"
                   height="1100"
                   fill={`url(#${id("feather")})`}
-                  initial={{ x: 0 }}
-                  animate={{ x: 564 - 155 + 120 }}
-                  transition={{ duration: 0.6, ease: EASE, delay: at(0.38) }}
+                  style={run("cs-logo-wipe", 0.4, EASE, 0.25, { transform: `translateX(${564 - 155 + 120}px)` })}
                 />
               </g>
             </mask>
             <mask id={id("m-sweep")} maskUnits="userSpaceOnUse" x="-2000" y="0" width="5000" height="1100">
               <g transform={`translate(${230 - 1100} 0)`}>
-                <motion.rect
+                <rect
+                  className="cs-intro-anim"
                   width="1100"
                   height="1100"
                   fill={`url(#${id("feather")})`}
-                  initial={{ x: 0 }}
-                  animate={{ x: 1004 - 230 + 140 }}
-                  transition={{ duration: 0.8, ease: DRAW, delay: at(0.5) }}
+                  style={run("cs-logo-wipe", 0.5, DRAW, 0.32, { transform: `translateX(${1004 - 230 + 140}px)` })}
                 />
               </g>
             </mask>
@@ -176,16 +178,16 @@ export function LogoMark({
           </>
         )}
 
-        {variant === "spinner" && !still && (
+        {spinner && (
           <>
-          <clipPath id={id("sweep-clip")}>
-            <path d={SWEEP} />
-          </clipPath>
-          <linearGradient id={id("travel")} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="260" y2="0">
-            <stop offset="0" stopColor="#fff" stopOpacity="0" />
-            <stop offset="0.5" stopColor="#fff" stopOpacity="0.7" />
-            <stop offset="1" stopColor="#fff" stopOpacity="0" />
-          </linearGradient>
+            <clipPath id={id("sweep-clip")}>
+              <path d={SWEEP} />
+            </clipPath>
+            <linearGradient id={id("travel")} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="260" y2="0">
+              <stop offset="0" stopColor="#fff" stopOpacity="0" />
+              <stop offset="0.5" stopColor="#fff" stopOpacity="0.7" />
+              <stop offset="1" stopColor="#fff" stopOpacity="0" />
+            </linearGradient>
           </>
         )}
       </defs>
@@ -204,47 +206,40 @@ export function LogoMark({
         <path d={SWEEP} fill={`url(#${id("sweep")})`} />
       </g>
 
-      {BARS.map((d, i) =>
-        intro ? (
-          <motion.path
-            key={i}
-            d={d}
-            fill={DEEP}
-            style={{ transformBox: "fill-box", transformOrigin: "50% 100%" }}
-            initial={{ scaleY: 0 }}
-            animate={{ scaleY: 1 }}
-            transition={{ duration: 0.5, ease: EASE, delay: at(0.55 + i * 0.1) }}
-          />
-        ) : (
-          <path
-            key={i}
-            d={d}
-            fill={DEEP}
-            className={variant === "spinner" ? "cs-logo-bar" : undefined}
-            style={variant === "spinner" ? ({ "--bar": i } as React.CSSProperties) : undefined}
-          />
-        )
-      )}
+      {BARS.map((d, i) => (
+        <path
+          key={i}
+          d={d}
+          fill={DEEP}
+          className={intro ? "cs-intro-anim" : spinner ? "cs-logo-bar" : undefined}
+          style={
+            intro
+              ? run("cs-logo-grow", 0.35, EASE, 0.38 + i * 0.07, { transformBox: "fill-box", transformOrigin: "50% 100%" })
+              : spinner
+                ? ({ "--bar": i } as React.CSSProperties)
+                : undefined
+          }
+        />
+      ))}
 
       {/* Spinner: a light travelling the arrow, clipped to the sweep. */}
-      {variant === "spinner" && !still && (
+      {spinner && (
         <g clipPath={`url(#${id("sweep-clip")})`}>
           <rect className="cs-logo-travel" x="-260" y="300" width="260" height="700" fill={`url(#${id("travel")})`} />
         </g>
       )}
 
-      {/* Intro: one glint across the finished mark. */}
+      {/* Intro: one glint across the finished mark. It rests past the mark's
+          right edge, so with motion off it is simply not there. */}
       {intro && (
         <g clipPath={`url(#${id("clip")})`}>
-          {/* Skew and offset on the group; the motion transform would replace them. */}
           <g transform="translate(-300 0) skewX(-18)">
-            <motion.rect
+            <rect
+              className="cs-intro-anim"
               width="300"
               height="1100"
               fill={`url(#${id("glint")})`}
-              initial={{ x: 0 }}
-              animate={{ x: 1600 }}
-              transition={{ duration: 0.7, ease: "easeInOut", delay: at(1.05) }}
+              style={run("cs-logo-glint", 0.5, "ease-in-out", 0.72, { transform: "translateX(1600px)" })}
             />
           </g>
         </g>
