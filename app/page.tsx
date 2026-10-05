@@ -21,13 +21,15 @@ export default function Page() {
   return (
     <div className="flex min-h-screen flex-col bg-cs-bg text-cs-ink">
       <Hero />
-      <ClientShore />
-      <Capabilities />
-      <Work />
-      <RealEstate />
-      <CvTool />
-      <Voices />
-      <Closing />
+      {/* Below the hero, each section is styled and laid out only as it nears
+          the screen (.cs-defer in globals.css). */}
+      <div className="cs-defer"><ClientShore /></div>
+      <div className="cs-defer"><Capabilities /></div>
+      <div className="cs-defer"><Work /></div>
+      <div className="cs-defer"><RealEstate /></div>
+      <div className="cs-defer"><CvTool /></div>
+      <div className="cs-defer"><Voices /></div>
+      <div className="cs-defer"><Closing /></div>
     </div>
   );
 }

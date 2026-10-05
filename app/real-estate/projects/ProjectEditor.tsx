@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
-import { motion } from "framer-motion"
+import { m as motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft, Save, X, Plus, Trash2, MapPin, ExternalLink, UploadCloud, Loader2 } from "lucide-react"

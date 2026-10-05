@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m as motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { X, ArrowUp, Square, RotateCcw } from "lucide-react";
 import { useLocale, useT } from "@/lib/i18n";

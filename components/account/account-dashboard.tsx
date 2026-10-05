@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
-import { motion } from "framer-motion"
+import { m as motion } from "framer-motion"
 import {
   Download,
   Eye,

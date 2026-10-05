@@ -10,7 +10,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import Link from "next/link";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m as motion, useReducedMotion } from "framer-motion";
 import {
   AlertCircle,
   AlignLeft,

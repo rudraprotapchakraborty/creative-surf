@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { m as motion, useReducedMotion } from "framer-motion";
 import { useT } from "@/lib/i18n";
 import { teamMessages } from "@/lib/i18n/messages/team";
 import { commonMessages } from "@/lib/i18n/messages/common";

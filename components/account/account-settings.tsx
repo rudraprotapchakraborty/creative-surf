@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { motion } from "framer-motion"
+import { m as motion } from "framer-motion"
 import { useT } from "@/lib/i18n"
 import { authMessages } from "@/lib/i18n/messages/auth"
 import type { AuthPayload } from "@/lib/auth"

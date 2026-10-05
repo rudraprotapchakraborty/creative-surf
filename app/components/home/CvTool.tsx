@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { m as motion, useInView, useReducedMotion } from "framer-motion";
 import { Check, Minus } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { cvTeaserMessages } from "@/lib/i18n/messages/cvTeaser";

@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { m as motion } from "framer-motion"
 
 /**
  * A titled block of account content: a ruled section rather than a box, so

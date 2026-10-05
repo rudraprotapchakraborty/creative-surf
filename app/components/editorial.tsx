@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
+import { m as motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, ArrowUpRight, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Breadcrumbs, type Crumb } from "@/components/Breadcrumbs";

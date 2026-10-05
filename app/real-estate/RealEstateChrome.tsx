@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { motion, useScroll, useSpring } from "framer-motion"
+import { m as motion, useScroll, useSpring } from "framer-motion"
 
 /* Creative Surf real-estate brand */
 const G  = "#B8892A"  // gold

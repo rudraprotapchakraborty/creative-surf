@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, m as motion } from "framer-motion"
 import ReactMarkdown from "react-markdown"
 import { ChevronDown, Loader2, MessageSquare, Search, Trash2, UserRound } from "lucide-react"
 import { useT } from "@/lib/i18n"
