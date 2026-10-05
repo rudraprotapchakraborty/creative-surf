@@ -40,11 +40,11 @@ export function CustomCursor() {
     if (!dot || !ring || !label) return
 
     const root = document.documentElement
-    root.classList.add("cs-cursor")
 
     let x = -100, y = -100 // pointer
     let rx = -100, ry = -100 // ring, trailing
     let visible = false
+    let active = false
     let frame = 0
 
     const setState = (state: "default" | "hover" | "label" | "hidden" | "text") => {
@@ -52,14 +52,25 @@ export function CustomCursor() {
       dot.dataset.state = state
     }
 
+    // The loop only runs while the ring is still catching up with the
+    // pointer; once it settles it stops, and the next move starts it again.
+    // An idle page does no per-frame work.
     const loop = () => {
       // Ease the ring toward the pointer; snap under reduced motion.
       const k = still ? 1 : 0.2
       rx += (x - rx) * k
       ry += (y - ry) * k
+      const settled = Math.abs(x - rx) < 0.1 && Math.abs(y - ry) < 0.1
+      if (settled) {
+        rx = x
+        ry = y
+      }
       dot.style.transform = `translate3d(${x}px, ${y}px, 0)`
       ring.style.transform = `translate3d(${rx}px, ${ry}px, 0)`
-      frame = requestAnimationFrame(loop)
+      frame = settled ? 0 : requestAnimationFrame(loop)
+    }
+    const wake = () => {
+      if (!frame) frame = requestAnimationFrame(loop)
     }
 
     const show = (on: boolean) => {
@@ -70,8 +81,16 @@ export function CustomCursor() {
 
     const onMove = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return
+      // The cursor takes over on the first real mouse move, not at load:
+      // hiding the native cursor restyles the whole document (html.cs-cursor *),
+      // and that cost belongs after the page is up, when nobody notices it.
+      if (!active) {
+        active = true
+        root.classList.add("cs-cursor")
+      }
       x = e.clientX
       y = e.clientY
+      wake()
       if (!visible) {
         // First move after entering: start the ring on the pointer, not flying in.
         rx = x
@@ -105,7 +124,6 @@ export function CustomCursor() {
     const onLeave = () => show(false)
 
     setState("default")
-    frame = requestAnimationFrame(loop)
     window.addEventListener("pointermove", onMove, { passive: true })
     document.addEventListener("pointerover", onOver, { passive: true })
     window.addEventListener("pointerdown", onDown, { passive: true })
