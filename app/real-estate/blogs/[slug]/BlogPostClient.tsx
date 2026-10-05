@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { m as motion } from "framer-motion"
+import { motion } from "framer-motion"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import ReactMarkdown from "react-markdown"

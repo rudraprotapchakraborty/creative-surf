@@ -5,7 +5,7 @@ import Link from "next/link";
 import { BreadcrumbJsonLd } from "@/components/Breadcrumbs";
 import {
   AnimatePresence,
-  m as motion,
+  motion,
   useInView,
   useMotionTemplate,
   useMotionValue,

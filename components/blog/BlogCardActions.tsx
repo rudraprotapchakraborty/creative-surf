@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { createPortal } from "react-dom"
-import { AnimatePresence, m as motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { Check, Eye, Facebook, Heart, Instagram, MessageCircle, Share2, X as CloseIcon } from "lucide-react"
 import { useT } from "@/lib/i18n"
 import { blogsMessages } from "@/lib/i18n/messages/blogs"

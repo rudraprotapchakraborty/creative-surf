@@ -1,7 +1,7 @@
 "use client"
 
 import type { ReactNode } from "react"
-import { m as motion, useReducedMotion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 import { Check } from "lucide-react"
 import { useT } from "@/lib/i18n"
 import { authMessages } from "@/lib/i18n/messages/auth"

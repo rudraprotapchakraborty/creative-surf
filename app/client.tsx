@@ -5,7 +5,6 @@ import { LoadingBarProvider } from "@/components/LoadingBarContext"
 import { LazyChatWidget } from "@/components/LazyChatWidget"
 import { CustomCursor } from "@/components/CustomCursor"
 import IntroCurtain from "@/components/IntroCurtain"
-import { MotionProvider } from "@/components/MotionProvider"
 import { Instrument_Serif, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google"
 import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -20,12 +19,9 @@ const jakarta = Plus_Jakarta_Sans({
   display: "swap",
 })
 
-// The editorial pair. Neither is preloaded: a preload is fetched at high
-// priority alongside the stylesheet, and on a slow phone that delays first
-// paint, which Lighthouse then charges to Largest Contentful Paint. The serif
-// italic sets the hero's accent line and section headings; the mono sets the
-// small instrument labels, and its fallback (below) has the same advance, so
-// the swap when it arrives changes letterforms, not layout.
+// The editorial pair. The serif italic only sets accent words inside section
+// headings, all below the fold, so it isn't preloaded; the mono carries the
+// small instrument labels, including the hero's, so it is.
 const serif = Instrument_Serif({
   subsets: ["latin"],
   variable: "--font-serif",
@@ -40,7 +36,6 @@ const mono = JetBrains_Mono({
   variable: "--font-mono",
   weight: ["400", "500"],
   display: "swap",
-  preload: false,
   // Next's generated fallback is Arial stretched to the average width, and
   // uppercase labels set in it run wider and wrap differently, so the page
   // jumps when the font arrives. A real monospace face has JetBrains Mono's
@@ -125,7 +120,6 @@ export default async function RootLayout({
       <body suppressHydrationWarning>
         <LanguageProvider initialLocale={locale}>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          <MotionProvider>
             <Suspense fallback={null}>
               <GoogleAnalytics />
             </Suspense>
@@ -149,7 +143,6 @@ export default async function RootLayout({
 
             {/* CURSOR (mouse only; touch keeps the platform behaviour) */}
             <CustomCursor />
-          </MotionProvider>
           </ThemeProvider>
         </LanguageProvider>
       </body>

@@ -1164,19 +1164,6 @@ body {
 }
 
 /*
- * Deferred rendering for long pages. A .cs-defer block is skipped for style,
- * layout and paint until it comes near the viewport, so the first frame only
- * pays for what is on screen. On the homepage that pulls first paint ahead of
- * the script downloads, which Lighthouse otherwise counts against Largest
- * Contentful Paint. The size is a placeholder until the block first renders;
- * `auto` then remembers its real height, so the scrollbar settles.
- */
-.cs-defer {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 900px;
-}
-
-/*
  * Page loader (components/IntroCurtain.tsx + LogoMark "intro"), shown on
  * every page except the homepage.
  * Pure CSS on a fixed timeline from the first paint — no JavaScript, so it

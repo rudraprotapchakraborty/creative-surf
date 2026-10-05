@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Check, Globe } from "lucide-react";
-import { AnimatePresence, m as motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { LOCALES, LOCALE_META, useLanguage, useT, type Locale } from "@/lib/i18n";
 import { commonMessages } from "@/lib/i18n/messages/common";
 

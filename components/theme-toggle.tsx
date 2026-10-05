@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Moon, Sun } from "lucide-react"
-import { m as motion } from "framer-motion"
+import { motion } from "framer-motion"
 import { useTheme } from "next-themes"
 
 const pillSpring = { type: "spring", stiffness: 400, damping: 34 } as const

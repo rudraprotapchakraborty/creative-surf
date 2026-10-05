@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { m as motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
 
 import { useT } from "@/lib/i18n";

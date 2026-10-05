@@ -4,7 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useState, useRef, useEffect } from "react"
 import {
-  m as motion, useScroll, useTransform, useInView, AnimatePresence,
+  motion, useScroll, useTransform, useInView, AnimatePresence,
   useMotionValue, animate,
 } from "framer-motion"
 import {

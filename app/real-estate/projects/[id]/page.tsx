@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { m as motion } from "framer-motion"
+import { motion } from "framer-motion"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { MapPin, Building2, Home, Users, Layers, Clock, Calendar, User, Pencil, Trash2, ChevronLeft, ChevronRight, X } from "lucide-react"

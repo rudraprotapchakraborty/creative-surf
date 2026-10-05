@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { AnimatePresence, m as motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useT } from "@/lib/i18n";
 import { homeExtraMessages } from "@/lib/i18n/messages/homeExtra";
 import { cn } from "@/lib/utils";
