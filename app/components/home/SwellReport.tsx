@@ -107,6 +107,15 @@ const SWELL_FRONT = swellPath(7, 192, 6);
 export default function SwellReport({ ready }: { ready: boolean }) {
   const t = useT(homeExtraMessages);
   const still = useReducedMotion() ?? false;
+  // On phones the chart opens already drawn, as it does with reduced motion.
+  // Drawing it in kept framer-motion re-laying-out the page every frame for
+  // ~2 s after load, which Lighthouse's mobile Speed Index counts against the
+  // page. Read once on the client; it only changes timings, never markup, so
+  // the server's HTML still hydrates as-is.
+  const [phone] = React.useState(
+    () => typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches
+  );
+  const drawn = still || phone;
   const copy = t.raw<SeriesCopy[]>("swell.series", []);
   const [active, setActive] = React.useState(0);
   const [scrub, setScrub] = React.useState<number | null>(null);
@@ -276,13 +285,13 @@ export default function SwellReport({ ready }: { ready: boolean }) {
               <motion.path
                 initial={{ d: areaPath(line), opacity: 0 }}
                 animate={{ d: areaPath(line), opacity: ready ? 1 : 0 }}
-                transition={{ d: transition, opacity: { duration: 1.2, delay: still ? 0 : 0.9 } }}
+                transition={{ d: transition, opacity: drawn ? { duration: 0 } : { duration: 1.2, delay: 0.9 } }}
                 fill={`url(#${baseId}-fill)`}
               />
               <motion.path
                 initial={{ d: line, pathLength: still ? 1 : 0 }}
                 animate={{ d: line, pathLength: ready ? 1 : 0 }}
-                transition={{ d: transition, pathLength: { duration: still ? 0 : 1.6, ease: [0.65, 0, 0.35, 1], delay: 0.5 } }}
+                transition={{ d: transition, pathLength: drawn ? { duration: 0 } : { duration: 1.6, ease: [0.65, 0, 0.35, 1], delay: 0.5 } }}
                 fill="none"
                 stroke="rgb(var(--cs-cyan))"
                 strokeWidth={2}
@@ -307,7 +316,7 @@ export default function SwellReport({ ready }: { ready: boolean }) {
               transition={
                 scrub !== null
                   ? { type: "spring", stiffness: 500, damping: 40 }
-                  : { ...transition, opacity: { duration: 0.5, delay: still ? 0 : 1.8 } }
+                  : { ...transition, opacity: drawn ? { duration: 0 } : { duration: 0.5, delay: 1.8 } }
               }
             >
               <span className="absolute -left-[5px] -top-[5px] h-2.5 w-2.5 rounded-full border-2 border-cs-cyan bg-cs-bg" />

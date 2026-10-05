@@ -1162,6 +1162,13 @@ body {
   .cs-glide,
   .cs-enter { animation: none; }
 }
+/* On phones the homepage hero opens already in place: the wordmark rising out
+   of its mask (and the fades around it) kept the first screen changing for
+   over a second, which Lighthouse's mobile Speed Index counts against the
+   page. Desktop keeps the entrance. */
+@media (max-width: 767px) {
+  #home :is(.cs-rise, .cs-glide, .cs-enter) { animation: none; }
+}
 
 /*
  * Page loader (components/IntroCurtain.tsx + LogoMark "intro"), shown on
