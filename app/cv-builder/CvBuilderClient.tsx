@@ -754,31 +754,6 @@ export default function CvBuilderClient({ initialSignedIn = false }: { initialSi
     goTo(current + 1);
   };
 
-  /*
-   * Beside the preview (lg and up) the panel is at least most of a screen tall
-   * and the step stretches to fill it, its text areas taking up the slack.
-   * Stacked, the panel's height follows the step on screen, so the footer
-   * glides rather than jumping when a short step replaces a long one.
-   */
-  const [isWide, setIsWide] = useState(false);
-  useEffect(() => {
-    const query = window.matchMedia("(min-width: 1024px)");
-    const update = () => setIsWide(query.matches);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
-
-  const stepBodyRef = useRef<HTMLDivElement>(null);
-  const [stepHeight, setStepHeight] = useState<number | "auto">("auto");
-  useEffect(() => {
-    const body = stepBodyRef.current;
-    if (!body) return;
-    const observer = new ResizeObserver(() => setStepHeight(body.offsetHeight));
-    observer.observe(body);
-    return () => observer.disconnect();
-  }, []);
-
   const handleGenerate = async () => {
     const payload = commitDrafts();
     // Sent back to the first step still wanting something, its fields outlined.
@@ -877,9 +852,10 @@ export default function CvBuilderClient({ initialSignedIn = false }: { initialSi
       | "phone"
       | "location"
       | "yearsExperience",
-    type = "text"
+    type = "text",
+    className = ""
   ) => (
-    <div className="space-y-1">
+    <div className={`min-w-0 space-y-1 ${className}`}>
       <Label htmlFor={key} className="text-[12.5px] font-semibold text-cs-ink">
         {t(`fields.${key}.label`)}
       </Label>
@@ -895,13 +871,13 @@ export default function CvBuilderClient({ initialSignedIn = false }: { initialSi
     </div>
   );
 
-  /** A text area. Beside the preview it grows into whatever height the step has spare. */
+  /** A text area. It grows into whatever height the step has spare, so every step fills the same panel. */
   const textarea = (
     key: "workHistory" | "education" | "skills" | "targetJob",
     rows: number,
     hint?: boolean
   ) => (
-    <div className="flex flex-col gap-1 lg:flex-1">
+    <div className="flex flex-1 flex-col gap-1">
       <Label htmlFor={key} className="text-[12.5px] font-semibold text-cs-ink">
         {t(`fields.${key}.label`)}
       </Label>
@@ -912,7 +888,7 @@ export default function CvBuilderClient({ initialSignedIn = false }: { initialSi
         placeholder={t(`fields.${key}.placeholder`)}
         onChange={(e) => set(key, e.target.value)}
         aria-invalid={isFlagged(key) || undefined}
-        className={`resize-y rounded-[10px] border-cs-ink/15 bg-cs-surface text-[14.5px] text-cs-ink focus-visible:ring-2 focus-visible:ring-cs-blue focus-visible:ring-offset-0 lg:flex-1 lg:resize-none ${isFlagged(key) ? flaggedClass : ""}`}
+        className={`resize-y rounded-[10px] border-cs-ink/15 bg-cs-surface text-[14.5px] text-cs-ink focus-visible:ring-2 focus-visible:ring-cs-blue focus-visible:ring-offset-0 flex-1 resize-none ${isFlagged(key) ? flaggedClass : ""}`}
       />
       {hint && <p className="text-xs leading-relaxed text-cs-ink2">{t(`fields.${key}.hint`)}</p>}
     </div>
@@ -1129,7 +1105,7 @@ export default function CvBuilderClient({ initialSignedIn = false }: { initialSi
                 {/* THE STEPS ---------------------------------------------- */}
                 <div
                   ref={wizardRef}
-                  className="scroll-mt-24 overflow-hidden rounded-2xl bg-cs-surface lg:flex lg:min-h-[clamp(36rem,calc(100svh-9rem),44rem)] lg:flex-1 lg:flex-col shadow-[0_1px_0_rgb(var(--cs-ink)/0.04),0_24px_48px_-32px_rgb(var(--cs-ink)/0.35)] ring-1 ring-inset ring-cs-ink/10"
+                  className="scroll-mt-24 flex min-h-[42rem] flex-col overflow-hidden rounded-2xl bg-cs-surface sm:min-h-[38rem] lg:min-h-[clamp(36rem,calc(100svh-9rem),44rem)] lg:flex-1 shadow-[0_1px_0_rgb(var(--cs-ink)/0.04),0_24px_48px_-32px_rgb(var(--cs-ink)/0.35)] ring-1 ring-inset ring-cs-ink/10"
                 >
                   {/* The rail: every step, where you are, and what is filled in. */}
                   <nav aria-label={t("wizard.label")} className="shrink-0 border-b border-cs-ink/10 px-2 pt-3 sm:px-4">
@@ -1183,12 +1159,8 @@ export default function CvBuilderClient({ initialSignedIn = false }: { initialSi
                   </nav>
 
                   {/* The step on screen, sliding in the direction of travel. */}
-                  <motion.div
-                    animate={{ height: isWide ? "auto" : stepHeight }}
-                    transition={{ duration: still || isWide ? 0 : 0.38, ease: EASE }}
-                    className="relative overflow-hidden lg:flex lg:flex-1 lg:flex-col"
-                  >
-                    <div ref={stepBodyRef} onKeyDown={onStepKeyDown} className="px-5 py-5 sm:px-7 lg:flex lg:flex-1 lg:flex-col">
+                  <div className="relative flex flex-1 flex-col overflow-hidden">
+                    <div onKeyDown={onStepKeyDown} className="flex flex-1 flex-col px-5 py-5 sm:px-7">
                       <AnimatePresence mode="wait" initial={false} custom={direction}>
                         <motion.section
                           key={stepKey}
@@ -1198,7 +1170,7 @@ export default function CvBuilderClient({ initialSignedIn = false }: { initialSi
                           animate="center"
                           exit="exit"
                           aria-labelledby="cv-step-title"
-                          className="lg:flex lg:flex-1 lg:flex-col"
+                          className="flex flex-1 flex-col"
                         >
                           <header className="mb-4">
                             <h3
@@ -1212,18 +1184,18 @@ export default function CvBuilderClient({ initialSignedIn = false }: { initialSi
                             <p className="mt-1 max-w-xl text-[13.5px] leading-relaxed text-cs-ink2">{stepCopy[stepKey].hint}</p>
                           </header>
 
-                          <div className="flex flex-col gap-4 lg:flex-1">
+                          <div className="flex flex-1 flex-col gap-4">
                 {stepKey === "basics" && (
                   <>
-                    <div className="grid gap-x-4 gap-y-3 sm:grid-cols-2">
-                      {field("fullName")}
-                      {field("jobTitle")}
+                    <div className="grid grid-cols-2 gap-x-3 gap-y-3 sm:gap-x-4">
+                      {field("fullName", "text", "col-span-2 sm:col-span-1")}
+                      {field("jobTitle", "text", "col-span-2 sm:col-span-1")}
                       {field("email", "email")}
                       {field("phone", "tel")}
                       {field("location")}
                       {field("yearsExperience")}
                     </div>
-                    <div className="space-y-2 rounded-xl bg-cs-bg/60 p-3 ring-1 ring-inset ring-cs-ink/10 lg:flex lg:flex-1 lg:flex-col lg:justify-center">
+                    <div className="space-y-2 rounded-xl bg-cs-bg/60 p-3 ring-1 ring-inset ring-cs-ink/10 flex flex-1 flex-col justify-center">
                       <div className="flex items-center gap-3 lg:gap-4">
                         {photoPreview ? (
                           // eslint-disable-next-line @next/next/no-img-element -- an image host URL, not a bundled asset
@@ -1443,8 +1415,8 @@ export default function CvBuilderClient({ initialSignedIn = false }: { initialSi
                 {stepKey === "target" && (
                   <>
                     {textarea("targetJob", 3, true)}
-                    <div className="grid gap-4 sm:grid-cols-3">
-                      <div className="space-y-1.5">
+                    <div className="grid grid-flow-row-dense grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+                      <div className="min-w-0 space-y-1.5">
                         <Label className="text-[13px] font-semibold text-cs-ink">
                           {t("fields.tone.label")}
                         </Label>
@@ -1464,7 +1436,7 @@ export default function CvBuilderClient({ initialSignedIn = false }: { initialSi
                           </SelectContent>
                         </Select>
                       </div>
-                      <div className="space-y-1.5">
+                      <div className="col-span-2 min-w-0 space-y-1.5 sm:col-span-1">
                         <Label className="text-[13px] font-semibold text-cs-ink">
                           {t("fields.language.label")}
                         </Label>
@@ -1484,7 +1456,7 @@ export default function CvBuilderClient({ initialSignedIn = false }: { initialSi
                           </SelectContent>
                         </Select>
                       </div>
-                      <div className="space-y-1.5">
+                      <div className="min-w-0 space-y-1.5">
                         <Label className="text-[13px] font-semibold text-cs-ink">
                           {t("fields.effort.label")}
                         </Label>
@@ -1521,7 +1493,7 @@ export default function CvBuilderClient({ initialSignedIn = false }: { initialSi
                         </div>
                       )}
                     </div>
-                  </motion.div>
+                  </div>
 
                   {/* Start again and back on the left; on — or, on the last step, the reason for all of it — on the right. */}
                   <div className="mt-auto flex shrink-0 items-center justify-between gap-3 border-t border-cs-ink/10 bg-cs-bg/40 px-5 py-3 sm:px-7">
