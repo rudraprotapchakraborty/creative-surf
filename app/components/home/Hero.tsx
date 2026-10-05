@@ -8,14 +8,6 @@ import { ButtonLink, TextLink } from "@/app/components/editorial";
 import SwellReport from "./SwellReport";
 
 /**
- * The homepage intro curtain lifts at --cs-intro-lift (globals.css). The hero
- * sits under it from the first paint, and its entrances are timed from that
- * moment so they play in view rather than behind the curtain.
- */
-const INTRO_LIFT_MS = 1000;
-const afterIntro = (seconds: number) => `calc(var(--cs-intro-lift) + ${seconds}s)`;
-
-/**
  * The wordmark is the headline, so it is set as one: "Creative" hangs off the
  * left edge, "Surf" drops to the right on the line below, and the tagline and
  * actions sit in the space the stagger opens up. The swell report below is
@@ -55,7 +47,7 @@ function Line({
     // The clip is padded below so descenders and the rising glyphs aren't
     // cropped, then pulled back so the padding doesn't open the leading.
     <span className={`block overflow-hidden pb-[0.08em] -mb-[0.08em] ${className ?? ""}`}>
-      <span className="cs-rise inline-block" style={{ animationDelay: afterIntro(delay) }}>
+      <span className="cs-rise inline-block" style={{ animationDelay: `${delay}s` }}>
         {children}
       </span>
     </span>
@@ -66,16 +58,9 @@ export default function Hero() {
   const t = useT(homeExtraMessages);
   const th = useT(homeMessages);
   const time = useDhakaTime();
-  // The swell draws its line once the intro curtain has lifted, not behind it.
-  const [introDone, setIntroDone] = React.useState(false);
-  React.useEffect(() => {
-    const timer = window.setTimeout(() => setIntroDone(true), INTRO_LIFT_MS);
-    return () => clearTimeout(timer);
-  }, []);
-
   // Entrances are CSS (see .cs-enter / .cs-glide in globals.css), in the HTML
-  // from the first paint and timed to begin as the intro curtain lifts.
-  const delay = (seconds: number) => ({ animationDelay: afterIntro(seconds) });
+  // and playing from the first paint.
+  const delay = (seconds: number) => ({ animationDelay: `${seconds}s` });
 
   return (
     <section
@@ -156,7 +141,7 @@ export default function Hero() {
 
         {/* ---- The swell ---- */}
         <div style={delay(0.6)} className="cs-glide mt-12 pb-10 sm:mt-14 lg:mt-10 lg:pb-14">
-          <SwellReport ready={introDone} />
+          <SwellReport ready />
         </div>
       </div>
     </section>

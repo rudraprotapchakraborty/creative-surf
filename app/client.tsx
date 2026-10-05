@@ -4,6 +4,7 @@ import { ConditionalFooter } from "@/components/ConditionalFooter"
 import { LoadingBarProvider } from "@/components/LoadingBarContext"
 import { LazyChatWidget } from "@/components/LazyChatWidget"
 import { CustomCursor } from "@/components/CustomCursor"
+import IntroCurtain from "@/components/IntroCurtain"
 import { Instrument_Serif, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google"
 import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -122,6 +123,9 @@ export default async function RootLayout({
             <Suspense fallback={null}>
               <GoogleAnalytics />
             </Suspense>
+
+            {/* PAGE LOADER (every page but the homepage) */}
+            <IntroCurtain />
 
             {/* NAV */}
             <Navbar />

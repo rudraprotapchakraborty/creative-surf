@@ -1,16 +1,23 @@
+"use client";
+
 import type { CSSProperties } from "react";
+import { usePathname } from "next/navigation";
 import { LogoMark } from "@/components/brand/LogoMark";
 
 /**
- * The homepage intro: the logo builds itself, the wordmark rises, a counter
- * runs to 100 and the whole stage lifts away like a wave drawing back off the
- * beach, uncovering the hero underneath.
+ * The page loader: the logo builds itself, the wordmark rises, a counter runs
+ * to 100 and the whole stage lifts away like a wave drawing back off the
+ * beach, uncovering the page underneath.
  *
- * Rendered by the homepage only and driven entirely by CSS (see "Homepage
- * intro" in globals.css): it plays on a fixed timeline from the first paint,
- * whether or not the page's scripts have arrived, and lifts at
- * --cs-intro-lift. It is decoration — the hero is already in the page beneath
- * it — so it is hidden from assistive tech and never takes a pointer.
+ * Mounted once by the root layout. The homepage opens straight onto its hero;
+ * every other page plays the loader, on first load and again on each
+ * navigation (it is keyed by the path, so the CSS timeline restarts).
+ *
+ * Driven entirely by CSS (see "Page loader" in globals.css): it plays on a
+ * fixed timeline from the first paint, whether or not the page's scripts have
+ * arrived, and lifts at --cs-intro-lift. It is decoration — the page is
+ * already rendered beneath it — so it is hidden from assistive tech and never
+ * takes a pointer.
  */
 const TITLE = "Creative Surf";
 const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
@@ -20,6 +27,12 @@ const run = (name: string, duration: number, at: number, easing = EASE): CSSProp
 });
 
 export default function IntroCurtain() {
+  const pathname = usePathname();
+  if (pathname === "/") return null;
+  return <Curtain key={pathname} />;
+}
+
+function Curtain() {
   return (
     <div aria-hidden className="cs-intro">
       {/* Backdrop */}

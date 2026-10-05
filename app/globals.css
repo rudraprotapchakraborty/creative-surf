@@ -1164,7 +1164,8 @@ body {
 }
 
 /*
- * Homepage intro (app/components/home/IntroCurtain.tsx + LogoMark "intro").
+ * Page loader (components/IntroCurtain.tsx + LogoMark "intro"), shown on
+ * every page except the homepage.
  * Pure CSS on a fixed timeline from the first paint — no JavaScript, so it
  * never waits for the page to load its scripts. The logo builds, the wordmark
  * rises, the counter runs to 100, and the curtain lifts at --cs-intro-lift.
