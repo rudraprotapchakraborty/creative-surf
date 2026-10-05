@@ -1,6 +1,7 @@
 import { cookies, headers } from "next/headers";
 import { DEFAULT_LOCALE, LOCALE_COOKIE, LOCALES, isLocale, resolveLocale, type Locale } from "./config";
 import { createTranslator } from "./translator";
+import { loadLocale } from "./load";
 import type { Dict, Messages } from "./types";
 
 /**
@@ -29,5 +30,6 @@ export async function getServerLocale(): Promise<Locale> {
 /** Server-component equivalent of `useT` — for metadata and RSC-only copy. */
 export async function getTranslator<T extends Dict>(messages: Messages<T>) {
   const locale = await getServerLocale();
-  return createTranslator(messages, locale);
+  const bundle = locale === "en" ? undefined : await loadLocale(locale);
+  return createTranslator(messages, locale, bundle);
 }

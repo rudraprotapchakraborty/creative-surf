@@ -9,7 +9,22 @@ import {
   type Locale,
 } from "./config";
 import { createTranslator, type Translator } from "./translator";
+import { getLoadedLocale, loadLocale, type LocaleBundle } from "./load";
 import type { Dict, Messages } from "./types";
+
+/**
+ * React's `use()`. The app router runs on React 19, but the installed type
+ * definitions are React 18's, which don't declare it.
+ */
+const use = (React as unknown as { use<T>(promise: Promise<T>): T }).use;
+
+/** Fetches a locale's bundle (if it isn't English or already here), then runs `then`. */
+function whenLoaded(locale: Locale, then: () => void) {
+  if (locale === "en" || getLoadedLocale(locale)) then();
+  else loadLocale(locale).then(then, () => {
+    /* offline or a failed deploy — stay in the current language */
+  });
+}
 
 type LanguageContextValue = {
   locale: Locale;
@@ -28,7 +43,8 @@ export function LanguageProvider({
   const [locale, setLocaleState] = React.useState<Locale>(initialLocale);
 
   const setLocale = React.useCallback((next: Locale) => {
-    setLocaleState(next);
+    // The copy arrives first, then the whole page switches at once.
+    whenLoaded(next, () => React.startTransition(() => setLocaleState(next)));
     // Persist so the server renders this language directly on the next load.
     document.cookie = `${LOCALE_COOKIE}=${next};path=/;max-age=${LOCALE_COOKIE_MAX_AGE};samesite=lax`;
     try {
@@ -58,7 +74,9 @@ export function LanguageProvider({
       .find((row) => row.startsWith(`${LOCALE_COOKIE}=`))
       ?.split("=")[1];
     const preferred = resolveLocale(fromCookie ?? stored);
-    if (preferred !== DEFAULT_LOCALE) setLocaleState(preferred);
+    if (preferred !== DEFAULT_LOCALE) {
+      whenLoaded(preferred, () => React.startTransition(() => setLocaleState(preferred)));
+    }
   }, [initialLocale]);
 
   const value = React.useMemo<LanguageContextValue>(() => ({ locale, setLocale }), [locale, setLocale]);
@@ -86,5 +104,13 @@ export function useLocale(): Locale {
  */
 export function useT<T extends Dict>(messages: Messages<T>): Translator<T> {
   const locale = useLocale();
-  return React.useMemo(() => createTranslator(messages, locale), [messages, locale]);
+  // English is bundled with the code. Another language is a separate download:
+  // on a page served in that language, the first render waits for it (on the
+  // server, and while hydrating, where the server's HTML stays on screen), and
+  // after that `use` reads the settled promise synchronously. Always go through
+  // `use` for a non-English locale, even once it has loaded: React replays a
+  // component that suspended, and skipping `use` on the replay changes the
+  // hook sequence (React error #467).
+  const bundle: LocaleBundle | undefined = locale === "en" ? undefined : use(loadLocale(locale));
+  return React.useMemo(() => createTranslator(messages, locale, bundle), [messages, locale, bundle]);
 }

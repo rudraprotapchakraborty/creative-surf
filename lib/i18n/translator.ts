@@ -44,8 +44,16 @@ export type Translator<T extends Dict = Dict> = {
   dict: T;
 };
 
-export function createTranslator<T extends Dict>(messages: Messages<T>, locale: Locale): Translator<T> {
-  const active = (messages[locale] ?? messages.en) as T;
+/**
+ * `bundle` is the active locale's loaded bundle (see ./load.ts); without it,
+ * or for English, the namespace's English copy is used.
+ */
+export function createTranslator<T extends Dict>(
+  messages: Messages<T>,
+  locale: Locale,
+  bundle?: Record<string, Dict>
+): Translator<T> {
+  const active = ((locale !== "en" && bundle?.[messages.id]) || messages.en) as T;
   const fallback = messages.en as T;
 
   const resolve = (path: string): DictValue | undefined => {

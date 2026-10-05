@@ -6,7 +6,7 @@ import { defineMessages } from "../types";
  * English-only for now — the translator falls back to `en` per-key, so
  * fr/de/ar visitors see this in English until it's translated.
  */
-export const homeExtraMessages = defineMessages({
+export const homeExtraMessages = defineMessages("homeExtra", {
   en: {
     hero: {
       agency: "Digital agency",

@@ -1,6 +1,6 @@
 import { defineMessages } from "../types";
 
-export const realEstateProjectsMessages = defineMessages({
+export const realEstateProjectsMessages = defineMessages("realEstateProjects", {
   en: {
     list: {
       eyebrow: "Creative Surf · Real Estate",
@@ -16,74 +16,6 @@ export const realEstateProjectsMessages = defineMessages({
       edit: "Edit",
       delete: "Delete",
       confirmDelete: 'Delete "{name}"? This cannot be undone.',
-    },
-  },
-  fr: {
-    list: {
-      eyebrow: "Creative Surf · Immobilier",
-      title: "Nos projets",
-      subtitle: "Des résidences haut de gamme à Dhaka — construites avec exigence, pensées pour la vie.",
-      statusAll: "Tous",
-      newProject: "Nouveau projet",
-      logout: "Déconnexion",
-      emptyTitle: "Aucun projet pour l'instant",
-      emptyAdmin: "Ajoutez votre premier projet immobilier pour commencer.",
-      emptyPublic: "Les projets apparaîtront bientôt ici.",
-      addFirst: "Ajouter le premier projet",
-      edit: "Modifier",
-      delete: "Supprimer",
-      confirmDelete: 'Supprimer « {name} » ? Cette action est irréversible.',
-    },
-  },
-  de: {
-    list: {
-      eyebrow: "Creative Surf · Immobilien",
-      title: "Unsere Projekte",
-      subtitle: "Hochwertige Wohnprojekte in Dhaka — mit Qualität gebaut, fürs Leben gestaltet.",
-      statusAll: "Alle",
-      newProject: "Neues Projekt",
-      logout: "Abmelden",
-      emptyTitle: "Noch keine Projekte",
-      emptyAdmin: "Legen Sie Ihr erstes Immobilienprojekt an, um zu starten.",
-      emptyPublic: "Projekte erscheinen hier in Kürze.",
-      addFirst: "Erstes Projekt anlegen",
-      edit: "Bearbeiten",
-      delete: "Löschen",
-      confirmDelete: '„{name}“ löschen? Das kann nicht rückgängig gemacht werden.',
-    },
-  },
-  ar: {
-    list: {
-      eyebrow: "Creative Surf · Al-Aqarat",
-      title: "Mashariuna",
-      subtitle: "Mashari sakaniyya mumayyaza fi Dhaka — mabniyya bi-jawda wa masmuma lil-haya.",
-      statusAll: "Al-Kull",
-      newProject: "Mashrou Jadid",
-      logout: "Tasjil Al-Khuruj",
-      emptyTitle: "La tujad mashari baad",
-      emptyAdmin: "Adif awwal mashrou aqari lak lil-bidaya.",
-      emptyPublic: "Sa-tazhar Al-Mashari huna qariban.",
-      addFirst: "Adif Awwal Mashrou",
-      edit: "Tahrir",
-      delete: "Hadhf",
-      confirmDelete: 'Hadhf \"{name}\"? La yumkin Al-Tarajju an dhalik.',
-    },
-  },
-  bn: {
-    list: {
-      eyebrow: "Creative Surf · রিয়েল এস্টেট",
-      title: "আমাদের প্রকল্প",
-      subtitle: "ঢাকার প্রিমিয়াম আবাসিক প্রকল্প — মানসম্মত নির্মাণ, জীবনের জন্য ডিজাইন করা।",
-      statusAll: "সব",
-      newProject: "নতুন প্রকল্প",
-      logout: "লগ আউট",
-      emptyTitle: "এখনও কোনো প্রকল্প নেই",
-      emptyAdmin: "শুরু করতে আপনার প্রথম রিয়েল এস্টেট প্রকল্পটি যোগ করুন।",
-      emptyPublic: "প্রকল্পগুলো শীঘ্রই এখানে দেখা যাবে।",
-      addFirst: "প্রথম প্রকল্প যোগ করুন",
-      edit: "সম্পাদনা",
-      delete: "মুছে ফেলুন",
-      confirmDelete: '"{name}" মুছে ফেলবেন? এটি আর ফেরানো যাবে না।',
     },
   },
 });

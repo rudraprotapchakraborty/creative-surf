@@ -1,7 +1,7 @@
 import { defineMessages } from "../types";
 
 /** Shared copy for both blog post readers (marketing and real estate). */
-export const blogPostMessages = defineMessages({
+export const blogPostMessages = defineMessages("blogPost", {
   en: {
     notFound: "Post not found",
     backToBlogs: "← Back to Blogs",
@@ -18,78 +18,6 @@ export const blogPostMessages = defineMessages({
       inboundReal: "Related on Creative Surf Real Estate",
       inbound: "Related on Creative Surf",
       outbound: "External Resources",
-    },
-  },
-  fr: {
-    notFound: "Article introuvable",
-    backToBlogs: "← Retour au blog",
-    backToBlogsShort: "Retour au blog",
-    back: "Retour",
-    backToAll: "Retour à tous les articles",
-    edit: "Modifier",
-    delete: "Supprimer",
-    confirmDelete: "Supprimer cet article ? Cette action est irréversible.",
-    writtenBy: "Écrit par",
-    share: "Partager",
-    keyTakeaways: "Points clés",
-    seo: {
-      inboundReal: "À lire aussi sur Creative Surf Immobilier",
-      inbound: "À lire aussi sur Creative Surf",
-      outbound: "Ressources externes",
-    },
-  },
-  de: {
-    notFound: "Beitrag nicht gefunden",
-    backToBlogs: "← Zurück zum Blog",
-    backToBlogsShort: "Zurück zum Blog",
-    back: "Zurück",
-    backToAll: "Zurück zu allen Artikeln",
-    edit: "Bearbeiten",
-    delete: "Löschen",
-    confirmDelete: "Diesen Beitrag löschen? Das kann nicht rückgängig gemacht werden.",
-    writtenBy: "Geschrieben von",
-    share: "Teilen",
-    keyTakeaways: "Kernaussagen",
-    seo: {
-      inboundReal: "Passend dazu bei Creative Surf Immobilien",
-      inbound: "Passend dazu bei Creative Surf",
-      outbound: "Externe Ressourcen",
-    },
-  },
-  ar: {
-    notFound: "Al-Maqal ghayr mawjud",
-    backToBlogs: "← Al-Awda lil-Mudawwana",
-    backToBlogsShort: "Al-Awda lil-Mudawwana",
-    back: "Ruju",
-    backToAll: "Al-Awda li-jami Al-Maqalat",
-    edit: "Tahrir",
-    delete: "Hadhf",
-    confirmDelete: "Hadhf hadha Al-Maqal? La yumkin Al-Tarajju an dhalik.",
-    writtenBy: "Kutiba bi-wasitat",
-    share: "Musharaka",
-    keyTakeaways: "Al-Nuqat Al-Raisiyya",
-    seo: {
-      inboundReal: "Dhu sila fi Creative Surf Al-Aqarat",
-      inbound: "Dhu sila fi Creative Surf",
-      outbound: "Masadir Kharijiyya",
-    },
-  },
-  bn: {
-    notFound: "পোস্ট পাওয়া যায়নি",
-    backToBlogs: "← ব্লগে ফিরুন",
-    backToBlogsShort: "ব্লগে ফিরুন",
-    back: "ফিরুন",
-    backToAll: "সব লেখায় ফিরুন",
-    edit: "সম্পাদনা",
-    delete: "মুছে ফেলুন",
-    confirmDelete: "এই পোস্টটি মুছে ফেলবেন? এটি আর ফেরানো যাবে না।",
-    writtenBy: "লিখেছেন",
-    share: "শেয়ার",
-    keyTakeaways: "মূল কথা",
-    seo: {
-      inboundReal: "Creative Surf রিয়েল এস্টেটে সম্পর্কিত",
-      inbound: "Creative Surf-এ সম্পর্কিত",
-      outbound: "বাইরের রিসোর্স",
     },
   },
 });
