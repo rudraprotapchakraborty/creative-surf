@@ -32,9 +32,12 @@ const nextConfig = {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
-    // The stylesheet (~22 KB gzipped) arrives inside the HTML instead of as a
-    // second, render-blocking request — a full round trip saved on mobile.
-    inlineCss: true,
+    // Off on purpose. Inlining saves the stylesheet request, but Next also
+    // repeats the whole stylesheet inside the page's hydration payload, so the
+    // homepage carried ~245 KB of CSS text and the browser parsed it twice. On
+    // Lighthouse mobile that cost more blocking time (130–240 ms against
+    // 50–90 ms) than the extra request costs in paint time.
+    inlineCss: false,
   },
 }
 
