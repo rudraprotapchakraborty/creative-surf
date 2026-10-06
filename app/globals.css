@@ -1174,8 +1174,8 @@ body {
  * Page loader (components/IntroCurtain.tsx + LogoMark "intro"), shown on
  * every page except the homepage.
  * Pure CSS on a fixed timeline from the first paint — no JavaScript, so it
- * never waits for the page to load its scripts. The logo builds, the wordmark
- * rises, the counter runs to 100, and the curtain lifts at --cs-intro-lift.
+ * never waits for the page to load its scripts. The logo builds and the
+ * curtain lifts at --cs-intro-lift.
  * Every element rests in its finished state; the keyframes only say where it
  * starts, so with reduced motion the intro is skipped rather than frozen.
  */
@@ -1187,15 +1187,6 @@ body {
 @keyframes cs-logo-grow { from { transform: scaleY(0); } }
 @keyframes cs-logo-glint { from { transform: translateX(0); } }
 
-@property --cs-intro-count {
-  syntax: "<integer>";
-  initial-value: 100;
-  inherits: false;
-}
-@keyframes cs-intro-count { from { --cs-intro-count: 0; } }
-@keyframes cs-intro-letter { from { transform: translateY(110%); opacity: 0; } }
-@keyframes cs-intro-track { from { opacity: 0; letter-spacing: 0.04em; } }
-@keyframes cs-intro-fade { from { opacity: 0; } }
 @keyframes cs-intro-stage-out { to { opacity: 0; transform: translateY(-24px) scale(0.97); } }
 @keyframes cs-intro-lift { to { transform: translateY(-110%); visibility: hidden; } }
 @keyframes cs-intro-dissolve { to { opacity: 0; visibility: hidden; } }
@@ -1211,15 +1202,9 @@ body {
 .cs-intro-stage {
   animation: cs-intro-stage-out 0.3s cubic-bezier(0.16, 1, 0.3, 1) var(--cs-intro-lift) forwards;
 }
-.cs-intro-count {
-  counter-reset: cs-intro var(--cs-intro-count);
-  animation: cs-intro-count 0.9s cubic-bezier(0.45, 0, 0.2, 1) both;
-}
-.cs-intro-count::before { content: counter(cs-intro); }
 
 @media (prefers-reduced-motion: reduce) {
   .cs-intro { animation: cs-intro-dissolve 0.3s ease 0.2s forwards; }
   .cs-intro-anim,
-  .cs-intro-stage,
-  .cs-intro-count { animation: none !important; }
+  .cs-intro-stage { animation: none !important; }
 }
