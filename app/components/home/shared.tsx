@@ -16,7 +16,13 @@ export function Kicker({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Line-by-line, word-by-word kinetic headline reveal (clip-mask slide-up). */
+/**
+ * Line-by-line, word-by-word kinetic headline reveal (clip-mask slide-up).
+ * It is the page's title, so it renders as the <h1>. Lines are spans (an h1
+ * may only hold inline content), and a real space follows each word so the
+ * heading reads "Our Approach", not "OurApproach", to crawlers and screen
+ * readers; flex ignores that whitespace, so the layout is unchanged.
+ */
 export function KineticHeading({
   lines,
   className,
@@ -30,27 +36,29 @@ export function KineticHeading({
 }) {
   let wordIndex = 0;
   return (
-    <div className={className} style={style}>
+    <h1 className={className} style={style}>
       {lines.map((line, li) => (
-        <div key={li} className="flex flex-wrap overflow-hidden">
+        <span key={li} className="flex flex-wrap overflow-hidden">
           {line.text.split(" ").map((word, wi) => {
             const i = wordIndex++;
             return (
-              <span key={wi} className="inline-block overflow-hidden pt-1 pb-[0.16em] -mb-[0.1em] mr-[0.28em]">
-                <motion.span
-                  className={`inline-block ${line.accent ? "text-aurora" : ""}`}
-                  initial={{ y: "115%" }}
-                  animate={{ y: "0%" }}
-                  transition={{ duration: 0.9, ease: EASE, delay: delay + i * 0.045 }}
-                >
-                  {word}
-                </motion.span>
-              </span>
+              <React.Fragment key={wi}>
+                <span className="inline-block overflow-hidden pt-1 pb-[0.16em] -mb-[0.1em] mr-[0.28em]">
+                  <motion.span
+                    className={`inline-block ${line.accent ? "text-aurora" : ""}`}
+                    initial={{ y: "115%" }}
+                    animate={{ y: "0%" }}
+                    transition={{ duration: 0.9, ease: EASE, delay: delay + i * 0.045 }}
+                  >
+                    {word}
+                  </motion.span>
+                </span>{" "}
+              </React.Fragment>
             );
           })}
-        </div>
+        </span>
       ))}
-    </div>
+    </h1>
   );
 }
 

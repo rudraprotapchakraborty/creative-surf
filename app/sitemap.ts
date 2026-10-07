@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next"
 import { getDb } from "@/lib/mongodb"
 import { LIVE_PATHS } from "@/lib/routes"
-import { SERVICES } from "@/app/services/catalog"
 
 const BASE_URL = "https://www.creativesurf.agency"
 
@@ -50,6 +49,5 @@ async function dataEntries(): Promise<MetadataRoute.Sitemap> {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const fixed = LIVE_PATHS.map(path => ({ url: path === "/" ? BASE_URL : `${BASE_URL}${path}` }))
-  const services = SERVICES.map(service => ({ url: `${BASE_URL}/services/${service.slug}` }))
-  return [...fixed, ...services, ...(await dataEntries())]
+  return [...fixed, ...(await dataEntries())]
 }

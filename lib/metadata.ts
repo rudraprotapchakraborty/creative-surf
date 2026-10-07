@@ -38,6 +38,9 @@ export function generateMetadata({
     description: metaDescription,
     // Without this Next resolves relative OG images against localhost.
     metadataBase: new URL(baseUrl),
+    // Query strings like /contact?subject=… or /login?from=… render the same
+    // page, so each one points search engines back at the clean URL.
+    ...(path && { alternates: { canonical: url } }),
     openGraph: {
       title: metaTitle,
       description: metaDescription,

@@ -47,7 +47,7 @@ export default function Capabilities() {
           {services.map((service, i) => (
             <Reveal as="li" key={service.slug} delay={Math.min(i, 3) * 0.05} y={14}>
               <Link
-                href={`/services/${service.slug}`}
+                href={`/services#${service.slug}`}
                 aria-label={tx("capabilities.explore", { name: service.title })}
                 className="cs-focus group relative grid grid-cols-[2.25rem_1fr_auto] gap-x-3 gap-y-3 border-b border-cs-ink/10 py-6 outline-offset-[-2px] sm:grid-cols-[3rem_1fr_auto] sm:py-8 lg:grid-cols-12 lg:gap-x-8 lg:py-9"
               >

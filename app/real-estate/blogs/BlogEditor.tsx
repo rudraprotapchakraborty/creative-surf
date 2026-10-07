@@ -21,6 +21,7 @@ import {
   type BlogSeoFields,
 } from "@/lib/blog-types"
 import { LogoSpinner } from "@/components/ui/LogoSpinner"
+import WritersField from "@/components/blog/WritersField"
 
 interface BlogForm {
   title: string
@@ -89,7 +90,6 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
   const isEdit = !!blogId
   const [form, setForm] = useState<BlogForm>(DEFAULT_FORM)
   const [tagInput, setTagInput] = useState("")
-  const [authorInput, setAuthorInput] = useState("")
   const [preview, setPreview] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
@@ -156,21 +156,6 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
     set("tags", form.tags.filter(t => t !== tag))
   }
 
-  function addAuthor(e: React.KeyboardEvent) {
-    if ((e.key === "Enter" || e.key === ",") && authorInput.trim()) {
-      e.preventDefault()
-      const author = authorInput.trim().replace(/,+$/, "")
-      if (author && !form.authors.includes(author)) {
-        set("authors", [...form.authors, author])
-      }
-      setAuthorInput("")
-    }
-  }
-
-  function removeAuthor(author: string) {
-    set("authors", form.authors.filter(a => a !== author))
-  }
-
   async function handleSave() {
     setError("")
 
@@ -184,8 +169,8 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
     }
     setShowSeoValidation(false)
 
-    // Pick up a name typed but not yet committed with Enter.
-    const authors = [...new Set([...form.authors, authorInput.trim()].filter(Boolean))]
+    // WritersField adds a half-typed name on blur, before Save is clicked.
+    const authors = [...new Set(form.authors.filter(Boolean))]
     if (!authors.length) authors.push("Creative Surf")
 
     const payload = {
@@ -419,25 +404,14 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
               </div>
 
               {/* Writers */}
-              <div className="glass rounded-xl p-4" style={{ border: "1px solid var(--flow-border)" }}>
-                <label className="block text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "rgb(var(--flow-text-soft))" }}>{t("authorsLabel")}</label>
-                <div className="flex flex-wrap gap-1.5 mb-2">
-                  {form.authors.map(author => (
-                    <span key={author} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium" style={{ background: "rgba(184,137,42,0.1)", color: "#B8892A" }}>
-                      {author}
-                      <button onClick={() => removeAuthor(author)} className="opacity-60 hover:opacity-100"><X size={10} /></button>
-                    </span>
-                  ))}
-                </div>
-                <input
-                  type="text"
-                  value={authorInput}
-                  onChange={e => setAuthorInput(e.target.value)}
-                  onKeyDown={addAuthor}
-                  placeholder={t("authorPlaceholder")}
-                  className="w-full bg-transparent outline-none text-xs text-flow-text placeholder:opacity-50"
-                />
-              </div>
+              <WritersField
+                label={t("authorsLabel")}
+                placeholder={t("authorPlaceholder")}
+                writers={form.authors}
+                onChange={authors => set("authors", authors)}
+                isNew={!isEdit}
+                variant="flow"
+              />
 
               <BlogSeoPanel
                 value={{

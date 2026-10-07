@@ -28,6 +28,17 @@ const nextConfig = {
   // Metadata goes in <head> for every visitor, not streamed in after the body
   // (Next only does that for crawlers it recognises, and audits read <head>).
   htmlLimitedBots: /.*/,
+  // Services is one page now. The detail pages and the three old service
+  // sections were removed; their URLs (indexed, and linked from elsewhere)
+  // hand their ranking on to /services instead of turning into 404s.
+  async redirects() {
+    return [
+      "/services/:slug+",
+      "/seo-lead-generation/:path*",
+      "/digital-marketing/:path*",
+      "/ux-interactive/:path*",
+    ].map((source) => ({ source, destination: "/services", permanent: true }))
+  },
   experimental: {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,

@@ -128,6 +128,13 @@ export async function recordBlogShare(
   return { shares: await shares.countDocuments({ blogId }) }
 }
 
+/** The post's view count, without adding to it. */
+export async function getBlogViews(blogId: string): Promise<{ views: number }> {
+  const db = await getDb()
+  const doc = await db.collection(VIEWS_COLLECTION).findOne({ blogId })
+  return { views: Number(doc?.count ?? 0) }
+}
+
 /** Increments the post's view counter and returns the new total. */
 export async function recordBlogView(blogId: string): Promise<{ views: number }> {
   await ensureEngagementIndexes()

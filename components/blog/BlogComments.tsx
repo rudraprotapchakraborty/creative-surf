@@ -181,7 +181,8 @@ export default function BlogComments({
     border: "1px solid var(--flow-border-strong)",
   }
   const avatarGradient = "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))"
-  const from = encodeURIComponent(isFeed ? "/blogs" : `${pathname}#comments`)
+  // In a feed that is the listing itself — either blog — not always /blogs.
+  const from = encodeURIComponent(isFeed ? pathname : `${pathname}#comments`)
 
   /**
    * The inline editor that replaces a comment's body while it is being edited.

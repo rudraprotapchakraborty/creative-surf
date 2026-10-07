@@ -2,6 +2,7 @@ import { cache } from "react"
 import { ObjectId } from "mongodb"
 import { getDb } from "@/lib/mongodb"
 import { normalizeKeyTakeaways, pickBlogSeoFields, type BlogSeoFields } from "@/lib/blog-types"
+import { adminAvatarsByName } from "@/lib/blog-writers"
 
 export interface BlogRecord {
   _id: string
@@ -16,6 +17,8 @@ export interface BlogRecord {
   author: string
   /** One entry per writer; falls back to `[author]` for posts saved before multi-writer support. */
   authors: string[]
+  /** Pictures for writers who are admin accounts, by name — public post lookups only. */
+  writerAvatars?: Record<string, string>
   readTime: string
   /** Short bullet summary rendered in the highlight card above the article body. */
   keyTakeaways: string[]
@@ -59,16 +62,25 @@ function toObjectId(id: string) {
   return ObjectId.isValid(id) ? new ObjectId(id) : null
 }
 
+/** Gives each writer who is an admin account their profile picture. */
+async function withWriterAvatars(db: Awaited<ReturnType<typeof getDb>>, blog: BlogRecord): Promise<BlogRecord> {
+  const avatars = await adminAvatarsByName(db)
+  const writerAvatars = Object.fromEntries(
+    blog.authors.flatMap(name => (avatars.has(name) ? [[name, avatars.get(name)!]] : []))
+  )
+  return { ...blog, writerAvatars }
+}
+
 export const getCreativeSurfBlogBySlug = cache(async (slug: string): Promise<BlogRecord | null> => {
   const db = await getDb()
   const doc = await db.collection("blogs").findOne({ slug, published: true })
-  return doc ? serializeBlog(doc as Record<string, unknown>) : null
+  return doc ? withWriterAvatars(db, serializeBlog(doc as Record<string, unknown>)) : null
 })
 
 export const getRealEstateBlogBySlug = cache(async (slug: string): Promise<BlogRecord | null> => {
   const db = await getDb()
   const doc = await db.collection("real_estate_blogs").findOne({ slug, published: true })
-  return doc ? serializeBlog(doc as Record<string, unknown>) : null
+  return doc ? withWriterAvatars(db, serializeBlog(doc as Record<string, unknown>)) : null
 })
 
 export async function getCreativeSurfBlogByIdOrSlug(id: string): Promise<BlogRecord | null> {

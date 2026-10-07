@@ -6,14 +6,14 @@ import { pageMetaMessages } from "@/lib/i18n/messages/pageMeta";
 import Client from "./client";
 import "./globals.css";
 
-// The homepage is a client component, so its title lives here. Every other
-// route sets its own; this is only the fallback for one that forgets.
+// The fallback for a route that forgets its own metadata. No `path`, so it
+// carries no canonical: one here would be inherited by such a route and
+// point it at the homepage. The homepage sets its own in app/page.tsx.
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslator(pageMetaMessages);
   return buildMetadata({
     title: t("home.title"),
     description: t("home.description"),
-    path: "/",
   });
 }
 

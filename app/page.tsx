@@ -6,6 +6,11 @@ import RealEstate from "./components/home/RealEstate";
 import CvTool from "./components/home/CvTool";
 import Voices from "./components/home/Voices";
 import Closing from "./components/home/Closing";
+import { pageMetadata } from "@/lib/page-metadata";
+
+export function generateMetadata() {
+  return pageMetadata("home", "/");
+}
 
 /**
  * The homepage reads as one argument, in order:

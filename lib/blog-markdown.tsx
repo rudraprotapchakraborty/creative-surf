@@ -1,6 +1,60 @@
 import type { Components } from "react-markdown"
 
+/**
+ * GFM tables as a ruled grid. The frame scrolls sideways on a phone rather
+ * than squeezing every column to a word wide; the header row is tinted and
+ * each body row ruled off. Shared by both blogs' post pages.
+ *
+ * Lines are ink at low alpha, not the theme border tokens, which all but
+ * vanish on the cream background. Most styling is inline: Tailwind doesn't scan lib/, so a class used only
+ * here would never be generated.
+ */
+export const blogTableComponents: Components = {
+  table: ({ node: _node, children, ...props }) => (
+    <div className="my-7 overflow-x-auto rounded-xl" style={{ border: "1px solid rgb(var(--flow-text) / 0.2)" }}>
+      <table {...props} className="w-full text-left text-sm" style={{ minWidth: "32rem", borderCollapse: "collapse" }}>
+        {children}
+      </table>
+    </div>
+  ),
+  thead: ({ node: _node, children, ...props }) => (
+    <thead {...props} style={{ background: "rgb(var(--flow-text) / 0.07)" }}>
+      {children}
+    </thead>
+  ),
+  th: ({ node: _node, children, ...props }) => (
+    <th
+      {...props}
+      className="px-4 py-3 font-semibold"
+      style={{
+        color: "rgb(var(--flow-text))",
+        lineHeight: 1.35,
+        verticalAlign: "bottom",
+        borderBottom: "1px solid rgb(var(--flow-text) / 0.2)",
+        ...props.style,
+      }}
+    >
+      {children}
+    </th>
+  ),
+  td: ({ node: _node, children, ...props }) => (
+    <td
+      {...props}
+      className="px-4 py-3 leading-relaxed"
+      style={{
+        color: "rgb(var(--flow-text))",
+        verticalAlign: "top",
+        borderTop: "1px solid rgb(var(--flow-text) / 0.12)",
+        ...props.style,
+      }}
+    >
+      {children}
+    </td>
+  ),
+}
+
 export const blogMarkdownComponents: Components = {
+  ...blogTableComponents,
   h1: ({ children }) => (
     <h1 className="font-bold text-flow-text mb-4 mt-10 leading-tight" style={{ fontSize: "clamp(1.4rem, 4vw, 2.2rem)", fontFamily: "var(--font-heading)" }}>
       {children}

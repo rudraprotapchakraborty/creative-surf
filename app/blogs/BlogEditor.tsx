@@ -28,6 +28,7 @@ import { LogoSpinner } from "@/components/ui/LogoSpinner"
 import { commonMessages } from "@/lib/i18n/messages/common"
 import { Breadcrumbs } from "@/components/Breadcrumbs"
 import { JournalCover } from "./JournalParts"
+import WritersField from "@/components/blog/WritersField"
 
 interface BlogForm {
   title: string
@@ -93,25 +94,20 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
   const isEdit = !!blogId
   const [form, setForm] = useState<BlogForm>(DEFAULT_FORM)
   const [tagInput, setTagInput] = useState("")
-  const [authorInput, setAuthorInput] = useState("")
   const [preview, setPreview] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(isEdit)
   const [showSeoValidation, setShowSeoValidation] = useState(false)
-  const [viewer, setViewer] = useState<{ sub: string; role: string } | null>(null)
-  /** Owner of the post being edited — "" for a new post. */
-  const [ownerId, setOwnerId] = useState("")
   const router = useRouter()
 
-  // Auth guard — any signed-in account may write; the API is what actually
-  // enforces who may edit an existing post.
+  // Auth guard — only admins write or edit posts. The API enforces the same.
   useEffect(() => {
     fetch("/api/auth/me")
       .then(r => r.json())
       .then(d => {
         if (!d.authenticated) router.push("/login")
-        else setViewer({ sub: d.user?.sub ?? "", role: d.role })
+        else if (d.role !== "admin") router.push("/blogs")
       })
       .catch(() => router.push("/login"))
   }, [router])
@@ -136,22 +132,10 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
           coverImage: data.coverImage ?? "",
           ...seo,
         })
-        setOwnerId(typeof data.authorId === "string" ? data.authorId : "")
         setLoading(false)
       })
       .catch(() => { setError("Failed to load blog post."); setLoading(false) })
   }, [isEdit, blogId])
-
-  /**
-   * Don't sit in an editor whose Save the API will refuse. Mirrors
-   * `canManageBlog` — admins edit anything, writers only their own, and posts
-   * saved before ownership existed carry no `authorId` so they stay admin-only.
-   */
-  useEffect(() => {
-    if (!isEdit || loading || !viewer) return
-    const mayEdit = viewer.role === "admin" || (!!ownerId && ownerId === viewer.sub)
-    if (!mayEdit) router.push("/blogs")
-  }, [isEdit, loading, viewer, ownerId, router])
 
   const set = useCallback(<K extends keyof BlogForm>(key: K, value: BlogForm[K]) => {
     setForm(prev => ({ ...prev, [key]: value }))
@@ -177,21 +161,6 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
     set("tags", form.tags.filter(t => t !== tag))
   }
 
-  function addAuthor(e: React.KeyboardEvent) {
-    if ((e.key === "Enter" || e.key === ",") && authorInput.trim()) {
-      e.preventDefault()
-      const author = authorInput.trim().replace(/,+$/, "")
-      if (author && !form.authors.includes(author)) {
-        set("authors", [...form.authors, author])
-      }
-      setAuthorInput("")
-    }
-  }
-
-  function removeAuthor(author: string) {
-    set("authors", form.authors.filter(a => a !== author))
-  }
-
   async function handleSave() {
     setError("")
 
@@ -205,8 +174,8 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
     }
     setShowSeoValidation(false)
 
-    // Pick up a name typed but not yet committed with Enter.
-    const authors = [...new Set([...form.authors, authorInput.trim()].filter(Boolean))]
+    // WritersField adds a half-typed name on blur, before Save is clicked.
+    const authors = [...new Set(form.authors.filter(Boolean))]
     if (!authors.length) authors.push("Creative Surf")
 
     const payload = {
@@ -361,7 +330,7 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                 <ImageUpload
                   value={form.coverImage}
                   onChange={v => set("coverImage", v)}
-                  placeholder={<JournalCover category={form.category} brand="Creative Surf" />}
+                  placeholder={<JournalCover title={form.title || form.category} brand="Creative Surf" />}
                 />
               </div>
 
@@ -375,14 +344,12 @@ export default function BlogEditor({ blogId }: { blogId?: string }) {
                 placeholder={t("tagPlaceholder")}
               />
 
-              <ChipField
+              <WritersField
                 label={t("authorsLabel")}
-                items={form.authors}
-                onRemove={removeAuthor}
-                input={authorInput}
-                onInput={setAuthorInput}
-                onKeyDown={addAuthor}
                 placeholder={t("authorPlaceholder")}
+                writers={form.authors}
+                onChange={authors => set("authors", authors)}
+                isNew={!isEdit}
               />
 
               <BlogSeoPanel

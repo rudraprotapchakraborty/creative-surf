@@ -39,7 +39,7 @@ function Contents({ services }: { services: Service[] }) {
         {services.map((s, i) => (
           <li key={s.slug} className="border-b border-cs-ink/10">
             <Link
-              href={`/services/${s.slug}`}
+              href={`#${s.slug}`}
               className="cs-focus group flex items-baseline gap-3 rounded-sm py-3 text-[15px] font-medium tracking-[-0.015em] text-cs-ink2 transition-colors hover:text-cs-blue"
             >
               <span className="cs-meta tabular-nums text-cs-ink3">{pad(i + 1)}</span>
@@ -58,7 +58,7 @@ function Contents({ services }: { services: Service[] }) {
 
 /**
  * The six disciplines as a ruled grid — cells divided by hairlines, not boxed
- * as cards. Each cell is one link; hover washes it and slides the numeral.
+ * as cards. Each cell carries its slug as an id, so /services#seo lands on it.
  */
 function Disciplines({ services }: { services: Service[] }) {
   const t = useT(servicesMessages);
@@ -88,30 +88,17 @@ function Disciplines({ services }: { services: Service[] }) {
                 i % 3 === 0 ? "lg:border-l-0" : "lg:border-l"
               )}
             >
-              <Link
-                href={`/services/${s.slug}`}
+              <div
+                id={s.slug}
                 className={cn(
-                  "cs-focus group relative flex h-full flex-col overflow-hidden py-9 outline-offset-[-2px] md:py-10",
+                  "relative flex h-full scroll-mt-24 flex-col py-9 md:py-10",
                   // Outer columns sit flush on the grid edge; inner gutters get the padding.
                   i % 2 === 0 ? "md:pl-0 md:pr-8" : "md:pl-8 md:pr-0",
                   i % 3 === 0 ? "lg:pl-0 lg:pr-8" : i % 3 === 1 ? "lg:px-8" : "lg:pl-8 lg:pr-0"
                 )}
               >
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 origin-bottom scale-y-0 bg-cs-sunken transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-y-100 motion-reduce:transition-none"
-                />
-                <span className="relative flex items-start justify-between">
-                  <span
-                    className="cs-accent text-cs-cyan transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1"
-                    style={{ fontSize: "3rem", lineHeight: 0.9 }}
-                    aria-hidden
-                  >
-                    {pad(i + 1)}
-                  </span>
-                  <span className="grid h-10 w-10 place-items-center rounded-full border border-cs-ink/15 text-cs-ink2 transition-colors duration-300 group-hover:border-cs-blue group-hover:bg-cs-blue group-hover:text-cs-onBlue">
-                    <ArrowUpRight aria-hidden className="h-4 w-4 transition-transform duration-300 group-hover:rotate-45" />
-                  </span>
+                <span className="cs-accent text-cs-cyan" style={{ fontSize: "3rem", lineHeight: 0.9 }} aria-hidden>
+                  {pad(i + 1)}
                 </span>
                 <h3
                   className="relative mt-10 font-medium text-cs-ink"
@@ -128,10 +115,7 @@ function Disciplines({ services }: { services: Service[] }) {
                     </span>
                   ))}
                 </p>
-                <span className="sr-only">
-                  {t("explore")} {s.title}
-                </span>
-              </Link>
+              </div>
             </Reveal>
           ))}
         </ul>

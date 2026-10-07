@@ -5,11 +5,6 @@ import { sitemapMessages } from "@/lib/i18n/messages/sitemap"
 import { commonMessages } from "@/lib/i18n/messages/common"
 import { navMessages } from "@/lib/i18n/messages/nav"
 import { servicesMessages } from "@/lib/i18n/messages/services"
-import { digitalIntelligenceMessages } from "@/lib/i18n/messages/digitalIntelligence"
-import { serviceCategoriesMessages } from "@/lib/i18n/messages/serviceCategories"
-import { serviceHubsMessages } from "@/lib/i18n/messages/serviceHubs"
-import { seoServicesMessages } from "@/lib/i18n/messages/seoServices"
-import { designMessages } from "@/lib/i18n/messages/design"
 import { aboutApproachMessages } from "@/lib/i18n/messages/aboutApproach"
 import { aboutHistoryMessages } from "@/lib/i18n/messages/aboutHistory"
 import { aboutValuesMessages } from "@/lib/i18n/messages/aboutValues"
@@ -39,17 +34,12 @@ export async function generateMetadata(): Promise<Metadata> {
  * parallel list of names to keep in sync.
  */
 export default async function SitemapPage() {
-  const [t, c, nav, services, di, cat, hubs, seo, design, approach, history, values, awards, careers, reviews, cost, privacy, privacyTerms, terms] =
+  const [t, c, nav, services, approach, history, values, awards, careers, reviews, cost, privacy, privacyTerms, terms] =
     await Promise.all([
       getTranslator(sitemapMessages),
       getTranslator(commonMessages),
       getTranslator(navMessages),
       getTranslator(servicesMessages),
-      getTranslator(digitalIntelligenceMessages),
-      getTranslator(serviceCategoriesMessages),
-      getTranslator(serviceHubsMessages),
-      getTranslator(seoServicesMessages),
-      getTranslator(designMessages),
       getTranslator(aboutApproachMessages),
       getTranslator(aboutHistoryMessages),
       getTranslator(aboutValuesMessages),
@@ -81,38 +71,7 @@ export default async function SitemapPage() {
       title: nav("links.services"),
       href: "/services",
       icon: "sparkles",
-      links: SERVICES.map((service, i) => ({ label: serviceTitles[i]?.title ?? service.slug, href: `/services/${service.slug}` })),
-    },
-    {
-      title: c("breadcrumb.digitalMarketing"),
-      href: "/digital-marketing",
-      icon: "megaphone",
-      links: [
-        { label: c("breadcrumb.digitalIntelligence"), href: "/digital-marketing/digital-intelligence" },
-        { label: di("seoReporting.breadcrumbCurrent"), href: "/digital-marketing/digital-intelligence/seo-reporting" },
-        { label: di("callTracking.breadcrumbCurrent"), href: "/digital-marketing/digital-intelligence/web-channel-call-tracking" },
-      ],
-    },
-    {
-      title: c("breadcrumb.seoLeadGen"),
-      href: "/seo-lead-generation",
-      icon: "search",
-      links: [
-        { label: c("breadcrumb.organicSearch"), href: "/seo-lead-generation/organic-search" },
-        { label: seo("breadcrumbCurrent"), href: "/seo-lead-generation/organic-search/seo-services" },
-        { label: cat("organicSearch.services.3.title"), href: "/seo-lead-generation/organic-search/local-seo" },
-        { label: c("breadcrumb.digitalAdvertising"), href: "/seo-lead-generation/digital-advertising" },
-        { label: hubs("seo.featured.2.title"), href: "/seo-lead-generation/ecommerce/ecommerce-seo" },
-      ],
-    },
-    {
-      title: c("breadcrumb.uxInteractive"),
-      href: "/ux-interactive",
-      icon: "monitor",
-      links: [
-        { label: design("websiteDesign.breadcrumbCurrent"), href: "/ux-interactive/design/website-design" },
-        { label: design("ecommerceDesign.metaTitle"), href: "/ux-interactive/design/ecommerce-design" },
-      ],
+      links: SERVICES.map((service, i) => ({ label: serviceTitles[i]?.title ?? service.slug, href: `/services#${service.slug}` })),
     },
     {
       title: nav("links.about"),

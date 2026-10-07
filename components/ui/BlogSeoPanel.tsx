@@ -161,7 +161,7 @@ export default function BlogSeoPanel({
   value,
   onChange,
   showValidation = false,
-  inboundUrlPlaceholder = "https://www.creativesurf.agency/seo-lead-generation",
+  inboundUrlPlaceholder = "https://www.creativesurf.agency/services",
   inboundHint,
   outboundHint,
   frame = "card",

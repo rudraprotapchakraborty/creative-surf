@@ -45,10 +45,7 @@ app/
 ├── blog/                       # Blog listing + dynamic post pages
 ├── case-studies/               # Case study listing + dynamic pages
 ├── contact/                    # Contact form with server actions
-├── digital-marketing/          # Digital marketing & intelligence pages
-├── seo-lead-generation/        # Organic search, local SEO, e-commerce SEO, ads
-├── ux-interactive/             # UX/design & e-commerce design pages
-├── services/                   # Services overview
+├── services/                   # Services: one page, no sub-pages
 ├── tools/                      # Internal tools (keyword suggestion, fix funnel)
 ├── privacy-terms/              # Privacy policy & terms of service
 └── components/                 # Page-level shared components

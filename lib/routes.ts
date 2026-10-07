@@ -19,35 +19,22 @@ const LIVE_ROUTES = new Set([
   "/blogs",
   "/contact",
   "/cv-builder",
-  "/digital-marketing",
-  "/digital-marketing/digital-intelligence",
-  "/digital-marketing/digital-intelligence/seo-reporting",
-  "/digital-marketing/digital-intelligence/web-channel-call-tracking",
   "/privacy-policy",
   "/privacy-terms",
   "/real-estate",
   "/real-estate/blogs",
   "/real-estate/projects",
-  "/seo-lead-generation",
-  "/seo-lead-generation/digital-advertising",
-  "/seo-lead-generation/ecommerce/ecommerce-seo",
-  "/seo-lead-generation/organic-search",
-  "/seo-lead-generation/organic-search/local-seo",
-  "/seo-lead-generation/organic-search/seo-services",
   "/services",
   "/sitemap",
   "/team",
   "/terms",
-  "/ux-interactive",
-  "/ux-interactive/design/ecommerce-design",
-  "/ux-interactive/design/website-design",
 ]);
 
 /** The live routes as a list, for app/sitemap.ts. */
 export const LIVE_PATHS: readonly string[] = [...LIVE_ROUTES];
 
-/** Sections whose children are generated from data (posts, services, projects). */
-const LIVE_PREFIXES = ["/services/", "/blogs/", "/real-estate/blogs/", "/real-estate/projects/"];
+/** Sections whose children are generated from data (posts, projects). */
+const LIVE_PREFIXES = ["/blogs/", "/real-estate/blogs/", "/real-estate/projects/"];
 
 export function isLiveRoute(href: string): boolean {
   if (!href.startsWith("/")) return true; // external, mailto:, tel:

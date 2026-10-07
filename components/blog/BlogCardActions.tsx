@@ -8,7 +8,7 @@ import { Check, Eye, Facebook, Heart, Instagram, MessageCircle, Share2, X as Clo
 import { useT } from "@/lib/i18n"
 import { blogsMessages } from "@/lib/i18n/messages/blogs"
 import { type BlogEngagement, type ShareNetwork } from "@/lib/blog-engagement-shared"
-import { getBlogPostUrl, type BlogSite } from "@/lib/blog-metadata"
+import { getBlogPath, getBlogPostUrl, type BlogSite } from "@/lib/blog-metadata"
 
 /** lucide only ships the pre-rebrand bird, so the X mark is inlined. */
 function XMarkIcon({ size = 16 }: { size?: number }) {
@@ -119,7 +119,7 @@ export default function BlogCardActions({
     } catch {}
   }
 
-  const commentsHref = `/blogs/${slug}#comments`
+  const commentsHref = `${getBlogPath(site)}/${slug}#comments`
 
   /**
    * On a blog card this link navigates to the post. On the post page itself the
@@ -155,10 +155,13 @@ export default function BlogCardActions({
 
   return (
     <div className="pt-3" style={{ borderTop: "1px solid var(--flow-border)" }}>
-      {/* Count summary above the divider, Facebook-style. Hidden while empty. */}
-      {hasCounts && (
+      {/* Count summary above the divider, Facebook-style. On the post page it
+          hides while empty; in the feed it keeps its line either way, so a post
+          with counts is no taller than its neighbours in the grid. */}
+      {(hasCounts || !isPage) && (
         <div
-          className={`flex items-center justify-between gap-2 pb-2 ${isPage ? "text-[13px]" : "text-[11px]"}`}
+          aria-hidden={!hasCounts || undefined}
+          className={`flex items-center justify-between gap-2 pb-2 ${isPage ? "text-[13px]" : "min-h-[25px] text-[11px]"}`}
           style={{ color: "rgb(var(--flow-text-soft))" }}
         >
           {engagement.likes > 0 ? (

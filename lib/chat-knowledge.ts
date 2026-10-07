@@ -1,4 +1,5 @@
 import menuData from "@/data/MenuItems.json";
+import { isLiveRoute } from "@/lib/routes";
 
 /**
  * Grounding material for the site assistant.
@@ -34,6 +35,9 @@ Other useful pages:
 - /real-estate — a separate real-estate projects and listings section
 - /team — the people at Creative Surf`;
 
+/** " (/href)" when the page exists, so the model only ever links to real pages. */
+const path = (href?: string) => (href && isLiveRoute(href) ? ` (${href})` : "");
+
 /** Flattens the navigation into "Section: Service (/href)" lines the model can quote from. */
 function buildServiceIndex(): string {
   const entries = (menuData as { menuItems: MenuEntry[] }).menuItems;
@@ -43,15 +47,15 @@ function buildServiceIndex(): string {
       const sections = (entry.sections ?? [])
         .map((section) => {
           const items = (section.items ?? [])
-            .map((item) => `    - ${item.name} (${item.href})`)
+            .map((item) => `    - ${item.name}${path(item.href)}`)
             .join("\n");
           return items
             ? `  ${section.title}:\n${items}`
-            : `  ${section.title}${section.href ? ` (${section.href})` : ""}`;
+            : `  ${section.title}${path(section.href)}`;
         })
         .join("\n");
 
-      return `${entry.title} (${entry.href}):\n${sections}`;
+      return `${entry.title}${path(entry.href)}:\n${sections}`;
     })
     .join("\n\n");
 }
@@ -61,5 +65,5 @@ const SERVICE_INDEX = buildServiceIndex();
 
 export const SITE_KNOWLEDGE = `${COMPANY_FACTS}
 
-Full service index (page paths are real and safe to link):
+Full service index (page paths are real and safe to link; a service listed without one is covered on /services):
 ${SERVICE_INDEX}`;

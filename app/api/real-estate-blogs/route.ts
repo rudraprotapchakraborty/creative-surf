@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getDb } from '@/lib/mongodb'
-import { requireAdmin } from '@/lib/auth'
+import { getAuth, requireAdmin } from '@/lib/auth'
 
 function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/(^-|-$)/g, '')
@@ -27,7 +27,9 @@ export async function POST(request: NextRequest) {
     if (!data.slug && data.title) data.slug = slugify(data.title)
 
     const now = new Date()
-    const doc = { ...data, createdAt: now, updatedAt: now }
+    // Owned by the admin who wrote it, from the session — never from the body —
+    // so the byline carries their profile picture, as on the marketing blog.
+    const doc = { ...data, authorId: getAuth(request)?.sub, createdAt: now, updatedAt: now }
 
     const result = await db.collection('real_estate_blogs').insertOne(doc)
     return NextResponse.json({ ...doc, _id: result.insertedId }, { status: 201 })

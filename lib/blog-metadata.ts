@@ -18,6 +18,11 @@ const SITE_CONFIG = {
 
 export type BlogSite = keyof typeof SITE_CONFIG
 
+/** Where a blog's posts live on this site, e.g. "/real-estate/blogs". */
+export function getBlogPath(site: BlogSite): string {
+  return SITE_CONFIG[site].blogPath
+}
+
 /** Canonical public URL for a post — share targets need an absolute, non-localhost URL. */
 export function getBlogPostUrl(slug: string, site: BlogSite): string {
   const config = SITE_CONFIG[site]

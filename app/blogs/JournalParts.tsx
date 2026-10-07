@@ -53,25 +53,24 @@ const SWELL = (() => {
 })()
 
 /**
- * The cover for a post that has no image: its topic, set large in the serif
- * on the deep-water surface, instead of a stock gradient. It names the topic
- * rather than repeating the title, which already sits beside it.
+ * The cover for a post that has no image: its title, set in the serif on the
+ * deep-water surface, instead of a stock gradient.
  */
-export function JournalCover({ category, brand }: { category: string; brand: string }) {
+export function JournalCover({ title, brand }: { title: string; brand: string }) {
   return (
     <span className="relative flex h-full w-full flex-col justify-between overflow-hidden bg-cs-deep p-5 text-cs-deepInk sm:p-6">
       <span className="cs-meta text-cs-deepInk/55">{brand}</span>
       <span
-        className="cs-accent line-clamp-2 max-w-[90%] text-cs-deepInk"
-        style={{ fontSize: "clamp(2rem, 4.4vw, 3.75rem)", lineHeight: 0.95 }}
+        className="cs-accent relative z-[1] line-clamp-3 max-w-[92%] text-cs-deepInk"
+        style={{ fontSize: "clamp(1.5rem, 2.3vw, 2.1rem)", lineHeight: 1.02, textWrap: "balance" }}
       >
-        {category}
+        {title}
       </span>
       <svg
         aria-hidden
         viewBox="0 0 800 60"
         preserveAspectRatio="none"
-        className="pointer-events-none absolute inset-x-0 top-1/3 h-10 w-full"
+        className="pointer-events-none absolute inset-x-0 top-[20%] h-10 w-full"
       >
         <path d={SWELL} fill="none" stroke="rgb(var(--cs-cyan) / 0.35)" strokeWidth="1.25" vectorEffect="non-scaling-stroke" />
       </svg>

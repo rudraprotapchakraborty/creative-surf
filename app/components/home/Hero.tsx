@@ -5,13 +5,11 @@ import { useT } from "@/lib/i18n";
 import { homeMessages } from "@/lib/i18n/messages/home";
 import { homeExtraMessages } from "@/lib/i18n/messages/homeExtra";
 import { ButtonLink, TextLink } from "@/app/components/editorial";
-import SwellReport from "./SwellReport";
 
 /**
  * The wordmark is the headline, so it is set as one: "Creative" hangs off the
  * left edge, "Surf" drops to the right on the line below, and the tagline and
- * actions sit in the space the stagger opens up. The swell report below is
- * the ocean the old hero painted, redrawn as the outcomes the agency sells.
+ * actions sit in the space the stagger opens up.
  *
  * The block is sized in the wordmark's own em, so the tagline's position stays
  * locked to the letterforms at every width instead of drifting off them.
@@ -99,8 +97,8 @@ export default function Hero() {
 
         {/* ---- Wordmark + tagline ---- */}
         {/* Wordmark scale: as wide as a phone allows, then a touch under the
-            full measure on larger screens so the swell clears the fold. */}
-        <div className="relative pt-8 text-[clamp(4.4rem,23vw,7rem)] sm:pt-10 sm:text-[19vw] lg:pt-8 lg:text-[min(18vw,16rem)]">
+            full measure on larger screens. */}
+        <div className="relative pt-8 pb-14 text-[clamp(4.4rem,23vw,7rem)] sm:pt-10 sm:pb-16 sm:text-[19vw] lg:pt-8 lg:pb-20 lg:text-[min(18vw,16rem)]">
           <h1
             id="hero-title"
             className="font-extrabold"
@@ -137,11 +135,6 @@ export default function Hero() {
               <TextLink href="#work">{t("hero.ctaSecondary")}</TextLink>
             </div>
           </div>
-        </div>
-
-        {/* ---- The swell ---- */}
-        <div style={delay(0.6)} className="cs-glide mt-12 pb-10 sm:mt-14 lg:mt-10 lg:pb-14">
-          <SwellReport ready />
         </div>
       </div>
     </section>

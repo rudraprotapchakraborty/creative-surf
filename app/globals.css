@@ -676,6 +676,23 @@ html {
 html.re-active {
   scrollbar-width: thin;
   scrollbar-color: #B8892A transparent;
+
+  /* No blue on the real-estate side: the accent tokens the shared chrome
+     draws with (account menu, avatars, editors, like/comment controls) turn
+     gold. On <html>, because the navbar sits outside the section's layout.
+     accent-2 is the deep gold that text links take, readable on cream. */
+  --accent-1: 184 137 42;
+  --accent-2: 143 102 22;
+  --accent-3: 212 168 67;
+  --flow-green: 184 137 42;
+  --flow-buttonHover: 143 102 22;
+}
+html.dark.re-active {
+  --accent-1: 214 170 70;
+  --accent-2: 232 194 110;
+  --accent-3: 240 210 140;
+  --flow-green: 214 170 70;
+  --flow-buttonHover: 232 194 110;
 }
 html.re-active::-webkit-scrollbar {
   width: 12px;
@@ -840,6 +857,56 @@ html.re-active::-webkit-scrollbar-thumb:hover {
   outline-offset: 2px;
 }
 
+/* Tables: ruled like the published post's, so the editor shows what readers get. */
+.blog-rich-editor .ProseMirror .tableWrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.blog-rich-editor .ProseMirror table {
+  width: 100%;
+  margin: 1.5rem 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.875rem;
+}
+
+.blog-rich-editor .ProseMirror .tableWrapper table {
+  margin: 0;
+}
+
+.blog-rich-editor .ProseMirror th,
+.blog-rich-editor .ProseMirror td {
+  position: relative;
+  min-width: 6rem;
+  padding: 0.6rem 0.75rem;
+  /* Ink at low alpha: the theme's border tokens all but vanish on cream. */
+  border: 1px solid rgb(var(--flow-text) / 0.2);
+  text-align: left;
+  vertical-align: top;
+}
+
+.blog-rich-editor .ProseMirror th {
+  font-weight: 600;
+  background: rgb(var(--flow-text) / 0.07);
+}
+
+.blog-rich-editor .ProseMirror th p,
+.blog-rich-editor .ProseMirror td p {
+  margin: 0;
+  font-size: inherit;
+  line-height: 1.5;
+}
+
+/* Cells picked by dragging across them. */
+.blog-rich-editor .ProseMirror .selectedCell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: rgb(var(--accent-1) / 0.12);
+}
+
 /* ============================================================
    EDITORIAL LAYER — homepage, navbar, footer
    ------------------------------------------------------------
@@ -885,6 +952,34 @@ html.re-active::-webkit-scrollbar-thumb:hover {
     --cs-gold: 214 170 70;
     --cs-deep: 9 22 41;
     --cs-deep-ink: 228 236 246;
+  }
+
+  /* The real-estate side in the same editorial UI: its cream ground, and gold
+     in place of blue and cyan. Actions take a deeper gold than the brand's
+     #B8892A, which reads at only ~3:1 on cream; accents keep the brand gold. */
+  .cs-theme-re {
+    --cs-bg: 252 249 243;
+    --cs-blue: 143 102 22;
+    --cs-blue-hover: 117 83 16;
+    --cs-on-blue: 255 255 255;
+    --cs-cyan: 184 137 42;
+    /* The older flow accents (post page, like/comment/share): gold, with
+       the deep gold for links. Also set on html.re-active, but here too so
+       the server-rendered page is gold before that class is applied. */
+    --accent-1: 184 137 42;
+    --accent-2: 143 102 22;
+  }
+
+  .dark .cs-theme-re {
+    /* Back to the night ground: the cream above is light mode's only, and
+       left in place it puts dark mode's pale ink on a pale page. */
+    --cs-bg: 4 11 24;
+    --cs-blue: 214 170 70;
+    --cs-blue-hover: 232 194 110;
+    --cs-on-blue: 4 11 24;
+    --cs-cyan: 214 170 70;
+    --accent-1: 214 170 70;
+    --accent-2: 232 194 110;
   }
 }
 

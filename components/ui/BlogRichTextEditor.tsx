@@ -4,7 +4,7 @@ import { useT } from "@/lib/i18n"
 import { editorUiMessages } from "@/lib/i18n/messages/editorUi"
 
 import { useCallback, useEffect, useRef, useState } from "react"
-import { useEditor, EditorContent, NodeViewWrapper, ReactNodeViewRenderer, type NodeViewProps } from "@tiptap/react"
+import { useEditor, useEditorState, EditorContent, NodeViewWrapper, ReactNodeViewRenderer, type NodeViewProps } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import Image from "@tiptap/extension-image"
 import Link from "@tiptap/extension-link"
@@ -24,9 +24,16 @@ import {
   Undo2,
   Redo2,
   Minus,
+  Table2,
+  BetweenHorizontalEnd,
+  BetweenVerticalEnd,
+  TableRowsSplit,
+  TableColumnsSplit,
+  Trash2,
 } from "lucide-react"
 import { uploadImageFile } from "@/components/ui/ImageUpload"
 import { normalizeBlogMarkdown } from "@/lib/blog-markdown-normalize"
+import { blogTableExtensions } from "@/components/ui/blog-table"
 
 const ACCEPT = "image/png,image/jpeg,image/webp,image/gif,image/svg+xml,image/avif"
 const MAX_INPUT_MB = 20
@@ -133,6 +140,7 @@ export default function BlogRichTextEditor({
         },
       }),
       BlogImage.configure({ inline: false, allowBase64: false }),
+      ...blogTableExtensions,
       Placeholder.configure({ placeholder: placeholder ?? t("toolbar.placeholder") }),
       Markdown.configure({
         html: false,
@@ -230,6 +238,16 @@ export default function BlogRichTextEditor({
       : editor?.isActive("heading", { level: 3 })
         ? "h3"
         : "p"
+
+  // Subscribed, not read off the editor: v3 doesn't re-render on cursor moves,
+  // and the table tools must appear the moment the cursor enters a table.
+  const { inTable, inHeaderRow } = useEditorState({
+    editor,
+    selector: ({ editor: ed }) => ({
+      inTable: !!ed?.isActive("table"),
+      inHeaderRow: !!ed?.isActive("tableHeader"),
+    }),
+  }) ?? { inTable: false, inHeaderRow: false }
 
   return (
     <div className="blog-rich-editor rounded-xl overflow-hidden" style={{ border: "1px solid var(--flow-border-strong)" }}>
@@ -337,6 +355,42 @@ export default function BlogRichTextEditor({
         >
           <Minus size={15} />
         </ToolbarButton>
+
+        <ToolbarButton
+          title={t("toolbar.insertTable")}
+          active={inTable}
+          disabled={inTable}
+          onClick={() => editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
+        >
+          <Table2 size={15} />
+        </ToolbarButton>
+
+        {/* Row and column tools, only while the cursor is in a table. */}
+        {inTable && (
+          <>
+            <ToolbarDivider />
+            <ToolbarButton title={t("toolbar.addRow")} onClick={() => editor?.chain().focus().addRowAfter().run()}>
+              <BetweenHorizontalEnd size={15} />
+            </ToolbarButton>
+            <ToolbarButton title={t("toolbar.addColumn")} onClick={() => editor?.chain().focus().addColumnAfter().run()}>
+              <BetweenVerticalEnd size={15} />
+            </ToolbarButton>
+            <ToolbarButton
+              title={t("toolbar.deleteRow")}
+              // The first row is the header a markdown table needs; it goes only with the table.
+              disabled={inHeaderRow}
+              onClick={() => editor?.chain().focus().deleteRow().run()}
+            >
+              <TableRowsSplit size={15} />
+            </ToolbarButton>
+            <ToolbarButton title={t("toolbar.deleteColumn")} onClick={() => editor?.chain().focus().deleteColumn().run()}>
+              <TableColumnsSplit size={15} />
+            </ToolbarButton>
+            <ToolbarButton title={t("toolbar.deleteTable")} onClick={() => editor?.chain().focus().deleteTable().run()}>
+              <Trash2 size={15} />
+            </ToolbarButton>
+          </>
+        )}
 
         <div className="flex-1" />
 

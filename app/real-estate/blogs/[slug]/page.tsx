@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
-import BlogPostClient from "./BlogPostClient"
+import BlogPostClient from "@/app/blogs/[slug]/BlogPostClient"
 import { getRealEstateBlogBySlug } from "@/lib/blog-db"
 import { generateArticleJsonLd, generateBlogPostMetadata } from "@/lib/blog-metadata"
 
@@ -34,7 +34,7 @@ export default async function BlogPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <BlogPostClient slug={slug} initialBlog={blog} />
+      <BlogPostClient slug={slug} initialBlog={blog} site="real-estate" />
     </>
   )
 }

@@ -75,9 +75,15 @@ export async function POST(
     if (!text) return NextResponse.json({ error: "Comment is required" }, { status: 400 })
 
     const db = await getDb()
-    // Reject comments on posts that do not exist or are not public yet.
-    const blog = await db.collection("blogs").findOne({ _id: oid, published: true }, { projection: { _id: 1 } })
-    if (!blog) return NextResponse.json({ error: "Not found" }, { status: 404 })
+    // Reject comments on posts that do not exist or are not public yet, in
+    // either blog: engagement is keyed by post id, which no two blogs share.
+    const published = { _id: oid, published: true }
+    const exists = await Promise.all(
+      ["blogs", "real_estate_blogs"].map(name =>
+        db.collection(name).countDocuments(published, { limit: 1 })
+      )
+    )
+    if (!exists.some(Boolean)) return NextResponse.json({ error: "Not found" }, { status: 404 })
 
     await ensureEngagementIndexes()
     // Name and avatar are denormalised so rendering a thread never joins users.

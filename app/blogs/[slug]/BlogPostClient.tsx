@@ -21,6 +21,8 @@ import { getVisitorId } from "@/lib/visitor-id"
 import type { BlogRecord } from "@/lib/blog-db"
 import { ArrowLeft, Clock, Calendar, User, Tag, Pencil, Trash2, Eye } from "lucide-react"
 import { LogoSpinner } from "@/components/ui/LogoSpinner"
+import type { BlogSite } from "@/lib/blog-metadata"
+import { Monogram } from "@/app/blogs/JournalParts"
 
 const CATEGORY_EMOJI: Record<string, string> = {
   Strategy: "🎯", Marketing: "📈", Design: "🎨", SEO: "🔍",
@@ -30,6 +32,29 @@ const CATEGORY_EMOJI: Record<string, string> = {
   "Lead Generation": "🧲", "AI & Creative": "🤖", "Video Production": "🎬",
   "Web Development": "🌐", "Digital Marketing": "📣",
 }
+
+const RE_CATEGORY_EMOJI: Record<string, string> = {
+  General: "🏠", Investment: "💰", "Market Analysis": "📊",
+  "Property Guide": "🔑", Renting: "📋", "Buying Guide": "🏡",
+  Legal: "⚖️", Finance: "💳", Location: "📍", Lifestyle: "✨",
+  Construction: "🏗️", Commercial: "🏢",
+}
+
+/**
+ * Both blogs' post pages. Real estate reads from its own API and paths, and
+ * wears its colours through `cs-theme-re` (gold accents, the real-estate
+ * blue for links); likes, views, sharing and comments work the same in both.
+ */
+const SECTIONS = {
+  "creative-surf": { base: "/blogs", api: "/api/blogs", theme: "", emoji: CATEGORY_EMOJI, fallbackEmoji: "💡" },
+  "real-estate": {
+    base: "/real-estate/blogs",
+    api: "/api/real-estate-blogs",
+    theme: "cs-theme-re",
+    emoji: RE_CATEGORY_EMOJI,
+    fallbackEmoji: "🏠",
+  },
+} as const
 
 /** Monogram for a writer's avatar: up to two initials. */
 function initials(name: string) {
@@ -43,10 +68,14 @@ function formatDate(dateStr: string, locale: Locale) {
 export default function BlogPostClient({
   slug,
   initialBlog,
+  site = "creative-surf",
 }: {
   slug: string
   initialBlog?: BlogRecord
+  site?: BlogSite
 }) {
+  const cfg = SECTIONS[site]
+  const realEstate = site === "real-estate"
   const t = useT(blogPostMessages)
   const tc = useT(commonMessages)
   const locale = useLocale()
@@ -94,7 +123,7 @@ export default function BlogPostClient({
 
   useEffect(() => {
     if (!initialBlog) {
-      fetch(`/api/blogs/${slug}`)
+      fetch(`${cfg.api}/${slug}`)
         .then(r => {
           if (!r.ok) { setNotFound(true); setLoading(false); return null }
           return r.json()
@@ -112,14 +141,14 @@ export default function BlogPostClient({
   async function handleDelete() {
     if (!blog) return
     if (!confirm(t("confirmDelete"))) return
-    await fetch(`/api/blogs/${blog._id}`, { method: "DELETE" })
-    router.push("/blogs")
+    await fetch(`${cfg.api}/${blog._id}`, { method: "DELETE" })
+    router.push(cfg.base)
   }
 
   if (loading) {
     return (
       <div className="min-h-screen bg-flow-bg flex items-center justify-center">
-        <LogoSpinner size={56} />
+        <LogoSpinner size={56} src={realEstate ? "/logo2.webp" : undefined} />
       </div>
     )
   }
@@ -128,7 +157,7 @@ export default function BlogPostClient({
     return (
       <div className="min-h-screen bg-flow-bg flex flex-col items-center justify-center gap-4 px-4 text-center">
         <h1 className="font-bold text-2xl sm:text-3xl text-flow-text">{t("notFound")}</h1>
-        <Link href="/blogs" className="text-sm font-semibold" style={{ color: "rgb(var(--accent-1))" }}>{t("backToBlogs")}</Link>
+        <Link href={cfg.base} className="text-sm font-semibold" style={{ color: "rgb(var(--accent-1))" }}>{t("backToBlogs")}</Link>
       </div>
     )
   }
@@ -136,7 +165,7 @@ export default function BlogPostClient({
   const writers = blog.authors?.length ? blog.authors : [blog.author]
 
   return (
-    <main className="min-h-screen bg-flow-bg">
+    <main className={`min-h-screen bg-flow-bg ${cfg.theme}`}>
       {/* Hero */}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 pb-4">
         <motion.div
@@ -169,13 +198,21 @@ export default function BlogPostClient({
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
           <Breadcrumbs
             className="cs-meta flex-1 py-1"
-            items={[{ label: tc("breadcrumb.blogs"), href: "/blogs" }, { label: blog.title }]}
+            items={
+              realEstate
+                ? [
+                    { label: tc("breadcrumb.realEstate"), href: "/real-estate" },
+                    { label: tc("breadcrumb.blogs"), href: cfg.base },
+                    { label: blog.title },
+                  ]
+                : [{ label: tc("breadcrumb.blogs"), href: cfg.base }, { label: blog.title }]
+            }
           />
 
           {isAdmin && (
             <div className="flex items-center gap-2">
               <Link
-                href={`/blogs/edit/${blog._id}`}
+                href={`${cfg.base}/edit/${blog._id}`}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
                 style={{ background: "rgb(var(--accent-1) / 0.1)", color: "rgb(var(--accent-1))" }}
               >
@@ -220,7 +257,7 @@ export default function BlogPostClient({
               <div className="absolute" style={{ width: "200%", height: "1px", background: "linear-gradient(90deg, transparent, rgb(var(--accent-2) / 0.4), transparent)", top: "52%", left: "-50%", transform: "rotate(-5deg)" }} />
               {/* emoji right */}
               <div className="absolute" style={{ fontSize: "6rem", lineHeight: 1, right: "8%", top: "50%", transform: "translateY(-52%) rotate(8deg)", filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.5))", userSelect: "none" }}>
-                {CATEGORY_EMOJI[blog.category] ?? "💡"}
+                {cfg.emoji[blog.category] ?? cfg.fallbackEmoji}
               </div>
               {/* content left */}
               <div className="absolute inset-0 flex flex-col justify-between p-6 z-10">
@@ -282,7 +319,7 @@ export default function BlogPostClient({
         <BlogSeoLinks
           inboundLinks={blog.inboundLinks}
           outboundLinks={blog.outboundLinks}
-          inboundTitle={t("seo.inbound")}
+          inboundTitle={t(realEstate ? "seo.inboundReal" : "seo.inbound")}
           outboundTitle={t("seo.outbound")}
         />
 
@@ -300,12 +337,17 @@ export default function BlogPostClient({
           <div className="flex flex-col gap-3">
             {writers.map(writer => (
               <div key={writer} className="flex items-center gap-3">
-                <div
-                  className="flex items-center justify-center shrink-0"
-                  style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
-                >
-                  <span style={{ fontSize: 13, fontWeight: 900, color: "white" }}>{initials(writer)}</span>
-                </div>
+                {/* An admin writer's own picture; initials for anyone else. */}
+                {blog.writerAvatars?.[writer] ? (
+                  <Monogram name={writer} src={blog.writerAvatars[writer]} size={40} />
+                ) : (
+                  <div
+                    className="flex items-center justify-center shrink-0"
+                    style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, rgb(var(--accent-1)), rgb(var(--accent-2)))" }}
+                  >
+                    <span style={{ fontSize: 13, fontWeight: 900, color: "white" }}>{initials(writer)}</span>
+                  </div>
+                )}
                 <p className="text-sm font-semibold text-flow-text">{writer}</p>
               </div>
             ))}
@@ -345,6 +387,7 @@ export default function BlogPostClient({
               engagement={engagement}
               onEngagementChange={(_, next) => setEngagement(next)}
               size="page"
+              site={site}
             />
           </div>
         )}
@@ -354,7 +397,7 @@ export default function BlogPostClient({
         {/* Back link */}
         <div className="mt-10 sm:mt-12 pt-5 sm:pt-6" style={{ borderTop: "1px solid var(--flow-border)" }}>
           <Link
-            href="/blogs"
+            href={cfg.base}
             className="inline-flex items-center gap-2 text-sm font-semibold"
             style={{ color: "rgb(var(--accent-1))" }}
           >

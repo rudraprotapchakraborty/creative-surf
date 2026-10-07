@@ -84,19 +84,15 @@ export function requireUser(request: NextRequest): { auth: AuthPayload } | { den
 }
 
 /**
- * Who may edit or delete a post: an admin, or the account that wrote it.
- *
- * Posts created before author ownership existed carry no `authorId`, so they
- * stay admin-only rather than falling open to whoever asks.
+ * Who may edit or delete a post: any admin, whoever wrote it. Only admins can
+ * post at all, so ownership decides whose name a post carries, not who may
+ * change it.
  */
 export function canManageBlog(
   auth: AuthPayload | null,
   blog: Record<string, unknown> | null
 ): boolean {
-  if (!auth || !blog) return false
-  if (isAdmin(auth)) return true
-  const ownerId = typeof blog.authorId === 'string' ? blog.authorId : null
-  return ownerId !== null && ownerId === auth.sub
+  return !!blog && isAdmin(auth)
 }
 
 /** Attaches the session cookie to a response. */

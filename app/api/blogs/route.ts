@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getDb } from '@/lib/mongodb'
-import { requireUser } from '@/lib/auth'
+import { requireAdmin, getAuth } from '@/lib/auth'
 import { sanitizeBlogInput, validateBlogInput } from '@/lib/blog-input'
 import { listPublishedBlogs } from '@/lib/blogs-feed'
 
@@ -12,11 +12,11 @@ export async function GET() {
   }
 }
 
-/** Any signed-in account may publish; the session decides who owns the result. */
+/** Admins only; the admin who posts owns the result and is its byline. */
 export async function POST(request: NextRequest) {
-  const gate = requireUser(request)
-  if ('denied' in gate) return gate.denied
-  const { auth } = gate
+  const denied = requireAdmin(request)
+  if (denied) return denied
+  const auth = getAuth(request)!
 
   try {
     const db = await getDb()

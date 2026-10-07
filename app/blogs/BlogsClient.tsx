@@ -3,11 +3,12 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react"
 import { useT, useLocale, formatDateForLocale, type Locale } from "@/lib/i18n"
 import { blogsMessages } from "@/lib/i18n/messages/blogs"
+import { realEstateBlogsMessages } from "@/lib/i18n/messages/realEstateBlogs"
 import { commonMessages } from "@/lib/i18n/messages/common"
 import { Breadcrumbs } from "@/components/Breadcrumbs"
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import Link from "next/link"
-import { Clock, LogIn, Plus } from "lucide-react"
+import { Clock, Plus } from "lucide-react"
 import BlogCardActions from "@/components/blog/BlogCardActions"
 import BlogComments from "@/components/blog/BlogComments"
 import { EMPTY_ENGAGEMENT, type BlogEngagement } from "@/lib/blog-engagement-shared"
@@ -36,7 +37,33 @@ export interface Blog {
 }
 
 /** How many posts render before the scroll sentinel pulls in the next batch. */
-const PAGE_SIZE = 5
+const PAGE_SIZE = 9
+
+/**
+ * How many columns the feed shows: 1, 2 from md, 3 from lg — Tailwind's
+ * breakpoints, matching the grid classes. Null until mounted, as the server
+ * can't know the viewport.
+ */
+function useColumnCount(): number | null {
+  const [columns, setColumns] = useState<number | null>(null)
+  useEffect(() => {
+    const md = window.matchMedia("(min-width: 768px)")
+    const lg = window.matchMedia("(min-width: 1024px)")
+    const update = () => setColumns(lg.matches ? 3 : md.matches ? 2 : 1)
+    update()
+    // Resize too: not every browser fires the media-query change events, and
+    // setting the same count again doesn't re-render.
+    md.addEventListener("change", update)
+    lg.addEventListener("change", update)
+    window.addEventListener("resize", update)
+    return () => {
+      md.removeEventListener("change", update)
+      lg.removeEventListener("change", update)
+      window.removeEventListener("resize", update)
+    }
+  }, [])
+  return columns
+}
 
 function formatDate(dateStr: string, locale: Locale) {
   return formatDateForLocale(dateStr, locale, { month: "short", day: "numeric", year: "numeric" })
@@ -44,26 +71,48 @@ function formatDate(dateStr: string, locale: Locale) {
 
 /**
  * The blog as a journal: a masthead, one ruled row of topics, and the posts
- * as editorial entries — words on the left, the picture on the right — rather
- * than a stack of social-feed cards. Everything the feed did still works in
- * place: likes, shares, the inline comment thread, owners' edit and delete,
- * and the next batch arriving as you near the end.
+ * as a three-up grid of cards, picture over words. Everything the feed did
+ * still works in place: likes, shares, the inline comment thread, owners'
+ * edit and delete, and the next batch arriving as you near the end.
  */
 /** Who is reading, as the session cookie says on the server. */
 export type BlogViewer = { sub: string; name: string; avatar?: string }
 
+/**
+ * The two blogs share this page; real estate differs in where its posts live
+ * and in its colour, from the `cs-theme-re` wrapper, which turns the page's
+ * blue and cyan to gold. On both, only admins write — and any admin may edit
+ * or delete any post — so readers get no "write a post" prompt.
+ */
+export type BlogSection = "marketing" | "real-estate"
+
+const SECTIONS = {
+  marketing: { base: "/blogs", api: "/api/blogs", site: "creative-surf", theme: "" },
+  "real-estate": {
+    base: "/real-estate/blogs",
+    api: "/api/real-estate-blogs",
+    site: "real-estate",
+    theme: "cs-theme-re",
+  },
+} as const
+
 export default function BlogsClient({
+  section = "marketing",
   initialBlogs,
   initialViewer,
   initialIsAdmin,
 }: {
+  section?: BlogSection
   /** The feed, rendered on the server so posts are in the first paint. */
   initialBlogs: Blog[]
   initialViewer: BlogViewer | null
   initialIsAdmin: boolean
 }) {
   const t = useT(blogsMessages)
+  const tre = useT(realEstateBlogsMessages)
   const tc = useT(commonMessages)
+  const cfg = SECTIONS[section]
+  const realEstate = section === "real-estate"
   const locale = useLocale()
   const still = useReducedMotion() ?? false
   const [blogs, setBlogs] = useState<Blog[]>(initialBlogs)
@@ -113,13 +162,10 @@ export default function BlogsClient({
   }, [])
 
   /**
-   * Mirrors `canManageBlog` on the server. The API is the real gate — this only
-   * decides whether the menu is worth showing.
+   * Mirrors `canManageBlog` on the server: any admin, any post. The API is the
+   * real gate — this only decides whether the menu is worth showing.
    */
-  const canManage = useCallback(
-    (blog: Blog) => isAdmin || (!!viewer && !!blog.authorId && blog.authorId === viewer.sub),
-    [isAdmin, viewer]
-  )
+  const canManage = useCallback((_blog: Blog) => isAdmin, [isAdmin])
 
   // One batched request for every post's like/comment counts, re-run once the
   // visitor id is known so the heart can render in its "already liked" state.
@@ -163,7 +209,7 @@ export default function BlogsClient({
     if (!confirm(t("confirmDelete", { title }))) return
     setDeletingId(id)
     try {
-      const res = await fetch(`/api/blogs/${id}`, { method: "DELETE" })
+      const res = await fetch(`${cfg.api}/${id}`, { method: "DELETE" })
       if (res.ok) setBlogs(prev => prev.filter(b => b._id !== id))
     } catch {}
     setDeletingId(null)
@@ -206,62 +252,218 @@ export default function BlogsClient({
     return () => window.removeEventListener("click", close)
   }, [menuOpenId])
 
-  /** Most-liked posts, for the rail. */
-  const trending = useMemo(() => {
-    return [...blogs]
-      .sort((a, b) => (engagement[b._id]?.likes ?? 0) - (engagement[a._id]?.likes ?? 0))
-      .slice(0, 4)
-      .filter(b => (engagement[b._id]?.likes ?? 0) > 0)
-  }, [blogs, engagement])
-
   const topicCount = Math.max(0, categories.length - 1)
+  const canWrite = isAdmin
+
+  const columns = useColumnCount()
+
+  const renderCard = (blog: Blog, i: number) => {
+    const author = blog.author || t("brand")
+    const commentsOpen = Boolean(openComments[blog._id])
+    return (
+      <motion.article
+        key={blog._id}
+        layout={still ? false : "position"}
+        initial={still ? false : { opacity: 0, y: 22 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={still ? { opacity: 0 } : { opacity: 0, y: -10 }}
+        transition={{ duration: 0.6, ease: EASE, delay: still ? 0 : (i % PAGE_SIZE) * 0.05 }}
+        aria-labelledby={`post-${blog._id}`}
+        className="flex min-w-0 flex-col"
+      >
+        {/* Picture */}
+        <Link
+          href={`${cfg.base}/${blog.slug}`}
+          tabIndex={-1}
+          aria-hidden
+          className="group relative block aspect-[16/10] overflow-hidden rounded-lg bg-cs-sunken ring-1 ring-inset ring-cs-ink/[0.06]"
+        >
+          {blog.coverImage ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={blog.coverImage}
+              alt=""
+              loading={i < 3 ? "eager" : "lazy"}
+              decoding="async"
+              className="h-full w-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03] motion-reduce:transition-none"
+            />
+          ) : (
+            <JournalCover title={blog.title} brand={t("brand")} />
+          )}
+        </Link>
+
+        {/* Words */}
+        <div className="mt-5 flex items-start justify-between gap-4">
+          {/* One line, always: a wrapped meta line would drop this
+              card's title below its neighbours'. Read time lives
+              in the byline to leave room. */}
+          <p className="cs-meta flex min-w-0 items-center gap-x-2 whitespace-nowrap text-cs-ink3">
+            <button
+              type="button"
+              onClick={() => setActiveCategory(blog.category)}
+              className="cs-focus min-w-0 truncate rounded-sm text-cs-blue transition-colors hover:text-cs-blueHover"
+            >
+              {blog.category}
+            </button>
+            <span aria-hidden className="shrink-0 opacity-50">/</span>
+            <time className="shrink-0" dateTime={blog.createdAt} title={formatDate(blog.createdAt, locale)}>
+              {relativeTime(blog.createdAt)}
+            </time>
+          </p>
+          {canManage(blog) && (
+            <PostMenu
+              open={menuOpenId === blog._id}
+              onToggle={() => setMenuOpenId(menuOpenId === blog._id ? null : blog._id)}
+              editHref={`${cfg.base}/edit/${blog._id}`}
+              onDelete={() => handleDelete(blog._id, blog.title)}
+              deleting={deletingId === blog._id}
+              labels={{ edit: t("edit"), delete: t("delete") }}
+            />
+          )}
+        </div>
+
+        {/* Fixed slots — two lines of title, three of excerpt —
+            however long the copy, so every card in a row
+            matches and the bylines line up. */}
+        <h2
+          id={`post-${blog._id}`}
+          className="mt-3 line-clamp-2 font-medium"
+          style={{
+            fontSize: "clamp(1.3rem, 1.7vw, 1.5rem)",
+            lineHeight: 1.12,
+            letterSpacing: "-0.035em",
+            minHeight: "2.24em",
+          }}
+        >
+          <Link
+            href={`${cfg.base}/${blog.slug}`}
+            title={blog.title}
+            className="cs-focus rounded-sm text-cs-ink transition-colors duration-200 hover:text-cs-blue"
+          >
+            {blog.title}
+          </Link>
+        </h2>
+
+        <p
+          className="mt-3 line-clamp-3 text-[15px] leading-relaxed text-cs-ink2"
+          style={{ minHeight: "4.875em" }}
+        >
+          {blog.excerpt}
+        </p>
+
+        <div className="mt-5 flex items-center justify-between gap-4">
+          <p className="flex min-w-0 items-center gap-2.5 text-sm font-medium text-cs-ink">
+            <Monogram name={author} src={blog.authorAvatar} size={26} />
+            <span className="truncate">{author}</span>
+          </p>
+          {blog.readTime && (
+            <p className="cs-meta inline-flex shrink-0 items-center gap-1 text-cs-ink3">
+              <Clock aria-hidden size={11} /> {blog.readTime}
+            </p>
+          )}
+        </div>
+
+        {/* Engagement + inline thread. Cards keep their natural height, so
+            opening one grows that card alone and pushes the
+            row below down; its neighbours stay as they are. */}
+        <div className="pt-6">
+          <BlogCardActions
+            blogId={blog._id}
+            slug={blog.slug}
+            title={blog.title}
+            site={cfg.site}
+            visitorId={visitorId}
+            engagement={engagement[blog._id] ?? EMPTY_ENGAGEMENT}
+            onEngagementChange={handleEngagementChange}
+            onToggleComments={() => toggleComments(blog._id)}
+            commentsOpen={commentsOpen}
+          />
+
+          <AnimatePresence initial={false}>
+            {commentsOpen && (
+              <motion.div
+                key="thread"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: EASE }}
+                style={{ overflow: "hidden" }}
+              >
+                <BlogComments blogId={blog._id} variant="feed" onCountChange={handleCommentCount} />
+                <div className="flex items-center justify-between gap-3 pt-3">
+                  <Link
+                    href={`${cfg.base}/${blog.slug}`}
+                    className="cs-focus cs-underline rounded-sm text-[13px] font-semibold text-cs-blue"
+                  >
+                    {t("readFullPost")} →
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => toggleComments(blog._id)}
+                    className="cs-focus rounded-sm text-[13px] font-semibold text-cs-ink3 transition-colors hover:text-cs-ink"
+                  >
+                    {t("hideComments")}
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </motion.article>
+    )
+  }
 
   return (
-    <div className="bg-cs-bg text-cs-ink">
+    <div className={cn("bg-cs-bg text-cs-ink", cfg.theme)}>
       {/* ─── Masthead ─── */}
       <header className="pt-[5.25rem] sm:pt-24 lg:pt-[6.5rem]">
         <div className="cs-container">
           <div
             className="cs-enter cs-meta flex items-center justify-between gap-6 border-b border-cs-ink/10 pb-4 text-cs-ink3"
           >
-            <Breadcrumbs items={[{ label: tc("breadcrumb.blogs") }]} />
+            <Breadcrumbs
+              items={
+                realEstate
+                  ? [{ label: tc("breadcrumb.realEstate"), href: "/real-estate" }, { label: tc("breadcrumb.blogs") }]
+                  : [{ label: tc("breadcrumb.blogs") }]
+              }
+            />
             <p className="tabular-nums">
               {blogs.length} {t("postsLabel")} <span aria-hidden className="mx-1.5 opacity-50">·</span> {topicCount}{" "}
               {t("topicsLabel")}
             </p>
           </div>
 
-          <div className="grid gap-y-8 pb-12 pt-12 sm:pt-16 lg:grid-cols-12 lg:gap-x-8 lg:pb-16 lg:pt-20">
+          <div className="grid gap-y-6 pb-8 pt-8 sm:pt-10 lg:grid-cols-12 lg:gap-x-8 lg:pb-10 lg:pt-12">
             <div className="lg:col-span-8">
               <h1 className="overflow-hidden pb-[0.08em]">
                 <span
                   className="cs-rise cs-display block text-cs-ink"
-                  style={{ animationDelay: "0.05s", fontSize: "clamp(3rem, 8.4vw, 8rem)", lineHeight: 0.92, letterSpacing: "-0.055em" }}
+                  style={{ animationDelay: "0.05s", fontSize: "clamp(2.4rem, 5vw, 4.5rem)", lineHeight: 0.98, letterSpacing: "-0.05em" }}
                 >
-                  {t("title")}
+                  {realEstate ? tre("title") : t("title")}
                 </span>
               </h1>
               <p
                 style={{ animationDelay: "0.25s" }}
-                className="cs-glide cs-lede mt-7 max-w-[36rem] text-cs-ink2"
+                className="cs-glide cs-lede mt-4 max-w-[36rem] text-cs-ink2"
               >
-                {t("subtitle")}
+                {realEstate ? tre("subtitle") : t("subtitle")}
               </p>
             </div>
 
-            {/* Posting: open to any signed-in account, and visible — not hidden —
-                to everyone else, as a way in. */}
+            {/* Posting is for admins only; readers like, comment and share. */}
             <div
               style={{ animationDelay: "0.35s" }}
               className="cs-enter flex items-end lg:col-span-4 lg:justify-end"
             >
-              {viewer ? (
+              {viewer && isAdmin && (
                 <div className="flex items-center gap-4">
                   <Monogram name={viewer.name || t("brand")} src={viewer.avatar} size={40} />
                   <div>
                     <p className="text-sm text-cs-ink2">{t("composerPrompt")}</p>
                     <Link
-                      href="/blogs/new"
+                      href={`${cfg.base}/new`}
                       className="cs-focus group mt-1 inline-flex items-center gap-1.5 rounded-sm text-[15px] font-semibold text-cs-blue"
                     >
                       <Plus aria-hidden className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
@@ -269,13 +471,6 @@ export default function BlogsClient({
                     </Link>
                   </div>
                 </div>
-              ) : (
-                <ButtonLink href="/login" variant="secondary" size="md" icon="none">
-                  <span className="inline-flex items-center gap-2">
-                    <LogIn aria-hidden className="h-4 w-4" />
-                    {t("loginToPost")}
-                  </span>
-                </ButtonLink>
               )}
             </div>
           </div>
@@ -318,16 +513,16 @@ export default function BlogsClient({
         </nav>
       )}
 
-      {/* ─── Feed + rail ─── */}
-      <div className="cs-container grid gap-y-16 pb-24 pt-4 lg:grid-cols-12 lg:gap-x-8 lg:pb-32">
-        <section aria-label={t("title")} className="min-w-0 lg:col-span-8">
+      {/* ─── Feed: a three-up grid of cards ─── */}
+      <div className="cs-container pb-24 pt-8 lg:pb-32">
+        <section aria-label={t("title")} className="min-w-0">
           {filtered.length === 0 && (
             <div className="border-t border-cs-ink/10 py-20">
               <Meta>{t("emptyTitle")}</Meta>
-              <p className="cs-h3 mt-6 max-w-[28rem] text-cs-ink">{viewer ? t("emptyAdmin") : t("emptyPublic")}</p>
-              {viewer && (
+              <p className="cs-h3 mt-6 max-w-[28rem] text-cs-ink">{canWrite ? t("emptyAdmin") : t("emptyPublic")}</p>
+              {canWrite && (
                 <div className="mt-8">
-                  <ButtonLink href="/blogs/new">{t("writeFirst")}</ButtonLink>
+                  <ButtonLink href={`${cfg.base}/new`}>{t("writeFirst")}</ButtonLink>
                 </div>
               )}
             </div>
@@ -335,156 +530,26 @@ export default function BlogsClient({
 
           {filtered.length > 0 && (
             <>
-              <AnimatePresence initial={false}>
-                {visible.map((blog, i) => {
-                  const author = blog.author || t("brand")
-                  const commentsOpen = Boolean(openComments[blog._id])
-                  const lead = i === 0
-                  return (
-                    <motion.article
-                      key={blog._id}
-                      layout={still ? false : "position"}
-                      initial={still ? false : { opacity: 0, y: 22 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={still ? { opacity: 0 } : { opacity: 0, y: -10 }}
-                      transition={{ duration: 0.6, ease: EASE, delay: still ? 0 : (i % PAGE_SIZE) * 0.05 }}
-                      aria-labelledby={`post-${blog._id}`}
-                      className={cn("border-t border-cs-ink/10", lead ? "pb-12 pt-8" : "py-10")}
-                    >
-                      <div className={cn("grid gap-6 md:gap-8", lead ? "" : "md:grid-cols-[1fr_0.85fr]")}>
-                        {/* Words */}
-                        <div className={cn("min-w-0", lead ? "order-2" : "order-2 md:order-1")}>
-                          <div className="flex items-start justify-between gap-4">
-                            <p className="cs-meta flex flex-wrap items-center gap-x-2 gap-y-1 text-cs-ink3">
-                              <button
-                                type="button"
-                                onClick={() => setActiveCategory(blog.category)}
-                                className="cs-focus rounded-sm text-cs-blue transition-colors hover:text-cs-blueHover"
-                              >
-                                {blog.category}
-                              </button>
-                              <span aria-hidden className="opacity-50">/</span>
-                              <time dateTime={blog.createdAt} title={formatDate(blog.createdAt, locale)}>
-                                {relativeTime(blog.createdAt)}
-                              </time>
-                              {blog.readTime && (
-                                <>
-                                  <span aria-hidden className="opacity-50">/</span>
-                                  <span className="inline-flex items-center gap-1">
-                                    <Clock aria-hidden size={11} /> {blog.readTime}
-                                  </span>
-                                </>
-                              )}
-                            </p>
-                            {canManage(blog) && (
-                              <PostMenu
-                                open={menuOpenId === blog._id}
-                                onToggle={() => setMenuOpenId(menuOpenId === blog._id ? null : blog._id)}
-                                editHref={`/blogs/edit/${blog._id}`}
-                                onDelete={() => handleDelete(blog._id, blog.title)}
-                                deleting={deletingId === blog._id}
-                                labels={{ edit: t("edit"), delete: t("delete") }}
-                              />
-                            )}
-                          </div>
-
-                          <h2 id={`post-${blog._id}`} className="mt-4">
-                            <Link
-                              href={`/blogs/${blog.slug}`}
-                              className="cs-focus rounded-sm font-medium text-cs-ink transition-colors duration-200 hover:text-cs-blue"
-                              style={{
-                                fontSize: lead ? "clamp(1.9rem, 3.6vw, 3.25rem)" : "clamp(1.45rem, 2.1vw, 1.875rem)",
-                                lineHeight: 1.08,
-                                letterSpacing: "-0.04em",
-                                textWrap: "balance",
-                              }}
-                            >
-                              {blog.title}
-                            </Link>
-                          </h2>
-
-                          <p className={cn("mt-4 text-cs-ink2", lead ? "cs-lede max-w-[40rem]" : "line-clamp-3 text-[15px] leading-relaxed")}>
-                            {blog.excerpt}
-                          </p>
-
-                          <p className="mt-5 flex items-center gap-2.5 text-sm font-medium text-cs-ink">
-                            <Monogram name={author} src={blog.authorAvatar} size={26} />
-                            {author}
-                          </p>
-                        </div>
-
-                        {/* Picture */}
-                        <Link
-                          href={`/blogs/${blog.slug}`}
-                          tabIndex={-1}
-                          aria-hidden
-                          className={cn(
-                            "group relative block overflow-hidden rounded-lg bg-cs-sunken ring-1 ring-inset ring-cs-ink/[0.06]",
-                            lead ? "order-1 aspect-[16/8]" : "order-1 aspect-[16/10] md:order-2"
-                          )}
-                        >
-                          {blog.coverImage ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              src={blog.coverImage}
-                              alt=""
-                              loading={i < 2 ? "eager" : "lazy"}
-                              decoding="async"
-                              className="h-full w-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03] motion-reduce:transition-none"
-                            />
-                          ) : (
-                            <JournalCover category={blog.category} brand={t("brand")} />
-                          )}
-                        </Link>
-                      </div>
-
-                      {/* Engagement + inline thread */}
-                      <div className="mt-6">
-                        <BlogCardActions
-                          blogId={blog._id}
-                          slug={blog.slug}
-                          title={blog.title}
-                          visitorId={visitorId}
-                          engagement={engagement[blog._id] ?? EMPTY_ENGAGEMENT}
-                          onEngagementChange={handleEngagementChange}
-                          onToggleComments={() => toggleComments(blog._id)}
-                          commentsOpen={commentsOpen}
-                        />
-
-                        <AnimatePresence initial={false}>
-                          {commentsOpen && (
-                            <motion.div
-                              key="thread"
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.3, ease: EASE }}
-                              style={{ overflow: "hidden" }}
-                            >
-                              <BlogComments blogId={blog._id} variant="feed" onCountChange={handleCommentCount} />
-                              <div className="flex items-center justify-between gap-3 pt-3">
-                                <Link
-                                  href={`/blogs/${blog.slug}`}
-                                  className="cs-focus cs-underline rounded-sm text-[13px] font-semibold text-cs-blue"
-                                >
-                                  {t("readFullPost")} →
-                                </Link>
-                                <button
-                                  type="button"
-                                  onClick={() => toggleComments(blog._id)}
-                                  className="cs-focus rounded-sm text-[13px] font-semibold text-cs-ink3 transition-colors hover:text-cs-ink"
-                                >
-                                  {t("hideComments")}
-                                </button>
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    </motion.article>
-                  )
-                })}
-              </AnimatePresence>
+              {/* Each column is its own stack, so opening one card's comments
+                  pushes down only the cards beneath it. Until the browser
+                  knows the column count, the server's plain grid stands in;
+                  closed cards are all one height, so the swap doesn't move
+                  anything. Cards are dealt across in reading order. */}
+              {columns ? (
+                <div className="grid items-start gap-x-8 md:grid-cols-2 lg:grid-cols-3">
+                  {Array.from({ length: columns }, (_, column) => (
+                    <div key={column} className="flex min-w-0 flex-col gap-y-14">
+                      <AnimatePresence initial={false}>
+                        {visible.map((blog, i) => (i % columns === column ? renderCard(blog, i) : null))}
+                      </AnimatePresence>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid items-start gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
+                  <AnimatePresence initial={false}>{visible.map(renderCard)}</AnimatePresence>
+                </div>
+              )}
 
               {/*
                 Scrolling past this pulls in the next batch. The button is a
@@ -492,7 +557,7 @@ export default function BlogsClient({
                 fires, it keeps the rest of the feed reachable.
               */}
               {hasMore && (
-                <div ref={sentinelRef} className="flex justify-center border-t border-cs-ink/10 py-10">
+                <div ref={sentinelRef} className="mt-14 flex justify-center border-t border-cs-ink/10 py-10">
                   <button
                     type="button"
                     onClick={() => setVisibleCount(c => c + PAGE_SIZE)}
@@ -507,58 +572,12 @@ export default function BlogsClient({
                 </div>
               )}
               {!hasMore && filtered.length > PAGE_SIZE && (
-                <p className="cs-meta border-t border-cs-ink/10 py-10 text-center text-cs-ink3">{t("allCaughtUp")}</p>
+                <p className="cs-meta mt-14 border-t border-cs-ink/10 py-10 text-center text-cs-ink3">{t("allCaughtUp")}</p>
               )}
             </>
           )}
         </section>
 
-        {/* ─── Rail ─── */}
-        <aside className="hidden lg:col-span-3 lg:col-start-10 lg:block">
-          <div className="sticky top-24 pt-8">
-            <dl className="grid grid-cols-2 border-y border-cs-ink/10">
-              {[
-                { value: blogs.length, label: t("postsLabel") },
-                { value: topicCount, label: t("topicsLabel") },
-              ].map((stat, i) => (
-                <div key={stat.label} className={cn("flex flex-col py-5", i > 0 && "border-l border-cs-ink/10 pl-5")}>
-                  <dt className="order-2 mt-2 text-sm text-cs-ink2">{stat.label}</dt>
-                  <dd className="order-1 text-[2.5rem] font-medium leading-none tabular-nums tracking-[-0.045em]">
-                    {stat.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-
-            {trending.length > 0 && (
-              <div className="mt-10">
-                <h2 className="cs-meta text-cs-ink">{t("trendingTitle")}</h2>
-                <ol className="mt-4">
-                  {trending.map((b, i) => (
-                    <li key={b._id} className="border-t border-cs-ink/10 first:border-t-0">
-                      <Link href={`/blogs/${b.slug}`} className="cs-focus group grid grid-cols-[1.75rem_1fr] gap-x-2 rounded-sm py-4">
-                        <span className="cs-accent text-xl leading-none text-cs-cyan" aria-hidden>
-                          {i + 1}
-                        </span>
-                        <span className="min-w-0">
-                          <span className="line-clamp-2 text-[15px] font-medium leading-snug tracking-[-0.015em] text-cs-ink transition-colors group-hover:text-cs-blue">
-                            {b.title}
-                          </span>
-                          <span className="cs-meta mt-1.5 block text-cs-ink3">
-                            {t(
-                              (engagement[b._id]?.likes ?? 0) === 1 ? "likeCountOne" : "likesCount",
-                              { count: engagement[b._id]?.likes ?? 0 }
-                            )}
-                          </span>
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            )}
-          </div>
-        </aside>
       </div>
     </div>
   )

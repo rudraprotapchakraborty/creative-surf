@@ -4,7 +4,6 @@ import { ConditionalFooter } from "@/components/ConditionalFooter"
 import { LoadingBarProvider } from "@/components/LoadingBarContext"
 import { LazyChatWidget } from "@/components/LazyChatWidget"
 import { CustomCursor } from "@/components/CustomCursor"
-import IntroCurtain from "@/components/IntroCurtain"
 import { Instrument_Serif, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google"
 import { Suspense } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -124,8 +123,8 @@ export default async function RootLayout({
               <GoogleAnalytics />
             </Suspense>
 
-            {/* PAGE LOADER (every page but the homepage) */}
-            <IntroCurtain />
+            {/* PAGE LOADER: switched off. The component (components/IntroCurtain.tsx)
+                and its CSS are kept; import it and render <IntroCurtain /> here to bring it back. */}
 
             {/* NAV */}
             <Navbar />
