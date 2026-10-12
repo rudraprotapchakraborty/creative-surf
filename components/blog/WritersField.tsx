@@ -109,7 +109,13 @@ export default function WritersField({
   const editorial = variant === "editorial"
 
   return (
-    <div className={editorial ? "border-t border-cs-ink/10 pt-5" : "glass rounded-xl p-4"} style={editorial ? undefined : { border: "1px solid var(--flow-border)" }}>
+    // The flow card's backdrop blur makes it its own stacking context, which
+    // traps the suggestion list's z-index inside it, so the next card paints
+    // over the list. Lifting the whole field while the list is open fixes that.
+    <div
+      className={`relative ${showList ? "z-30" : ""} ${editorial ? "border-t border-cs-ink/10 pt-5" : "glass rounded-xl p-4"}`}
+      style={editorial ? undefined : { border: "1px solid var(--flow-border)" }}
+    >
       <p
         className={editorial ? "cs-meta mb-3 text-cs-ink3" : "block text-xs font-semibold uppercase tracking-widest mb-3"}
         style={editorial ? undefined : { color: "rgb(var(--flow-text-soft))" }}
